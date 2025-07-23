@@ -1,6 +1,6 @@
 import { Args, Command, Options } from "@effect/cli"
-import { TodoId } from "@template/domain/TodosApi"
-import { TodosClient } from "./TodosClient.js"
+import { TodoId } from "@template/domain/TodoApi"
+import { TodoClient } from "./TodoClient.js"
 
 const todoArg = Args.text({ name: "todo" }).pipe(
   Args.withDescription("The message associated with a todo")
@@ -12,22 +12,22 @@ const todoId = Options.withSchema(Options.integer("id"), TodoId).pipe(
 
 const add = Command.make("add", { todo: todoArg }).pipe(
   Command.withDescription("Add a new todo"),
-  Command.withHandler(({ todo }) => TodosClient.create(todo))
+  Command.withHandler(({ todo }) => TodoClient.create(todo))
 )
 
 const done = Command.make("done", { id: todoId }).pipe(
   Command.withDescription("Mark a todo as done"),
-  Command.withHandler(({ id }) => TodosClient.update(id))
+  Command.withHandler(({ id }) => TodoClient.update(id))
 )
 
 const list = Command.make("list").pipe(
   Command.withDescription("List all todos"),
-  Command.withHandler(() => TodosClient.readAll())
+  Command.withHandler(() => TodoClient.readAll())
 )
 
 const remove = Command.make("remove", { id: todoId }).pipe(
   Command.withDescription("Remove a todo"),
-  Command.withHandler(({ id }) => TodosClient.del(id))
+  Command.withHandler(({ id }) => TodoClient.del(id))
 )
 
 const command = Command.make("todo").pipe(

@@ -18,7 +18,7 @@ export class TodoNotFound extends Schema.TaggedError<TodoNotFound>()("TodoNotFou
   id: Schema.Number
 }) {}
 
-export class TodosApiGroup extends HttpApiGroup.make("todos")
+export class TodoApiGroup extends HttpApiGroup.make("todo")
   .add(
     HttpApiEndpoint.post("create", "/")
       .addSuccess(Todo)
@@ -43,7 +43,7 @@ export class TodosApiGroup extends HttpApiGroup.make("todos")
       .addError(TodoNotFound, { status: 404 })
       .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
-  .prefix("/todos")
+  .prefix("/todo")
 {}
 
-export class TodosApi extends HttpApi.make("api").add(TodosApiGroup) {}
+export class TodoApi extends HttpApi.make("api").add(TodoApiGroup) {}
