@@ -19,30 +19,31 @@ export class TodoNotFound extends Schema.TaggedError<TodoNotFound>()("TodoNotFou
 }) {}
 
 export class TodosApiGroup extends HttpApiGroup.make("todos")
-  .add(HttpApiEndpoint.get("getAllTodos", "/todos").addSuccess(Schema.Array(Todo)))
   .add(
-    HttpApiEndpoint.get("getTodoById", "/todos/:id")
-      .addSuccess(Todo)
-      .addError(TodoNotFound, { status: 404 })
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
-  )
-  .add(
-    HttpApiEndpoint.post("createTodo", "/todos")
+    HttpApiEndpoint.post("create", "/")
       .addSuccess(Todo)
       .setPayload(Schema.Struct({ text: Schema.NonEmptyTrimmedString }))
   )
   .add(
-    HttpApiEndpoint.patch("completeTodo", "/todos/:id")
+    HttpApiEndpoint.del("delete", "/:id")
+      .addSuccess(Schema.Void)
+      .addError(TodoNotFound, { status: 404 })
+      .setPath(Schema.Struct({ id: TodoIdFromString }))
+  )
+  .add(HttpApiEndpoint.get("readAll", "/").addSuccess(Schema.Array(Todo)))
+  .add(
+    HttpApiEndpoint.get("readById", "/:id")
       .addSuccess(Todo)
       .addError(TodoNotFound, { status: 404 })
       .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
   .add(
-    HttpApiEndpoint.del("removeTodo", "/todos/:id")
-      .addSuccess(Schema.Void)
+    HttpApiEndpoint.patch("update", "/:id")
+      .addSuccess(Todo)
       .addError(TodoNotFound, { status: 404 })
       .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
+  .prefix("/todos")
 {}
 
 export class TodosApi extends HttpApi.make("api").add(TodosApiGroup) {}

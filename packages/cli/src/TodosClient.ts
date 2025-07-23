@@ -10,35 +10,40 @@ export class TodosClient extends Effect.Service<TodosClient>()("cli/TodosClient"
       baseUrl: "http://localhost:3000"
     })
 
-    function create(text: string) {
-      return client.todos.createTodo({ payload: { text } }).pipe(
+    const create = (text: string) =>
+      client.todos.create({ payload: { text } }).pipe(
         Effect.flatMap((todo) => Effect.logInfo("Created todo: ", todo))
       )
-    }
 
-    const list = client.todos.getAllTodos().pipe(
-      Effect.flatMap((todos) => Effect.logInfo(todos))
-    )
-
-    function complete(id: TodoId) {
-      return client.todos.completeTodo({ path: { id } }).pipe(
-        Effect.flatMap((todo) => Effect.logInfo("Marked todo completed: ", todo)),
-        Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
-      )
-    }
-
-    function remove(id: TodoId) {
-      return client.todos.removeTodo({ path: { id } }).pipe(
+    const del = (id: TodoId) =>
+      client.todos.delete({ path: { id } }).pipe(
         Effect.flatMap(() => Effect.logInfo(`Deleted todo with id: ${id}`)),
         Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
       )
-    }
+
+    const readAll = () =>
+      client.todos.readAll().pipe(
+        Effect.flatMap((todos) => Effect.logInfo(todos))
+      )
+
+    const readById = (id: TodoId) =>
+      client.todos.readById({ path: { id } }).pipe(
+        Effect.flatMap((todo) => Effect.logInfo(todo)),
+        Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
+      )
+
+    const update = (id: TodoId) =>
+      client.todos.update({ path: { id } }).pipe(
+        Effect.flatMap((todo) => Effect.logInfo("Marked todo done: ", todo)),
+        Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
+      )
 
     return {
       create,
-      list,
-      complete,
-      remove
+      del,
+      readAll,
+      readById,
+      update
     } as const
   })
 }) {}

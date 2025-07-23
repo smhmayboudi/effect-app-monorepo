@@ -17,17 +17,17 @@ const add = Command.make("add", { todo: todoArg }).pipe(
 
 const done = Command.make("done", { id: todoId }).pipe(
   Command.withDescription("Mark a todo as done"),
-  Command.withHandler(({ id }) => TodosClient.complete(id))
+  Command.withHandler(({ id }) => TodosClient.update(id))
 )
 
 const list = Command.make("list").pipe(
   Command.withDescription("List all todos"),
-  Command.withHandler(() => TodosClient.list)
+  Command.withHandler(() => TodosClient.readAll())
 )
 
 const remove = Command.make("remove", { id: todoId }).pipe(
   Command.withDescription("Remove a todo"),
-  Command.withHandler(({ id }) => TodosClient.remove(id))
+  Command.withHandler(({ id }) => TodosClient.del(id))
 )
 
 const command = Command.make("todo").pipe(

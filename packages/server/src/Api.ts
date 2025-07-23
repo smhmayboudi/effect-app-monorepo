@@ -7,11 +7,11 @@ const TodosApiLive = HttpApiBuilder.group(TodosApi, "todos", (handlers) =>
   Effect.gen(function*() {
     const todos = yield* TodosRepository
     return handlers
-      .handle("getAllTodos", () => todos.getAll)
-      .handle("getTodoById", ({ path: { id } }) => todos.getById(id))
-      .handle("createTodo", ({ payload: { text } }) => todos.create(text))
-      .handle("completeTodo", ({ path: { id } }) => todos.complete(id))
-      .handle("removeTodo", ({ path: { id } }) => todos.remove(id))
+      .handle("create", ({ payload: { text } }) => todos.create(text))
+      .handle("delete", ({ path: { id } }) => todos.del(id))
+      .handle("readAll", () => todos.readAll())
+      .handle("readById", ({ path: { id } }) => todos.readById(id))
+      .handle("update", ({ path: { id } }) => todos.update(id))
   }))
 
 export const ApiLive = HttpApiBuilder.api(TodosApi).pipe(
