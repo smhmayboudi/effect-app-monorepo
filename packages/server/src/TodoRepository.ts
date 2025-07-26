@@ -20,17 +20,18 @@ export class TodoRepository extends Effect.Service<TodoRepository>()("api/TodoRe
 
     const create = (text: string) =>
       Ref.get(todos).pipe(
-        Effect.flatMap((map) => {
-          if (HashMap.some(map, (todo) => todo.text === text)) {
-            return Effect.fail(new TodoErrorAlreadyExists({ text }))
-          }
-          const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
-          const todo = new Todo({ done: false, id, text })
+        Effect.flatMap((map) =>
+          HashMap.some(map, (todo) => todo.text === text) ?
+            Effect.fail(new TodoErrorAlreadyExists({ text })) :
+            Effect.suspend(() => {
+              const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
+              const todo = new Todo({ done: false, id, text })
 
-          return Ref.update(todos, (map) => HashMap.set(map, id, todo)).pipe(
-            Effect.as(todo)
-          )
-        })
+              return Ref.update(todos, (map) => HashMap.set(map, id, todo)).pipe(
+                Effect.as(todo)
+              )
+            })
+        )
       )
 
     const del = (id: TodoId) =>
