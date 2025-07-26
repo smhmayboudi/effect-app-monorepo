@@ -9,12 +9,24 @@ export const TodoIdFromString = Schema.NumberFromString.pipe(
 )
 
 export class Todo extends Schema.Class<Todo>("Todo")({
+  done: Schema.Boolean,
   id: TodoId,
-  text: Schema.NonEmptyTrimmedString,
-  done: Schema.Boolean
+  text: Schema.NonEmptyTrimmedString
 }) {}
 
-export class TodoNotFound extends Schema.TaggedError<TodoNotFound>()("TodoNotFound", {
+export class TodoCreatePayload extends Schema.Class<TodoCreatePayload>("TodoCreatePayload")({
+  text: Schema.NonEmptyTrimmedString
+}) {}
+
+export class TodoPath extends Schema.Class<TodoPath>("TodoPath")({
+  id: TodoIdFromString
+}) {}
+
+export class TodoErrorAlreadyExists extends Schema.TaggedError<TodoErrorAlreadyExists>()("TodoErrorAlreadyExists", {
+  text: Schema.NonEmptyTrimmedString
+}) {}
+
+export class TodoErrorNotFound extends Schema.TaggedError<TodoErrorNotFound>()("TodoErrorNotFound", {
   id: Schema.Number
 }) {}
 
@@ -22,26 +34,30 @@ export class TodoApiGroup extends HttpApiGroup.make("todo")
   .add(
     HttpApiEndpoint.post("create", "/")
       .addSuccess(Todo)
-      .setPayload(Schema.Struct({ text: Schema.NonEmptyTrimmedString }))
+      .addError(TodoErrorAlreadyExists, { status: 404 })
+      .setPayload(TodoCreatePayload)
   )
   .add(
     HttpApiEndpoint.del("delete", "/:id")
       .addSuccess(Schema.Void)
-      .addError(TodoNotFound, { status: 404 })
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
+      .addError(TodoErrorNotFound, { status: 404 })
+      .setPath(TodoPath)
   )
-  .add(HttpApiEndpoint.get("readAll", "/").addSuccess(Schema.Array(Todo)))
+  .add(
+    HttpApiEndpoint.get("readAll", "/")
+      .addSuccess(Schema.Array(Todo))
+  )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
       .addSuccess(Todo)
-      .addError(TodoNotFound, { status: 404 })
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
+      .addError(TodoErrorNotFound, { status: 404 })
+      .setPath(TodoPath)
   )
   .add(
     HttpApiEndpoint.patch("update", "/:id")
       .addSuccess(Todo)
-      .addError(TodoNotFound, { status: 404 })
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
+      .addError(TodoErrorNotFound, { status: 404 })
+      .setPath(TodoPath)
   )
   .prefix("/todo")
 {}

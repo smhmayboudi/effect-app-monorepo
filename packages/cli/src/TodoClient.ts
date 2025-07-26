@@ -18,7 +18,7 @@ export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
     const del = (id: TodoId) =>
       client.todo.delete({ path: { id } }).pipe(
         Effect.flatMap(() => Effect.logInfo(`Deleted todo with id: ${id}`)),
-        Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
+        Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
       )
 
     const readAll = () =>
@@ -29,13 +29,13 @@ export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
     const readById = (id: TodoId) =>
       client.todo.readById({ path: { id } }).pipe(
         Effect.flatMap((todo) => Effect.logInfo(todo)),
-        Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
+        Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
       )
 
     const update = (id: TodoId) =>
       client.todo.update({ path: { id } }).pipe(
         Effect.flatMap((todo) => Effect.logInfo("Marked todo done: ", todo)),
-        Effect.catchTag("TodoNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
+        Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`))
       )
 
     return {

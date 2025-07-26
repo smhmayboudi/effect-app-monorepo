@@ -1,16 +1,37 @@
-import { Todo, TodoId, TodoNotFound } from "@template/domain/TodoApi"
+import { Todo, TodoErrorAlreadyExists, TodoErrorNotFound, TodoId } from "@template/domain/TodoApi"
 import { Effect, HashMap, Ref } from "effect"
 
 export class TodoRepository extends Effect.Service<TodoRepository>()("api/TodoRepository", {
   effect: Effect.gen(function*() {
     const todos = yield* Ref.make(HashMap.empty<TodoId, Todo>())
 
+    // const create = (text: string) =>
+    //   Effect.gen(function*() {
+    //     const map = yield* Ref.get(todos)
+    //     if (HashMap.some(map, (todo) => todo.text === text)) {
+    //       return yield* Effect.fail(new TodoErrorAlreadyExists({ text }))
+    //     }
+    //     const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => Math.max(max, todo.id)) + 1)
+    //     const todo = new Todo({ done: false, id, text })
+    //     yield* Ref.update(todos, (map) => HashMap.set(map, id, todo))
+
+    //     return todo
+    //   })
+
     const create = (text: string) =>
-      Ref.modify(todos, (map) => {
-        const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
-        const todo = new Todo({ id, text, done: false })
-        return [todo, HashMap.set(map, id, todo)]
-      })
+      Ref.get(todos).pipe(
+        Effect.flatMap((map) => {
+          if (HashMap.some(map, (todo) => todo.text === text)) {
+            return Effect.fail(new TodoErrorAlreadyExists({ text }))
+          }
+          const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
+          const todo = new Todo({ done: false, id, text })
+
+          return Ref.update(todos, (map) => HashMap.set(map, id, todo)).pipe(
+            Effect.as(todo)
+          )
+        })
+      )
 
     const del = (id: TodoId) =>
       readById(id).pipe(
@@ -25,7 +46,7 @@ export class TodoRepository extends Effect.Service<TodoRepository>()("api/TodoRe
     const readById = (id: TodoId) =>
       Ref.get(todos).pipe(
         Effect.flatMap(HashMap.get(id)),
-        Effect.catchTag("NoSuchElementException", () => new TodoNotFound({ id }))
+        Effect.catchTag("NoSuchElementException", () => new TodoErrorNotFound({ id }))
       )
 
     const update = (id: TodoId) =>
