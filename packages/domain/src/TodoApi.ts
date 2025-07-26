@@ -1,4 +1,4 @@
-import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "@effect/platform"
+import { HttpApi, HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
 
 export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"))
@@ -22,13 +22,25 @@ export class TodoPath extends Schema.Class<TodoPath>("TodoPath")({
   id: TodoIdFromString
 }) {}
 
-export class TodoErrorAlreadyExists extends Schema.TaggedError<TodoErrorAlreadyExists>()("TodoErrorAlreadyExists", {
-  text: Schema.NonEmptyTrimmedString
-}) {}
+export class TodoErrorAlreadyExists extends Schema.TaggedError<TodoErrorAlreadyExists>("TodoErrorAlreadyExists")(
+  "TodoErrorAlreadyExists",
+  { text: Schema.NonEmptyTrimmedString },
+  HttpApiSchema.annotations({ status: 404 })
+) {
+  get message() {
+    return `${this.text} is already exists.`
+  }
+}
 
-export class TodoErrorNotFound extends Schema.TaggedError<TodoErrorNotFound>()("TodoErrorNotFound", {
-  id: Schema.Number
-}) {}
+export class TodoErrorNotFound extends Schema.TaggedError<TodoErrorNotFound>("TodoErrorNotFound")(
+  "TodoErrorNotFound",
+  { id: Schema.Number },
+  HttpApiSchema.annotations({ status: 404 })
+) {
+  get message() {
+    return `${this.id} not found.`
+  }
+}
 
 export class TodoApiGroup extends HttpApiGroup.make("todo")
   .add(
