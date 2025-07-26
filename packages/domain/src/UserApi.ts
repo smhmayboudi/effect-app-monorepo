@@ -1,4 +1,4 @@
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform"
+import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 
 export const UserId = Schema.UUID.pipe(Schema.brand("UserId"))
@@ -40,8 +40,13 @@ export class UserErrorNotFound extends Schema.TaggedError<UserErrorNotFound>("Us
   }
 }
 
-export class UserApi extends HttpApiGroup.make("users").add(
-  HttpApiEndpoint.post("signup", "/signup")
-    .setPayload(UserSignupRequestData)
-    .addError(UserErrorEmailAlreadyTaken)
-) {}
+export class UserApiGroup extends HttpApiGroup.make("user")
+  .add(
+    HttpApiEndpoint.post("signup", "/signup")
+      .setPayload(UserSignupRequestData)
+      .addError(UserErrorEmailAlreadyTaken)
+  )
+  .prefix("/user")
+  .annotate(OpenApi.Description, "Manage User")
+  .annotate(OpenApi.Title, "User")
+{}

@@ -2,13 +2,13 @@ import { HttpApiClient } from "@effect/platform"
 import { NodeHttpClient } from "@effect/platform-node"
 
 import { describe, expect, it } from "@effect/vitest"
-import { TodoApi } from "@template/domain/TodoApi"
+import { Api } from "@template/domain/Api"
 import { Effect } from "effect"
 
 describe("TodoApi", () => {
   it.effect("should get the list of todos", () =>
     Effect.gen(function*() {
-      const client = yield* HttpApiClient.make(TodoApi, {
+      const client = yield* HttpApiClient.make(Api, {
         baseUrl: "http://localhost:3000/"
       })
 
@@ -20,7 +20,7 @@ describe("TodoApi", () => {
 
   it.effect("should create a todo", () =>
     Effect.gen(function*() {
-      const client = yield* HttpApiClient.make(TodoApi, {
+      const client = yield* HttpApiClient.make(Api, {
         baseUrl: "http://localhost:3000/"
       })
       const text = "my new todo"

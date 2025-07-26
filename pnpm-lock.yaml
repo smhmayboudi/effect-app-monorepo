@@ -47,14 +47,14 @@ importers:
         specifier: 0.6.0
         version: 0.6.0(patch_hash=4nwpuevfciovsbhi25hd4g5r7y)
       '@effect/build-utils':
-        specifier: ^0.7.7
-        version: 0.7.9
+        specifier: latest
+        version: 0.8.9
       '@effect/eslint-plugin':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: latest
+        version: 0.3.2
       '@effect/language-service':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: latest
+        version: 0.30.0
       '@effect/vitest':
         specifier: latest
         version: 0.25.0(effect@3.16.12)(vitest@2.1.9(@types/node@22.16.0))
@@ -137,9 +137,6 @@ importers:
       '@effect/platform':
         specifier: latest
         version: 0.90.0(effect@3.17.2)
-      '@effect/sql':
-        specifier: latest
-        version: 0.44.0(@effect/experimental@0.54.0(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2)
       effect:
         specifier: latest
         version: 3.17.2
@@ -345,8 +342,8 @@ packages:
   '@dprint/typescript@0.91.8':
     resolution: {integrity: sha512-tuKn4leCPItox1O4uunHcQF0QllDCvPWklnNQIh2PiWWVtRAGltJJnM4Cwj5AciplosD1Hiz7vAY3ew3crLb3A==}
 
-  '@effect/build-utils@0.7.9':
-    resolution: {integrity: sha512-I9tuSvKOnhF2NNsCzHulsUvEwJBQKqiZ1RtbJA+DfxqXZ9J1QSh4txnfnDC2D2bygMYuWqMJWg7TvAWun7cs6w==}
+  '@effect/build-utils@0.8.9':
+    resolution: {integrity: sha512-wzunjr8pyNjghLueo5ePQD7vaM3qeO2H/jF57hNYbQM/rxfipBWYKukoqWyp04qGZ+V86FyOHb8zD5+PMZvH2A==}
     engines: {node: '>=16.17.1'}
     hasBin: true
 
@@ -367,8 +364,8 @@ packages:
       '@effect/workflow': ^0.4.11
       effect: ^3.16.12
 
-  '@effect/eslint-plugin@0.2.0':
-    resolution: {integrity: sha512-PC/hEDGctYGYIjZyhM6kbD4FyHxLgoYNoQNjGkCXcFEzi71vQc3PJKe2JnCgzcUDvr/Nc2qgTVU4ONYwjHzQGA==}
+  '@effect/eslint-plugin@0.3.2':
+    resolution: {integrity: sha512-c4Vs9t3r54A4Zpl+wo8+PGzZz3JWYsip41H+UrebRLjQ2Hk/ap63IeCgN/HWcYtxtyhRopjp7gW9nOQ2Snbl+g==}
 
   '@effect/experimental@0.54.0':
     resolution: {integrity: sha512-9XkKzfHpcGSLCVKGqC6lHNG/O1seBHNWtOW6bssJbYw8slvZ7giPNyW+iQHL2GhWsSDPFANvIu9K32iBdE7AGA==}
@@ -383,8 +380,9 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.2.0':
-    resolution: {integrity: sha512-DoK41yKGyQv79o0ca8gxEogMlt+IphXkdCXwgenbQjH1BXKD7tJAr0+VsDhblycQcvQ39f1l9NZN9CBqjM9ALA==}
+  '@effect/language-service@0.30.0':
+    resolution: {integrity: sha512-6nA9DxsepIUjYeZqmkM+wNrSgzv2/9tYyg2XD8rv9cDydMMIlKHzVbGRba67nCKGqeJ1jHsn6RBN3a4qCIgqKQ==}
+    hasBin: true
 
   '@effect/platform-node-shared@0.47.0':
     resolution: {integrity: sha512-ITsvT1Upphnf5Iq6gkUef4oy/ivoJkl8grtIuVkNE38I3EC57A/00anDXlwSgUd7i4pRT+KX5ypcc1/TsehCeg==}
@@ -2679,6 +2677,9 @@ packages:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
 
+  pkg-entry-points@1.1.1:
+    resolution: {integrity: sha512-BhZa7iaPmB4b3vKIACoppyUoYn8/sFs17VJJtzrzPZvEnN2nqrgg911tdL65lA2m1ml6UI3iPeYbZQ4VXpn1mA==}
+
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
@@ -3556,7 +3557,10 @@ snapshots:
 
   '@dprint/typescript@0.91.8': {}
 
-  '@effect/build-utils@0.7.9': {}
+  '@effect/build-utils@0.8.9':
+    dependencies:
+      micromatch: 4.0.8
+      pkg-entry-points: 1.1.1
 
   '@effect/cli@0.69.0(@effect/platform@0.90.0(effect@3.17.2))(@effect/printer-ansi@0.44.12(@effect/typeclass@0.35.12(effect@3.17.2))(effect@3.17.2))(@effect/printer@0.44.12(@effect/typeclass@0.35.12(effect@3.17.2))(effect@3.17.2))(effect@3.17.2)':
     dependencies:
@@ -3576,7 +3580,7 @@ snapshots:
       '@effect/workflow': 0.4.11(@effect/platform@0.90.0(effect@3.17.2))(@effect/rpc@0.64.11(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(effect@3.17.2)
       effect: 3.17.2
 
-  '@effect/eslint-plugin@0.2.0':
+  '@effect/eslint-plugin@0.3.2':
     dependencies:
       '@dprint/formatter': 0.4.1
       '@dprint/typescript': 0.91.8
@@ -3588,7 +3592,7 @@ snapshots:
       effect: 3.17.2
       uuid: 11.1.0
 
-  '@effect/language-service@0.2.0': {}
+  '@effect/language-service@0.30.0': {}
 
   '@effect/platform-node-shared@0.47.0(@effect/cluster@0.41.14(@effect/platform@0.90.0(effect@3.17.2))(@effect/rpc@0.64.11(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(@effect/sql@0.44.0(@effect/experimental@0.54.0(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(@effect/workflow@0.4.11(@effect/platform@0.90.0(effect@3.17.2))(@effect/rpc@0.64.11(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(effect@3.17.2))(effect@3.17.2))(@effect/platform@0.90.0(effect@3.17.2))(@effect/rpc@0.64.11(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(@effect/sql@0.44.0(@effect/experimental@0.54.0(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(@effect/platform@0.90.0(effect@3.17.2))(effect@3.17.2))(effect@3.17.2)':
     dependencies:
@@ -5872,6 +5876,8 @@ snapshots:
   picomatch@4.0.2: {}
 
   pify@4.0.1: {}
+
+  pkg-entry-points@1.1.1: {}
 
   possible-typed-array-names@1.1.0: {}
 

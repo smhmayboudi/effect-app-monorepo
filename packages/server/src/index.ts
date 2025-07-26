@@ -14,6 +14,4 @@ const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
 )
 
-Layer.launch(HttpLive).pipe(
-  NodeRuntime.runMain
-)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain)

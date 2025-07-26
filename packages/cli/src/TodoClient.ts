@@ -1,12 +1,12 @@
 import { HttpApiClient } from "@effect/platform"
 import type { TodoId } from "@template/domain/TodoApi"
-import { TodoApi } from "@template/domain/TodoApi"
+import { Api } from "@template/domain/Api"
 import { Effect } from "effect"
 
 export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
   accessors: true,
   effect: Effect.gen(function*() {
-    const client = yield* HttpApiClient.make(TodoApi, {
+    const client = yield* HttpApiClient.make(Api, {
       baseUrl: "http://localhost:3000"
     })
 

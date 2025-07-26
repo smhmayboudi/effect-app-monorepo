@@ -1,4 +1,4 @@
-import { HttpApi, HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform"
+import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 
 export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"))
@@ -72,6 +72,6 @@ export class TodoApiGroup extends HttpApiGroup.make("todo")
       .setPath(TodoPath)
   )
   .prefix("/todo")
+  .annotate(OpenApi.Description, "Manage Todo")
+  .annotate(OpenApi.Title, "Todo")
 {}
-
-export class TodoApi extends HttpApi.make("api").add(TodoApiGroup) {}
