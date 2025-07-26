@@ -6,8 +6,9 @@ import { ApiLive } from "./Api.js"
 import { TodoRepository } from "./TodoRepository.js"
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  Layer.provide(HttpApiSwagger.layer()),
   Layer.provide(HttpApiBuilder.middlewareCors()),
+  Layer.provide(HttpApiBuilder.middlewareOpenApi()),
+  Layer.provide(HttpApiSwagger.layer()),
   Layer.provide(ApiLive),
   Layer.provide(TodoRepository.Default),
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
