@@ -6,6 +6,7 @@ import { TodoRepository } from "./TodoRepository.js"
 const TodoApiLive = HttpApiBuilder.group(TodoApi, "todo", (handlers) =>
   Effect.gen(function*() {
     const todoRepository = yield* TodoRepository
+
     return handlers
       .handle("create", ({ payload: { text } }) => todoRepository.create(text))
       .handle("delete", ({ path: { id } }) => todoRepository.del(id))
