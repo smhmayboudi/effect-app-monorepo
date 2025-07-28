@@ -1,5 +1,13 @@
 import { Todo, TodoErrorAlreadyExists, TodoErrorNotFound, TodoId } from "@template/domain/TodoApi"
-import { Effect, HashMap, Ref } from "effect"
+import { Context, Effect, HashMap, Ref } from "effect"
+
+export class PortTodo extends Context.Tag("PortTodo")<PortTodo, {
+  create: (text: string) => Effect.Effect<Todo, TodoErrorAlreadyExists, never>
+  del: (id: TodoId) => Effect.Effect<void, TodoErrorNotFound, never>
+  readAll: () => Effect.Effect<Todo[], never, never>
+  readById: (id: TodoId) => Effect.Effect<Todo, TodoErrorNotFound, never>
+  update: (id: TodoId) => Effect.Effect<Todo, TodoErrorNotFound, never>
+}>() {}
 
 export class TodoRepository extends Effect.Service<TodoRepository>()("api/TodoRepository", {
   effect: Effect.gen(function*() {

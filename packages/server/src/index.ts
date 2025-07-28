@@ -1,4 +1,4 @@
-import { HttpApiBuilder, HttpApiSwagger, HttpMiddleware } from "@effect/platform"
+import { HttpApiBuilder, HttpApiSwagger, HttpMiddleware, HttpServer } from "@effect/platform"
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
 import { Layer } from "effect"
 import { createServer } from "node:http"
@@ -11,6 +11,7 @@ const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
   Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
   Layer.provide(ApiLive),
   Layer.provide(TodoRepository.Default),
+  HttpServer.withLogAddress,
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
 )
 
