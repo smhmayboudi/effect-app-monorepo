@@ -1,6 +1,6 @@
 import { HttpApiClient } from "@effect/platform"
 import { TodoId } from "@template/domain/todo/application/domain-todo"
-import { Api } from "@template/domain/Api"
+import { Api } from "@template/domain/api"
 import { Effect } from "effect"
 
 export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {

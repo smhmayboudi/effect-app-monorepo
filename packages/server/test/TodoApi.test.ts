@@ -2,7 +2,7 @@ import { HttpApiClient } from "@effect/platform"
 import { NodeHttpClient } from "@effect/platform-node"
 
 import { describe, expect, it } from "@effect/vitest"
-import { Api } from "@template/domain/Api"
+import { Api } from "@template/domain/api"
 import { Effect } from "effect"
 
 describe("TodoApi", () => {

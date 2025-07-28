@@ -1,9 +1,9 @@
 import { HttpApi, OpenApi } from "@effect/platform"
-import { ApiGroupTodo } from "./todo/api-group-todo.js"
-import { ApiGroupUser } from "./user/api-group-user.js"
+import { TodoDriving } from "./todo/adapter/todo-driving.js"
+import { UserDriving } from "./user/adapter/user-driving.js"
 
 export const Api = HttpApi.make("api")
-  .add(ApiGroupTodo)
-  .add(ApiGroupUser)
+  .add(TodoDriving)
+  .add(UserDriving)
   .annotate(OpenApi.Description, "Manage API")
   .annotate(OpenApi.Title, "API")

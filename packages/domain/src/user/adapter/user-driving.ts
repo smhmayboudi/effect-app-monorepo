@@ -1,7 +1,7 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { ErrorUserEmailAlreadyTaken } from "./application/error-user-email-already-taken.js"
-import { UserId } from "./application/domain-user.js"
+import { ErrorUserEmailAlreadyTaken } from "../application/error-user-email-already-taken.js"
+import { UserId } from "../application/domain-user.js"
 
 export class UserSignupPayload extends Schema.Class<UserSignupPayload>("UserSignupPayload")({
   birthday: Schema.Date,
@@ -10,7 +10,7 @@ export class UserSignupPayload extends Schema.Class<UserSignupPayload>("UserSign
   surname: Schema.NonEmptyString,
 }) {}
 
-export class ApiGroupUser extends HttpApiGroup.make("user")
+export class UserDriving extends HttpApiGroup.make("user")
   .add(
     HttpApiEndpoint.post("signup", "/signup")
       .addError(ErrorUserEmailAlreadyTaken)

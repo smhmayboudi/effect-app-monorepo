@@ -1,6 +1,6 @@
 import { Args, Command, Options } from "@effect/cli"
 import { TodoId } from "@template/domain/todo/application/domain-todo"
-import { TodoClient } from "./TodoClient.js"
+import { TodoClient } from "./todo-client.js"
 
 const todoArg = Args.text({ name: "todo" }).pipe(
   Args.withDescription("The message associated with a todo")

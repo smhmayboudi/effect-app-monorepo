@@ -1,8 +1,8 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { DomainTodo, TodoId } from "./application/domain-todo.js"
-import { ErrorTodoAlreadyExists } from "./application/error-todo-already-exists.js"
-import { ErrorTodoNotFound } from "./application/error-todo-not-found.js"
+import { DomainTodo, TodoId } from "../application/domain-todo.js"
+import { ErrorTodoAlreadyExists } from "../application/error-todo-already-exists.js"
+import { ErrorTodoNotFound } from "../application/error-todo-not-found.js"
 
 export class TodoCreatePayload extends Schema.Class<TodoCreatePayload>("TodoCreatePayload")({
   text: Schema.NonEmptyTrimmedString
@@ -15,7 +15,7 @@ export class TodoPath extends Schema.Class<TodoPath>("TodoPath")({
   id: TodoIdFromString
 }) {}
 
-export class ApiGroupTodo extends HttpApiGroup.make("todo")
+export class TodoDriving extends HttpApiGroup.make("todo")
   .add(
     HttpApiEndpoint.post("create", "/")
       .addError(ErrorTodoAlreadyExists, { status: 404 })
