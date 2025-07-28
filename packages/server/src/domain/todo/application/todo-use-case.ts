@@ -5,7 +5,7 @@ import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 
-export const UseCaseTodo = Layer.effect(
+export const TodoUseCase = Layer.effect(
   PortTodoDriving,
   Effect.gen(function* () {
     const driven = yield* PortTodoDriven

@@ -1,5 +1,5 @@
 import { Args, Command, Options } from "@effect/cli"
-import { TodoId } from "@template/domain/TodoApi"
+import { TodoId } from "@template/domain/todo/application/domain-todo"
 import { TodoClient } from "./TodoClient.js"
 
 const todoArg = Args.text({ name: "todo" }).pipe(

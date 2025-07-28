@@ -11,4 +11,6 @@ export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
   done: Schema.Boolean,
   id: TodoId,
   text: Schema.NonEmptyTrimmedString
-}) {}
+}) {
+  static decodeUknown = Schema.decodeUnknown(DomainTodo)
+}
