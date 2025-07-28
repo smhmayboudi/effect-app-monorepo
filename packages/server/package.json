@@ -24,7 +24,6 @@
     "@effect/platform-node": "latest",
     "@effect/sql": "latest",
     "@effect/sql-sqlite-node": "latest",
-    "@effect/experimental": "latest",
     "@template/domain": "workspace:^",
     "effect": "latest",
     "uuid": "^11.1.0"

@@ -4,8 +4,7 @@ import { Effect } from "effect"
 export default Effect.gen(function*() {
   const sql = yield* SqlClient.SqlClient
   yield* sql.onDialectOrElse({
-    pg: () =>
-      sql`
+    pg: () => sql`
       CREATE TABLE people (
         id SERIAL PRIMARY KEY,
         groupId INTEGER NOT NULL,
@@ -17,8 +16,7 @@ export default Effect.gen(function*() {
         FOREIGN KEY (ownerId) REFERENCES groups(id)
       )
     `,
-    orElse: () =>
-      sql`
+    orElse: () => sql`
       CREATE TABLE people (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         groupId INTEGER NOT NULL,

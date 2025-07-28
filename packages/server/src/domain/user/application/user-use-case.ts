@@ -3,7 +3,7 @@ import { PortUserDriving } from "./port-user-driving.js";
 import { PortUserDriven } from "./port-user-driven.js";
 import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
 import { DomainUser, UserId } from "@template/domain/user/application/domain-user"
-import { PortUUID } from "../../../infrastructure/application/port/UUID.js";
+import { PortUUID } from "../../../infrastructure/application/port/uuid.js";
 
 export const UserUseCase = Layer.effect(
   PortUserDriving,
