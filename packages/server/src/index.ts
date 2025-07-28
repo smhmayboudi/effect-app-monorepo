@@ -9,6 +9,7 @@ import { TodoUseCase } from "./domain/todo/application/todo-use-case.js"
 import { UserUseCase } from "./domain/user/application/user-use-case.js"
 import { UserDriven } from "./domain/user/adapter/user-driven.js"
 import { TodoDriven } from "./domain/todo/adapter/todo-driven.js"
+import { UUID } from "./infrastructure/adapter/UUID.js"
 
 export const ApiLive = HttpApiBuilder.api(Api).pipe(
   Layer.provide(TodoDriving),
@@ -16,7 +17,8 @@ export const ApiLive = HttpApiBuilder.api(Api).pipe(
   Layer.provide(TodoDriven),
   Layer.provide(UserDriving),
   Layer.provide(UserUseCase),
-  Layer.provide(UserDriven)
+  Layer.provide(UserDriven),
+  Layer.provide(UUID)
 )
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(

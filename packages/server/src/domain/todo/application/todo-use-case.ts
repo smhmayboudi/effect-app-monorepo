@@ -10,29 +10,28 @@ export const TodoUseCase = Layer.effect(
   Effect.gen(function* () {
     const driven = yield* PortTodoDriven
 
-    const create = (todo: Omit<DomainTodo, "id">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> => {
-      const id = TodoId.make(0)
-      driven.create(DomainTodo.make({ id, ...todo }))
-      return Effect.succeed(TodoId.make(id))
-    }
+    const create = (todo: Omit<DomainTodo, "id">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> => 
+      driven.create(todo)
 
-    const del = (id: TodoId): Effect.Effect<TodoId, ErrorTodoNotFound, never> => {
-      driven.delete(id)
-      return Effect.succeed(id)
-    }
+    const del = (id: TodoId): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
+      Effect.gen(function* () {
+        yield* driven.delete(id)
 
-    const readAll = (): Effect.Effect<DomainTodo[], never, never> => {
-      return driven.readAll()
-    }
+        return id
+      })
 
-    const readById = (id: TodoId): Effect.Effect<DomainTodo, ErrorTodoNotFound, never> => {
-      return driven.readById(id)
-    }
+    const readAll = (): Effect.Effect<DomainTodo[], never, never> =>
+      driven.readAll()
 
-    const update = (id: TodoId, todo: Partial<Omit<DomainTodo, "id">>): Effect.Effect<TodoId, ErrorTodoNotFound, never> => {
-      driven.update(id, todo)
-      return Effect.succeed(id)
-    }
+    const readById = (id: TodoId): Effect.Effect<DomainTodo, ErrorTodoNotFound, never> =>
+      driven.readById(id)
+
+    const update = (id: TodoId, todo: Partial<Omit<DomainTodo, "id">>): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
+      Effect.gen(function* () {
+        yield* driven.update(id, todo)
+
+        return id
+      })
 
     return {
       create,
@@ -40,6 +39,6 @@ export const TodoUseCase = Layer.effect(
       readAll,
       readById,
       update,
-    }
+    } as const
   })
 )

@@ -19,6 +19,6 @@ export const UserDriven = Layer.effect(
 
     return {
       signup
-    }
+    } as const
   })
 )

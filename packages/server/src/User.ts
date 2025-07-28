@@ -3,54 +3,61 @@ import { SqlError } from "@effect/sql/SqlError"
 import { DomainUser, UserId } from "@template/domain/user/application/domain-user"
 import { Context, Effect, Layer } from "effect"
 import { ParseError } from "effect/ParseResult"
-import { PortUUID } from "./UUID.js"
 import { UserSignupPayload } from "@template/domain/user/api-group-user"
 import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
 import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
+import { PortUUID } from "./infrastructure/application/port/UUID.js"
 
 export class PortUser extends Context.Tag("PortUser")<PortUser, {
-  addUser: (data: UserSignupPayload) => Effect.Effect.AsEffect<Effect.Effect<DomainUser, ParseError | SqlError | ErrorUserEmailAlreadyTaken, PortUUID>>
-  findUserById: (userId: UserId) => Effect.Effect<DomainUser, ParseError | SqlError | ErrorUserNotFound, never>
+  create: (data: UserSignupPayload) => Effect.Effect<DomainUser, ErrorUserEmailAlreadyTaken | ParseError | SqlError, never>
+  readById: (userId: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound | ParseError | SqlError, never>
 }>() {}
 
-export const AdapterUser = Layer.effect(
+export const User = Layer.effect(
   PortUser,
   Effect.gen(function*() {
     const sql = yield* SqlClient.SqlClient
     yield* sql`
-        CREATE TABLE IF NOT EXISTS users (
-            id TEXT PRIMARY KEY,
-            email TEXT,
-            name TEXT,
-            surname TEXT,
-            birthday DATE
-        )
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        birthday DATE,
+        email TEXT,
+        name TEXT,
+        surname TEXT
+      )
     `
+    const uuid = yield* PortUUID
 
-    const addUser = Effect.fn(function*(data: UserSignupPayload) {
-      const existingUserForEmail = yield* sql`SELECT email FROM users WHERE email = ${data.email}`
-      if (existingUserForEmail.length > 0) {
-        yield* Effect.fail(new ErrorUserEmailAlreadyTaken({ email: data.email }))
-      }
-      const uuid = yield* PortUUID
-      const generate = yield* uuid.generate()
-      const userId = UserId.make(generate)
-      yield* sql`INSERT INTO users 
-        (id, email, name, surname, birthday) 
-        VALUES (${userId}, ${data.email}, ${data.name}, ${data.surname}, ${data.birthday.toISOString()})`
-      const user = yield* findUserById(userId).pipe(Effect.catchTag(ErrorUserNotFound._tag, Effect.die))
+    const create = (data: UserSignupPayload): Effect.Effect<DomainUser, ErrorUserEmailAlreadyTaken | ParseError | SqlError, never> =>
+      Effect.gen(function*() {
+        const existingUserForEmail = yield* sql`
+          SELECT email FROM users WHERE email = ${data.email}
+        `
+        if (existingUserForEmail.length > 0) {
+          yield* Effect.fail(new ErrorUserEmailAlreadyTaken({ email: data.email }))
+        }
+        const v7 = yield* uuid.v7()
+        const id = UserId.make(v7)
+        yield* sql`
+          INSERT INTO users (id, birthday, email, name, surname) VALUES (${id}, ${data.birthday.toISOString()}, ${data.email}, ${data.name}, ${data.surname})
+        `
+        const user = yield* readById(id).pipe(Effect.catchTag(ErrorUserNotFound._tag, Effect.die))
 
-      return user
-    }, sql.withTransaction)
+        return user
+      }).pipe(sql.withTransaction)
 
-    const findUserById = Effect.fn(function*(id: UserId) {
-      const users = yield* sql`SELECT * FROM users WHERE id = ${id}`
+    const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound | ParseError | SqlError, never> =>
+      Effect.gen(function*() {
+        const users = yield* sql`SELECT * FROM users WHERE id = ${id}`
 
-      return (users.length !== 1) ? 
-        yield* Effect.fail(new ErrorUserNotFound({ id }))
-        : yield* DomainUser.decodeUknown(users[0])
-    })
+        return (users.length !== 1) ? 
+          yield* Effect.fail(new ErrorUserNotFound({ id }))
+          : yield* DomainUser.decodeUknown(users[0])
+      })
 
-    return { addUser, findUserById }
+    return {
+      create,
+      readById
+    } as const
   })
 )

@@ -3,19 +3,19 @@ import { SqlClient } from "@effect/sql"
 import { SqliteClient, SqliteMigrator } from "@effect/sql-sqlite-node"
 import { identity, Layer } from "effect"
 import { fileURLToPath } from "url"
-import { makeTestLayer } from "./lib/Layer.js"
+import { makeTestLayer } from "../../util/Layer.js"
 
-const ClientLive = SqliteClient.layer({
+const Client = SqliteClient.layer({
   filename: "data/db.sqlite"
 })
 
-const MigratorLive = SqliteMigrator.layer({
+const Migrator = SqliteMigrator.layer({
   loader: SqliteMigrator.fromFileSystem(
     fileURLToPath(new URL("./migrations", import.meta.url))
   )
 }).pipe(Layer.provide(NodeContext.layer))
 
-export const SqlLive = MigratorLive.pipe(Layer.provideMerge(ClientLive))
+export const Sql = Migrator.pipe(Layer.provideMerge(Client))
 
 export const SqlTest = makeTestLayer(SqlClient.SqlClient)({
   withTransaction: identity

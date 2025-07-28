@@ -9,7 +9,7 @@ export const TodoDriven = Layer.effect(
   Effect.gen(function* () {
     const todos = yield* Ref.make(HashMap.empty<TodoId, DomainTodo>())
 
-    const create = (todo: DomainTodo): Effect.Effect<void, ErrorTodoAlreadyExists, never> =>
+    const create = (todo: Omit<DomainTodo, "id">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> =>
       Ref.get(todos).pipe(
         Effect.flatMap((map) =>
           HashMap.some(map, (newTodo) => newTodo.text === todo.text) ?
@@ -18,7 +18,9 @@ export const TodoDriven = Layer.effect(
               const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
               const newTodo = DomainTodo.make({ done: false, id, text: todo.text })
 
-              return Ref.update(todos, (map) => HashMap.set(map, id, newTodo))
+              return Ref.update(todos, (map) => HashMap.set(map, id, newTodo)).pipe(
+                Effect.as(id)
+              )
             })
         )
       )
@@ -51,6 +53,6 @@ export const TodoDriven = Layer.effect(
       readAll,
       readById,
       update
-    }
+    } as const
   })
 )
