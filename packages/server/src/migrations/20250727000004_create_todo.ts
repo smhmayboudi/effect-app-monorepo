@@ -7,25 +7,23 @@ export default Effect.gen(function*() {
     pg: () => sql`
       CREATE TABLE people (
         id SERIAL PRIMARY KEY,
-        owner_id INTEGER NOT NULL,
-        first_name VARCHAR(255) NOT NULL,
-        last_name VARCHAR(255) NOT NULL,
-        date_of_birth DATE,
+        group_id INTEGER NOT NULL,
+        text VARCHAR(255) NOT NULL,
+        done BOOLEAN,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        FOREIGN KEY (owner_id) REFERENCES account(id)
+        FOREIGN KEY (group_id) REFERENCES group(id)
       )
     `,
     orElse: () => sql`
       CREATE TABLE people (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        owner_id INTEGER NOT NULL,
-        first_name TEXT NOT NULL,
-        last_name TEXT NOT NULL,
-        date_of_birth DATE,
+        group_id INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        done BOOLEAN,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        FOREIGN KEY (owner_id) REFERENCES account(id)
+        FOREIGN KEY (group_id) REFERENCES group(id)
       )
     `
   })
