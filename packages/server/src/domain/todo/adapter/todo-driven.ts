@@ -3,6 +3,7 @@ import { PortTodoDriven } from "../application/port-todo-driven.js";
 import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
+import { AccountId } from "@template/domain/account/application/domain-account";
 
 export const TodoDriven = Layer.effect(
   PortTodoDriven,
@@ -16,7 +17,14 @@ export const TodoDriven = Layer.effect(
             Effect.fail(new ErrorTodoAlreadyExists({ text: todo.text })) :
             Effect.suspend(() => {
               const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
-              const newTodo = DomainTodo.make({ done: false, id, text: todo.text })
+              const newTodo = DomainTodo.make({
+                accountId: AccountId.make(0),
+                done: false,
+                id,
+                text: todo.text,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              })
 
               return Ref.update(todos, (map) => HashMap.set(map, id, newTodo)).pipe(
                 Effect.as(id)

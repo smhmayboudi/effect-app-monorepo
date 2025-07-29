@@ -1,24 +1,22 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
-import { PortUserDriving } from "../application/port-user-driving.js";
+import { PortGroupDriving } from "../application/port-group-driving.js";
 import { AccountId } from "@template/domain/account/application/domain-account";
-import { UserId } from "@template/domain/user/application/domain-user";
 
-export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
+export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
   Effect.gen(function*() {
-    const driving = yield* PortUserDriving
+    const driving = yield* PortGroupDriving
 
     return handlers
       .handle("create", ({ payload }) => driving.create({
         ...payload,
-        accountId: AccountId.make(0),
+        ownerId: AccountId.make(0),
         createdAt: new Date(),
         updatedAt: new Date()
       }))
       // .handle("delete", ({ path: { id } }) => driving.delete(id))
       // .handle("readAll", () => driving.readAll())
-      .handle("readById", ({ path: { id } }) => driving.readById(id))
-      .handle("readMe", () => driving.readMe(UserId.make(0)))
+      // .handle("readById", ({ path: { id } }) => driving.readById(id))
       .handle("update", ({ path: { id }, payload }) => driving.update(id, payload))
   }))

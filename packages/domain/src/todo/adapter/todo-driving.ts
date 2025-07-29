@@ -4,10 +4,6 @@ import { DomainTodo, TodoId } from "../application/domain-todo.js"
 import { ErrorTodoAlreadyExists } from "../application/error-todo-already-exists.js"
 import { ErrorTodoNotFound } from "../application/error-todo-not-found.js"
 
-export class TodoCreatePayload extends Schema.Class<TodoCreatePayload>("TodoCreatePayload")({
-  text: Schema.NonEmptyTrimmedString
-}) {}
-
 export const TodoIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(TodoId)
 )
@@ -17,7 +13,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.post("create", "/")
       .addError(ErrorTodoAlreadyExists, { status: 404 })
       .addSuccess(TodoId)
-      .setPayload(TodoCreatePayload)
+      .setPayload(Schema.Struct({ text: Schema.NonEmptyTrimmedString }))
   )
   .add(
     HttpApiEndpoint.del("delete", "/:id")

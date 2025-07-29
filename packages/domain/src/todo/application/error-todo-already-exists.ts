@@ -1,7 +1,7 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
 
-export class ErrorTodoAlreadyExists extends Schema.TaggedError<ErrorTodoAlreadyExists>("TodoErrorAlreadyExists")(
+export class ErrorTodoAlreadyExists extends Schema.TaggedError<ErrorTodoAlreadyExists>("ErrorTodoAlreadyExists")(
   "ErrorTodoAlreadyExists",
   { text: Schema.NonEmptyTrimmedString },
   HttpApiSchema.annotations({ status: 404 })

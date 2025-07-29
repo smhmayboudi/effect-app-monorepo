@@ -4,32 +4,17 @@ import { ErrorUserEmailAlreadyTaken } from "../application/error-user-email-alre
 import { DomainUser, DomainUserWithSensitive, Email, UserId } from "../application/domain-user.js"
 import { ErrorUserNotFound } from "../application/error-user-not-found.js"
 
-export class UserCreatePayload extends Schema.Class<UserCreatePayload>("UserCreatePayload")({
-  email: Email,
-}) {}
-
 export const UserIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(UserId)
 )
-
-export class UserUpdatePayload extends Schema.Class<UserUpdatePayload>("UserUpdatePayload")({
-  email: Email,
-}) {}
 
 export class UserDriving extends HttpApiGroup.make("user")
   .add(
     HttpApiEndpoint.post("create", "/")
       .addError(ErrorUserEmailAlreadyTaken)
-      .addSuccess(DomainUserWithSensitive)
-      .setPayload(UserCreatePayload)
-  )
-  .add(
-    HttpApiEndpoint.patch("update", "/:id")
-      .addError(ErrorUserEmailAlreadyTaken)
-      .addError(ErrorUserNotFound)
-      .addSuccess(DomainUser)
-      .setPath(Schema.Struct({ id: UserIdFromString }))
-      .setPayload(UserUpdatePayload)
+      // .addSuccess(DomainUserWithSensitive)
+      .addSuccess(UserId)
+      .setPayload(Schema.Struct({ email: Email }))
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
@@ -40,6 +25,14 @@ export class UserDriving extends HttpApiGroup.make("user")
   .add(
     HttpApiEndpoint.get("readMe", "/me")
       .addSuccess(DomainUserWithSensitive)
+  )
+  .add(
+    HttpApiEndpoint.patch("update", "/:id")
+      .addError(ErrorUserEmailAlreadyTaken)
+      .addError(ErrorUserNotFound)
+      .addSuccess(UserId)
+      .setPath(Schema.Struct({ id: UserIdFromString }))
+      .setPayload(Schema.Struct({ email: Email }))
   )
   .prefix("/user")
   .annotate(OpenApi.Description, "Manage User")

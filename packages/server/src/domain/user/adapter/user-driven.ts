@@ -1,24 +1,45 @@
-import { Effect, HashMap, Layer, Ref } from "effect";
+import { Effect, Layer } from "effect";
 import { PortUserDriven } from "../application/port-user-driven.js";
-import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
-import { DomainUser, UserId } from "@template/domain/user/application/domain-user"
+import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
+import { DomainUser, Email, UserId } from "@template/domain/user/application/domain-user"
+import { AccountId } from "@template/domain/account/application/domain-account";
 
 export const UserDriven = Layer.effect(
   PortUserDriven,
   Effect.gen(function* () {
-    const users = yield* Ref.make(HashMap.empty<UserId, DomainUser>())
+    const create = (user: Omit<DomainUser, "id">): Effect.Effect<UserId, never, never> =>
+      Effect.succeed(UserId.make(0))
 
-    const signup = (user: DomainUser): Effect.Effect<void, ErrorUserEmailAlreadyTaken, never> =>
-      Ref.get(users).pipe(
-        Effect.flatMap((map) =>
-          HashMap.some(map, (newUser) => newUser.email === user.email) ?
-            Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email })) :
-            Ref.update(users, (map) => HashMap.set(map, user.id, user))
-        )
-      )
+    const del = (id: UserId): Effect.Effect<void, ErrorUserNotFound, never> =>
+      Effect.void
+
+    const readAll = (): Effect.Effect<DomainUser[], never, never> =>
+      Effect.succeed([DomainUser.make({
+        id: UserId.make(0),
+        accountId: AccountId.make(0),
+        email: Email.make("smhmayboudi@gmail.com"),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })])
+
+    const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, never> =>
+      Effect.succeed(DomainUser.make({
+        id: UserId.make(0),
+        accountId: AccountId.make(0),
+        email: Email.make("smhmayboudi@gmail.com"),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }))
+
+    const update = (id: UserId, user: Partial<Omit<DomainUser, "id">>): Effect.Effect<void, ErrorUserNotFound, never> =>
+      Effect.succeed(UserId.make(0))
 
     return {
-      signup
+      create,
+      delete: del,
+      readAll,
+      readById,
+      update
     } as const
   })
 )

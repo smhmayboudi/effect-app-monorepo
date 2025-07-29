@@ -6,7 +6,7 @@
 // import { UserSignupPayload } from "@template/domain/user/api-group-user"
 // import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
 // import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
-// import { PortUUID } from "./infrastructure/application/port/uuid.js"
+// import { PortUUID } from "@template/server/infrastructure/application/port/uuid";
 
 // export class PortUser extends Context.Tag("PortUser")<PortUser, {
 //   create: (data: UserSignupPayload) => Effect.Effect<DomainUser, ErrorUserEmailAlreadyTaken | ParseError | SqlError, never>

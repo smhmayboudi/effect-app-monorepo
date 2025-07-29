@@ -19,12 +19,12 @@ export const AccessToken = Schema.transform(
 export type AccessToken = Schema.Schema.Type<typeof AccessToken>;
 
 export const Email = Schema.String.pipe(
-  Schema.brand("Email"),
   Schema.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+  Schema.brand("Email"),
   Schema.annotations({
     description: "An email address",
     title: "Email"
-  })
+  }),
 )
 export type Email = typeof Email.Type
 

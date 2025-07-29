@@ -5,12 +5,6 @@ import { ErrorGroupNotFound } from "../../group/application/error-group-not-foun
 import { GroupIdFromString } from "../../group/adapter/group-driving.js"
 import { ErrorPersonNotFound } from "../application/error-person-not-found.js"
 
-export class PersonCreatePayload extends Schema.Class<PersonCreatePayload>("PersonCreatePayload")({
-  birthday: Schema.Date,
-  firstName: Schema.NonEmptyString,
-  lastName: Schema.NonEmptyString,
-}) {}
-
 export const PersonIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(PersonId)
 )
@@ -19,9 +13,13 @@ export class PersonDriving extends HttpApiGroup.make("person")
   .add(
     HttpApiEndpoint.post("create", "/:groupId/person")
       .addError(ErrorGroupNotFound)
-      .addSuccess(DomainPerson)
+      .addSuccess(PersonId)
       .setPath(Schema.Struct({ groupId: GroupIdFromString }))
-      .setPayload(PersonCreatePayload)
+      .setPayload(Schema.Struct({
+        birthday: Schema.Date,
+        firstName: Schema.NonEmptyString,
+        lastName: Schema.NonEmptyString
+      }))
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
