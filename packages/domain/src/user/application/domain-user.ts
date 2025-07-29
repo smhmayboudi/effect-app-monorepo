@@ -1,14 +1,50 @@
-import { Schema } from "effect"
+import { Redacted, Schema } from "effect"
+import { AccountId } from "../../account/application/domain-account.js"
 
-export const UserId = Schema.UUID.pipe(Schema.brand("UserId"))
+// export const AccessTokenString = Schema.String.pipe(Schema.brand("AccessToken"))
+// export const AccessToken = Schema.Redacted(AccessTokenString)
+// export type AccessToken = typeof AccessToken.Type
+// export const accessTokenFromString = (token: string): AccessToken => Redacted.make(AccessTokenString.make(token))
+// export const accessTokenFromRedacted = (token: Redacted.Redacted): AccessToken => token as AccessToken
+
+export const AccessToken = Schema.transform(
+  Schema.String.pipe(Schema.brand("AccessToken")),
+  Schema.Redacted(Schema.String),
+  {
+    decode: (token) => Redacted.make(token),
+    encode: (redacted) => redacted,
+    strict: false
+  }
+).pipe(Schema.brand("AccessToken"));
+export type AccessToken = Schema.Schema.Type<typeof AccessToken>;
+
+export const Email = Schema.String.pipe(
+  Schema.brand("Email"),
+  Schema.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+  Schema.annotations({
+    description: "An email address",
+    title: "Email"
+  })
+)
+export type Email = typeof Email.Type
+
+export const UserId = Schema.Number.pipe(Schema.brand("UserId"))
 export type UserId = Schema.Schema.Type<typeof UserId>
 
-export class DomainUser extends Schema.Class<DomainUser>("User")({
-  birthday: Schema.Date,
-  email: Schema.NonEmptyString,
+export class DomainUser extends Schema.Class<DomainUser>("DomainUser")({
   id: UserId,
-  name: Schema.NonEmptyString,
-  surname: Schema.NonEmptyString,
+  accountId: AccountId,
+  email: Email,
+  createdAt: Schema.Date,
+  updatedAt: Schema.Date
 }) {
   static decodeUknown = Schema.decodeUnknown(DomainUser)
 }
+
+export class DomainUserWithSensitive extends Schema.Class<DomainUserWithSensitive>(
+  "DomainUserWithSensitive"
+)({
+  ...DomainUser.fields,
+  accessToken: AccessToken,
+  // account: DomainAccount
+}) {}

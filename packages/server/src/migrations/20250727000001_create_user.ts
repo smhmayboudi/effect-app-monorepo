@@ -8,8 +8,8 @@ export default Effect.gen(function*() {
       CREATE TABLE user (
         id SERIAL PRIMARY KEY,
         account_id INTEGER NOT NULL,
-        email TEXT UNIQUE NOT NULL,
         access_token VARCHAR(255) UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (account_id) REFERENCES account(id)
@@ -19,8 +19,8 @@ export default Effect.gen(function*() {
       CREATE TABLE user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         account_id INTEGER NOT NULL,
-        email TEXT UNIQUE NOT NULL,
         access_token VARCHAR(255) UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (account_id) REFERENCES account(id)

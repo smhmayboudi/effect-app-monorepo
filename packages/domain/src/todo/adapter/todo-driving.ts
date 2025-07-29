@@ -11,9 +11,6 @@ export class TodoCreatePayload extends Schema.Class<TodoCreatePayload>("TodoCrea
 export const TodoIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(TodoId)
 )
-export class TodoPath extends Schema.Class<TodoPath>("TodoPath")({
-  id: TodoIdFromString
-}) {}
 
 export class TodoDriving extends HttpApiGroup.make("todo")
   .add(
@@ -26,7 +23,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.del("delete", "/:id")
       .addError(ErrorTodoNotFound, { status: 404 })
       .addSuccess(TodoId)
-      .setPath(TodoPath)
+      .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
   .add(
     HttpApiEndpoint.get("readAll", "/")
@@ -36,13 +33,13 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.get("readById", "/:id")
       .addError(ErrorTodoNotFound, { status: 404 })
       .addSuccess(DomainTodo)
-      .setPath(TodoPath)
+      .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
   .add(
     HttpApiEndpoint.patch("update", "/:id")
       .addError(ErrorTodoNotFound, { status: 404 })
       .addSuccess(TodoId)
-      .setPath(TodoPath)
+      .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
   .prefix("/todo")
   .annotate(OpenApi.Description, "Manage Todo")

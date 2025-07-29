@@ -5,24 +5,24 @@ export default Effect.gen(function*() {
   const sql = yield* SqlClient.SqlClient
   yield* sql.onDialectOrElse({
     pg: () => sql`
-      CREATE TABLE people (
+      CREATE TABLE person (
         id SERIAL PRIMARY KEY,
         owner_id INTEGER NOT NULL,
+        birthday DATE,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        date_of_birth DATE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (owner_id) REFERENCES account(id)
       )
     `,
     orElse: () => sql`
-      CREATE TABLE people (
+      CREATE TABLE person (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         owner_id INTEGER NOT NULL,
+        birthday DATE,
         first_name TEXT NOT NULL,
         last_name TEXT NOT NULL,
-        date_of_birth DATE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (owner_id) REFERENCES account(id)

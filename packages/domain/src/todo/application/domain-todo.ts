@@ -1,4 +1,5 @@
 import { Schema } from "effect"
+import { AccountId } from "../../account/application/domain-account.js"
 
 export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"))
 export type TodoId = typeof TodoId.Type
@@ -8,9 +9,12 @@ export const TodoIdFromString = Schema.NumberFromString.pipe(
 )
 
 export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
-  done: Schema.Boolean,
   id: TodoId,
-  text: Schema.NonEmptyTrimmedString
+  accountId: AccountId,
+  done: Schema.Boolean,
+  text: Schema.NonEmptyTrimmedString,
+  createdAt: Schema.Date,
+  updatedAt: Schema.Date
 }) {
   static decodeUknown = Schema.decodeUnknown(DomainTodo)
 }
