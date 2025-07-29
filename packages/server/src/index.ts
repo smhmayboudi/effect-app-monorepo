@@ -1,5 +1,5 @@
 import { HttpApiBuilder, HttpApiSwagger, HttpMiddleware, HttpServer } from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
+import { NodeContext, NodeHttpServer, NodeRuntime } from "@effect/platform-node"
 import { Layer } from "effect"
 import { createServer } from "node:http"
 import { Api } from "@template/domain/api"
@@ -18,6 +18,7 @@ import { TodoUseCase } from "./domain/todo/application/todo-use-case.js"
 import { UserDriven } from "./domain/user/adapter/user-driven.js"
 import { UserDriving } from "./domain/user/adapter/user-driving.js"
 import { UserUseCase } from "./domain/user/application/user-use-case.js"
+import { Sql } from "./infrastructure/adapter/sql.js"
 
 export const ApiLive = HttpApiBuilder.api(Api).pipe(
   Layer.provide(AccountDriving),
@@ -34,7 +35,9 @@ export const ApiLive = HttpApiBuilder.api(Api).pipe(
   Layer.provide(TodoDriven),
   Layer.provide(UserDriving),
   Layer.provide(UserUseCase),
-  Layer.provide(UserDriven)
+  Layer.provide(UserDriven),
+  Layer.provide(Sql),
+  Layer.provide(NodeContext.layer)
 )
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(

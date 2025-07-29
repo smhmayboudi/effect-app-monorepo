@@ -8,6 +8,6 @@ export class PortUserDriving extends Context.Tag("PortUserDriving")<PortUserDriv
   delete: (id: UserId) => Effect.Effect<UserId, ErrorUserNotFound, never>
   readAll: () => Effect.Effect<DomainUser[], never, never>
   readById: (id: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound, never>
-  readMe: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, never>
+  readByMe: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, never>
   update: (id: UserId, user: Partial<Omit<DomainUser, "id">>) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never>
 }>() {}

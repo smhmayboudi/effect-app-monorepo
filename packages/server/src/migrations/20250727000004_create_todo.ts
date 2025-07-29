@@ -5,7 +5,7 @@ export default Effect.gen(function*() {
   const sql = yield* SqlClient.SqlClient
   yield* sql.onDialectOrElse({
     pg: () => sql`
-      CREATE TABLE people (
+      CREATE TABLE todo (
         id SERIAL PRIMARY KEY,
         account_id INTEGER NOT NULL,
         done BOOLEAN,
@@ -16,7 +16,7 @@ export default Effect.gen(function*() {
       )
     `,
     orElse: () => sql`
-      CREATE TABLE people (
+      CREATE TABLE todo (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         account_id INTEGER NOT NULL,
         done BOOLEAN,

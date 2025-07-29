@@ -23,7 +23,7 @@ export class UserDriving extends HttpApiGroup.make("user")
       .setPath(Schema.Struct({ id: UserIdFromString }))
   )
   .add(
-    HttpApiEndpoint.get("readMe", "/me")
+    HttpApiEndpoint.get("readByMe", "/me")
       .addSuccess(DomainUserWithSensitive)
   )
   .add(

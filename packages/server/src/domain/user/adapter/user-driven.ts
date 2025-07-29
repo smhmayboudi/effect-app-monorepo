@@ -1,7 +1,7 @@
-import { Effect, Layer } from "effect";
+import { Effect, Layer, Redacted } from "effect";
 import { PortUserDriven } from "../application/port-user-driven.js";
 import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
-import { DomainUser, Email, UserId } from "@template/domain/user/application/domain-user"
+import { AccessToken, DomainUser, DomainUserWithSensitive, Email, UserId } from "@template/domain/user/application/domain-user"
 import { AccountId } from "@template/domain/account/application/domain-account";
 
 export const UserDriven = Layer.effect(
@@ -31,6 +31,16 @@ export const UserDriven = Layer.effect(
         updatedAt: new Date()
       }))
 
+    const readByMe = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
+      Effect.succeed(DomainUserWithSensitive.make({
+        id: UserId.make(0),
+        accountId: AccountId.make(0),
+        email: Email.make("smhmayboudi@gmail.com"),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        accessToken: AccessToken.make(Redacted.make("0"))
+      }))
+
     const update = (id: UserId, user: Partial<Omit<DomainUser, "id">>): Effect.Effect<void, ErrorUserNotFound, never> =>
       Effect.succeed(UserId.make(0))
 
@@ -39,6 +49,7 @@ export const UserDriven = Layer.effect(
       delete: del,
       readAll,
       readById,
+      readByMe,
       update
     } as const
   })

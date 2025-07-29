@@ -19,6 +19,6 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
       // .handle("delete", ({ path: { id } }) => driving.delete(id))
       // .handle("readAll", () => driving.readAll())
       .handle("readById", ({ path: { id } }) => driving.readById(id))
-      .handle("readMe", () => driving.readMe(UserId.make(0)))
+      .handle("readByMe", () => driving.readByMe(UserId.make(0)))
       .handle("update", ({ path: { id }, payload }) => driving.update(id, payload))
   }))
