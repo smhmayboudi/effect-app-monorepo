@@ -13,19 +13,20 @@ export const UserUseCase = Layer.effect(
 
     const create = (user: Omit<DomainUser, "id">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> => 
       driven.create(user)
+        .pipe(Effect.withSpan("user.use-case.create", { attributes: { user } }))
 
     const del = (id: UserId): Effect.Effect<UserId, ErrorUserNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.delete(id)
-
-        return id
-      })
+      driven.delete(id)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("user.use-case.delete", { attributes: { id } }))
 
     const readAll = (): Effect.Effect<DomainUser[], never, never> =>
       driven.readAll()
+        .pipe(Effect.withSpan("user.use-case.readAll"))
 
     const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, never> =>
       driven.readById(id)
+        .pipe(Effect.withSpan("user.use-case.readById", { attributes: { id } }))
 
     const readMe = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
       Effect.succeed(DomainUserWithSensitive.make({
@@ -36,13 +37,12 @@ export const UserUseCase = Layer.effect(
         updatedAt: new Date(),
         accessToken: AccessToken.make(Redacted.make("0"))
       }))
+        .pipe(Effect.withSpan("user.use-case.readMe", { attributes: { id } }))
 
     const update = (id: UserId, user: Partial<Omit<DomainUser, "id">>): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.update(id, user)
-
-        return id
-      })
+      driven.update(id, user)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("user.use-case.update", { attributes: { id, user } }))
 
     return {
       create,

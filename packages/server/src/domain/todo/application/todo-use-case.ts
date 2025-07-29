@@ -12,26 +12,23 @@ export const TodoUseCase = Layer.effect(
 
     const create = (todo: Omit<DomainTodo, "id">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> => 
       driven.create(todo)
+        .pipe(Effect.withSpan("todo.use-case.create", { attributes: { todo } }))
 
     const del = (id: TodoId): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.delete(id)
-
-        return id
-      })
+      driven.delete(id)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("todo.use-case.delete", { attributes: { id } }))
 
     const readAll = (): Effect.Effect<DomainTodo[], never, never> =>
-      driven.readAll()
+      driven.readAll().pipe(Effect.withSpan("todo.use-case.readAll"))
 
     const readById = (id: TodoId): Effect.Effect<DomainTodo, ErrorTodoNotFound, never> =>
-      driven.readById(id)
+      driven.readById(id).pipe(Effect.withSpan("todo.use-case.readById", { attributes: { id } }))
 
     const update = (id: TodoId, todo: Partial<Omit<DomainTodo, "id">>): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.update(id, todo)
-
-        return id
-      })
+      driven.update(id, todo)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("todo.use-case.update", { attributes: { id, todo } }))
 
     return {
       create,

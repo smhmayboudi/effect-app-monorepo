@@ -11,26 +11,25 @@ export const PersonUseCase = Layer.effect(
 
     const create = (person: Omit<DomainPerson, "id">): Effect.Effect<PersonId, never, never> => 
       driven.create(person)
+        .pipe(Effect.withSpan("person.use-case.create", { attributes: { person } }))
 
     const del = (id: PersonId): Effect.Effect<PersonId, ErrorPersonNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.delete(id)
-
-        return id
-      })
+      driven.delete(id)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("person.use-case.delete", { attributes: { id } }))
 
     const readAll = (): Effect.Effect<DomainPerson[], never, never> =>
       driven.readAll()
+        .pipe(Effect.withSpan("person.use-case.readAll"))
 
     const readById = (id: PersonId): Effect.Effect<DomainPerson, ErrorPersonNotFound, never> =>
       driven.readById(id)
+        .pipe(Effect.withSpan("person.use-case.readById", { attributes: { id } }))
 
     const update = (id: PersonId, person: Partial<Omit<DomainPerson, "id">>): Effect.Effect<PersonId, ErrorPersonNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.update(id, person)
-
-        return id
-      })
+      driven.update(id, person)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("person.use-case.update", { attributes: { id, person } }))
 
     return {
       create,

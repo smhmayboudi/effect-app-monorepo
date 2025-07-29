@@ -11,26 +11,25 @@ export const GroupUseCase = Layer.effect(
 
     const create = (group: Omit<DomainGroup, "id">): Effect.Effect<GroupId, never, never> => 
       driven.create(group)
+        .pipe(Effect.withSpan("group.use-case.create", { attributes: { group } }))
 
     const del = (id: GroupId): Effect.Effect<GroupId, ErrorGroupNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.delete(id)
-
-        return id
-      })
+      driven.delete(id)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("group.use-case.delete", { attributes: { id } }))
 
     const readAll = (): Effect.Effect<DomainGroup[], never, never> =>
       driven.readAll()
+        .pipe(Effect.withSpan("group.use-case.readAll"))
 
     const readById = (id: GroupId): Effect.Effect<DomainGroup, ErrorGroupNotFound, never> =>
       driven.readById(id)
+        .pipe(Effect.withSpan("group.use-case.readById", { attributes: { id } }))
 
     const update = (id: GroupId, group: Partial<Omit<DomainGroup, "id">>): Effect.Effect<GroupId, ErrorGroupNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.update(id, group)
-
-        return id
-      })
+      driven.update(id, group)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("group.use-case.update", { attributes: { id, group } }))
 
     return {
       create,

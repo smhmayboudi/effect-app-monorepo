@@ -11,26 +11,25 @@ export const AccountUseCase = Layer.effect(
 
     const create = (account: Omit<DomainAccount, "id">): Effect.Effect<AccountId, never, never> => 
       driven.create(account)
+        .pipe(Effect.withSpan("account.use-case.create", { attributes: { account } }))
 
     const del = (id: AccountId): Effect.Effect<AccountId, ErrorAccountNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.delete(id)
-
-        return id
-      })
+      driven.delete(id)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("account.use-case.delete", { attributes: { id } }))
 
     const readAll = (): Effect.Effect<DomainAccount[], never, never> =>
       driven.readAll()
+        .pipe(Effect.withSpan("account.use-case.readAll"))
 
     const readById = (id: AccountId): Effect.Effect<DomainAccount, ErrorAccountNotFound, never> =>
       driven.readById(id)
+        .pipe(Effect.withSpan("account.use-case.readById", { attributes: { id } }))
 
     const update = (id: AccountId, account: Partial<Omit<DomainAccount, "id">>): Effect.Effect<AccountId, ErrorAccountNotFound, never> =>
-      Effect.gen(function* () {
-        yield* driven.update(id, account)
-
-        return id
-      })
+      driven.update(id, account)
+        .pipe(Effect.flatMap(() => Effect.succeed(id)))
+        .pipe(Effect.withSpan("account.use-case.update", { attributes: { id, account } }))
 
     return {
       create,
