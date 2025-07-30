@@ -1,58 +1,107 @@
-import { Effect, HashMap, Layer, Ref } from "effect"
+import { Effect, Layer } from "effect"
 import { PortTodoDriven } from "../application/port-todo-driven.js"
-import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 import { AccountId } from "@template/domain/account/application/domain-account"
+import { SqlClient } from "@effect/sql"
+import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 
 export const TodoDriven = Layer.effect(
   PortTodoDriven,
   Effect.gen(function* () {
-    const todos = yield* Ref.make(HashMap.empty<TodoId, DomainTodo>())
+    const sql = yield* SqlClient.SqlClient
 
     const create = (todo: Omit<DomainTodo, "id">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> =>
-      Ref.get(todos).pipe(
-        Effect.flatMap((map) =>
-          HashMap.some(map, (newTodo) => newTodo.text === todo.text) ?
-            Effect.fail(new ErrorTodoAlreadyExists({ text: todo.text })) :
-            Effect.suspend(() => {
-              const id = TodoId.make(HashMap.reduce(map, -1, (max, todo) => todo.id > max ? todo.id : max) + 1)
-              const newTodo = DomainTodo.make({
-                accountId: AccountId.make(0),
-                done: false,
-                id,
-                text: todo.text,
-                createdAt: new Date(),
-                updatedAt: new Date()
-              })
-
-              return Ref.update(todos, (map) => HashMap.set(map, id, newTodo)).pipe(
-                Effect.as(id)
-              )
-            })
-        )
+      sql<{ id: number }>`
+        INSERT INTO todo (owner_id, done, text) VALUES (${todo.ownerId}, ${todo.done}, ${todo.text}) RETURNING id
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => TodoId.make(row.id))
       )
 
     const del = (id: TodoId): Effect.Effect<void, ErrorTodoNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap((todo) => Ref.update(todos, HashMap.remove(todo.id)))
+        Effect.flatMap(() => sql`DELETE FROM todo WHERE id = ${id}`),
+        sql.withTransaction,
+        Effect.catchTag("SqlError", Effect.die)
       )
 
     const readAll = (): Effect.Effect<DomainTodo[], never, never> =>
-      Ref.get(todos).pipe(
-        Effect.map((todo) => Array.from(HashMap.values(todo)))
+      sql<{
+        id: number
+        owner_id: number
+        done: boolean
+        text: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, owner_id, done, text, created_at, updated_at FROM todo
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.map((rows) =>
+          rows.map((row) =>
+            DomainTodo.make({
+              id: TodoId.make(row.id),
+              ownerId: AccountId.make(row.owner_id),
+              done: row.done,
+              text: row.text,
+              createdAt: new Date(row.created_at),
+              updatedAt: new Date(row.updated_at)
+            })
+          )
+        )
       )
 
     const readById = (id: TodoId): Effect.Effect<DomainTodo, ErrorTodoNotFound, never> =>
-      Ref.get(todos).pipe(
-        Effect.flatMap(HashMap.get(id)),
-        Effect.catchTag("NoSuchElementException", () => new ErrorTodoNotFound({ id }))
+      sql<{
+        id: number
+        owner_id: number
+        done: boolean
+        text: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, owner_id, done, text, created_at, updated_at FROM todo WHERE id = ${id}
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          rows.length === 0
+            ? Effect.fail(new ErrorTodoNotFound({ id }))
+            : Effect.succeed(rows[0])
+        ),
+        Effect.map((row) =>
+          DomainTodo.make({
+            id: TodoId.make(row.id),
+            ownerId: AccountId.make(row.owner_id),
+            done: row.done,
+            text: row.text,
+            createdAt: new Date(row.created_at),
+            updatedAt: new Date(row.updated_at)
+          })
+        )
       )
 
-    const update = (id: TodoId, todo: Partial<Omit<DomainTodo, "id">>): Effect.Effect<void, ErrorTodoNotFound, never> =>
+    const updateQuery = (
+      id: TodoId,
+      todo: Omit<DomainTodo, "id">
+    ) => sql`
+        UPDATE todo SET
+          owner_id = ${todo.ownerId},
+          done = '${todo.done}',
+          text = '${todo.text}',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+      `
+
+    const update = (
+      id: TodoId,
+      todo: Partial<Omit<DomainTodo, "id">>
+    ): Effect.Effect<void, ErrorTodoNotFound, never> =>
       readById(id).pipe(
-        Effect.map((oldTodo) => DomainTodo.make({...oldTodo, ...todo})),
-        Effect.tap((newTodo) => Ref.update(todos, HashMap.set(newTodo.id, newTodo)))
+        Effect.flatMap((oldTodo) => updateQuery(id, { ...oldTodo, ...todo })),
+        sql.withTransaction,
+        Effect.catchTag("SqlError", Effect.die)
       )
 
     return {

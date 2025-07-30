@@ -3,36 +3,100 @@ import { PortGroupDriven } from "../application/port-group-driven.js"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import { AccountId } from "@template/domain/account/application/domain-account"
+import { SqlClient } from "@effect/sql"
 
 export const GroupDriven = Layer.effect(
   PortGroupDriven,
   Effect.gen(function* () {
+    const sql = yield* SqlClient.SqlClient
+
     const create = (group: Omit<DomainGroup, "id">): Effect.Effect<GroupId, never, never> =>
-      Effect.succeed(GroupId.make(0))
+      sql<{ id: number }>`
+        INSERT INTO group (owner_id, name) VALUES (${group.ownerId}, ${group.name}) RETURNING id
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => GroupId.make(row.id))
+      )
 
     const del = (id: GroupId): Effect.Effect<void, ErrorGroupNotFound, never> =>
-      Effect.void
+      readById(id).pipe(
+        Effect.flatMap(() => sql`DELETE FROM group WHERE id = ${id}`),
+        sql.withTransaction,
+        Effect.catchTag("SqlError", Effect.die)
+      )
 
     const readAll = (): Effect.Effect<DomainGroup[], never, never> =>
-      Effect.succeed([DomainGroup.make({
-        id: GroupId.make(0),
-        ownerId: AccountId.make(0),
-        name: "",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      })])
+      sql<{
+        id: number
+        owner_id: number
+        name: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, owner_id, name, created_at, updated_at FROM group
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.map((rows) =>
+          rows.map((row) =>
+            DomainGroup.make({
+              id: GroupId.make(row.id),
+              ownerId: AccountId.make(row.owner_id),
+              name: row.name,
+              createdAt: new Date(row.created_at),
+              updatedAt: new Date(row.updated_at)
+            })
+          )
+        )
+      )
 
     const readById = (id: GroupId): Effect.Effect<DomainGroup, ErrorGroupNotFound, never> =>
-      Effect.succeed(DomainGroup.make({
-        id: GroupId.make(0),
-        ownerId: AccountId.make(0),
-        name: "",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }))
+      sql<{
+        id: number
+        owner_id: number
+        name: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, owner_id, name, created_at, updated_at FROM group WHERE id = ${id}
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          rows.length === 0
+            ? Effect.fail(new ErrorGroupNotFound({ id }))
+            : Effect.succeed(rows[0])
+        ),
+        Effect.map((row) =>
+          DomainGroup.make({
+            id: GroupId.make(row.id),
+            ownerId: AccountId.make(row.owner_id),
+            name: row.name,
+            createdAt: new Date(row.created_at),
+            updatedAt: new Date(row.updated_at)
+          })
+        )
+      )
 
-    const update = (id: GroupId, group: Partial<Omit<DomainGroup, "id">>): Effect.Effect<void, ErrorGroupNotFound, never> =>
-      Effect.succeed(GroupId.make(0))
+    const updateQuery = (
+      id: GroupId,
+      group: Omit<DomainGroup, "id">
+    ) => sql`
+        UPDATE group SET
+          owner_id = ${group.ownerId},
+          name = ${group.name},
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+      `
+
+    const update = (
+      id: GroupId,
+      group: Partial<Omit<DomainGroup, "id">>
+    ): Effect.Effect<void, ErrorGroupNotFound, never> =>
+      readById(id).pipe(
+        Effect.flatMap((oldGroup) => updateQuery(id, { ...oldGroup, ...group })),
+        sql.withTransaction,
+        Effect.catchTag("SqlError", Effect.die)
+      )
 
     return {
       create,

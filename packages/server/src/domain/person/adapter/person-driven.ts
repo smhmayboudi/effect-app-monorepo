@@ -2,41 +2,111 @@ import { Effect, Layer } from "effect"
 import { PortPersonDriven } from "../application/port-person-driven.js"
 import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
+import { SqlClient } from "@effect/sql"
 import { GroupId } from "@template/domain/group/application/domain-group"
 
 export const PersonDriven = Layer.effect(
   PortPersonDriven,
   Effect.gen(function* () {
+    const sql = yield* SqlClient.SqlClient
+
     const create = (person: Omit<DomainPerson, "id">): Effect.Effect<PersonId, never, never> =>
-      Effect.succeed(PersonId.make(0))
+      sql<{ id: number }>`
+        INSERT INTO person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => PersonId.make(row.id))
+      )
 
     const del = (id: PersonId): Effect.Effect<void, ErrorPersonNotFound, never> =>
-      Effect.void
+      readById(id).pipe(
+        Effect.flatMap(() => sql`DELETE FROM person WHERE id = ${id}`),
+        sql.withTransaction,
+        Effect.catchTag("SqlError", Effect.die)
+      )
 
     const readAll = (): Effect.Effect<DomainPerson[], never, never> =>
-      Effect.succeed([DomainPerson.make({
-        id: PersonId.make(0),
-        groupId: GroupId.make(0),
-        birthday: new Date(),
-        firstName: "",
-        lastName: "",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      })])
+      sql<{
+        id: number
+        group_id: number
+        birthday: Date
+        first_name: string
+        last_name: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM person
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.map((rows) =>
+          rows.map((row) =>
+            DomainPerson.make({
+              id: PersonId.make(row.id),
+              groupId: GroupId.make(row.group_id),
+              birthday: new Date(row.birthday),
+              firstName: row.first_name,
+              lastName: row.last_name,
+              createdAt: new Date(row.created_at),
+              updatedAt: new Date(row.updated_at)
+            })
+          )
+        )
+      )
 
     const readById = (id: PersonId): Effect.Effect<DomainPerson, ErrorPersonNotFound, never> =>
-      Effect.succeed(DomainPerson.make({
-        id: PersonId.make(0),
-        groupId: GroupId.make(0),
-        birthday: new Date(),
-        firstName: "",
-        lastName: "",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }))
+      sql<{
+        id: number
+        group_id: number
+        birthday: Date
+        first_name: string
+        last_name: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM person WHERE id = ${id}
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          rows.length === 0
+            ? Effect.fail(new ErrorPersonNotFound({ id }))
+            : Effect.succeed(rows[0])
+        ),
+        Effect.map((row) =>
+          DomainPerson.make({
+            id: PersonId.make(row.id),
+            groupId: GroupId.make(row.group_id),
+            birthday: new Date(row.birthday),
+            firstName: row.first_name,
+            lastName: row.last_name,
+            createdAt: new Date(row.created_at),
+            updatedAt: new Date(row.updated_at)
+          })
+        )
+      )
 
-    const update = (id: PersonId, person: Partial<Omit<DomainPerson, "id">>): Effect.Effect<void, ErrorPersonNotFound, never> =>
-      Effect.succeed(PersonId.make(0))
+    const updateQuery = (
+      id: PersonId,
+      person: Omit<DomainPerson, "id">
+    ) => sql`
+        UPDATE person SET
+          group_id = ${person.groupId},
+          birthday = '${person.birthday}',
+          first_name = '${person.firstName}',
+          last_name = '${person.lastName}',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+      `
+
+    const update = (
+      id: PersonId,
+      person: Partial<Omit<DomainPerson, "id">>
+    ): Effect.Effect<void, ErrorPersonNotFound, never> =>
+      readById(id).pipe(
+        Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),
+        sql.withTransaction,
+        Effect.catchTag("SqlError", Effect.die)
+      )
 
     return {
       create,

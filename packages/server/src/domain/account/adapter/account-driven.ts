@@ -68,11 +68,18 @@ export const AccountDriven = Layer.effect(
         )
       )
 
+    const buildUpdateQuery = (
+      id: AccountId,
+      user: Omit<DomainAccount, "id">
+    ) => sql`
+        UPDATE user SET
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+      `
+      
     const update = (id: AccountId, account: Partial<Omit<DomainAccount, "id">>): Effect.Effect<void, ErrorAccountNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`
-          UPDATE user SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id}
-        `),
+        Effect.flatMap((oldAccount) => buildUpdateQuery(id, { ...oldAccount, ...account })),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die)
       )

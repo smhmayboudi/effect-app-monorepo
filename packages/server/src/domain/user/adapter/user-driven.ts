@@ -13,7 +13,7 @@ export const UserDriven = Layer.effect(
 
     const create = (user: Omit<DomainUser, "id">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
       sql<{ id: number }>`
-        INSERT INTO user (account_id, email, access_token) VALUES (${user.accountId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id
+        INSERT INTO user (owner_id, email, access_token) VALUES (${user.accountId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id
       `.pipe(
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
@@ -34,19 +34,19 @@ export const UserDriven = Layer.effect(
     const readAll = (): Effect.Effect<DomainUser[], never, never> =>
       sql<{
         id: number
-        account_id: number
+        owner_id: number
         email: string
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, account_id, email, created_at, updated_at FROM user
+        SELECT id, owner_id, email, created_at, updated_at FROM user
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
             DomainUser.make({
               id: UserId.make(row.id),
-              accountId: AccountId.make(row.account_id),
+              accountId: AccountId.make(row.owner_id),
               email: Email.make(row.email),
               createdAt: new Date(row.created_at),
               updatedAt: new Date(row.updated_at)
@@ -58,12 +58,12 @@ export const UserDriven = Layer.effect(
     const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, never> =>
       sql<{
         id: number
-        account_id: number
+        owner_id: number
         email: string
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, account_id, email, created_at, updated_at FROM user WHERE id = ${id}
+        SELECT id, owner_id, email, created_at, updated_at FROM user WHERE id = ${id}
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
@@ -74,7 +74,7 @@ export const UserDriven = Layer.effect(
         Effect.map((row) =>
           DomainUser.make({
             id: UserId.make(row.id),
-            accountId: AccountId.make(row.account_id),
+            accountId: AccountId.make(row.owner_id),
             email: Email.make(row.email),
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
@@ -85,20 +85,20 @@ export const UserDriven = Layer.effect(
     const readByMe = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
       sql<{
         id: number
-        account_id: number
+        owner_id: number
         access_token: string
         email: string
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, account_id, access_token, email, created_at, updated_at FROM user WHERE id = ${id}
+        SELECT id, owner_id, access_token, email, created_at, updated_at FROM user WHERE id = ${id}
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) =>
           DomainUserWithSensitive.make({
             id: UserId.make(row.id),
-            accountId: AccountId.make(row.account_id),
+            accountId: AccountId.make(row.owner_id),
             accessToken: AccessToken.make(Redacted.make(row.access_token)),
             email: Email.make(row.email),
             createdAt: new Date(row.created_at),
@@ -109,51 +109,27 @@ export const UserDriven = Layer.effect(
 
     const buildUpdateQuery = (
       id: UserId,
-      user: Partial<Omit<DomainUser, "id">>
-    ) => {
-      if (user.accountId && user.email) {
-        return sql`
-          UPDATE user SET
-            account_id = ${user.accountId},
-            email = ${user.email},
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ${id}
-        `
-      } else if (user.accountId) {
-        return sql`
-          UPDATE user SET
-            account_id = ${user.accountId},
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ${id}
-        `
-      } else if (user.email) {
-        return sql`
-          UPDATE user SET
-            email = ${user.email},
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ${id}
-        `
-      } else {
-        return sql`
-          UPDATE user SET
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ${id}
-        `
-      }
-    }
+      user: Omit<DomainUser, "id">
+    ) => sql`
+        UPDATE user SET
+          owner_id = ${user.accountId},
+          email = ${user.email},
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+      `
 
     const update = (
       id: UserId,
       user: Partial<Omit<DomainUser, "id">>
     ): Effect.Effect<void, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => buildUpdateQuery(id, user)),
+        Effect.flatMap((oldUser) => buildUpdateQuery(id, { ...oldUser, ...user })),
         sql.withTransaction,
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email! }))
             : Effect.die(error)
-        ),
+        )
       )
 
     return {

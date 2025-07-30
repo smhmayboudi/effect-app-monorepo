@@ -11,7 +11,7 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
     return handlers
       .handle("create", ({ payload }) => driving.create({
         ...payload,
-        accountId: AccountId.make(0),
+        ownerId: AccountId.make(0),
         done: false,
         createdAt: new Date(),
         updatedAt: new Date()

@@ -7,7 +7,7 @@ export default Effect.gen(function*() {
     pg: () => sql`
       CREATE TABLE user (
         id SERIAL PRIMARY KEY,
-        account_id INTEGER NOT NULL,
+        owner_id INTEGER NOT NULL,
         access_token VARCHAR(255) UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -18,7 +18,7 @@ export default Effect.gen(function*() {
     orElse: () => sql`
       CREATE TABLE user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        account_id INTEGER NOT NULL,
+        owner_id INTEGER NOT NULL,
         access_token VARCHAR(255) UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,

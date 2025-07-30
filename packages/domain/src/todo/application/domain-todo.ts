@@ -10,7 +10,7 @@ export const TodoIdFromString = Schema.NumberFromString.pipe(
 
 export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
   id: TodoId,
-  accountId: AccountId,
+  ownerId: AccountId,
   done: Schema.Boolean,
   text: Schema.NonEmptyTrimmedString,
   createdAt: Schema.Date,
