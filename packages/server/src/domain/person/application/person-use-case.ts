@@ -9,7 +9,7 @@ export const PersonUseCase = Layer.effect(
   Effect.gen(function* () {
     const driven = yield* PortPersonDriven
 
-    const create = (person: Omit<DomainPerson, "id">): Effect.Effect<PersonId, never, never> => 
+    const create = (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">): Effect.Effect<PersonId, never, never> => 
       driven.create(person)
         .pipe(Effect.withSpan("person.use-case.create", { attributes: { person } }))
 

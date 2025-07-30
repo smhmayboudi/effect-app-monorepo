@@ -12,9 +12,7 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
     return handlers
       .handle("create", ({ payload }) => driving.create({
         ...payload,
-        accountId: AccountId.make(0),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        accountId: AccountId.make(0)
       }))
       .handle("delete", ({ path: { id } }) => driving.delete(id))
       .handle("readAll", () => driving.readAll())

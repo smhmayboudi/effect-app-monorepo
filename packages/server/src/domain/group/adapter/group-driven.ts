@@ -10,7 +10,7 @@ export const GroupDriven = Layer.effect(
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (group: Omit<DomainGroup, "id">): Effect.Effect<GroupId, never, never> =>
+    const create = (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, never> =>
       sql<{ id: number }>`
         INSERT INTO group (owner_id, name) VALUES (${group.ownerId}, ${group.name}) RETURNING id
       `.pipe(

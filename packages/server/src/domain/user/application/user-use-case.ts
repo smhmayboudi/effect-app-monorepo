@@ -10,7 +10,7 @@ export const UserUseCase = Layer.effect(
   Effect.gen(function* () {
     const driven = yield* PortUserDriven
 
-    const create = (user: Omit<DomainUser, "id">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> => 
+    const create = (user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> => 
       driven.create(user)
         .pipe(Effect.withSpan("user.use-case.create", { attributes: { user } }))
 

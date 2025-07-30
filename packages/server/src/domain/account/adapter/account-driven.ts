@@ -9,7 +9,7 @@ export const AccountDriven = Layer.effect(
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (account: Omit<DomainAccount, "id">): Effect.Effect<AccountId, never, never> =>
+    const create = (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">): Effect.Effect<AccountId, never, never> =>
       sql<{ id: number }>`
         INSERT INTO account () VALUES () RETURNING id
       `.pipe(

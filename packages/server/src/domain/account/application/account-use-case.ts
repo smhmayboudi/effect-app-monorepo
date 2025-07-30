@@ -9,7 +9,7 @@ export const AccountUseCase = Layer.effect(
   Effect.gen(function* () {
     const driven = yield* PortAccountDriven
 
-    const create = (account: Omit<DomainAccount, "id">): Effect.Effect<AccountId, never, never> => 
+    const create = (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">): Effect.Effect<AccountId, never, never> => 
       driven.create(account)
         .pipe(Effect.withSpan("account.use-case.create", { attributes: { account } }))
 

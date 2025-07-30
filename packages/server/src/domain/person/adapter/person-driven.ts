@@ -10,7 +10,7 @@ export const PersonDriven = Layer.effect(
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (person: Omit<DomainPerson, "id">): Effect.Effect<PersonId, never, never> =>
+    const create = (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">): Effect.Effect<PersonId, never, never> =>
       sql<{ id: number }>`
         INSERT INTO person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id
       `.pipe(

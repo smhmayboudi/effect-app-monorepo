@@ -11,9 +11,7 @@ export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
     return handlers
       .handle("create", ({ payload }) => driving.create({
         ...payload,
-        ownerId: AccountId.make(0),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        ownerId: AccountId.make(0)
       }))
       // .handle("delete", ({ path: { id } }) => driving.delete(id))
       // .handle("readAll", () => driving.readAll())

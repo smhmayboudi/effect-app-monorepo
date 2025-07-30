@@ -11,7 +11,7 @@ export const UserDriven = Layer.effect(
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (user: Omit<DomainUser, "id">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
+    const create = (user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
       sql<{ id: number }>`
         INSERT INTO user (owner_id, email, access_token) VALUES (${user.accountId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id
       `.pipe(

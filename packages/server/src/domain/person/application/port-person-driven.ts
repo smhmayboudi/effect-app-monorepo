@@ -3,7 +3,7 @@ import { ErrorPersonNotFound } from "@template/domain/person/application/error-p
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 
 export class PortPersonDriven extends Context.Tag("PortPersonDriven")<PortPersonDriven, {
-  create: (person: Omit<DomainPerson, "id">) => Effect.Effect<PersonId, never, never>
+  create: (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">) => Effect.Effect<PersonId, never, never>
   delete: (id: PersonId) => Effect.Effect<void, ErrorPersonNotFound, never>
   readAll: () => Effect.Effect<DomainPerson[], never, never>
   readById: (id: PersonId) => Effect.Effect<DomainPerson, ErrorPersonNotFound, never>

@@ -10,7 +10,7 @@ export const TodoUseCase = Layer.effect(
   Effect.gen(function* () {
     const driven = yield* PortTodoDriven
 
-    const create = (todo: Omit<DomainTodo, "id">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> => 
+    const create = (todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> => 
       driven.create(todo)
         .pipe(Effect.withSpan("todo.use-case.create", { attributes: { todo } }))
 

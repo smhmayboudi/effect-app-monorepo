@@ -3,7 +3,7 @@ import { ErrorAccountNotFound } from "@template/domain/account/application/error
 import { DomainAccount, AccountId } from "@template/domain/account/application/domain-account"
 
 export class PortAccountDriven extends Context.Tag("PortAccountDriven")<PortAccountDriven, {
-  create: (account: Omit<DomainAccount, "id">) => Effect.Effect<AccountId, never, never>
+  create: (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">) => Effect.Effect<AccountId, never, never>
   delete: (id: AccountId) => Effect.Effect<void, ErrorAccountNotFound, never>
   readAll: () => Effect.Effect<DomainAccount[], never, never>
   readById: (id: AccountId) => Effect.Effect<DomainAccount, ErrorAccountNotFound, never>
