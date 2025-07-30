@@ -5,6 +5,7 @@ import { AccessToken, DomainUser, DomainUserWithSensitive, Email, UserId } from 
 import { AccountId } from "@template/domain/account/application/domain-account"
 import { SqlClient } from "@effect/sql"
 import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
+import { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
 
 export const UserDriven = Layer.effect(
   PortUserDriven,
@@ -13,7 +14,7 @@ export const UserDriven = Layer.effect(
 
     const create = (user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
       sql<{ id: number }>`
-        INSERT INTO user (owner_id, email, access_token) VALUES (${user.accountId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id
+        INSERT INTO user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id
       `.pipe(
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
@@ -46,12 +47,39 @@ export const UserDriven = Layer.effect(
           rows.map((row) =>
             DomainUser.make({
               id: UserId.make(row.id),
-              accountId: AccountId.make(row.owner_id),
+              ownerId: AccountId.make(row.owner_id),
               email: Email.make(row.email),
               createdAt: new Date(row.created_at),
               updatedAt: new Date(row.updated_at)
             })
           )
+        )
+      )
+
+    const readByAccessToken = (accessToken: AccessToken): Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never> =>
+      sql<{
+        id: number
+        owner_id: number
+        email: string
+        created_at: Date
+        updated_at: Date
+      }>`
+        SELECT id, owner_id, email, created_at, updated_at FROM user WHERE access_token = ${Redacted.value(accessToken)}
+      `.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          rows.length === 0
+            ? Effect.fail(new ErrorUserNotFoundWithAccessToken({ accessToken }))
+            : Effect.succeed(rows[0])
+        ),
+        Effect.map((row) =>
+          DomainUser.make({
+            id: UserId.make(row.id),
+            ownerId: AccountId.make(row.owner_id),
+            email: Email.make(row.email),
+            createdAt: new Date(row.created_at),
+            updatedAt: new Date(row.updated_at)
+          })
         )
       )
 
@@ -74,7 +102,7 @@ export const UserDriven = Layer.effect(
         Effect.map((row) =>
           DomainUser.make({
             id: UserId.make(row.id),
-            accountId: AccountId.make(row.owner_id),
+            ownerId: AccountId.make(row.owner_id),
             email: Email.make(row.email),
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
@@ -98,8 +126,9 @@ export const UserDriven = Layer.effect(
         Effect.map((row) =>
           DomainUserWithSensitive.make({
             id: UserId.make(row.id),
-            accountId: AccountId.make(row.owner_id),
+            ownerId: AccountId.make(row.owner_id),
             accessToken: AccessToken.make(Redacted.make(row.access_token)),
+            // account: DomainAccount.make({}),
             email: Email.make(row.email),
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
@@ -112,7 +141,7 @@ export const UserDriven = Layer.effect(
       user: Omit<DomainUser, "id">
     ) => sql`
         UPDATE user SET
-          owner_id = ${user.accountId},
+          owner_id = ${user.ownerId},
           email = ${user.email},
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
@@ -136,6 +165,7 @@ export const UserDriven = Layer.effect(
       create,
       delete: del,
       readAll,
+      readByAccessToken,
       readById,
       readByMe,
       update

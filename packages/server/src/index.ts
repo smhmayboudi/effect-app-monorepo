@@ -21,9 +21,6 @@ import { UserUseCase } from "./domain/user/application/user-use-case.js"
 import { Sql } from "./infrastructure/adapter/sql.js"
 
 export const ApiLive = HttpApiBuilder.api(Api).pipe(
-  Layer.provide(AccountDriving),
-  Layer.provide(AccountUseCase),
-  Layer.provide(AccountDriven),
   Layer.provide(GroupDriving),
   Layer.provide(GroupUseCase),
   Layer.provide(GroupDriven),
@@ -36,6 +33,9 @@ export const ApiLive = HttpApiBuilder.api(Api).pipe(
   Layer.provide(UserDriving),
   Layer.provide(UserUseCase),
   Layer.provide(UserDriven),
+  Layer.provide(AccountDriving),
+  Layer.provide(AccountUseCase),
+  Layer.provide(AccountDriven),
   Layer.provide(Sql),
   Layer.provide(NodeContext.layer)
 )

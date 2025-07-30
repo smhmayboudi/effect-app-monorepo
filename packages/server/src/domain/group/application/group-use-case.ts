@@ -9,7 +9,7 @@ export const GroupUseCase = Layer.effect(
   Effect.gen(function* () {
     const driven = yield* PortGroupDriven
 
-    const create = (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, never> => 
+    const create = (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, never> =>
       driven.create(group)
         .pipe(Effect.withSpan("group.use-case.create", { attributes: { group } }))
 

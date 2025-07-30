@@ -33,7 +33,7 @@ export type UserId = Schema.Schema.Type<typeof UserId>
 
 export class DomainUser extends Schema.Class<DomainUser>("DomainUser")({
   id: UserId,
-  accountId: AccountId,
+  ownerId: AccountId,
   email: Email,
   createdAt: Schema.Date,
   updatedAt: Schema.Date
