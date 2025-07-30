@@ -15,7 +15,7 @@ export const AccountDriven = Layer.effect(
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => AccountId.make(row.id))
+        Effect.map((row) => AccountId.make(row.id)),
       )
 
     const del = (id: AccountId): Effect.Effect<void, ErrorAccountNotFound, never> =>

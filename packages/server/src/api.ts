@@ -19,24 +19,45 @@ import { Sql } from "./infrastructure/adapter/sql.js"
 import { MiddlewareAuthenticationLive } from "./middleware-authentication.js"
 import { HttpApiBuilder } from "@effect/platform";
 import { NodeContext } from "@effect/platform-node";
+import { AccountPolicy } from "./domain/account/application/account-policy.js";
+import { GroupPolicy } from "./domain/group/application/group-policy.js";
+import { PersonPolicy } from "./domain/person/application/person-policy.js";
+import { TodoPolicy } from "./domain/todo/application/todo-policy.js";
+import { UserPolicy } from "./domain/user/application/user-policy.js";
 
-export const ApiLive = HttpApiBuilder.api(Api).pipe(
-  Layer.provide(GroupDriving),
-  Layer.provide(GroupUseCase),
-  Layer.provide(GroupDriven),
-  Layer.provide(PersonDriving),
-  Layer.provide(PersonUseCase),
-  Layer.provide(PersonDriven),
-  Layer.provide(TodoDriving),
-  Layer.provide(TodoUseCase),
-  Layer.provide(TodoDriven),
-  Layer.provide(UserDriving),
-  Layer.provide(MiddlewareAuthenticationLive),
-  Layer.provide(UserUseCase),
-  Layer.provide(UserDriven),
-  Layer.provide(AccountDriving),
-  Layer.provide(AccountUseCase),
-  Layer.provide(AccountDriven),
-  Layer.provide(Sql),
-  Layer.provide(NodeContext.layer),
-)
+export const ApiLive = HttpApiBuilder.api(Api)
+  .pipe(
+    Layer.provide(GroupDriving),
+    Layer.provide(GroupUseCase),
+    Layer.provide(GroupDriven),
+    Layer.provide(GroupPolicy),
+  )
+  .pipe(
+    Layer.provide(PersonDriving),
+    Layer.provide(PersonUseCase),
+    Layer.provide(PersonDriven),
+    Layer.provide(PersonPolicy),
+  )
+  .pipe(
+    Layer.provide(TodoDriving),
+    Layer.provide(TodoUseCase),
+    Layer.provide(TodoDriven),
+    Layer.provide(TodoPolicy),
+  )
+  .pipe(
+    Layer.provide(UserDriving),
+    Layer.provide(MiddlewareAuthenticationLive),
+    Layer.provide(UserUseCase),
+    Layer.provide(UserDriven),
+    Layer.provide(UserPolicy),
+  )
+  .pipe(
+    Layer.provide(AccountDriving),
+    Layer.provide(AccountUseCase),
+    Layer.provide(AccountDriven),
+    Layer.provide(AccountPolicy),
+  )
+  .pipe(
+    Layer.provide(Sql),
+    Layer.provide(NodeContext.layer)
+  )
