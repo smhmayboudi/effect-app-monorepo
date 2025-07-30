@@ -4,6 +4,7 @@ import { DomainPerson, PersonId } from "../application/domain-person.js"
 import { ErrorGroupNotFound } from "../../group/application/error-group-not-found.js"
 import { GroupIdFromString } from "../../group/adapter/group-driving.js"
 import { ErrorPersonNotFound } from "../application/error-person-not-found.js"
+import { MiddlewareAuthentication } from "../../middleware-authentication.js"
 
 export const PersonIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(PersonId)
@@ -27,7 +28,8 @@ export class PersonDriving extends HttpApiGroup.make("person")
       .addSuccess(DomainPerson)
       .addError(ErrorPersonNotFound)
   )
-  .prefix("/person")
   .annotate(OpenApi.Description, "Manage Person")
   .annotate(OpenApi.Title, "Person")
+  .middlewareEndpoints(MiddlewareAuthentication)
+  .prefix("/person")
 {}

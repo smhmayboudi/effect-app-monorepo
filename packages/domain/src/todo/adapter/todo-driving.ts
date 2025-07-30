@@ -3,6 +3,7 @@ import { Schema } from "effect"
 import { DomainTodo, TodoId } from "../application/domain-todo.js"
 import { ErrorTodoAlreadyExists } from "../application/error-todo-already-exists.js"
 import { ErrorTodoNotFound } from "../application/error-todo-not-found.js"
+import { MiddlewareAuthentication } from "../../middleware-authentication.js"
 
 export const TodoIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(TodoId)
@@ -37,7 +38,8 @@ export class TodoDriving extends HttpApiGroup.make("todo")
       .addSuccess(TodoId)
       .setPath(Schema.Struct({ id: TodoIdFromString }))
   )
-  .prefix("/todo")
   .annotate(OpenApi.Description, "Manage Todo")
   .annotate(OpenApi.Title, "Todo")
+  .middlewareEndpoints(MiddlewareAuthentication)
+  .prefix("/todo")
 {}
