@@ -1,8 +1,8 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
-import { PortTodoDriving } from "../application/port-todo-driving.js";
-import { AccountId } from "@template/domain/account/application/domain-account";
+import { PortTodoDriving } from "../application/port-todo-driving.js"
+import { AccountId } from "@template/domain/account/application/domain-account"
 
 export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
   Effect.gen(function*() {

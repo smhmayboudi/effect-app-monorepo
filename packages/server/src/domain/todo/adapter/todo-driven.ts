@@ -1,9 +1,9 @@
-import { Effect, HashMap, Layer, Ref } from "effect";
-import { PortTodoDriven } from "../application/port-todo-driven.js";
+import { Effect, HashMap, Layer, Ref } from "effect"
+import { PortTodoDriven } from "../application/port-todo-driven.js"
 import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
-import { AccountId } from "@template/domain/account/application/domain-account";
+import { AccountId } from "@template/domain/account/application/domain-account"
 
 export const TodoDriven = Layer.effect(
   PortTodoDriven,

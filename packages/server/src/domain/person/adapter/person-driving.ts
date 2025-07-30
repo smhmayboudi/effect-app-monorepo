@@ -1,8 +1,8 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
-import { PortPersonDriving } from "../application/port-person-driving.js";
-import { GroupId } from "@template/domain/group/application/domain-group";
+import { PortPersonDriving } from "../application/port-person-driving.js"
+import { GroupId } from "@template/domain/group/application/domain-group"
 
 export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
   Effect.gen(function*() {

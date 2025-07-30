@@ -1,8 +1,8 @@
-import { Effect, Layer } from "effect";
-import { PortPersonDriven } from "../application/port-person-driven.js";
+import { Effect, Layer } from "effect"
+import { PortPersonDriven } from "../application/port-person-driven.js"
 import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
-import { GroupId } from "@template/domain/group/application/domain-group";
+import { GroupId } from "@template/domain/group/application/domain-group"
 
 export const PersonDriven = Layer.effect(
   PortPersonDriven,

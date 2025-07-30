@@ -1,6 +1,6 @@
-import { Effect, Layer } from "effect";
-import { PortGroupDriving } from "./port-group-driving.js";
-import { PortGroupDriven } from "./port-group-driven.js";
+import { Effect, Layer } from "effect"
+import { PortGroupDriving } from "./port-group-driving.js"
+import { PortGroupDriven } from "./port-group-driven.js"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 

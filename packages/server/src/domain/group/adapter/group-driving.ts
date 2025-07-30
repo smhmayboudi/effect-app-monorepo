@@ -1,8 +1,8 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
-import { PortGroupDriving } from "../application/port-group-driving.js";
-import { AccountId } from "@template/domain/account/application/domain-account";
+import { PortGroupDriving } from "../application/port-group-driving.js"
+import { AccountId } from "@template/domain/account/application/domain-account"
 
 export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
   Effect.gen(function*() {

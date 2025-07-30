@@ -1,6 +1,6 @@
-import { Effect, Layer } from "effect";
-import { PortPersonDriving } from "./port-person-driving.js";
-import { PortPersonDriven } from "./port-person-driven.js";
+import { Effect, Layer } from "effect"
+import { PortPersonDriving } from "./port-person-driving.js"
+import { PortPersonDriven } from "./port-person-driven.js"
 import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 
