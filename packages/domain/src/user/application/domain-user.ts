@@ -15,8 +15,8 @@ export const AccessToken = Schema.transform(
     encode: (redacted) => redacted,
     strict: false
   }
-).pipe(Schema.brand("AccessToken"));
-export type AccessToken = Schema.Schema.Type<typeof AccessToken>;
+).pipe(Schema.brand("AccessToken"))
+export type AccessToken = Schema.Schema.Type<typeof AccessToken>
 
 export const Email = Schema.String.pipe(
   Schema.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),

@@ -17,6 +17,16 @@ export class UserDriving extends HttpApiGroup.make("user")
       .setPayload(Schema.Struct({ email: Email }))
   )
   .add(
+    HttpApiEndpoint.del("delete", "/:id")
+      .addError(ErrorUserNotFound, { status: 404 })
+      .addSuccess(UserId)
+      .setPath(Schema.Struct({ id: UserIdFromString }))
+  )
+  .add(
+    HttpApiEndpoint.get("readAll", "/")
+      .addSuccess(Schema.Array(DomainUser))
+  )
+  .add(
     HttpApiEndpoint.get("readById", "/:id")
       .addError(ErrorUserNotFound)
       .addSuccess(DomainUser)
