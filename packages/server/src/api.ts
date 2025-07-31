@@ -19,11 +19,11 @@ import { Sql } from "./infrastructure/adapter/sql.js"
 import { MiddlewareAuthenticationLive } from "./middleware-authentication.js"
 import { HttpApiBuilder } from "@effect/platform";
 import { NodeContext } from "@effect/platform-node";
-import { AccountPolicy } from "./domain/account/application/account-policy.js";
-import { GroupPolicy } from "./domain/group/application/group-policy.js";
-import { PersonPolicy } from "./domain/person/application/person-policy.js";
-import { TodoPolicy } from "./domain/todo/application/todo-policy.js";
-import { UserPolicy } from "./domain/user/application/user-policy.js";
+import { AccountPolicy } from "./domain/account/adapter/account-policy.js";
+import { GroupPolicy } from "./domain/group/adapter/group-policy.js";
+import { PersonPolicy } from "./domain/person/adapter/person-policy.js";
+import { TodoPolicy } from "./domain/todo/adapter/todo-policy.js";
+import { UserPolicy } from "./domain/user/adapter/user-policy.js";
 
 export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(
