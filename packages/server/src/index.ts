@@ -3,16 +3,19 @@ import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
 import { Layer } from "effect"
 import { createServer } from "node:http"
 import { ApiLive } from "./api.js"
-import { BatchSpanProcessor, ConsoleSpanExporter } from "@opentelemetry/sdk-trace-base";
+import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { NodeSdk } from "@effect/opentelemetry";
-import { ConsoleLogRecordExporter, SimpleLogRecordProcessor } from "@opentelemetry/sdk-logs";
-import { ConsoleMetricExporter, PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
+import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
+import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 
 const NodeSdkLive = NodeSdk.layer(() => ({
-  logRecordProcessor: new SimpleLogRecordProcessor(new ConsoleLogRecordExporter()),
-  metricReader: new PeriodicExportingMetricReader({ exporter: new ConsoleMetricExporter() }),
+  logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),
+  metricReader: new PeriodicExportingMetricReader({ exporter: new OTLPMetricExporter() }),
   resource: { serviceName: "effect-app-monorepo", serviceVersion: "0.0.0" },
-  spanProcessor: new BatchSpanProcessor(new ConsoleSpanExporter())
+  spanProcessor: new BatchSpanProcessor(new OTLPTraceExporter())
 }))
 
 const HttpApiLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
@@ -23,7 +26,7 @@ const HttpApiLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
   Layer.provide(ApiLive),
   Layer.provide(NodeSdkLive),
   HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
+  Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 }))
 )
 
 Layer.launch(HttpApiLive).pipe(NodeRuntime.runMain)

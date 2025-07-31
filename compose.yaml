@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
+x-default-logging: &logging
+  driver: json-file
+  options:
+    # compress:
+    # env:
+    # env-regex:
+    # label:
+    # labels-regex:
+    max-file: 2
+    max-size: 5m
+
+services:
+  otel-lgtm:
+    container_name: effect-app-monorepo-otel-lgtm
+    environment:
+      - ENABLE_LOGS_ALL=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_FEATURE_TOGGLES_ENABLE=flameGraph traceqlSearch correlations traceQLStreaming metricsSummary traceqlEditor traceToMetrics traceToProfiles datatrails
+      - GF_INSTALL_PLUGINS=grafana-exploretraces-app,grafana-llm-app,grafana-lokiexplore-app,grafana-pyroscope-app
+    expose:
+      - 3000 # Panel
+      - 4040 # Pyroscope
+      - 4317 # OTLP gRPC
+      - 4318 # OTLP http
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD-SHELL
+        - curl --fail http://otel-lgtm:3000 || exit 1
+      timeout: 10s
+    image: grafana/otel-lgtm:0.11.6
+    ports:
+      - "3000:3000"
+      - "4040:4040"
+      - "4317:4317"
+      - "4318:4318"
+    labels:
+      namespace: service
+    logging: *logging
+    restart: "no"
+    volumes:
+      - ./.docker/otel-lgtm/grafana/conf/provisioning:/otel-lgtm/grafana/conf/provisioning:ro
+      - ./.docker/otel-lgtm/loki-config.yaml:/otel-lgtm/loki-config.yaml:ro
+      - ./.docker/otel-lgtm/otelcol-config.yaml:/otel-lgtm/otelcol-config.yaml:ro
+      - ./.docker/otel-lgtm/prometheus.yaml:/otel-lgtm/prometheus.yaml:ro
+      - ./.docker/otel-lgtm/pyroscope-config.yaml:/otel-lgtm/pyroscope-config.yaml:ro
+      - ./.docker/otel-lgtm/tempo-config.yaml:/otel-lgtm/tempo-config.yaml:ro
+      - otel-lgtm:/data
+
+volumes:
+  otel-lgtm: {}

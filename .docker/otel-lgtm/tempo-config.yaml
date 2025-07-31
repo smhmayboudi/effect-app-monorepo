@@ -1,0 +1,90 @@
+stream_over_http_enabled: true
+
+server:
+  http_listen_port: 3200
+  grpc_listen_port: 9096
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 127.0.0.1:4417
+        http:
+          endpoint: 127.0.0.1:4418
+
+ingester:
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+    min_ready_duration: 1s
+  trace_idle_period: 10s
+  max_block_bytes: 1_000_000
+  max_block_duration: 10s
+  flush_check_period: 10s
+
+querier:
+  frontend_worker:
+    frontend_address: 127.0.0.1:9096
+
+compactor:
+  compaction:
+    compaction_window: 1h
+    max_block_bytes: 100_000_000
+    block_retention: 1h
+    compacted_block_retention: 10m
+
+storage:
+  trace:
+    backend: local
+    wal:
+      path: /data/tempo/wal
+    local:
+      path: /data/tempo/blocks
+    pool:
+      max_workers: 100
+      queue_depth: 10000
+    block:
+      bloom_filter_false_positive: .05
+
+metrics_generator:
+  processor:
+    local_blocks:
+      filter_server_spans: false
+      flush_to_storage: true
+    span_metrics:
+      dimensions:
+        - http.method
+        - http.target
+        - http.status_code
+        - service.version
+    service_graphs:
+      dimensions:
+        - http.method
+        - http.target
+        - http.status_code
+        - service.version
+  traces_storage:
+    path: /data/tempo/generator/traces
+  storage:
+    path: /data/tempo/generator/wal
+    remote_write:
+      - url: http://127.0.0.1:9090/api/v1/write
+        send_exemplars: true
+  registry:
+    collection_interval: 5s
+    external_labels:
+      source: tempo
+      group: effect-app-monorepo
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors:
+        - local-blocks
+        - service-graphs
+        - span-metrics
+      generate_native_histograms: both

@@ -1,0 +1,166 @@
+connectors:
+  spanmetrics:
+    namespace: traces.spanmetrics
+    histogram:
+      explicit:
+    dimensions:
+      - name: http.method
+      - name: http.target
+      - name: http.status_code
+      - name: service.version
+    exemplars:
+      enabled: true
+  servicegraph:
+    metrics_exporter: otlphttp/metrics
+    store:
+      ttl: 2s
+      max_items: 200
+    cache_loop: 2m
+    store_expiration_loop: 10s
+    virtual_node_peer_attributes:
+      - db.name
+
+extensions:
+  health_check:
+    endpoint: :13133
+    path: /ready
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - http://*
+  prometheus/collector:
+    config:
+      scrape_configs:
+        - job_name: grafana
+          scrape_interval: 1s
+          static_configs:
+            - targets:
+                - 127.0.0.1:3000
+              labels:
+                service: grafana
+                group: infrastructure
+        - job_name: loki
+          scrape_interval: 1s
+          static_configs:
+            - targets:
+                - 127.0.0.1:3100
+              labels:
+                service: loki
+                group: infrastructure
+        - job_name: otelcol
+          scrape_interval: 1s
+          static_configs:
+            - targets:
+                - 127.0.0.1:8888
+              labels:
+                service: otelcol
+                group: infrastructure
+        - job_name: prometheus
+          scrape_interval: 1s
+          static_configs:
+            - targets:
+                - 127.0.0.1:9090
+              labels:
+                service: prometheus
+                group: infrastructure
+        - job_name: pyroscope
+          scrape_interval: 1s
+          static_configs:
+            - targets:
+                - 127.0.0.1:4040
+              labels:
+                service: pyroscope
+                group: infrastructure
+        - job_name: tempo
+          scrape_interval: 1s
+          static_configs:
+            - targets:
+                - 127.0.0.1:3200
+              labels:
+                service: tempo
+                group: infrastructure
+
+processors:
+  batch:
+  tail_sampling:
+    decision_wait: 30s
+    policies:
+      - {
+          name: sample-erroring-traces,
+          type: status_code,
+          status_code: { status_codes: [ERROR] },
+        }
+      - {
+          name: sample-long-traces,
+          type: latency,
+          latency: { threshold_ms: 200 },
+        }
+
+exporters:
+  otlphttp/metrics:
+    endpoint: http://127.0.0.1:9090/api/v1/otlp
+    tls:
+      insecure: true
+  otlphttp/traces:
+    endpoint: http://127.0.0.1:4418
+    tls:
+      insecure: true
+  otlphttp/logs:
+    endpoint: http://127.0.0.1:3100/otlp
+    tls:
+      insecure: true
+  otlp/profiles:
+    endpoint: http://127.0.0.1:4040
+    tls:
+      insecure: true
+  debug/metrics:
+    verbosity: detailed
+  debug/traces:
+    verbosity: detailed
+  debug/logs:
+    verbosity: detailed
+
+service:
+  extensions:
+    - health_check
+  telemetry:
+    metrics:
+      level: detailed
+  pipelines:
+    traces:
+      receivers:
+        - otlp
+      processors:
+        - batch
+      exporters:
+        # - debug/traces
+        - otlphttp/traces
+    metrics:
+      receivers:
+        - otlp
+        - prometheus/collector
+      processors:
+        - batch
+      exporters:
+        # - debug/metrics
+        - otlphttp/metrics
+    logs:
+      receivers:
+        - otlp
+      processors:
+        - batch
+      exporters:
+        # - debug/logs
+        - otlphttp/logs
+    profiles:
+      receivers:
+        - otlp
+      exporters:
+        - otlp/profiles

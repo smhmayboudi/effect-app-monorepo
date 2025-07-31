@@ -1,0 +1,23 @@
+apiVersion: 1
+
+apps:
+  # - type: grafana-exploretraces-app
+  #   jsonData:
+  #     # apiUrl: string
+  #     # isApiKeySet: boolean
+  #   secureJsonData:
+  #     # apiKey: string
+
+  # - type: grafana-lokiexplore-app
+  #   jsonData:
+  #     # apiUrl: string
+  #     # isApiKeySet: boolean
+  #   secureJsonData:
+  #     # apiKey: string
+
+  # - type: grafana-pyroscope-app
+  #   jsonData:
+  #     backendUrl: http://127.0.0.1:4040
+  #     # basicAuthUser: USER
+  #   secureJsonData:
+  #     # basicAuthPassword: PASSWORD

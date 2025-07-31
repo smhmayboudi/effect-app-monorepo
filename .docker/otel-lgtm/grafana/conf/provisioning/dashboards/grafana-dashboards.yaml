@@ -1,0 +1,17 @@
+apiVersion: 1
+
+providers:
+  - disableDeletion: false
+    editable: false
+    folder: ORIGINAL
+    name: ORIGINAL
+    options:
+      path: /otel-lgtm/grafana/conf/provisioning/dashboards/ORIGINAL/
+    type: file
+  - disableDeletion: false
+    editable: false
+    folder: MLT
+    name: MLT
+    options:
+      path: /otel-lgtm/grafana/conf/provisioning/dashboards/MLT/
+    type: file
