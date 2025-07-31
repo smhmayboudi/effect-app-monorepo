@@ -1,5 +1,6 @@
 import { Effect } from "effect"
-import { DomainUser, DomainUserCurrent } from "@template/domain/user/application/domain-user"
+import { DomainUser } from "@template/domain/user/application/domain-user"
+import { DomainActor } from "@template/domain/actor"
 import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
 
 export const actorAuthorized = <Entity extends string, Action extends string>(
@@ -13,9 +14,9 @@ export const policy = <Entity extends string, Action extends string, E, R>(
 ): Effect.Effect<
   ActorAuthorized<Entity, Action>,
   E | ErrorActorUnauthorized,
-  R | DomainUserCurrent
+  R | DomainActor
 > =>
-  Effect.flatMap(DomainUserCurrent, (actor) =>
+  Effect.flatMap(DomainActor, (actor) =>
     Effect.flatMap(f(actor), (can) =>
       can
         ? Effect.succeed(actorAuthorized<Entity, Action>(actor))
@@ -26,7 +27,7 @@ export const policyCompose = <Actor extends ActorAuthorized<any, any>, E, R>(
 ) =>
 <Actor2 extends ActorAuthorized<any, any>, E2, R2>(
   self: Effect.Effect<Actor2, E2, R2>
-): Effect.Effect<Actor | Actor2, E | ErrorActorUnauthorized, R | DomainUserCurrent> => Effect.zipRight(self, that) as any
+): Effect.Effect<Actor | Actor2, E | ErrorActorUnauthorized, R | DomainActor> => Effect.zipRight(self, that) as any
 
 export const policyUse = <Actor extends ActorAuthorized<any, any>, E, R>(
   policy: Effect.Effect<Actor, E, R>

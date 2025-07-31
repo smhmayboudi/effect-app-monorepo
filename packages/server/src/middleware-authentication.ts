@@ -16,7 +16,7 @@ export const MiddlewareAuthenticationLive = Layer.effect(
             Effect.catchTag("ErrorUserNotFoundWithAccessToken", () => Effect.fail(
               ErrorActorUnauthorized.make({
                 actorId: UserId.make(-1),
-                entity: "DomainUser",
+                entity: "User",
                 action: "read"
               })
             )),

@@ -1,28 +1,29 @@
 import { Effect, Layer } from "effect"
 import { policy } from "../../../util/policy.js"
-import { DomainUserCurrent, UserId } from "@template/domain/user/application/domain-user"
+import { UserId } from "@template/domain/user/application/domain-user"
+import { DomainActor } from "@template/domain/actor"
 import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
 import { PortUserPolicy } from "../application/user-policy.js"
 
 export const UserPolicy = Layer.effect(
   PortUserPolicy,
   Effect.gen(function* () {
-    const canCreate = (id: UserId): Effect.Effect<ActorAuthorized<"User", "create">, ErrorActorUnauthorized, DomainUserCurrent> =>
+    const canCreate = (id: UserId): Effect.Effect<ActorAuthorized<"User", "create">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "create", (actor) => Effect.succeed(true))
 
-    const canDelete = (id: UserId): Effect.Effect<ActorAuthorized<"User", "delete">, ErrorActorUnauthorized, DomainUserCurrent> =>
+    const canDelete = (id: UserId): Effect.Effect<ActorAuthorized<"User", "delete">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "delete", (actor) => Effect.succeed(true))
 
-    const canReadAll = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readAll">, ErrorActorUnauthorized, DomainUserCurrent> =>
+    const canReadAll = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readAll">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "readAll", (actor) => Effect.succeed(true))
 
-    const canReadById = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readById">, ErrorActorUnauthorized, DomainUserCurrent> =>
+    const canReadById = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readById">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "readById", (actor) => Effect.succeed(true))
 
-    const canReadByMe = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readByMe">, ErrorActorUnauthorized, DomainUserCurrent> =>
+    const canReadByMe = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readByMe">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "readByMe", (actor) => Effect.succeed(true))
 
-    const canUpdate = (id: UserId): Effect.Effect<ActorAuthorized<"User", "update">, ErrorActorUnauthorized, DomainUserCurrent> =>
+    const canUpdate = (id: UserId): Effect.Effect<ActorAuthorized<"User", "update">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "update", (actor) => Effect.succeed(true))
 
     return {

@@ -42,8 +42,3 @@ export class DomainUserWithSensitive extends Schema.Class<DomainUserWithSensitiv
   accessToken: AccessToken,
   // account: DomainAccount
 }) {}
-
-export class DomainUserCurrent extends Context.Tag("DomainUserCurrent")<
-  DomainUserCurrent,
-  DomainUser
->() {}
