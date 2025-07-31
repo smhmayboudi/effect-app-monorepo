@@ -13,7 +13,7 @@ export const TodoDriven = Layer.effect(
 
     const create = (todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> =>
       sql<{ id: number }>`
-        INSERT INTO todo (owner_id, done, text) VALUES (${todo.ownerId}, ${todo.done}, ${todo.text}) RETURNING id
+        INSERT INTO tbl_todo (owner_id, done, text) VALUES (${todo.ownerId}, ${todo.done}, ${todo.text}) RETURNING id
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -22,7 +22,7 @@ export const TodoDriven = Layer.effect(
 
     const del = (id: TodoId): Effect.Effect<void, ErrorTodoNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM todo WHERE id = ${id}`),
+        Effect.flatMap(() => sql`DELETE FROM tbl_todo WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die)
       )
@@ -36,7 +36,7 @@ export const TodoDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, owner_id, done, text, created_at, updated_at FROM todo
+        SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
@@ -62,7 +62,7 @@ export const TodoDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, owner_id, done, text, created_at, updated_at FROM todo WHERE id = ${id}
+        SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo WHERE id = ${id}
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
@@ -86,7 +86,7 @@ export const TodoDriven = Layer.effect(
       id: TodoId,
       todo: Omit<DomainTodo, "id">
     ) => sql`
-        UPDATE todo SET
+        UPDATE tbl_todo SET
           owner_id = ${todo.ownerId},
           done = '${todo.done}',
           text = '${todo.text}',

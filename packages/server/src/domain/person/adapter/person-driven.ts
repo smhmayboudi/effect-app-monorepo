@@ -12,7 +12,7 @@ export const PersonDriven = Layer.effect(
 
     const create = (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">): Effect.Effect<PersonId, never, never> =>
       sql<{ id: number }>`
-        INSERT INTO person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id
+        INSERT INTO tbl_person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -21,7 +21,7 @@ export const PersonDriven = Layer.effect(
 
     const del = (id: PersonId): Effect.Effect<void, ErrorPersonNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM person WHERE id = ${id}`),
+        Effect.flatMap(() => sql`DELETE FROM tbl_person WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die)
       )
@@ -36,7 +36,7 @@ export const PersonDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM person
+        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
@@ -64,7 +64,7 @@ export const PersonDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM person WHERE id = ${id}
+        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id = ${id}
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
@@ -89,7 +89,7 @@ export const PersonDriven = Layer.effect(
       id: PersonId,
       person: Omit<DomainPerson, "id">
     ) => sql`
-        UPDATE person SET
+        UPDATE tbl_person SET
           group_id = ${person.groupId},
           birthday = '${person.birthday}',
           first_name = '${person.firstName}',

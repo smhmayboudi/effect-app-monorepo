@@ -11,7 +11,7 @@ export const AccountDriven = Layer.effect(
 
     const create = (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">): Effect.Effect<AccountId, never, never> =>
       sql<{ id: number }>`
-        INSERT INTO account () VALUES () RETURNING id
+        INSERT INTO tbl_account () VALUES () RETURNING id
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -20,7 +20,7 @@ export const AccountDriven = Layer.effect(
 
     const del = (id: AccountId): Effect.Effect<void, ErrorAccountNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM account WHERE id = ${id}`),
+        Effect.flatMap(() => sql`DELETE FROM tbl_account WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die)
       )
@@ -31,7 +31,7 @@ export const AccountDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, created_at, updated_at FROM account
+        SELECT id, created_at, updated_at FROM tbl_account
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
@@ -51,7 +51,7 @@ export const AccountDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, created_at, updated_at FROM account WHERE id = ${id}
+        SELECT id, created_at, updated_at FROM tbl_account WHERE id = ${id}
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
@@ -72,7 +72,7 @@ export const AccountDriven = Layer.effect(
       id: AccountId,
       user: Omit<DomainAccount, "id">
     ) => sql`
-        UPDATE user SET
+        UPDATE tbl_user SET
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
       `

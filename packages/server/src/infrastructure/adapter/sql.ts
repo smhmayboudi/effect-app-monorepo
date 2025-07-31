@@ -11,7 +11,8 @@ const Client = SqliteClient.layer({
 const Migrator = SqliteMigrator.layer({
   loader: SqliteMigrator.fromFileSystem(
     fileURLToPath(new URL("../../migrations/", import.meta.url))
-  )
+  ),
+  table: "tbl_sql_migration"
 })
 
 export const Sql = Migrator.pipe(Layer.provideMerge(Client))

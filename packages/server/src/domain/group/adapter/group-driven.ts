@@ -12,7 +12,7 @@ export const GroupDriven = Layer.effect(
 
     const create = (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, never> =>
       sql<{ id: number }>`
-        INSERT INTO group (owner_id, name) VALUES (${group.ownerId}, ${group.name}) RETURNING id
+        INSERT INTO tbl_group (owner_id, name) VALUES (${group.ownerId}, ${group.name}) RETURNING id
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -21,7 +21,7 @@ export const GroupDriven = Layer.effect(
 
     const del = (id: GroupId): Effect.Effect<void, ErrorGroupNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM group WHERE id = ${id}`),
+        Effect.flatMap(() => sql`DELETE FROM tbl_group WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die)
       )
@@ -34,7 +34,7 @@ export const GroupDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, owner_id, name, created_at, updated_at FROM group
+        SELECT id, owner_id, name, created_at, updated_at FROM tbl_group
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
@@ -58,7 +58,7 @@ export const GroupDriven = Layer.effect(
         created_at: Date
         updated_at: Date
       }>`
-        SELECT id, owner_id, name, created_at, updated_at FROM group WHERE id = ${id}
+        SELECT id, owner_id, name, created_at, updated_at FROM tbl_group WHERE id = ${id}
       `.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
@@ -81,7 +81,7 @@ export const GroupDriven = Layer.effect(
       id: GroupId,
       group: Omit<DomainGroup, "id">
     ) => sql`
-        UPDATE group SET
+        UPDATE tbl_group SET
           owner_id = ${group.ownerId},
           name = ${group.name},
           updated_at = CURRENT_TIMESTAMP
