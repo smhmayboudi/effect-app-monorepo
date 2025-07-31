@@ -3,7 +3,7 @@ import { DomainUser } from "@template/domain/user/application/domain-user"
 import { DomainActor } from "@template/domain/actor"
 import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
 
-export const actorAuthorized = <Entity extends string, Action extends string>(
+const actorAuthorized = <Entity extends string, Action extends string>(
   user: DomainUser
 ): ActorAuthorized<Entity, Action> => user as any
 

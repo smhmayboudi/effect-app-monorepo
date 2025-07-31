@@ -42,7 +42,6 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
           Effect.flatMap((user) => driving.readByIdWithSensitive(user.id)),
           withSystemActor
         )
-        
       )
       .handle("update", ({ path: { id }, payload }) =>
         driving.update(id, payload).pipe(
