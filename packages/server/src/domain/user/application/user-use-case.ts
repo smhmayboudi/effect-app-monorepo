@@ -43,7 +43,7 @@ export const UserUseCase = Layer.effect(
     const readByAccessToken = (accessToken: AccessToken): Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never> =>
       driven.readByAccessToken(accessToken)
         .pipe(
-          Effect.withSpan("user.use-case.readById", { attributes: { accessToken } })
+          Effect.withSpan("user.use-case.readByAccessToken", { attributes: { accessToken } })
         )
 
     const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, ActorAuthorized<"User", "readById">> =>
