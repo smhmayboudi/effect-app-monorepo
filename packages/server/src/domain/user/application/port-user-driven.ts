@@ -10,6 +10,6 @@ export class PortUserDriven extends Context.Tag("PortUserDriven")<PortUserDriven
   readAll: () => Effect.Effect<DomainUser[], never, never>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound, never>
-  readByMe: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, never>
+  readByIdWithSensitive: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, never>
   update: (id: UserId, user: Partial<Omit<DomainUser, "id">>) => Effect.Effect<void, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never>
 }>() {}

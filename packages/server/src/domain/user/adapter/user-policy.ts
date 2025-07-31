@@ -20,8 +20,8 @@ export const UserPolicy = Layer.effect(
     const canReadById = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readById">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "readById", (actor) => Effect.succeed(true))
 
-    const canReadByMe = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readByMe">, ErrorActorUnauthorized, DomainActor> =>
-      policy("User", "readByMe", (actor) => Effect.succeed(true))
+    const canReadByIdWithSensitive = (id: UserId): Effect.Effect<ActorAuthorized<"User", "readByIdWithSensitive">, ErrorActorUnauthorized, DomainActor> =>
+      policy("User", "readByIdWithSensitive", (actor) => Effect.succeed(true))
 
     const canUpdate = (id: UserId): Effect.Effect<ActorAuthorized<"User", "update">, ErrorActorUnauthorized, DomainActor> =>
       policy("User", "update", (actor) => Effect.succeed(true))
@@ -31,7 +31,7 @@ export const UserPolicy = Layer.effect(
       canDelete,
       canReadAll,
       canReadById,
-      canReadByMe,
+      canReadByIdWithSensitive,
       canUpdate
     } as const
   })

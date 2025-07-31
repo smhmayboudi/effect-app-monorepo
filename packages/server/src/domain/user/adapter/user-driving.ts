@@ -37,9 +37,9 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
           policyUse(policy.canReadById(UserId.make(0)))
         )
       )
-      .handle("readByMe", () =>
+      .handle("readByIdWithSensitive", () =>
         DomainActor.pipe(
-          Effect.flatMap((user) => driving.readByMe(user.id)),
+          Effect.flatMap((user) => driving.readByIdWithSensitive(user.id)),
           withSystemActor
         )
         

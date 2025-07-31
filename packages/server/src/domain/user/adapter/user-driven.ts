@@ -110,7 +110,7 @@ export const UserDriven = Layer.effect(
         )
       )
 
-    const readByMe = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
+    const readByIdWithSensitive = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
       sql<{
         id: number
         owner_id: number
@@ -167,7 +167,7 @@ export const UserDriven = Layer.effect(
       readAll,
       readByAccessToken,
       readById,
-      readByMe,
+      readByIdWithSensitive,
       update
     } as const
   })

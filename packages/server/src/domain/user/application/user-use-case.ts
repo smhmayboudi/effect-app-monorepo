@@ -53,11 +53,11 @@ export const UserUseCase = Layer.effect(
           policyRequire("User", "readById")
         )
 
-    const readByMe = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByMe">> =>
-      driven.readByMe(id)
+    const readByIdWithSensitive = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
+      driven.readByIdWithSensitive(id)
         .pipe(
-          Effect.withSpan("user.use-case.readByMe", { attributes: { id } }),
-          policyRequire("User", "readByMe")
+          Effect.withSpan("user.use-case.readByIdWithSensitive", { attributes: { id } }),
+          policyRequire("User", "readByIdWithSensitive")
         )
 
     const update = (id: UserId, user: Partial<Omit<DomainUser, "id">>): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, ActorAuthorized<"User", "update">> =>
@@ -74,7 +74,7 @@ export const UserUseCase = Layer.effect(
       readAll,
       readByAccessToken,
       readById,
-      readByMe,
+      readByIdWithSensitive,
       update,
     } as const
   })

@@ -11,6 +11,6 @@ export class PortUserDriving extends Context.Tag("PortUserDriving")<PortUserDriv
   readAll: () => Effect.Effect<DomainUser[], never, ActorAuthorized<"User", "readAll">>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound, ActorAuthorized<"User", "readById">>
-  readByMe: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByMe">>
+  readByIdWithSensitive: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">>
   update: (id: UserId, user: Partial<Omit<DomainUser, "id">>) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, ActorAuthorized<"User", "update">>
 }>() {}
