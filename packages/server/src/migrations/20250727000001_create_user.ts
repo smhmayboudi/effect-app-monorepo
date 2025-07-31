@@ -12,7 +12,7 @@ export default Effect.gen(function*() {
         email TEXT UNIQUE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        FOREIGN KEY (account_id) REFERENCES account(id)
+        FOREIGN KEY (owner_id) REFERENCES account(id)
       )
     `,
     orElse: () => sql`
@@ -23,7 +23,7 @@ export default Effect.gen(function*() {
         email TEXT UNIQUE NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        FOREIGN KEY (account_id) REFERENCES account(id)
+        FOREIGN KEY (owner_id) REFERENCES account(id)
       )
     `
   })
