@@ -5,6 +5,7 @@ import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-tod
 import { AccountId } from "@template/domain/account/application/domain-account"
 import { SqlClient } from "@effect/sql"
 import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const TodoDriven = Layer.effect(
   PortTodoDriven,
@@ -15,14 +16,16 @@ export const TodoDriven = Layer.effect(
       sql<{ id: number }>`INSERT INTO tbl_todo (owner_id, done, text) VALUES (${todo.ownerId}, ${todo.done}, ${todo.text}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => TodoId.make(row.id))
+        Effect.map((row) => TodoId.make(row.id)),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
       )
 
     const del = (id: TodoId): Effect.Effect<void, ErrorTodoNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap(() => sql`DELETE FROM tbl_todo WHERE id = ${id}`),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
       )
 
     const readAll = (): Effect.Effect<DomainTodo[], never, never> =>
@@ -46,7 +49,8 @@ export const TodoDriven = Layer.effect(
               updatedAt: new Date(row.updated_at)
             })
           )
-        )
+        ),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }})
       )
 
     const readById = (id: TodoId): Effect.Effect<DomainTodo, ErrorTodoNotFound, never> =>
@@ -73,7 +77,8 @@ export const TodoDriven = Layer.effect(
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
           })
-        )
+        ),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
       )
 
     const updateQuery = (
@@ -93,7 +98,8 @@ export const TodoDriven = Layer.effect(
       readById(id).pipe(
         Effect.flatMap((oldTodo) => updateQuery(id, { ...oldTodo, ...todo })),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
       )
 
     return {

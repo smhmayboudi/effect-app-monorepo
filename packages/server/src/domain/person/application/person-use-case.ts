@@ -5,6 +5,7 @@ import { ErrorPersonNotFound } from "@template/domain/person/application/error-p
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 import { policyRequire } from "../../../util/policy.js"
 import { ActorAuthorized } from "@template/domain/actor"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const PersonUseCase = Layer.effect(
   PortPersonDriving,
@@ -14,7 +15,7 @@ export const PersonUseCase = Layer.effect(
     const create = (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">): Effect.Effect<PersonId, never, ActorAuthorized<"Person", "create">> =>
       driven.create(person)
         .pipe(
-          Effect.withSpan("person.use-case.create", { attributes: { person } }),
+          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", person }}),
           policyRequire("Person", "create")
         )
 
@@ -22,21 +23,21 @@ export const PersonUseCase = Layer.effect(
       driven.delete(id)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("person.use-case.delete", { attributes: { id } }),
+          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyRequire("Person", "delete")
         )
 
     const readAll = (): Effect.Effect<DomainPerson[], never, ActorAuthorized<"Person", "readAll">> =>
       driven.readAll()
         .pipe(
-          Effect.withSpan("person.use-case.readAll"),
+          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
           policyRequire("Person", "readAll")
         )
 
     const readById = (id: PersonId): Effect.Effect<DomainPerson, ErrorPersonNotFound, ActorAuthorized<"Person", "readById">> =>
       driven.readById(id)
         .pipe(
-          Effect.withSpan("person.use-case.readById", { attributes: { id } }),
+          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
           policyRequire("Person", "readById")
         )
 
@@ -44,7 +45,7 @@ export const PersonUseCase = Layer.effect(
       driven.update(id, person)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("person.use-case.update", { attributes: { id, person } }),
+          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person }}),
           policyRequire("Person", "update")
         )
 

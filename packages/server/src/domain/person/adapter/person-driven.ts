@@ -4,6 +4,7 @@ import { ErrorPersonNotFound } from "@template/domain/person/application/error-p
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 import { SqlClient } from "@effect/sql"
 import { GroupId } from "@template/domain/group/application/domain-group"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const PersonDriven = Layer.effect(
   PortPersonDriven,
@@ -14,14 +15,16 @@ export const PersonDriven = Layer.effect(
       sql<{ id: number }>`INSERT INTO tbl_person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => PersonId.make(row.id))
+        Effect.map((row) => PersonId.make(row.id)),
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
       )
 
     const del = (id: PersonId): Effect.Effect<void, ErrorPersonNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap(() => sql`DELETE FROM tbl_person WHERE id = ${id}`),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
       )
 
     const readAll = (): Effect.Effect<DomainPerson[], never, never> =>
@@ -47,7 +50,8 @@ export const PersonDriven = Layer.effect(
               updatedAt: new Date(row.updated_at)
             })
           )
-        )
+        ),
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }})
       )
 
     const readById = (id: PersonId): Effect.Effect<DomainPerson, ErrorPersonNotFound, never> =>
@@ -76,7 +80,8 @@ export const PersonDriven = Layer.effect(
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
           })
-        )
+        ),
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
       )
 
     const updateQuery = (
@@ -97,7 +102,8 @@ export const PersonDriven = Layer.effect(
       readById(id).pipe(
         Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
       )
 
     return {

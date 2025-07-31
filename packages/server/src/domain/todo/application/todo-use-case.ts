@@ -6,6 +6,7 @@ import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 import { policyRequire } from "../../../util/policy.js"
 import { ActorAuthorized } from "@template/domain/actor"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const TodoUseCase = Layer.effect(
   PortTodoDriving,
@@ -15,7 +16,7 @@ export const TodoUseCase = Layer.effect(
     const create = (todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, ActorAuthorized<"Todo", "create">> =>
       driven.create(todo)
         .pipe(
-          Effect.withSpan("todo.use-case.create", { attributes: { todo } }),
+          Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", todo }}),
           policyRequire("Todo", "create")
         )
 
@@ -23,19 +24,19 @@ export const TodoUseCase = Layer.effect(
       driven.delete(id)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("todo.use-case.delete", { attributes: { id } }),
+          Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyRequire("Todo", "delete")
         )
 
     const readAll = (): Effect.Effect<DomainTodo[], never, ActorAuthorized<"Todo", "readAll">> =>
       driven.readAll().pipe(
-        Effect.withSpan("todo.use-case.readAll"),
+        Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
         policyRequire("Todo", "readAll")
       )
 
     const readById = (id: TodoId): Effect.Effect<DomainTodo, ErrorTodoNotFound, ActorAuthorized<"Todo", "readById">> =>
       driven.readById(id).pipe(
-        Effect.withSpan("todo.use-case.readById", { attributes: { id } }),
+        Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
         policyRequire("Todo", "readById")
       )
 
@@ -43,7 +44,7 @@ export const TodoUseCase = Layer.effect(
       driven.update(id, todo)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("todo.use-case.update", { attributes: { id, todo } }),
+          Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo }}),
           policyRequire("Todo", "update")
         )
 

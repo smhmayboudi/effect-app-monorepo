@@ -3,6 +3,7 @@ import { PortAccountDriven } from "../application/port-account-driven.js"
 import { ErrorAccountNotFound } from "@template/domain/account/application/error-account-not-found"
 import { DomainAccount, AccountId } from "@template/domain/account/application/domain-account"
 import { SqlClient } from "@effect/sql"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const AccountDriven = Layer.effect(
   PortAccountDriven,
@@ -14,13 +15,15 @@ export const AccountDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => AccountId.make(row.id)),
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
       )
 
     const del = (id: AccountId): Effect.Effect<void, ErrorAccountNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap(() => sql`DELETE FROM tbl_account WHERE id = ${id}`),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
       )
 
     const readAll = (): Effect.Effect<DomainAccount[], never, never> =>
@@ -38,7 +41,8 @@ export const AccountDriven = Layer.effect(
               updatedAt: new Date(row.updated_at)
             })
           )
-        )
+        ),
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }})
       )
 
     const readById = (id: AccountId): Effect.Effect<DomainAccount, ErrorAccountNotFound, never> =>
@@ -59,7 +63,8 @@ export const AccountDriven = Layer.effect(
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
           })
-        )
+        ),
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
       )
 
     const buildUpdateQuery = (
@@ -73,7 +78,8 @@ export const AccountDriven = Layer.effect(
       readById(id).pipe(
         Effect.flatMap((oldAccount) => buildUpdateQuery(id, { ...oldAccount, ...account })),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
       )
 
     return {

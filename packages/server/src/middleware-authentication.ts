@@ -3,6 +3,7 @@ import { Effect, Layer } from "effect"
 import { PortUserDriving } from "./domain/user/application/port-user-driving.js"
 import { AccessToken, UserId } from "@template/domain/user/application/domain-user"
 import { ErrorActorUnauthorized } from "@template/domain/actor"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const MiddlewareAuthenticationLive = Layer.effect(
   MiddlewareAuthentication,
@@ -21,7 +22,7 @@ export const MiddlewareAuthenticationLive = Layer.effect(
               })
             )),
             Effect.flatMap(Effect.succeed),
-            Effect.withSpan("MiddlewareAuthentication.cookie")
+            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie" }})
           )
     })
   })

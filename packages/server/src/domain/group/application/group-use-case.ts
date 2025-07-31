@@ -5,6 +5,7 @@ import { ErrorGroupNotFound } from "@template/domain/group/application/error-gro
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import { policyRequire } from "../../../util/policy.js"
 import { ActorAuthorized } from "@template/domain/actor"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const GroupUseCase = Layer.effect(
   PortGroupDriving,
@@ -14,7 +15,7 @@ export const GroupUseCase = Layer.effect(
     const create = (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">> =>
       driven.create(group)
         .pipe(
-          Effect.withSpan("group.use-case.create", { attributes: { group } }),
+          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", group }}),
           policyRequire("Group", "create")
         )
 
@@ -22,21 +23,21 @@ export const GroupUseCase = Layer.effect(
       driven.delete(id)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("group.use-case.delete", { attributes: { id } }),
+          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyRequire("Group", "delete")
         )
 
     const readAll = (): Effect.Effect<DomainGroup[], never, ActorAuthorized<"Group", "readAll">> =>
       driven.readAll()
         .pipe(
-          Effect.withSpan("group.use-case.readAll"),
+          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
           policyRequire("Group", "readAll")
         )
 
     const readById = (id: GroupId): Effect.Effect<DomainGroup, ErrorGroupNotFound, ActorAuthorized<"Group", "readById">> =>
       driven.readById(id)
         .pipe(
-          Effect.withSpan("group.use-case.readById", { attributes: { id } }),
+          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
           policyRequire("Group", "readById")
         )
 
@@ -44,7 +45,7 @@ export const GroupUseCase = Layer.effect(
       driven.update(id, group)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("group.use-case.update", { attributes: { id, group } }),
+          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group }}),
           policyRequire("Group", "update")
         )
 

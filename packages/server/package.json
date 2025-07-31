@@ -33,6 +33,7 @@
     "@opentelemetry/sdk-trace-base": "^2.0.1",
     "@opentelemetry/sdk-trace-node": "^2.0.1",
     "@opentelemetry/sdk-trace-web": "^2.0.1",
+    "@opentelemetry/semantic-conventions": "^1.36.0",
     "@template/domain": "workspace:^",
     "effect": "latest",
     "uuid": "^11.1.0"

@@ -4,6 +4,7 @@ import { ErrorGroupNotFound } from "@template/domain/group/application/error-gro
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import { AccountId } from "@template/domain/account/application/domain-account"
 import { SqlClient } from "@effect/sql"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const GroupDriven = Layer.effect(
   PortGroupDriven,
@@ -14,14 +15,16 @@ export const GroupDriven = Layer.effect(
       sql<{ id: number }>`INSERT INTO tbl_group (owner_id, name) VALUES (${group.ownerId}, ${group.name}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => GroupId.make(row.id))
+        Effect.map((row) => GroupId.make(row.id)),
+        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
       )
 
     const del = (id: GroupId): Effect.Effect<void, ErrorGroupNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap(() => sql`DELETE FROM tbl_group WHERE id = ${id}`),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
       )
 
     const readAll = (): Effect.Effect<DomainGroup[], never, never> =>
@@ -43,7 +46,8 @@ export const GroupDriven = Layer.effect(
               updatedAt: new Date(row.updated_at)
             })
           )
-        )
+        ),
+        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }})
       )
 
     const readById = (id: GroupId): Effect.Effect<DomainGroup, ErrorGroupNotFound, never> =>
@@ -68,7 +72,8 @@ export const GroupDriven = Layer.effect(
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
           })
-        )
+        ),
+        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
       )
 
     const updateQuery = (
@@ -87,7 +92,8 @@ export const GroupDriven = Layer.effect(
       readById(id).pipe(
         Effect.flatMap((oldGroup) => updateQuery(id, { ...oldGroup, ...group })),
         sql.withTransaction,
-        Effect.catchTag("SqlError", Effect.die)
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
       )
 
     return {

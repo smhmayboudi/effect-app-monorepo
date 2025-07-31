@@ -8,6 +8,7 @@ import { AccessToken, DomainUser, DomainUserWithSensitive, UserId } from "@templ
 import { PortAccountDriving } from "../../account/application/port-account-driving.js"
 import { policyRequire } from "../../../util/policy.js"
 import { ActorAuthorized } from "@template/domain/actor"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const UserUseCase = Layer.effect(
   PortUserDriving,
@@ -19,7 +20,7 @@ export const UserUseCase = Layer.effect(
       account.create({}).pipe(
         Effect.flatMap((accountId) =>
           driven.create({ ...user, ownerId: accountId}).pipe(
-            Effect.withSpan("user.use-case.create", { attributes: { user, accountId } }),
+            Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user }}),
             policyRequire("User", "create")
           )
         )
@@ -29,34 +30,34 @@ export const UserUseCase = Layer.effect(
       driven.delete(id)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("user.use-case.delete", { attributes: { id } }),
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyRequire("User", "delete")
         )
 
     const readAll = (): Effect.Effect<DomainUser[], never, ActorAuthorized<"User", "readAll">> =>
       driven.readAll()
         .pipe(
-          Effect.withSpan("user.use-case.readAll"),
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
           policyRequire("User", "readAll")
         )
 
     const readByAccessToken = (accessToken: AccessToken): Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never> =>
       driven.readByAccessToken(accessToken)
         .pipe(
-          Effect.withSpan("user.use-case.readByAccessToken", { attributes: { accessToken } })
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }}),
         )
 
     const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, ActorAuthorized<"User", "readById">> =>
       driven.readById(id)
         .pipe(
-          Effect.withSpan("user.use-case.readById", { attributes: { id } }),
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
           policyRequire("User", "readById")
         )
 
     const readByIdWithSensitive = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
       driven.readByIdWithSensitive(id)
         .pipe(
-          Effect.withSpan("user.use-case.readByIdWithSensitive", { attributes: { id } }),
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id }}),
           policyRequire("User", "readByIdWithSensitive")
         )
 
@@ -64,7 +65,7 @@ export const UserUseCase = Layer.effect(
       driven.update(id, user)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("user.use-case.update", { attributes: { id, user } }),
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user }}),
           policyRequire("User", "update")
         )
 
