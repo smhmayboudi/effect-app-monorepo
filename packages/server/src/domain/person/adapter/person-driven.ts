@@ -11,9 +11,7 @@ export const PersonDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">): Effect.Effect<PersonId, never, never> =>
-      sql<{ id: number }>`
-        INSERT INTO tbl_person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id
-      `.pipe(
+      sql<{ id: number }>`INSERT INTO tbl_person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => PersonId.make(row.id))
@@ -35,9 +33,7 @@ export const PersonDriven = Layer.effect(
         last_name: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person
-      `.pipe(
+      }>`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
@@ -63,9 +59,7 @@ export const PersonDriven = Layer.effect(
         last_name: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id = ${id}
-      `.pipe(
+      }>`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -88,15 +82,13 @@ export const PersonDriven = Layer.effect(
     const updateQuery = (
       id: PersonId,
       person: Omit<DomainPerson, "id">
-    ) => sql`
-        UPDATE tbl_person SET
+    ) => sql`UPDATE tbl_person SET
           group_id = ${person.groupId},
           birthday = '${person.birthday}',
           first_name = '${person.firstName}',
           last_name = '${person.lastName}',
           updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}
-      `
+        WHERE id = ${id}`
 
     const update = (
       id: PersonId,

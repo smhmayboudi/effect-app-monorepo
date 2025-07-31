@@ -10,9 +10,7 @@ export const AccountDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">): Effect.Effect<AccountId, never, never> =>
-      sql<{ id: number }>`
-        INSERT INTO tbl_account () VALUES () RETURNING id
-      `.pipe(
+      sql<{ id: number }>`INSERT INTO tbl_account () VALUES () RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => AccountId.make(row.id)),
@@ -30,9 +28,7 @@ export const AccountDriven = Layer.effect(
         id: number
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, created_at, updated_at FROM tbl_account
-      `.pipe(
+      }>`SELECT id, created_at, updated_at FROM tbl_account`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
@@ -50,9 +46,7 @@ export const AccountDriven = Layer.effect(
         id: number
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, created_at, updated_at FROM tbl_account WHERE id = ${id}
-      `.pipe(
+      }>`SELECT id, created_at, updated_at FROM tbl_account WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -71,11 +65,9 @@ export const AccountDriven = Layer.effect(
     const buildUpdateQuery = (
       id: AccountId,
       user: Omit<DomainAccount, "id">
-    ) => sql`
-        UPDATE tbl_user SET
+    ) => sql`UPDATE tbl_user SET
           updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}
-      `
+        WHERE id = ${id}`
       
     const update = (id: AccountId, account: Partial<Omit<DomainAccount, "id">>): Effect.Effect<void, ErrorAccountNotFound, never> =>
       readById(id).pipe(

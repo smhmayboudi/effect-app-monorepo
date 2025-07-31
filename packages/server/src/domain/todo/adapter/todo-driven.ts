@@ -12,9 +12,7 @@ export const TodoDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">): Effect.Effect<TodoId, ErrorTodoAlreadyExists, never> =>
-      sql<{ id: number }>`
-        INSERT INTO tbl_todo (owner_id, done, text) VALUES (${todo.ownerId}, ${todo.done}, ${todo.text}) RETURNING id
-      `.pipe(
+      sql<{ id: number }>`INSERT INTO tbl_todo (owner_id, done, text) VALUES (${todo.ownerId}, ${todo.done}, ${todo.text}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => TodoId.make(row.id))
@@ -35,9 +33,7 @@ export const TodoDriven = Layer.effect(
         text: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo
-      `.pipe(
+      }>`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
@@ -61,9 +57,7 @@ export const TodoDriven = Layer.effect(
         text: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo WHERE id = ${id}
-      `.pipe(
+      }>`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -85,14 +79,12 @@ export const TodoDriven = Layer.effect(
     const updateQuery = (
       id: TodoId,
       todo: Omit<DomainTodo, "id">
-    ) => sql`
-        UPDATE tbl_todo SET
+    ) => sql`UPDATE tbl_todo SET
           owner_id = ${todo.ownerId},
           done = '${todo.done}',
           text = '${todo.text}',
           updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}
-      `
+        WHERE id = ${id}`
 
     const update = (
       id: TodoId,

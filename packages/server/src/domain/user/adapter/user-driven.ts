@@ -13,9 +13,7 @@ export const UserDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
-      sql<{ id: number }>`
-        INSERT INTO tbl_user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id
-      `.pipe(
+      sql<{ id: number }>`INSERT INTO tbl_user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email }))
@@ -39,9 +37,7 @@ export const UserDriven = Layer.effect(
         email: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, owner_id, email, created_at, updated_at FROM tbl_user
-      `.pipe(
+      }>`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
@@ -63,9 +59,7 @@ export const UserDriven = Layer.effect(
         email: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE access_token = ${Redacted.value(accessToken)}
-      `.pipe(
+      }>`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE access_token = ${Redacted.value(accessToken)}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -90,9 +84,7 @@ export const UserDriven = Layer.effect(
         email: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id = ${id}
-      `.pipe(
+      }>`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -118,9 +110,7 @@ export const UserDriven = Layer.effect(
         email: string
         created_at: Date
         updated_at: Date
-      }>`
-        SELECT id, owner_id, access_token, email, created_at, updated_at FROM tbl_user WHERE id = ${id}
-      `.pipe(
+      }>`SELECT id, owner_id, access_token, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) =>
@@ -139,13 +129,11 @@ export const UserDriven = Layer.effect(
     const buildUpdateQuery = (
       id: UserId,
       user: Omit<DomainUser, "id">
-    ) => sql`
-        UPDATE tbl_user SET
+    ) => sql`UPDATE tbl_user SET
           owner_id = ${user.ownerId},
           email = ${user.email},
           updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}
-      `
+        WHERE id = ${id}`
 
     const update = (
       id: UserId,
