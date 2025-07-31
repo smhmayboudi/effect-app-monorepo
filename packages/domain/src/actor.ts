@@ -44,7 +44,7 @@ export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnautho
   }
 }
 
-export const TypeId: unique symbol = Symbol.for("AuthorizedActor")
+export const TypeId: unique symbol = Symbol.for("ActorAuthorized")
 export type TypeId = typeof TypeId
 
 export interface ActorAuthorized<Entity extends string, Action extends string> extends DomainUser {

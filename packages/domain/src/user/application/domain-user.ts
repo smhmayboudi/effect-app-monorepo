@@ -1,4 +1,4 @@
-import { Context, Redacted, Schema } from "effect"
+import { Redacted, Schema } from "effect"
 import { AccountId } from "../../account/application/domain-account.js"
 
 export const AccessToken = Schema.transform(

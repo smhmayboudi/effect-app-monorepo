@@ -5,8 +5,9 @@ import { PortUserDriving } from "../application/port-user-driving.js"
 import { UserId } from "@template/domain/user/application/domain-user"
 import { PortAccountPolicy } from "../../account/application/account-policy.js"
 import { PortUserPolicy } from "../application/user-policy.js"
-import { policyUse } from "../../../util/policy.js"
+import { policyUse, withSystemActor } from "../../../util/policy.js"
 import { AccountId } from "@template/domain/account/application/domain-account"
+import { DomainActor } from "@template/domain/actor"
 
 export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
   Effect.gen(function*() {
@@ -37,9 +38,11 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
         )
       )
       .handle("readByMe", () =>
-        driving.readByMe(UserId.make(0)).pipe(
-          policyUse(policy.canReadByMe(UserId.make(0)))
+        DomainActor.pipe(
+          Effect.flatMap((user) => driving.readByMe(user.id)),
+          withSystemActor
         )
+        
       )
       .handle("update", ({ path: { id }, payload }) =>
         driving.update(id, payload).pipe(
