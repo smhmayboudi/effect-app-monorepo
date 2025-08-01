@@ -21,15 +21,20 @@ export class PersonDriving extends HttpApiGroup.make("person")
         firstName: Schema.NonEmptyString,
         lastName: Schema.NonEmptyString
       }))
+      .annotate(OpenApi.Description, "Person create")
+      .annotate(OpenApi.Summary, "Person create")
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
       .setPath(Schema.Struct({ id: PersonIdFromString }))
       .addSuccess(DomainPerson)
       .addError(ErrorPersonNotFound)
+      .annotate(OpenApi.Description, "Person readById")
+      .annotate(OpenApi.Summary, "Person readById")
   )
   .middlewareEndpoints(MiddlewareAuthentication)
   .annotate(OpenApi.Description, "Manage Person")
+  .annotate(OpenApi.Summary, "Manage Person")
   .annotate(OpenApi.Title, "Person")
   .prefix("/person")
 {}

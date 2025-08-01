@@ -7,10 +7,7 @@ export class MiddlewareAuthentication extends HttpApiMiddleware.Tag<MiddlewareAu
     failure: ErrorActorUnauthorized,
     provides: DomainActor,
     security: {
-      cookie: HttpApiSecurity.apiKey({
-        in: "cookie",
-        key: "token"
-      })
+      cookie: HttpApiSecurity.apiKey({ in: "cookie", key: "token" })
     }
   }
 ) {}
