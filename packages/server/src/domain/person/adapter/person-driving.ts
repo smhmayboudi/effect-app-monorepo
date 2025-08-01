@@ -6,6 +6,7 @@ import { GroupId } from "@template/domain/group/application/domain-group"
 import { PortPersonPolicy } from "../application/person-policy.js"
 import { policyUse } from "../../../util/policy.js"
 import { PersonId } from "@template/domain/person/application/domain-person"
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
   Effect.gen(function*() {
@@ -15,26 +16,31 @@ export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
     return handlers
       .handle("create", ({ payload }) =>
         driving.create({ ...payload, groupId: GroupId.make(0) }).pipe(
+          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }}),
           policyUse(policy.canCreate(PersonId.make(0)))
         )
       )
       // .handle("delete", ({ path: { id } }) =>
       //   driving.delete(id).pipe(
+      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }}),
       //     policyUse(policy.canDelete(PersonId.make(0)))
       //   )
       // )
       // .handle("readAll", () =>
       //   driving.readAll().pipe(
+      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
       //     policyUse(policy.canReadAll(PersonId.make(0)))
       //   )
       // )
       .handle("readById", ({ path: { id } }) =>
         driving.readById(id).pipe(
+          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }}),
           policyUse(policy.canReadById(PersonId.make(0)))
         )
       )
       // .handle("update", ({ path: { id } }) =>
       //   driving.update(id, { done: true }).pipe(
+      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }}),
       //     policyUse(policy.canUpdate(PersonId.make(0)))
       //   )
       // )
