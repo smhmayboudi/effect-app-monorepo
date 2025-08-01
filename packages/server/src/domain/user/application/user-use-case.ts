@@ -1,4 +1,4 @@
-import { Effect, Layer } from "effect"
+import { Effect, Layer, Redacted } from "effect"
 import { PortUserDriving } from "./port-user-driving.js"
 import { PortUserDriven } from "./port-user-driven.js"
 import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
@@ -9,23 +9,25 @@ import { PortAccountDriving } from "../../account/application/port-account-drivi
 import { policyRequire } from "../../../util/policy.js"
 import { ActorAuthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import { PortUUID } from "../../../infrastructure/application/port/uuid.js"
 
 export const UserUseCase = Layer.effect(
   PortUserDriving,
   Effect.gen(function* () {
     const account = yield* PortAccountDriving
     const driven = yield* PortUserDriven
+    const uuid = yield* PortUUID
 
     const create = (user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">): Effect.Effect<DomainUserWithSensitive, ErrorUserEmailAlreadyTaken, ActorAuthorized<"Account", "create"> | ActorAuthorized<"User", "create"> | ActorAuthorized<"User", "readByIdWithSensitive">> =>
-      account.create({}).pipe(
+      uuid.v7().pipe(Effect.flatMap((v7) => account.create({}).pipe(
         Effect.flatMap((accountId) =>
-          driven.create({ ...user, ownerId: accountId}).pipe(
+          driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId}).pipe(
             Effect.flatMap((userId) => readByIdWithSensitive(userId)),
             Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user }}),
             policyRequire("User", "create")
           )
         )
-      )
+      )))
 
     const del = (id: UserId): Effect.Effect<UserId, ErrorUserNotFound, ActorAuthorized<"User", "delete">> =>
       driven.delete(id)

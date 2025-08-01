@@ -13,8 +13,8 @@ export const UserDriven = Layer.effect(
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
-      sql<{ id: number }>`INSERT INTO tbl_user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${crypto.randomUUID()}) RETURNING id`.pipe(
+    const create = (user: Omit<DomainUserWithSensitive, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
+      sql<{ id: number }>`INSERT INTO tbl_user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${Redacted.value(user.accessToken)}) RETURNING id`.pipe(
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email }))

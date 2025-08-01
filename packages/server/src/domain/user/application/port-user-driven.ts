@@ -5,7 +5,7 @@ import { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/applicat
 import { AccessToken, DomainUser, DomainUserWithSensitive, UserId } from "@template/domain/user/application/domain-user"
 
 export class PortUserDriven extends Context.Tag("PortUserDriven")<PortUserDriven, {
-  create: (user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never>
+  create: (user: Omit<DomainUserWithSensitive, "id" | "createdAt" | "updatedAt">) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never>
   delete: (id: UserId) => Effect.Effect<void, ErrorUserNotFound, never>
   readAll: () => Effect.Effect<DomainUser[], never, never>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>

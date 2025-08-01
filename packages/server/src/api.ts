@@ -24,6 +24,7 @@ import { GroupPolicy } from "./domain/group/adapter/group-policy.js";
 import { PersonPolicy } from "./domain/person/adapter/person-policy.js";
 import { TodoPolicy } from "./domain/todo/adapter/todo-policy.js";
 import { UserPolicy } from "./domain/user/adapter/user-policy.js";
+import { UUID } from "./infrastructure/adapter/uuid.js";
 
 export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(
@@ -48,6 +49,7 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(UserDriving),
     Layer.provide(MiddlewareAuthenticationLive),
     Layer.provide(UserUseCase),
+    Layer.provide(UUID),
     Layer.provide(UserDriven),
     Layer.provide(UserPolicy),
   )
