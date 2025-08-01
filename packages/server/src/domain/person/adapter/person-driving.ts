@@ -2,7 +2,6 @@ import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
 import { PortPersonDriving } from "../application/port-person-driving.js"
-import { GroupId } from "@template/domain/group/application/domain-group"
 import { PortPersonPolicy } from "../application/person-policy.js"
 import { policyUse } from "../../../util/policy.js"
 import { PersonId } from "@template/domain/person/application/domain-person"
@@ -14,9 +13,9 @@ export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
     const policy = yield* PortPersonPolicy
 
     return handlers
-      .handle("create", ({ payload }) =>
-        driving.create({ ...payload, groupId: GroupId.make(0) }).pipe(
-          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person: { ...payload, groupId: GroupId.make(0) }}}),
+      .handle("create", ({ path, payload }) =>
+        driving.create({ ...payload, groupId: path.groupId }).pipe(
+          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person: { ...payload, groupId: path.groupId }}}),
           policyUse(policy.canCreate(PersonId.make(0)))
         )
       )
