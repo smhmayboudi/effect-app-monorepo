@@ -22,7 +22,7 @@ export const MiddlewareAuthenticationLive = Layer.effect(
               })
             )),
             Effect.flatMap(Effect.succeed),
-            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie" }})
+            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }})
           )
     })
   })

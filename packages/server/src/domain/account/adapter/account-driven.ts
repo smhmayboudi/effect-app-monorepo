@@ -15,7 +15,7 @@ export const AccountDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => AccountId.make(row.id)),
-        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account }})
       )
 
     const del = (id: AccountId): Effect.Effect<void, ErrorAccountNotFound, never> =>
@@ -23,7 +23,7 @@ export const AccountDriven = Layer.effect(
         Effect.flatMap(() => sql`DELETE FROM tbl_account WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }})
       )
 
     const readAll = (): Effect.Effect<DomainAccount[], never, never> =>
@@ -64,7 +64,7 @@ export const AccountDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }})
       )
 
     const buildUpdateQuery = (
@@ -79,7 +79,7 @@ export const AccountDriven = Layer.effect(
         Effect.flatMap((oldAccount) => buildUpdateQuery(id, { ...oldAccount, ...account })),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, account }})
       )
 
     return {

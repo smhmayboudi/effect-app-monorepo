@@ -21,13 +21,13 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
             MiddlewareAuthentication.security.cookie,
             user.accessToken
           )),
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }}),
+          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user: payload }}),
           withSystemActor,
         )
       )
-      .handle("delete", ({ path: { id } }) =>
+      .handle("delete", ({ path: { id }}) =>
         driving.delete(id).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }}),
+          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyUse(policy.canDelete(UserId.make(0)))
         )
       )
@@ -37,22 +37,23 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
           policyUse(policy.canReadAll(UserId.make(0)))
         )
       )
-      .handle("readById", ({ path: { id } }) =>
+      .handle("readById", ({ path: { id }}) =>
         driving.readById(id).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }}),
+          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
           policyUse(policy.canReadById(UserId.make(0)))
         )
       )
       .handle("readByIdWithSensitive", () =>
         DomainActor.pipe(
-          Effect.flatMap((user) => driving.readByIdWithSensitive(user.id)),
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive" }}),
+          Effect.flatMap((user) => driving.readByIdWithSensitive(user.id).pipe(
+            Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id: user.id }}),
+          )),
           withSystemActor
         )
       )
       .handle("update", ({ path: { id }, payload }) =>
         driving.update(id, payload).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }}),
+          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user: payload }}),
           policyUse(policy.canUpdate(UserId.make(0)))
         )
       )

@@ -24,7 +24,7 @@ describe("TodoApi", () => {
         baseUrl: "http://localhost:3000/"
       })
       const text = "my new todo"
-      const todo = yield* client.todo.create({ payload: { text } })
+      const todo = yield* client.todo.create({ payload: { text }})
       expect(todo.text).toEqual(text)
     }).pipe(
       Effect.provide(NodeHttpClient.layer)

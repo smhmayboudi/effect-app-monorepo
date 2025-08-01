@@ -16,7 +16,7 @@ export const PersonDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => PersonId.make(row.id)),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person }})
       )
 
     const del = (id: PersonId): Effect.Effect<void, ErrorPersonNotFound, never> =>
@@ -24,7 +24,7 @@ export const PersonDriven = Layer.effect(
         Effect.flatMap(() => sql`DELETE FROM tbl_person WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }})
       )
 
     const readAll = (): Effect.Effect<DomainPerson[], never, never> =>
@@ -81,7 +81,7 @@ export const PersonDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }})
       )
 
     const updateQuery = (
@@ -103,7 +103,7 @@ export const PersonDriven = Layer.effect(
         Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person }})
       )
 
     return {

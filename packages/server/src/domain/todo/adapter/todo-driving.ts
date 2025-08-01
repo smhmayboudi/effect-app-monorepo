@@ -16,13 +16,13 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
     return handlers
       .handle("create", ({ payload }) =>
         driving.create({ ...payload, ownerId: AccountId.make(0), done: false }).pipe(
-          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }}),
+          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", todo: { ...payload, ownerId: AccountId.make(0), done: false }}}),
           policyUse(policy.canCreate(TodoId.make(0)))
         )
       )
-      .handle("delete", ({ path: { id } }) =>
+      .handle("delete", ({ path: { id }}) =>
         driving.delete(id).pipe(
-          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }}),
+          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyUse(policy.canDelete(TodoId.make(0)))
         )
       )
@@ -32,15 +32,15 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
           policyUse(policy.canReadAll(TodoId.make(0)))
         )
       )
-      .handle("readById", ({ path: { id } }) =>
+      .handle("readById", ({ path: { id }}) =>
         driving.readById(id).pipe(
-          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }}),
+          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
           policyUse(policy.canReadById(TodoId.make(0)))
         )
       )
-      .handle("update", ({ path: { id } }) =>
+      .handle("update", ({ path: { id }}) =>
         driving.update(id, { done: true }).pipe(
-          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }}),
+          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", todo: { done: true }}}),
           policyUse(policy.canUpdate(TodoId.make(0)))
         )
       )

@@ -16,14 +16,15 @@ export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
     return handlers
       .handle("create", ({ payload }) =>
         DomainActor.pipe(
-          Effect.flatMap((user) => driving.create({ ...payload, ownerId: user.ownerId})),
-          Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }}),
+          Effect.flatMap((user) => driving.create({ ...payload, ownerId: user.ownerId }).pipe(
+            Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group: { ...payload, ownerId: user.ownerId }}}),
+          )),
           policyUse(policy.canCreate(GroupId.make(0)))
         )
       )
-      // .handle("delete", ({ path: { id } }) =>
+      // .handle("delete", ({ path: { id }}) =>
       //   driving.delete(id).pipe(
-      //     Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }}),
+      //     Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
       //     policyUse(policy.canDelete(GroupId.make(0)))
       //   )
       // )
@@ -33,15 +34,15 @@ export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
       //     policyUse(policy.canReadAll(GroupId.make(0)))
       //   )
       // )
-      // .handle("readById", ({ path: { id } }) =>
+      // .handle("readById", ({ path: { id }}) =>
       //   driving.readById(id).pipe(
-      //     Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }}),
+      //     Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
       //     policyUse(policy.readById(GroupId.make(0)))
       //   )
       // )
       .handle("update", ({ path: { id }, payload }) =>
         driving.update(id, payload).pipe(
-          Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }}),
+          Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group: payload }}),
           policyUse(policy.canUpdate(GroupId.make(0)))
         )
       )

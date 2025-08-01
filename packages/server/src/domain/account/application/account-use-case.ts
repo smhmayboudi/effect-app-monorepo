@@ -15,7 +15,7 @@ export const AccountUseCase = Layer.effect(
     const create = (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">): Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">> =>
       driven.create(account)
         .pipe(
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account } }),
+          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account }}),
           policyRequire("Account", "create")
         )
 
@@ -23,7 +23,7 @@ export const AccountUseCase = Layer.effect(
       driven.delete(id)
         .pipe(
           Effect.flatMap(() => Effect.succeed(id)),
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
           policyRequire("Account", "delete")
         )
 

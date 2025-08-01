@@ -22,7 +22,7 @@ export const UserDriven = Layer.effect(
         ),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => UserId.make(row.id)),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user }})
       )
 
     const del = (id: UserId): Effect.Effect<void, ErrorUserNotFound, never> =>
@@ -30,7 +30,7 @@ export const UserDriven = Layer.effect(
         Effect.flatMap(() => sql`DELETE FROM tbl_user WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }})
       )
 
     const readAll = (): Effect.Effect<DomainUser[], never, never> =>
@@ -79,7 +79,7 @@ export const UserDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }})
       )
 
     const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, never> =>
@@ -105,7 +105,7 @@ export const UserDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }})
       )
 
     const readByIdWithSensitive = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
@@ -130,7 +130,7 @@ export const UserDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id }})
       )
 
     const buildUpdateQuery = (
@@ -154,7 +154,7 @@ export const UserDriven = Layer.effect(
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email! }))
             : Effect.die(error)
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user }})
       )
 
     return {

@@ -17,7 +17,7 @@ export const TodoDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => TodoId.make(row.id)),
-        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }})
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", todo }})
       )
 
     const del = (id: TodoId): Effect.Effect<void, ErrorTodoNotFound, never> =>
@@ -25,7 +25,7 @@ export const TodoDriven = Layer.effect(
         Effect.flatMap(() => sql`DELETE FROM tbl_todo WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }})
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }})
       )
 
     const readAll = (): Effect.Effect<DomainTodo[], never, never> =>
@@ -78,7 +78,7 @@ export const TodoDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }})
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }})
       )
 
     const updateQuery = (
@@ -99,7 +99,7 @@ export const TodoDriven = Layer.effect(
         Effect.flatMap((oldTodo) => updateQuery(id, { ...oldTodo, ...todo })),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }})
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo }})
       )
 
     return {

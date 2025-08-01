@@ -16,13 +16,13 @@ export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
     return handlers
       .handle("create", ({ payload }) =>
         driving.create({ ...payload, groupId: GroupId.make(0) }).pipe(
-          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create" }}),
+          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person: { ...payload, groupId: GroupId.make(0) }}}),
           policyUse(policy.canCreate(PersonId.make(0)))
         )
       )
-      // .handle("delete", ({ path: { id } }) =>
+      // .handle("delete", ({ path: { id }}) =>
       //   driving.delete(id).pipe(
-      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete" }}),
+      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
       //     policyUse(policy.canDelete(PersonId.make(0)))
       //   )
       // )
@@ -32,15 +32,15 @@ export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
       //     policyUse(policy.canReadAll(PersonId.make(0)))
       //   )
       // )
-      .handle("readById", ({ path: { id } }) =>
+      .handle("readById", ({ path: { id }}) =>
         driving.readById(id).pipe(
-          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById" }}),
+          Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }}),
           policyUse(policy.canReadById(PersonId.make(0)))
         )
       )
-      // .handle("update", ({ path: { id } }) =>
-      //   driving.update(id, { done: true }).pipe(
-      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update" }}),
+      // .handle("update", ({ path: { id }}) =>
+      //   driving.update(id, { payload }).pipe(
+      //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person: payload }}),
       //     policyUse(policy.canUpdate(PersonId.make(0)))
       //   )
       // )
