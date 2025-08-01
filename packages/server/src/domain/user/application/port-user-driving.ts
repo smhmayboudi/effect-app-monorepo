@@ -6,7 +6,7 @@ import { AccessToken, DomainUser, DomainUserWithSensitive, UserId } from "@templ
 import { ActorAuthorized } from "@template/domain/actor"
 
 export class PortUserDriving extends Context.Tag("PortUserDriving")<PortUserDriving, {
-  create: (user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, ActorAuthorized<"User", "create"> | ActorAuthorized<"Account", "create">>
+  create: (user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">) => Effect.Effect<DomainUserWithSensitive, ErrorUserEmailAlreadyTaken, ActorAuthorized<"Account", "create"> | ActorAuthorized<"User", "create"> | ActorAuthorized<"User", "readByIdWithSensitive">>
   delete: (id: UserId) => Effect.Effect<UserId, ErrorUserNotFound, ActorAuthorized<"User", "delete">>
   readAll: () => Effect.Effect<DomainUser[], never, ActorAuthorized<"User", "readAll">>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>

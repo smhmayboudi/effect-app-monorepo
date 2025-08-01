@@ -19,12 +19,12 @@ const NodeSdkLive = NodeSdk.layer(() => ({
 }))
 
 const HttpApiLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
+  Layer.provide(NodeSdkLive),
   Layer.provide(HttpApiBuilder.middlewareCors()),
   Layer.provide(HttpApiBuilder.middlewareOpenApi({ path: "/openapi.json" })),
   Layer.provide(HttpApiScalar.layer({ path: "/references" })),
   Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
   Layer.provide(ApiLive),
-  Layer.provide(NodeSdkLive),
   HttpServer.withLogAddress,
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 }))
 )

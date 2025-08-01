@@ -3,23 +3,24 @@ import { Api } from "@template/domain/api"
 import { Effect } from "effect"
 import { PortUserDriving } from "../application/port-user-driving.js"
 import { UserId } from "@template/domain/user/application/domain-user"
-import { PortAccountPolicy } from "../../account/application/account-policy.js"
 import { PortUserPolicy } from "../application/user-policy.js"
 import { policyUse, withSystemActor } from "../../../util/policy.js"
-import { AccountId } from "@template/domain/account/application/domain-account"
 import { DomainActor } from "@template/domain/actor"
+import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
 
 export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
   Effect.gen(function*() {
     const driving = yield* PortUserDriving
-    const account = yield* PortAccountPolicy
     const policy = yield* PortUserPolicy
 
     return handlers
       .handle("create", ({ payload }) =>
         driving.create(payload).pipe(
-          policyUse(account.canCreate(AccountId.make(0))),
-          policyUse(policy.canCreate(UserId.make(0)))
+          withSystemActor,
+          Effect.tap((user) => HttpApiBuilder.securitySetCookie(
+            MiddlewareAuthentication.security.cookie,
+            user.accessToken
+          )),
         )
       )
       .handle("delete", ({ path: { id } }) =>

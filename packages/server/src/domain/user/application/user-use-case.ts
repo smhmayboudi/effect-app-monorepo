@@ -16,10 +16,11 @@ export const UserUseCase = Layer.effect(
     const account = yield* PortAccountDriving
     const driven = yield* PortUserDriven
 
-    const create = (user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, ActorAuthorized<"User", "create"> | ActorAuthorized<"Account", "create">> =>
+    const create = (user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">): Effect.Effect<DomainUserWithSensitive, ErrorUserEmailAlreadyTaken, ActorAuthorized<"Account", "create"> | ActorAuthorized<"User", "create"> | ActorAuthorized<"User", "readByIdWithSensitive">> =>
       account.create({}).pipe(
         Effect.flatMap((accountId) =>
           driven.create({ ...user, ownerId: accountId}).pipe(
+            Effect.flatMap((userId) => readByIdWithSensitive(userId)),
             Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user }}),
             policyRequire("User", "create")
           )
