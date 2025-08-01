@@ -28,19 +28,12 @@ export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnautho
     return <A, E, R>(
       effect: Effect.Effect<A, E, R>
     ): Effect.Effect<A, E | ErrorActorUnauthorized, R | DomainActor> =>
-      Effect.catchIf(
-        effect,
+      effect.pipe(Effect.catchIf(
         (e) => !ErrorActorUnauthorized.is(e),
-        () => Effect.flatMap(
-          DomainActor,
-          (actor) =>
-            new ErrorActorUnauthorized({
-              actorId: actor.id,
-              entity,
-              action
-            })
-        )
-      )
+        () => DomainActor.pipe(Effect.flatMap((actor) =>
+          new ErrorActorUnauthorized({ actorId: actor.id, entity, action })
+        ))
+      ))
   }
 }
 
