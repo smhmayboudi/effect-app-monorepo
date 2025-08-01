@@ -11,13 +11,6 @@ export const UserIdFromString = Schema.NumberFromString.pipe(
 
 export class UserDriving extends HttpApiGroup.make("user")
   .add(
-    HttpApiEndpoint.post("create", "/")
-      .addError(ErrorUserEmailAlreadyTaken)
-      // .addSuccess(DomainUserWithSensitive)
-      .addSuccess(UserId)
-      .setPayload(Schema.Struct({ email: Email }))
-  )
-  .add(
     HttpApiEndpoint.del("delete", "/:id")
       .addError(ErrorUserNotFound, { status: 404 })
       .addSuccess(UserId)
@@ -45,8 +38,14 @@ export class UserDriving extends HttpApiGroup.make("user")
       .setPath(Schema.Struct({ id: UserIdFromString }))
       .setPayload(Schema.Struct({ email: Email }))
   )
+  .middlewareEndpoints(MiddlewareAuthentication)
+  .add(
+    HttpApiEndpoint.post("create", "/")
+      .addError(ErrorUserEmailAlreadyTaken)
+      .addSuccess(DomainUserWithSensitive)
+      .setPayload(Schema.Struct({ email: Email }))
+  )
   .annotate(OpenApi.Description, "Manage User")
   .annotate(OpenApi.Title, "User")
-  .middlewareEndpoints(MiddlewareAuthentication)
   .prefix("/user")
 {}
