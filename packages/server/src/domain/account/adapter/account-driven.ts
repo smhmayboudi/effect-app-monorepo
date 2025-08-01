@@ -11,7 +11,7 @@ export const AccountDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">): Effect.Effect<AccountId, never, never> =>
-      sql<{ id: number }>`INSERT INTO tbl_account () VALUES () RETURNING id`.pipe(
+      sql<{ id: number }>`INSERT INTO tbl_account DEFAULT VALUES RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => AccountId.make(row.id)),
