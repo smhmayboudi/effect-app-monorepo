@@ -1,5 +1,5 @@
 import { Effect, Layer } from "effect"
-import { PortTodoDriven } from "../application/port-todo-driven.js"
+import { PortTodoDriven } from "@template/server/domain/todo/application/port-todo-driven"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 import { AccountId } from "@template/domain/account/application/domain-account"

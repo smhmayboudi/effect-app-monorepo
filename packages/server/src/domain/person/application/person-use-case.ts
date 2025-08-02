@@ -1,9 +1,9 @@
 import { Effect, Layer } from "effect"
-import { PortPersonDriving } from "./port-person-driving.js"
-import { PortPersonDriven } from "./port-person-driven.js"
+import { PortPersonDriving } from "@template/server/domain/person/application/port-person-driving"
+import { PortPersonDriven } from "@template/server/domain/person/application/port-person-driven"
 import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "@template/server/util/policy"
 import { ActorAuthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 

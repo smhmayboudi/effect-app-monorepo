@@ -1,9 +1,9 @@
 import { Effect, Layer } from "effect"
-import { policy } from "../../../util/policy.js"
+import { policy } from "@template/server/util/policy"
 import { DomainActor } from "@template/domain/actor"
 import { GroupId } from "@template/domain/group/application/domain-group"
 import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
-import { PortGroupPolicy } from "../application/group-policy.js"
+import { PortGroupPolicy } from "@template/server/domain/group/application/group-policy"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const GroupPolicy = Layer.effect(

@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { AccountId } from "../../account/application/domain-account.js"
+import { AccountId } from "@template/domain/account/application/domain-account"
 
 export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"))
 export type TodoId = typeof TodoId.Type

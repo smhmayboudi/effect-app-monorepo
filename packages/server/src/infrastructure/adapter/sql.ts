@@ -2,7 +2,7 @@ import { SqlClient } from "@effect/sql"
 import { SqliteClient, SqliteMigrator } from "@effect/sql-sqlite-node"
 import { identity, Layer } from "effect"
 import { fileURLToPath } from "url"
-import { makeTestLayer } from "../../util/layer.js"
+import { makeTestLayer } from "@template/server/util/layer"
 
 const Client = SqliteClient.layer({
   filename: "./db.sqlite"

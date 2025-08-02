@@ -1,10 +1,10 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { ErrorUserEmailAlreadyTaken } from "../application/error-user-email-already-taken.js"
-import { DomainUser, DomainUserWithSensitive, Email, UserId } from "../application/domain-user.js"
-import { ErrorUserNotFound } from "../application/error-user-not-found.js"
-import { MiddlewareAuthentication } from "../../middleware-authentication.js"
-import { ResponseSuccess } from "../../shared/adapter/response.js"
+import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
+import { DomainUser, DomainUserWithSensitive, Email, UserId } from "@template/domain/user/application/domain-user"
+import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
+import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
+import { ResponseSuccess } from "@template/domain/shared/adapter/response"
 
 export const UserIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(UserId)

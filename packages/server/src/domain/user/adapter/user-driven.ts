@@ -1,5 +1,5 @@
 import { Effect, Layer, Redacted } from "effect"
-import { PortUserDriven } from "../application/port-user-driven.js"
+import { PortUserDriven } from "@template/server/domain/user/application/port-user-driven"
 import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
 import { AccessToken, DomainUser, DomainUserWithSensitive, Email, UserId } from "@template/domain/user/application/domain-user"
 import { AccountId } from "@template/domain/account/application/domain-account"

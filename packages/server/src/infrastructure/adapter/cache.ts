@@ -4,7 +4,7 @@ import type * as Effect from "effect/Effect";
 import type * as Option from "effect/Option";
 import type * as Scope from "effect/Scope";
 import type * as Types from "effect/Types";
-import * as internal from "../application/port/cache.js";
+import * as internal from "@template/server/infrastructure/application/port/cache";
 
 /**
  * A `ManualCache` is a key-value store with a specified capacity and time to live for entries,

@@ -1,5 +1,5 @@
 import { HttpApiGroup, OpenApi } from "@effect/platform"
-import { MiddlewareAuthentication } from "../../middleware-authentication.js";
+import { MiddlewareAuthentication } from "@template/domain/middleware-authentication";
 
 export class AccountDriving extends HttpApiGroup.make("account")
   .middlewareEndpoints(MiddlewareAuthentication)

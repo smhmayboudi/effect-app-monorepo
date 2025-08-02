@@ -1,6 +1,6 @@
 import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
 import { Effect, Layer } from "effect"
-import { PortUserDriving } from "./domain/user/application/port-user-driving.js"
+import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
 import { AccessToken, UserId } from "@template/domain/user/application/domain-user"
 import { ErrorActorUnauthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"

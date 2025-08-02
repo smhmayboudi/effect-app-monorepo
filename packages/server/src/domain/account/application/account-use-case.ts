@@ -1,9 +1,9 @@
 import { Effect, Layer } from "effect"
-import { PortAccountDriving } from "./port-account-driving.js"
-import { PortAccountDriven } from "./port-account-driven.js"
+import { PortAccountDriving } from "@template/server/domain/account/application/port-account-driving"
+import { PortAccountDriven } from "@template/server/domain/account/application/port-account-driven"
 import { ErrorAccountNotFound } from "@template/domain/account/application/error-account-not-found"
 import { DomainAccount, AccountId } from "@template/domain/account/application/domain-account"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "@template/server/util/policy"
 import { ActorAuthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 

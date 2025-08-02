@@ -1,9 +1,9 @@
 import { Effect, Layer } from "effect"
-import { policy } from "../../../util/policy.js"
+import { policy } from "@template/server/util/policy"
 import { UserId } from "@template/domain/user/application/domain-user"
 import { DomainActor } from "@template/domain/actor"
 import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
-import { PortUserPolicy } from "../application/user-policy.js"
+import { PortUserPolicy } from "@template/server/domain/user/application/user-policy"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const UserPolicy = Layer.effect(

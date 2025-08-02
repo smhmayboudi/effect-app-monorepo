@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Context, Effect, Predicate, Schema } from "effect"
-import { DomainUser, UserId } from "./user/application/domain-user.js"
+import { DomainUser, UserId } from "@template/domain/user/application/domain-user"
 
 export class DomainActor extends Context.Tag("DomainActor")<
   DomainActor,

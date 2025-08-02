@@ -1,12 +1,12 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
-import { PortPersonDriving } from "../application/port-person-driving.js"
-import { PortPersonPolicy } from "../application/person-policy.js"
-import { policyUse } from "../../../util/policy.js"
+import { PortPersonDriving } from "@template/server/domain/person/application/port-person-driving"
+import { PortPersonPolicy } from "@template/server/domain/person/application/person-policy"
+import { policyUse } from "@template/server/util/policy"
 import { PersonId } from "@template/domain/person/application/domain-person"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { response } from "../../../shared/application/response.js"
+import { response } from "@template/server/shared/application/response"
 
 export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
   Effect.gen(function*() {

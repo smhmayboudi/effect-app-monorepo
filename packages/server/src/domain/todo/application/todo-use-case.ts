@@ -1,10 +1,10 @@
 import { Effect, Layer } from "effect"
-import { PortTodoDriving } from "./port-todo-driving.js"
-import { PortTodoDriven } from "./port-todo-driven.js"
+import { PortTodoDriving } from "@template/server/domain/todo/application/port-todo-driving"
+import { PortTodoDriven } from "@template/server/domain/todo/application/port-todo-driven"
 import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "@template/server/util/policy"
 import { ActorAuthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 

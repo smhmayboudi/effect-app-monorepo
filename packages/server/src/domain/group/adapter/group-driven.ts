@@ -1,5 +1,5 @@
 import { Effect, Layer } from "effect"
-import { PortGroupDriven } from "../application/port-group-driven.js"
+import { PortGroupDriven } from "@template/server/domain/group/application/port-group-driven"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import { AccountId } from "@template/domain/account/application/domain-account"

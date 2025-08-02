@@ -1,9 +1,9 @@
 import { Effect, Layer } from "effect"
-import { policy } from "../../../util/policy.js"
+import { policy } from "@template/server/util/policy"
 import { DomainActor } from "@template/domain/actor"
 import { TodoId } from "@template/domain/todo/application/domain-todo"
 import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
-import { PortTodoPolicy } from "../application/todo-policy.js"
+import { PortTodoPolicy } from "@template/server/domain/todo/application/todo-policy"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
 export const TodoPolicy = Layer.effect(

@@ -1,15 +1,15 @@
 import { Effect, Layer, Redacted } from "effect"
-import { PortUserDriving } from "./port-user-driving.js"
-import { PortUserDriven } from "./port-user-driven.js"
+import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
+import { PortUserDriven } from "@template/server/domain/user/application/port-user-driven"
 import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
 import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
 import { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
 import { AccessToken, DomainUser, DomainUserWithSensitive, UserId } from "@template/domain/user/application/domain-user"
-import { PortAccountDriving } from "../../account/application/port-account-driving.js"
-import { policyRequire } from "../../../util/policy.js"
+import { PortAccountDriving } from "@template/server/domain/account/application/port-account-driving"
+import { policyRequire } from "@template/server/util/policy"
 import { ActorAuthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { PortUUID } from "../../../infrastructure/application/port/uuid.js"
+import { PortUUID } from "@template/server/infrastructure/application/port/uuid"
 
 export const UserUseCase = Layer.effect(
   PortUserDriving,

@@ -1,13 +1,13 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/api"
 import { Effect } from "effect"
-import { PortGroupDriving } from "../application/port-group-driving.js"
-import { PortGroupPolicy } from "../../group/application/group-policy.js"
-import { policyUse } from "../../../util/policy.js"
+import { PortGroupDriving } from "@template/server/domain/group/application/port-group-driving"
+import { PortGroupPolicy } from "@template/server/domain/group/application/group-policy"
+import { policyUse } from "@template/server/util/policy"
 import { GroupId } from "@template/domain/group/application/domain-group"
 import { DomainActor } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { response } from "../../../shared/application/response.js"
+import { response } from "@template/server/shared/application/response"
 
 export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
   Effect.gen(function*() {

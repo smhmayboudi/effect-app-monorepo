@@ -1,5 +1,5 @@
 import { Effect, Layer } from "effect"
-import { PortAccountDriven } from "../application/port-account-driven.js"
+import { PortAccountDriven } from "@template/server/domain/account/application/port-account-driven"
 import { ErrorAccountNotFound } from "@template/domain/account/application/error-account-not-found"
 import { DomainAccount, AccountId } from "@template/domain/account/application/domain-account"
 import { SqlClient } from "@effect/sql"

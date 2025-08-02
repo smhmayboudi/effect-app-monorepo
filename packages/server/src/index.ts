@@ -2,7 +2,7 @@ import { HttpApiBuilder, HttpApiScalar, HttpApiSwagger, HttpMiddleware, HttpServ
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
 import { Layer } from "effect"
 import { createServer } from "node:http"
-import { ApiLive } from "./api.js"
+import { ApiLive } from "@template/server/api"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { NodeSdk } from "@effect/opentelemetry";
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";

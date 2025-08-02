@@ -1,9 +1,9 @@
 import { Effect, Layer } from "effect"
-import { PortGroupDriving } from "./port-group-driving.js"
-import { PortGroupDriven } from "./port-group-driven.js"
+import { PortGroupDriving } from "@template/server/domain/group/application/port-group-driving"
+import { PortGroupDriven } from "@template/server/domain/group/application/port-group-driven"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "@template/server/util/policy"
 import { ActorAuthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 
