@@ -37,7 +37,7 @@ export const AccountDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
-            DomainAccount.make({
+            new DomainAccount({
               id: AccountId.make(row.id),
               createdAt: new Date(row.created_at),
               updatedAt: new Date(row.updated_at)
@@ -60,7 +60,7 @@ export const AccountDriven = Layer.effect(
             : Effect.succeed(rows[0])
         ),
         Effect.map((row) =>
-          DomainAccount.make({
+          new DomainAccount({
             id: AccountId.make(row.id),
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)

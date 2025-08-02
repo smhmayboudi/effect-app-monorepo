@@ -45,7 +45,7 @@ export const TodoDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
-            DomainTodo.make({
+            new DomainTodo({
               id: TodoId.make(row.id),
               ownerId: AccountId.make(row.owner_id),
               done: row.done,
@@ -74,7 +74,7 @@ export const TodoDriven = Layer.effect(
             : Effect.succeed(rows[0])
         ),
         Effect.map((row) =>
-          DomainTodo.make({
+          new DomainTodo({
             id: TodoId.make(row.id),
             ownerId: AccountId.make(row.owner_id),
             done: row.done,

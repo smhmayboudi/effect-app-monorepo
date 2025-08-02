@@ -45,7 +45,7 @@ export const PersonDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
-            DomainPerson.make({
+            new DomainPerson({
               id: PersonId.make(row.id),
               groupId: GroupId.make(row.group_id),
               birthday: new Date(row.birthday),
@@ -77,7 +77,7 @@ export const PersonDriven = Layer.effect(
               : Effect.succeed(rows[0])
           ),
           Effect.map((row) =>
-            DomainPerson.make({
+            new DomainPerson({
               id: PersonId.make(row.id),
               groupId: GroupId.make(row.group_id),
               birthday: new Date(row.birthday),

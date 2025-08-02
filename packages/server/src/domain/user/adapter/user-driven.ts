@@ -55,7 +55,7 @@ export const UserDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
-            DomainUser.make({
+            new DomainUser({
               id: UserId.make(row.id),
               ownerId: AccountId.make(row.owner_id),
               email: Email.make(row.email),
@@ -86,7 +86,7 @@ export const UserDriven = Layer.effect(
             : Effect.succeed(rows[0])
         ),
         Effect.map((row) =>
-          DomainUser.make({
+          new DomainUser({
             id: UserId.make(row.id),
             ownerId: AccountId.make(row.owner_id),
             email: Email.make(row.email),
@@ -112,7 +112,7 @@ export const UserDriven = Layer.effect(
             : Effect.succeed(rows[0])
         ),
         Effect.map((row) =>
-          DomainUser.make({
+          new DomainUser({
             id: UserId.make(row.id),
             ownerId: AccountId.make(row.owner_id),
             email: Email.make(row.email),
@@ -135,11 +135,11 @@ export const UserDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) =>
-          DomainUserWithSensitive.make({
+          new DomainUserWithSensitive({
             id: UserId.make(row.id),
             ownerId: AccountId.make(row.owner_id),
             accessToken: AccessToken.make(Redacted.make(row.access_token)),
-            // account: DomainAccount.make({}),
+            // account: new DomainAccount({}),
             email: Email.make(row.email),
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)

@@ -39,7 +39,7 @@ export const GroupDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.map((rows) =>
           rows.map((row) =>
-            DomainGroup.make({
+            new DomainGroup({
               id: GroupId.make(row.id),
               ownerId: AccountId.make(row.owner_id),
               name: row.name,
@@ -66,7 +66,7 @@ export const GroupDriven = Layer.effect(
             : Effect.succeed(rows[0])
         ),
         Effect.map((row) =>
-          DomainGroup.make({
+          new DomainGroup({
             id: GroupId.make(row.id),
             ownerId: AccountId.make(row.owner_id),
             name: row.name,
