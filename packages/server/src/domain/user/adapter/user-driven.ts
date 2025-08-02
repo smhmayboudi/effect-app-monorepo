@@ -1,28 +1,39 @@
-import { Effect, Layer, Redacted } from "effect"
-import { PortUserDriven } from "@template/server/domain/user/application/port-user-driven"
-import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
-import { AccessToken, DomainUser, DomainUserWithSensitive, Email, UserId } from "@template/domain/user/application/domain-user"
-import { AccountId } from "@template/domain/account/application/domain-account"
 import { SqlClient } from "@effect/sql"
-import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
-import { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import { AccountId } from "@template/domain/account/application/domain-account"
+import {
+  AccessToken,
+  DomainUser,
+  DomainUserWithSensitive,
+  Email,
+  UserId
+} from "@template/domain/user/application/domain-user"
+import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
+import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
+import { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
+import { PortUserDriven } from "@template/server/domain/user/application/port-user-driven"
+import { Effect, Layer, Redacted } from "effect"
 
 export const UserDriven = Layer.effect(
   PortUserDriven,
-  Effect.gen(function* () {
+  Effect.gen(function*() {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (user: Omit<DomainUserWithSensitive, "id" | "createdAt" | "updatedAt">): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
-      sql<{ id: number }>`INSERT INTO tbl_user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${Redacted.value(user.accessToken)}) RETURNING id`.pipe(
+    const create = (
+      user: Omit<DomainUserWithSensitive, "id" | "createdAt" | "updatedAt">
+    ): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never> =>
+      sql<
+        { id: number }
+      >`INSERT INTO tbl_user (owner_id, email, access_token) VALUES (${user.ownerId}, ${user.email}, ${
+        Redacted.value(user.accessToken)
+      }) RETURNING id`.pipe(
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email }))
-            : Effect.die(error)
-        ),
+            : Effect.die(error)),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => UserId.make(row.id)),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user } })
       )
 
     const del = (id: UserId): Effect.Effect<void, ErrorUserNotFound, never> =>
@@ -30,10 +41,10 @@ export const UserDriven = Layer.effect(
         Effect.flatMap(() => sql`DELETE FROM tbl_user WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<DomainUser[], never, never> =>
+    const readAll = (): Effect.Effect<Array<DomainUser>, never, never> =>
       sql<{
         id: number
         owner_id: number
@@ -53,17 +64,21 @@ export const UserDriven = Layer.effect(
             })
           )
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
       )
 
-    const readByAccessToken = (accessToken: AccessToken): Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never> =>
+    const readByAccessToken = (
+      accessToken: AccessToken
+    ): Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never> =>
       sql<{
         id: number
         owner_id: number
         email: string
         created_at: Date
         updated_at: Date
-      }>`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE access_token = ${Redacted.value(accessToken)}`.pipe(
+      }>`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE access_token = ${
+        Redacted.value(accessToken)
+      }`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -79,7 +94,7 @@ export const UserDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken } })
       )
 
     const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, never> =>
@@ -105,7 +120,7 @@ export const UserDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
       )
 
     const readByIdWithSensitive = (id: UserId): Effect.Effect<DomainUserWithSensitive, never, never> =>
@@ -130,13 +145,14 @@ export const UserDriven = Layer.effect(
             updatedAt: new Date(row.updated_at)
           })
         ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id }})
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } })
       )
 
     const buildUpdateQuery = (
       id: UserId,
       user: Omit<DomainUser, "id">
-    ) => sql`UPDATE tbl_user SET
+    ) =>
+      sql`UPDATE tbl_user SET
           owner_id = ${user.ownerId},
           email = ${user.email},
           updated_at = CURRENT_TIMESTAMP
@@ -152,9 +168,8 @@ export const UserDriven = Layer.effect(
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email! }))
-            : Effect.die(error)
-        ),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user }})
+            : Effect.die(error)),
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } })
       )
 
     return {

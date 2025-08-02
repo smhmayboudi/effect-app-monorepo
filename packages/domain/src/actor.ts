@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
+import { type DomainUser, UserId } from "@template/domain/user/application/domain-user"
 import { Context, Effect, Predicate, Schema } from "effect"
-import { DomainUser, UserId } from "@template/domain/user/application/domain-user"
 
 export class DomainActor extends Context.Tag("DomainActor")<
   DomainActor,
@@ -30,9 +30,8 @@ export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnautho
     ): Effect.Effect<A, E | ErrorActorUnauthorized, R | DomainActor> =>
       effect.pipe(Effect.catchIf(
         (e) => !ErrorActorUnauthorized.is(e),
-        () => DomainActor.pipe(Effect.flatMap((actor) =>
-          new ErrorActorUnauthorized({ actorId: actor.id, entity, action })
-        ))
+        () =>
+          DomainActor.pipe(Effect.flatMap((actor) => new ErrorActorUnauthorized({ actorId: actor.id, entity, action })))
       ))
   }
 }

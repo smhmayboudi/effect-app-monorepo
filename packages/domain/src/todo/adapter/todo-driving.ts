@@ -1,10 +1,10 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
-import { Schema } from "effect"
+import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
+import { ResponseSuccess } from "@template/domain/shared/adapter/response"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 import { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
-import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
-import { ResponseSuccess } from "@template/domain/shared/adapter/response"
+import { Schema } from "effect"
 
 export const TodoIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(TodoId)

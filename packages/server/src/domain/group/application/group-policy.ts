@@ -1,7 +1,6 @@
-import { Context, Effect } from "effect"
-import { DomainActor } from "@template/domain/actor"
-import { GroupId } from "@template/domain/group/application/domain-group"
-import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
+import type { ActorAuthorized, DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
+import type { GroupId } from "@template/domain/group/application/domain-group"
+import { Context, type Effect } from "effect"
 
 export class PortGroupPolicy extends Context.Tag("PortGroupPolicy")<PortGroupPolicy, {
   canCreate: (id: GroupId) => Effect.Effect<ActorAuthorized<"Group", "create">, ErrorActorUnauthorized, DomainActor>

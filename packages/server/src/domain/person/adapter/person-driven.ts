@@ -1,33 +1,38 @@
-import { Effect, Layer } from "effect"
-import { PortPersonDriven } from "@template/server/domain/person/application/port-person-driven"
-import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
-import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 import { SqlClient } from "@effect/sql"
-import { GroupId } from "@template/domain/group/application/domain-group"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import { GroupId } from "@template/domain/group/application/domain-group"
+import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
+import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
+import { PortPersonDriven } from "@template/server/domain/person/application/port-person-driven"
+import { Effect, Layer } from "effect"
 
 export const PersonDriven = Layer.effect(
   PortPersonDriven,
-  Effect.gen(function* () {
+  Effect.gen(function*() {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">): Effect.Effect<PersonId, never, never> =>
-      sql<{ id: number }>`INSERT INTO tbl_person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id`.pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => PersonId.make(row.id)),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person }})
-      )
+    const create = (
+      person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">
+    ): Effect.Effect<PersonId, never, never> =>
+      sql<
+        { id: number }
+      >`INSERT INTO tbl_person (group_id, birthday, first_name, last_name) VALUES (${person.groupId}, ${person.birthday}, ${person.firstName}, ${person.lastName}) RETURNING id`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) => Effect.succeed(rows[0])),
+          Effect.map((row) => PersonId.make(row.id)),
+          Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person } })
+        )
 
     const del = (id: PersonId): Effect.Effect<void, ErrorPersonNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap(() => sql`DELETE FROM tbl_person WHERE id = ${id}`),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<DomainPerson[], never, never> =>
+    const readAll = (): Effect.Effect<Array<DomainPerson>, never, never> =>
       sql<{
         id: number
         group_id: number
@@ -51,7 +56,7 @@ export const PersonDriven = Layer.effect(
             })
           )
         ),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
       )
 
     const readById = (id: PersonId): Effect.Effect<DomainPerson, ErrorPersonNotFound, never> =>
@@ -63,31 +68,33 @@ export const PersonDriven = Layer.effect(
         last_name: string
         created_at: Date
         updated_at: Date
-      }>`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id = ${id}`.pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((rows) =>
-          rows.length === 0
-            ? Effect.fail(new ErrorPersonNotFound({ id }))
-            : Effect.succeed(rows[0])
-        ),
-        Effect.map((row) =>
-          DomainPerson.make({
-            id: PersonId.make(row.id),
-            groupId: GroupId.make(row.group_id),
-            birthday: new Date(row.birthday),
-            firstName: row.first_name,
-            lastName: row.last_name,
-            createdAt: new Date(row.created_at),
-            updatedAt: new Date(row.updated_at)
-          })
-        ),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id }})
-      )
+      }>`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id = ${id}`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) =>
+            rows.length === 0
+              ? Effect.fail(new ErrorPersonNotFound({ id }))
+              : Effect.succeed(rows[0])
+          ),
+          Effect.map((row) =>
+            DomainPerson.make({
+              id: PersonId.make(row.id),
+              groupId: GroupId.make(row.group_id),
+              birthday: new Date(row.birthday),
+              firstName: row.first_name,
+              lastName: row.last_name,
+              createdAt: new Date(row.created_at),
+              updatedAt: new Date(row.updated_at)
+            })
+          ),
+          Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
+        )
 
     const updateQuery = (
       id: PersonId,
       person: Omit<DomainPerson, "id">
-    ) => sql`UPDATE tbl_person SET
+    ) =>
+      sql`UPDATE tbl_person SET
           group_id = ${person.groupId},
           birthday = '${person.birthday}',
           first_name = '${person.firstName}',
@@ -103,7 +110,7 @@ export const PersonDriven = Layer.effect(
         Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),
         sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person }})
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } })
       )
 
     return {

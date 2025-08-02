@@ -1,15 +1,15 @@
+import { NodeSdk } from "@effect/opentelemetry"
 import { HttpApiBuilder, HttpApiScalar, HttpApiSwagger, HttpMiddleware, HttpServer } from "@effect/platform"
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http"
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http"
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
+import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
+import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
+import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
+import { ApiLive } from "@template/server/api"
 import { Layer } from "effect"
 import { createServer } from "node:http"
-import { ApiLive } from "@template/server/api"
-import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
-import { NodeSdk } from "@effect/opentelemetry";
-import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
-import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 
 const NodeSdkLive = NodeSdk.layer(() => ({
   logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),

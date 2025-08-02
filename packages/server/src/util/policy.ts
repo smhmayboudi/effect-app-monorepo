@@ -1,7 +1,6 @@
+import { type ActorAuthorized, DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
+import type { DomainUser } from "@template/domain/user/application/domain-user"
 import { Effect } from "effect"
-import { DomainUser } from "@template/domain/user/application/domain-user"
-import { DomainActor } from "@template/domain/actor"
-import { ActorAuthorized, ErrorActorUnauthorized } from "@template/domain/actor"
 
 const actorAuthorized = <Entity extends string, Action extends string>(
   user: DomainUser
@@ -31,7 +30,8 @@ export const policyCompose = <Actor extends ActorAuthorized<any, any>, E, R>(
 
 export const policyUse = <Actor extends ActorAuthorized<any, any>, E, R>(
   policy: Effect.Effect<Actor, E, R>
-) => <A, E2, R2>(
+) =>
+<A, E2, R2>(
   effect: Effect.Effect<A, E2, R2>
 ): Effect.Effect<A, E | E2, Exclude<R2, Actor> | R> => policy.pipe(Effect.zipRight(effect)) as any
 

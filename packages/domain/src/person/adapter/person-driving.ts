@@ -1,11 +1,11 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
-import { Schema } from "effect"
-import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
-import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { GroupIdFromString } from "@template/domain/group/adapter/group-driving"
-import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
+import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
+import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
+import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
 import { ResponseSuccess } from "@template/domain/shared/adapter/response"
+import { Schema } from "effect"
 
 export const PersonIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(PersonId)

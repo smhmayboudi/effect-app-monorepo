@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
-import type * as Duration from "effect/Duration";
-import type * as Effect from "effect/Effect";
-import type * as Option from "effect/Option";
-import type * as Scope from "effect/Scope";
-import type * as Types from "effect/Types";
-import * as internal from "@template/server/infrastructure/application/port/cache";
+import * as internal from "@template/server/infrastructure/application/port/cache"
+import type * as Duration from "effect/Duration"
+import type * as Effect from "effect/Effect"
+import type * as Option from "effect/Option"
+import type * as Scope from "effect/Scope"
+import type * as Types from "effect/Types"
 
 /**
  * A `ManualCache` is a key-value store with a specified capacity and time to live for entries,
@@ -24,58 +23,58 @@ export interface ManualCache<in out Key, in out Value> extends ManualCache.Varia
    * Retrieves the value associated with the specified key if it exists and is not expired.
    * Otherwise returns Option.none. Updates LRU status on hit.
    */
-  readonly get: (key: Key) => Effect.Effect<Option.Option<Value>>;
+  readonly get: (key: Key) => Effect.Effect<Option.Option<Value>>
 
   /**
    * Associates the specified value with the specified key in the cache. Resets TTL.
    * Updates LRU status. May evict LRU entry if capacity is exceeded.
    */
-  readonly set: (key: Key, value: Value) => Effect.Effect<void>;
+  readonly set: (key: Key, value: Value) => Effect.Effect<void>
 
   /**
    * Returns whether a non-expired value associated with the specified key exists in the cache.
    */
-  readonly contains: (key: Key) => Effect.Effect<boolean>;
+  readonly contains: (key: Key) => Effect.Effect<boolean>
 
   /**
    * Invalidates the value associated with the specified key, removing it from the cache.
    */
-  readonly invalidate: (key: Key) => Effect.Effect<void>;
+  readonly invalidate: (key: Key) => Effect.Effect<void>
 
   /**
    * Invalidates all values in the cache. Resets state including LRU list.
    */
-  readonly invalidateAll: Effect.Effect<void>;
+  readonly invalidateAll: Effect.Effect<void>
 
   /**
    * Returns the number of non-expired entries in the cache.
    */
-  readonly size: Effect.Effect<number>;
+  readonly size: Effect.Effect<number>
 
   /**
    * Returns an array of non-expired keys currently in the cache. Order is not guaranteed.
    */
-  readonly keys: Effect.Effect<Array<Key>>;
+  readonly keys: Effect.Effect<Array<Key>>
 
   /**
    * Returns an array of non-expired values currently in the cache. Order is not guaranteed.
    */
-  readonly values: Effect.Effect<Array<Value>>;
+  readonly values: Effect.Effect<Array<Value>>
 
   /**
    * Returns an array of non-expired [key, value] entries currently in the cache. Order is not guaranteed.
    */
-  readonly entries: Effect.Effect<Array<[Key, Value]>>;
+  readonly entries: Effect.Effect<Array<[Key, Value]>>
 
   /**
    * Manually triggers the removal of expired entries. The cache also does this periodically.
    */
-  readonly evictExpired: () => Effect.Effect<void>;
+  readonly evictExpired: () => Effect.Effect<void>
 
   /**
    * Returns cache statistics (hits, misses, approximate total size).
    */
-  readonly cacheStats: Effect.Effect<ManualCacheStats>;
+  readonly cacheStats: Effect.Effect<ManualCacheStats>
 }
 
 /**
@@ -89,9 +88,9 @@ export declare namespace ManualCache {
    */
   export interface Variance<in out Key, in out Value> {
     readonly [internal.ManualCacheTypeId]: {
-      readonly _Key: Types.Invariant<Key>;
-      readonly _Value: Types.Invariant<Value>;
-    };
+      readonly _Key: Types.Invariant<Key>
+      readonly _Value: Types.Invariant<Value>
+    }
   }
 }
 
@@ -101,9 +100,9 @@ export declare namespace ManualCache {
  * @category models
  */
 export interface ManualCacheStats {
-  readonly hits: number;
-  readonly misses: number;
-  readonly currentSize: number;
+  readonly hits: number
+  readonly misses: number
+  readonly currentSize: number
 }
 
 /**
@@ -112,7 +111,7 @@ export interface ManualCacheStats {
  * @category models
  */
 export interface EntryStats {
-  readonly loadedMillis: number;
+  readonly loadedMillis: number
 }
 
 /**
@@ -128,6 +127,6 @@ export interface EntryStats {
  * @category constructors
  */
 export const make = <Key, Value = never>(options: {
-  readonly capacity: number;
-  readonly timeToLive: Duration.DurationInput;
-}): Effect.Effect<ManualCache<Key, Value>, never, Scope.Scope> => internal.make(options);
+  readonly capacity: number
+  readonly timeToLive: Duration.DurationInput
+}): Effect.Effect<ManualCache<Key, Value>, never, Scope.Scope> => internal.make(options)

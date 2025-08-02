@@ -1,9 +1,9 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
-import { Schema } from "effect"
 import { GroupId } from "@template/domain/group/application/domain-group"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
 import { ResponseSuccess } from "@template/domain/shared/adapter/response"
+import { Schema } from "effect"
 
 export const GroupIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(GroupId)

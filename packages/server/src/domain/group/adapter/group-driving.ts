@@ -1,13 +1,13 @@
 import { HttpApiBuilder } from "@effect/platform"
-import { Api } from "@template/domain/api"
-import { Effect } from "effect"
-import { PortGroupDriving } from "@template/server/domain/group/application/port-group-driving"
-import { PortGroupPolicy } from "@template/server/domain/group/application/group-policy"
-import { policyUse } from "@template/server/util/policy"
-import { GroupId } from "@template/domain/group/application/domain-group"
-import { DomainActor } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import { DomainActor } from "@template/domain/actor"
+import { Api } from "@template/domain/api"
+import { GroupId } from "@template/domain/group/application/domain-group"
+import { PortGroupPolicy } from "@template/server/domain/group/application/group-policy"
+import { PortGroupDriving } from "@template/server/domain/group/application/port-group-driving"
 import { response } from "@template/server/shared/application/response"
+import { policyUse } from "@template/server/util/policy"
+import { Effect } from "effect"
 
 export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
   Effect.gen(function*() {
@@ -17,13 +17,16 @@ export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
     return handlers
       .handle("create", ({ payload }) =>
         DomainActor.pipe(
-          Effect.flatMap((user) => driving.create({ ...payload, ownerId: user.ownerId }).pipe(
-            Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group: { ...payload, ownerId: user.ownerId }}}),
-          )),
+          Effect.flatMap((user) =>
+            driving.create({ ...payload, ownerId: user.ownerId }).pipe(
+              Effect.withSpan("GroupDriving", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group: { ...payload, ownerId: user.ownerId } }
+              })
+            )
+          ),
           policyUse(policy.canCreate(GroupId.make(0))),
           response
-        )
-      )
+        ))
       // .handle("delete", ({ path: { id }}) =>
       //   driving.delete(id).pipe(
       //     Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
@@ -47,9 +50,8 @@ export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
       // )
       .handle("update", ({ path: { id }, payload }) =>
         driving.update(id, payload).pipe(
-          Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group: payload }}),
+          Effect.withSpan("GroupDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group: payload } }),
           policyUse(policy.canUpdate(GroupId.make(0))),
           response
-        )
-      )
+        ))
   }))

@@ -54,7 +54,7 @@ importers:
         version: 0.3.2
       '@effect/language-service':
         specifier: latest
-        version: 0.32.0
+        version: 0.33.1
       '@effect/vitest':
         specifier: latest
         version: 0.25.0(effect@3.16.12)(vitest@2.1.9(@types/node@22.16.0))
@@ -407,8 +407,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.32.0':
-    resolution: {integrity: sha512-aMRs2b2s2pImcwelye1MsVG0ofyauFW8wziWNJKoVvCDXje7MW6IobImvEMKT2FPwNphgXtSjWYkMgCecCTDWg==}
+  '@effect/language-service@0.33.1':
+    resolution: {integrity: sha512-oNlNI69c3t43Zk6C2vJx2+qcjLpfTWDDCl1JEZKKhViIjADOlbruIwLXP9/jNRw5JOcMANlgV6xCunBSTWXM0A==}
     hasBin: true
 
   '@effect/opentelemetry@0.56.0':
@@ -3771,7 +3771,7 @@ snapshots:
       effect: 3.17.4
       uuid: 11.1.0
 
-  '@effect/language-service@0.32.0': {}
+  '@effect/language-service@0.33.1': {}
 
   '@effect/opentelemetry@0.56.0(@effect/platform@0.90.0(effect@3.17.4))(@opentelemetry/api@1.9.0)(@opentelemetry/resources@2.0.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.203.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@2.0.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.0.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-node@2.0.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-web@2.0.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.36.0)(effect@3.17.4)':
     dependencies:

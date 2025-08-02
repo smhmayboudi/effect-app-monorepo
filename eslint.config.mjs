@@ -6,6 +6,7 @@ import codegen from "eslint-plugin-codegen"
 import _import from "eslint-plugin-import"
 import simpleImportSort from "eslint-plugin-simple-import-sort"
 import sortDestructureKeys from "eslint-plugin-sort-destructure-keys"
+import effectPlugin from "@effect/eslint-plugin"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -24,15 +25,16 @@ export default [
   ...compat.extends(
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@effect/recommended"
+    "plugin:@typescript-eslint/recommended"
+    // "plugin:@effect/recommended"
   ),
   {
     plugins: {
       import: fixupPluginRules(_import),
       "sort-destructure-keys": sortDestructureKeys,
       "simple-import-sort": simpleImportSort,
-      codegen
+      codegen,
+      "@effect": effectPlugin
     },
 
     languageOptions: {
@@ -54,6 +56,7 @@ export default [
     },
 
     rules: {
+      ...effectPlugin.configs?.recommended?.rules,
       "codegen/codegen": "error",
       "no-fallthrough": "off",
       "no-irregular-whitespace": "off",

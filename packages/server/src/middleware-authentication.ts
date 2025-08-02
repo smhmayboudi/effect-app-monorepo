@@ -1,9 +1,9 @@
-import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
-import { Effect, Layer } from "effect"
-import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
-import { AccessToken, UserId } from "@template/domain/user/application/domain-user"
-import { ErrorActorUnauthorized } from "@template/domain/actor"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import { ErrorActorUnauthorized } from "@template/domain/actor"
+import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
+import { AccessToken, UserId } from "@template/domain/user/application/domain-user"
+import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
+import { Effect, Layer } from "effect"
 
 export const MiddlewareAuthenticationLive = Layer.effect(
   MiddlewareAuthentication,
@@ -14,15 +14,16 @@ export const MiddlewareAuthenticationLive = Layer.effect(
       cookie: (token) =>
         user.readByAccessToken(AccessToken.make(token))
           .pipe(
-            Effect.catchTag("ErrorUserNotFoundWithAccessToken", () => Effect.fail(
-              ErrorActorUnauthorized.make({
-                actorId: UserId.make(-1),
-                entity: "User",
-                action: "read"
-              })
-            )),
+            Effect.catchTag("ErrorUserNotFoundWithAccessToken", () =>
+              Effect.fail(
+                ErrorActorUnauthorized.make({
+                  actorId: UserId.make(-1),
+                  entity: "User",
+                  action: "read"
+                })
+              )),
             Effect.flatMap(Effect.succeed),
-            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }})
+            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token } })
           )
     })
   })

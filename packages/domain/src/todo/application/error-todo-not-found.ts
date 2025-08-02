@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
 import { TodoId } from "@template/domain/todo/application/domain-todo"
+import { Schema } from "effect"
 
 export class ErrorTodoNotFound extends Schema.TaggedError<ErrorTodoNotFound>("ErrorTodoNotFound")(
   "ErrorTodoNotFound",

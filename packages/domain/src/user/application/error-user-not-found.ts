@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
 import { UserId } from "@template/domain/user/application/domain-user"
+import { Schema } from "effect"
 
 export class ErrorUserNotFound extends Schema.TaggedError<ErrorUserNotFound>("ErrorUserNotFound")(
   "ErrorUserNotFound",
