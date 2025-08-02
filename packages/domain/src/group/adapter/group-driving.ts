@@ -3,6 +3,7 @@ import { Schema } from "effect"
 import { GroupId } from "../application/domain-group.js"
 import { ErrorGroupNotFound } from "../application/error-group-not-found.js"
 import { MiddlewareAuthentication } from "../../middleware-authentication.js"
+import { ResponseSuccess } from "../../shared/adapter/response.js"
 
 export const GroupIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(GroupId)
@@ -11,7 +12,7 @@ export const GroupIdFromString = Schema.NumberFromString.pipe(
 export class GroupDriving extends HttpApiGroup.make("group")
   .add(
     HttpApiEndpoint.post("create", "/")
-      .addSuccess(GroupId)
+      .addSuccess(ResponseSuccess(GroupId))
       .setPayload(Schema.Struct({ name: Schema.NonEmptyString }))
       .annotate(OpenApi.Description, "Group create")
       .annotate(OpenApi.Summary, "Group create")
@@ -19,7 +20,7 @@ export class GroupDriving extends HttpApiGroup.make("group")
   .add(
     HttpApiEndpoint.patch("update", "/:id")
       .addError(ErrorGroupNotFound)
-      .addSuccess(GroupId)
+      .addSuccess(ResponseSuccess(GroupId))
       .setPath(Schema.Struct({ id: GroupIdFromString }))
       .setPayload(Schema.Struct({ name: Schema.NonEmptyString }))
       .annotate(OpenApi.Description, "Group update")

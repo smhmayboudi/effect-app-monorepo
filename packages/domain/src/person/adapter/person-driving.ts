@@ -5,6 +5,7 @@ import { ErrorGroupNotFound } from "../../group/application/error-group-not-foun
 import { GroupIdFromString } from "../../group/adapter/group-driving.js"
 import { ErrorPersonNotFound } from "../application/error-person-not-found.js"
 import { MiddlewareAuthentication } from "../../middleware-authentication.js"
+import { ResponseSuccess } from "../../shared/adapter/response.js"
 
 export const PersonIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(PersonId)
@@ -14,7 +15,7 @@ export class PersonDriving extends HttpApiGroup.make("person")
   .add(
     HttpApiEndpoint.post("create", "/:groupId/person")
       .addError(ErrorGroupNotFound)
-      .addSuccess(PersonId)
+      .addSuccess(ResponseSuccess(PersonId))
       .setPath(Schema.Struct({ groupId: GroupIdFromString }))
       .setPayload(Schema.Struct({
         birthday: Schema.Date,
@@ -27,7 +28,7 @@ export class PersonDriving extends HttpApiGroup.make("person")
   .add(
     HttpApiEndpoint.get("readById", "/:id")
       .setPath(Schema.Struct({ id: PersonIdFromString }))
-      .addSuccess(DomainPerson)
+      .addSuccess(ResponseSuccess(DomainPerson))
       .addError(ErrorPersonNotFound)
       .annotate(OpenApi.Description, "Person readById")
       .annotate(OpenApi.Summary, "Person readById")
