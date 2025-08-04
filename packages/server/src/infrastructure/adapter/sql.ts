@@ -1,11 +1,13 @@
 import { SqlClient } from "@effect/sql"
 import { SqliteClient, SqliteMigrator } from "@effect/sql-sqlite-node"
-import { identity, Layer } from "effect"
+import { identity, Layer, String } from "effect"
 import { fileURLToPath } from "url"
 import { makeTestLayer } from "../../util/layer.js"
 
 const Client = SqliteClient.layer({
-  filename: "./db.sqlite"
+  filename: "./db.sqlite",
+  transformQueryNames: String.camelToSnake,
+  transformResultNames: String.snakeToCamel
 })
 
 const Migrator = SqliteMigrator.layer({

@@ -1,6 +1,5 @@
 import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { AccountId } from "@template/domain/account/application/domain-account"
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
 import { Effect, Layer } from "effect"
@@ -12,7 +11,7 @@ export const GroupDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, never> =>
-      sql<{ id: number }>`INSERT INTO tbl_group (owner_id, name) VALUES (${group.ownerId}, ${group.name}) RETURNING id`
+      sql<{ id: number }>`INSERT INTO tbl_group ${sql.insert(group)} RETURNING id`
         .pipe(
           Effect.catchTag("SqlError", Effect.die),
           Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -29,63 +28,30 @@ export const GroupDriven = Layer.effect(
       )
 
     const readAll = (): Effect.Effect<Array<DomainGroup>, never, never> =>
-      sql<{
-        id: number
-        owner_id: number
-        name: string
-        created_at: Date
-        updated_at: Date
-      }>`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group`.pipe(
+      sql`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group`.pipe(
         Effect.catchTag("SqlError", Effect.die),
-        Effect.map((rows) =>
-          rows.map((row) =>
-            new DomainGroup({
-              id: GroupId.make(row.id),
-              ownerId: AccountId.make(row.owner_id),
-              name: row.name,
-              createdAt: new Date(row.created_at),
-              updatedAt: new Date(row.updated_at)
-            })
-          )
-        ),
+        Effect.flatMap((groups) => Effect.all(groups.map((group) => DomainGroup.decodeUnknown(group)))),
+        Effect.catchTag("ParseError", Effect.die),
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
       )
 
     const readById = (id: GroupId): Effect.Effect<DomainGroup, ErrorGroupNotFound, never> =>
-      sql<{
-        id: number
-        owner_id: number
-        name: string
-        created_at: Date
-        updated_at: Date
-      }>`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group WHERE id = ${id}`.pipe(
+      sql`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
             ? Effect.fail(new ErrorGroupNotFound({ id }))
             : Effect.succeed(rows[0])
         ),
-        Effect.map((row) =>
-          new DomainGroup({
-            id: GroupId.make(row.id),
-            ownerId: AccountId.make(row.owner_id),
-            name: row.name,
-            createdAt: new Date(row.created_at),
-            updatedAt: new Date(row.updated_at)
-          })
-        ),
+        Effect.flatMap(DomainGroup.decodeUnknown),
+        Effect.catchTag("ParseError", Effect.die),
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
       )
 
     const updateQuery = (
       id: GroupId,
       group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">
-    ) =>
-      sql`UPDATE tbl_group SET
-          owner_id = ${group.ownerId},
-          name = ${group.name},
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}`
+    ) => sql`UPDATE tbl_group SET ${sql.update(group)}, updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
 
     const update = (
       id: GroupId,

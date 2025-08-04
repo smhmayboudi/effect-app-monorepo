@@ -29,53 +29,30 @@ export const AccountDriven = Layer.effect(
       )
 
     const readAll = (): Effect.Effect<Array<DomainAccount>, never, never> =>
-      sql<{
-        id: number
-        created_at: Date
-        updated_at: Date
-      }>`SELECT id, created_at, updated_at FROM tbl_account`.pipe(
+      sql`SELECT id, created_at, updated_at FROM tbl_account`.pipe(
         Effect.catchTag("SqlError", Effect.die),
-        Effect.map((rows) =>
-          rows.map((row) =>
-            new DomainAccount({
-              id: AccountId.make(row.id),
-              createdAt: new Date(row.created_at),
-              updatedAt: new Date(row.updated_at)
-            })
-          )
-        ),
+        Effect.flatMap((accounts) => Effect.all(accounts.map((account) => DomainAccount.decodeUnknown(account)))),
+        Effect.catchTag("ParseError", Effect.die),
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
       )
 
     const readById = (id: AccountId): Effect.Effect<DomainAccount, ErrorAccountNotFound, never> =>
-      sql<{
-        id: number
-        created_at: Date
-        updated_at: Date
-      }>`SELECT id, created_at, updated_at FROM tbl_account WHERE id = ${id}`.pipe(
+      sql`SELECT id, created_at, updated_at FROM tbl_account WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
             ? Effect.fail(new ErrorAccountNotFound({ id }))
             : Effect.succeed(rows[0])
         ),
-        Effect.map((row) =>
-          new DomainAccount({
-            id: AccountId.make(row.id),
-            createdAt: new Date(row.created_at),
-            updatedAt: new Date(row.updated_at)
-          })
-        ),
+        Effect.flatMap(DomainAccount.decodeUnknown),
+        Effect.catchTag("ParseError", Effect.die),
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
       )
 
     const buildUpdateQuery = (
       id: AccountId,
       _account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">
-    ) =>
-      sql`UPDATE tbl_user SET
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ${id}`
+    ) => sql`UPDATE tbl_user SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
 
     const update = (
       id: AccountId,
