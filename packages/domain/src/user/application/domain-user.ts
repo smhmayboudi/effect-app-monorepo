@@ -1,15 +1,7 @@
-import { Redacted, Schema } from "effect"
+import { Schema } from "effect"
 import { AccountId } from "../../account/application/domain-account.js"
 
-export const AccessToken = Schema.transform(
-  Schema.String.pipe(Schema.brand("AccessToken")),
-  Schema.Redacted(Schema.String),
-  {
-    decode: (token) => Redacted.make(token),
-    encode: (redacted) => redacted,
-    strict: false
-  }
-).pipe(Schema.brand("AccessToken"))
+export const AccessToken = Schema.Redacted(Schema.String).pipe(Schema.brand("AccessToken"))
 export type AccessToken = Schema.Schema.Type<typeof AccessToken>
 
 export const Email = Schema.String.pipe(
@@ -41,4 +33,6 @@ export class DomainUserWithSensitive extends Schema.Class<DomainUserWithSensitiv
   ...DomainUser.fields,
   accessToken: AccessToken
   // account: DomainAccount
-}) {}
+}) {
+  static decodeUnknown = Schema.decodeUnknown(DomainUserWithSensitive)
+}
