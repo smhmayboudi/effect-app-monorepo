@@ -62,7 +62,7 @@ export const GroupDriven = Layer.effect(
       group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<GroupId, ErrorGroupNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap((oldGroup) => updateQuery(id, { ...oldGroup, ...group })),
+        Effect.flatMap((oldGroup) => updateQuery(id, { ownerId: oldGroup.ownerId, name: oldGroup.name, ...group })),
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => GroupId.make(row.id)),

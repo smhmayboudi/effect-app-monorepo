@@ -67,7 +67,9 @@ export const TodoDriven = Layer.effect(
       todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap((oldTodo) => updateQuery(id, { ...oldTodo, ...todo })),
+        Effect.flatMap((oldTodo) =>
+          updateQuery(id, { ownerId: oldTodo.ownerId, done: oldTodo.done, text: oldTodo.text, ...todo })
+        ),
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => TodoId.make(row.id)),

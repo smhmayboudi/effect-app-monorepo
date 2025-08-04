@@ -67,7 +67,15 @@ export const PersonDriven = Layer.effect(
       person: Partial<Omit<DomainPerson, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<PersonId, ErrorPersonNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),
+        Effect.flatMap((oldPerson) =>
+          updateQuery(id, {
+            groupId: oldPerson.groupId,
+            birthday: oldPerson.birthday,
+            firstName: oldPerson.firstName,
+            lastName: oldPerson.lastName,
+            ...person
+          })
+        ),
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => PersonId.make(row.id)),

@@ -98,7 +98,7 @@ export const UserDriven = Layer.effect(
       user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap((oldUser) => buildUpdateQuery(id, { ...oldUser, ...user })),
+        Effect.flatMap((oldUser) => buildUpdateQuery(id, { ownerId: oldUser.ownerId, email: oldUser.email, ...user })),
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: tbl_user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email! }))
