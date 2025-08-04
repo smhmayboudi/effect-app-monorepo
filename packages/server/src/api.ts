@@ -12,6 +12,8 @@ import { PersonDriven } from "@template/server/domain/person/adapter/person-driv
 import { PersonDriving } from "@template/server/domain/person/adapter/person-driving"
 import { PersonPolicy } from "@template/server/domain/person/adapter/person-policy"
 import { PersonUseCase } from "@template/server/domain/person/application/person-use-case"
+import { SSEDriving } from "@template/server/domain/sse/adapter/sse-driving"
+import { SSEUseCase } from "@template/server/domain/sse/application/sse-use-case"
 import { TodoDriven } from "@template/server/domain/todo/adapter/todo-driven"
 import { TodoDriving } from "@template/server/domain/todo/adapter/todo-driving"
 import { TodoPolicy } from "@template/server/domain/todo/adapter/todo-policy"
@@ -21,6 +23,7 @@ import { UserDriving } from "@template/server/domain/user/adapter/user-driving"
 import { UserPolicy } from "@template/server/domain/user/adapter/user-policy"
 import { UserUseCase } from "@template/server/domain/user/application/user-use-case"
 import { Sql } from "@template/server/infrastructure/adapter/sql"
+import { SSEManager } from "@template/server/infrastructure/adapter/sse-manager"
 import { UUID } from "@template/server/infrastructure/adapter/uuid"
 import { MiddlewareAuthenticationLive } from "@template/server/middleware-authentication"
 import { Layer } from "effect"
@@ -37,6 +40,11 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(PersonUseCase),
     Layer.provide(PersonDriven),
     Layer.provide(PersonPolicy)
+  )
+  .pipe(
+    Layer.provide(SSEDriving),
+    Layer.provide(SSEUseCase),
+    Layer.provide(SSEManager)
   )
   .pipe(
     Layer.provide(TodoDriving),

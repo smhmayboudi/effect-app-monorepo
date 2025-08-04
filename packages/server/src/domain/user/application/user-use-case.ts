@@ -28,17 +28,19 @@ export const UserUseCase = Layer.effect(
       | ActorAuthorized<"User", "create">
       | ActorAuthorized<"User", "readByIdWithSensitive">
     > =>
-      uuid.v7().pipe(Effect.flatMap((v7) =>
-        account.create({}).pipe(
-          Effect.flatMap((accountId) =>
-            driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId }).pipe(
-              Effect.flatMap((userId) => readByIdWithSensitive(userId)),
-              Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user } }),
-              policyRequire("User", "create")
+      uuid.v7().pipe(
+        Effect.flatMap((v7) =>
+          account.create({}).pipe(
+            Effect.flatMap((accountId) =>
+              driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId }).pipe(
+                Effect.flatMap((userId) => readByIdWithSensitive(userId)),
+                Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user } }),
+                policyRequire("User", "create")
+              )
             )
           )
         )
-      ))
+      )
 
     const del = (id: UserId): Effect.Effect<UserId, ErrorUserNotFound, ActorAuthorized<"User", "delete">> =>
       driven.delete(id)
