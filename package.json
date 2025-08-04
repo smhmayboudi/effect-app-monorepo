@@ -38,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.12.2",
     "babel-plugin-annotate-pure-calls": "^0.4.0",
-    "effect": "^3.10.7",
+    "effect": "latest",
     "eslint": "^9.13.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-codegen": "^0.29.0",
