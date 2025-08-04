@@ -20,11 +20,12 @@ export const AccountDriven = Layer.effect(
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account } })
       )
 
-    const del = (id: AccountId): Effect.Effect<void, ErrorAccountNotFound, never> =>
+    const del = (id: AccountId): Effect.Effect<AccountId, ErrorAccountNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM tbl_account WHERE id = ${id}`),
-        sql.withTransaction,
+        Effect.flatMap(() => sql<{ id: number }>`DELETE FROM tbl_account WHERE id = ${id} RETURNING id`),
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => AccountId.make(row.id)),
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
@@ -52,16 +53,17 @@ export const AccountDriven = Layer.effect(
     const buildUpdateQuery = (
       id: AccountId,
       _account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">
-    ) => sql`UPDATE tbl_user SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+    ) => sql<{ id: number }>`UPDATE tbl_user SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: AccountId,
       account: Partial<Omit<DomainAccount, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<void, ErrorAccountNotFound, never> =>
+    ): Effect.Effect<AccountId, ErrorAccountNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldAccount) => buildUpdateQuery(id, { ...oldAccount, ...account })),
-        sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => AccountId.make(row.id)),
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, account } })
       )
 

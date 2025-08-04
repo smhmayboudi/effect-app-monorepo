@@ -24,7 +24,6 @@ export const PersonUseCase = Layer.effect(
     const del = (id: PersonId): Effect.Effect<PersonId, ErrorPersonNotFound, ActorAuthorized<"Person", "delete">> =>
       driven.delete(id)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Person", "delete")
         )
@@ -51,7 +50,6 @@ export const PersonUseCase = Layer.effect(
     ): Effect.Effect<PersonId, ErrorPersonNotFound, ActorAuthorized<"Person", "update">> =>
       driven.update(id, person)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } }),
           policyRequire("Person", "update")
         )

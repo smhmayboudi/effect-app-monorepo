@@ -24,7 +24,6 @@ export const GroupUseCase = Layer.effect(
     const del = (id: GroupId): Effect.Effect<GroupId, ErrorGroupNotFound, ActorAuthorized<"Group", "delete">> =>
       driven.delete(id)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Group", "delete")
         )
@@ -51,7 +50,6 @@ export const GroupUseCase = Layer.effect(
     ): Effect.Effect<GroupId, ErrorGroupNotFound, ActorAuthorized<"Group", "update">> =>
       driven.update(id, group)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group } }),
           policyRequire("Group", "update")
         )

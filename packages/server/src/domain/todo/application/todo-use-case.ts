@@ -25,7 +25,6 @@ export const TodoUseCase = Layer.effect(
     const del = (id: TodoId): Effect.Effect<TodoId, ErrorTodoNotFound, ActorAuthorized<"Todo", "delete">> =>
       driven.delete(id)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Todo", "delete")
         )
@@ -48,7 +47,6 @@ export const TodoUseCase = Layer.effect(
     ): Effect.Effect<TodoId, ErrorTodoNotFound, ActorAuthorized<"Todo", "update">> =>
       driven.update(id, todo)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo } }),
           policyRequire("Todo", "update")
         )

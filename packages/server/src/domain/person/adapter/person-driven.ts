@@ -23,11 +23,12 @@ export const PersonDriven = Layer.effect(
           Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person } })
         )
 
-    const del = (id: PersonId): Effect.Effect<void, ErrorPersonNotFound, never> =>
+    const del = (id: PersonId): Effect.Effect<PersonId, ErrorPersonNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM tbl_person WHERE id = ${id}`),
-        sql.withTransaction,
+        Effect.flatMap(() => sql<{ id: number }>`DELETE FROM tbl_person WHERE id = ${id} RETURNING id`),
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => PersonId.make(row.id)),
         Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
@@ -56,16 +57,20 @@ export const PersonDriven = Layer.effect(
     const updateQuery = (
       id: PersonId,
       person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">
-    ) => sql`UPDATE tbl_person SET ${sql.update(person)}, updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+    ) =>
+      sql<{ id: number }>`UPDATE tbl_person SET ${
+        sql.update(person)
+      }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: PersonId,
       person: Partial<Omit<DomainPerson, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<void, ErrorPersonNotFound, never> =>
+    ): Effect.Effect<PersonId, ErrorPersonNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),
-        sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => PersonId.make(row.id)),
         Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } })
       )
 

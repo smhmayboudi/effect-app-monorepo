@@ -24,11 +24,12 @@ export const TodoDriven = Layer.effect(
           Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", todo } })
         )
 
-    const del = (id: TodoId): Effect.Effect<void, ErrorTodoNotFound, never> =>
+    const del = (id: TodoId): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM tbl_todo WHERE id = ${id}`),
-        sql.withTransaction,
+        Effect.flatMap(() => sql<{ id: number }>`DELETE FROM tbl_todo WHERE id = ${id} RETURNING id`),
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => TodoId.make(row.id)),
         Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
@@ -56,16 +57,20 @@ export const TodoDriven = Layer.effect(
     const updateQuery = (
       id: TodoId,
       todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">
-    ) => sql`UPDATE tbl_todo SET ${sql.update(todo)}, updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+    ) =>
+      sql<{ id: number }>`UPDATE tbl_todo SET ${
+        sql.update(todo)
+      }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: TodoId,
       todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<void, ErrorTodoNotFound, never> =>
+    ): Effect.Effect<TodoId, ErrorTodoNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldTodo) => updateQuery(id, { ...oldTodo, ...todo })),
-        sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => TodoId.make(row.id)),
         Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo } })
       )
 

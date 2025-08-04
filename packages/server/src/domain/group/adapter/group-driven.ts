@@ -19,11 +19,12 @@ export const GroupDriven = Layer.effect(
           Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group } })
         )
 
-    const del = (id: GroupId): Effect.Effect<void, ErrorGroupNotFound, never> =>
+    const del = (id: GroupId): Effect.Effect<GroupId, ErrorGroupNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM tbl_group WHERE id = ${id}`),
-        sql.withTransaction,
+        Effect.flatMap(() => sql<{ id: number }>`DELETE FROM tbl_group WHERE id = ${id} RETURNING id`),
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => GroupId.make(row.id)),
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
@@ -51,16 +52,20 @@ export const GroupDriven = Layer.effect(
     const updateQuery = (
       id: GroupId,
       group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">
-    ) => sql`UPDATE tbl_group SET ${sql.update(group)}, updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+    ) =>
+      sql<{ id: number }>`UPDATE tbl_group SET ${
+        sql.update(group)
+      }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: GroupId,
       group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<void, ErrorGroupNotFound, never> =>
+    ): Effect.Effect<GroupId, ErrorGroupNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldGroup) => updateQuery(id, { ...oldGroup, ...group })),
-        sql.withTransaction,
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => GroupId.make(row.id)),
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group } })
       )
 

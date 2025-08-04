@@ -29,11 +29,12 @@ export const UserDriven = Layer.effect(
           Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user } })
         )
 
-    const del = (id: UserId): Effect.Effect<void, ErrorUserNotFound, never> =>
+    const del = (id: UserId): Effect.Effect<UserId, ErrorUserNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap(() => sql`DELETE FROM tbl_user WHERE id = ${id}`),
-        sql.withTransaction,
+        Effect.flatMap(() => sql<{ id: number }>`DELETE FROM tbl_user WHERE id = ${id} RETURNING id`),
         Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => UserId.make(row.id)),
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
@@ -87,19 +88,23 @@ export const UserDriven = Layer.effect(
     const buildUpdateQuery = (
       id: UserId,
       user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">
-    ) => sql`UPDATE tbl_user SET ${sql.update(user)}, updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+    ) =>
+      sql<{ id: number }>`UPDATE tbl_user SET ${
+        sql.update(user)
+      }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: UserId,
       user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<void, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never> =>
+    ): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldUser) => buildUpdateQuery(id, { ...oldUser, ...user })),
-        sql.withTransaction,
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: tbl_user.email")
             ? Effect.fail(new ErrorUserEmailAlreadyTaken({ email: user.email! }))
             : Effect.die(error)),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => UserId.make(row.id)),
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } })
       )
 

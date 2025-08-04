@@ -7,11 +7,11 @@ export class PortTodoDriven extends Context.Tag("PortTodoDriven")<PortTodoDriven
   create: (
     todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<TodoId, ErrorTodoAlreadyExists, never>
-  delete: (id: TodoId) => Effect.Effect<void, ErrorTodoNotFound, never>
+  delete: (id: TodoId) => Effect.Effect<TodoId, ErrorTodoNotFound, never>
   readAll: () => Effect.Effect<Array<DomainTodo>, never, never>
   readById: (id: TodoId) => Effect.Effect<DomainTodo, ErrorTodoNotFound, never>
   update: (
     id: TodoId,
     todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<void, ErrorTodoNotFound, never>
+  ) => Effect.Effect<TodoId, ErrorTodoNotFound, never>
 }>() {}

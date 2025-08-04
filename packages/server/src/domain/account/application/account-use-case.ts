@@ -24,7 +24,6 @@ export const AccountUseCase = Layer.effect(
     const del = (id: AccountId): Effect.Effect<AccountId, ErrorAccountNotFound, ActorAuthorized<"Account", "delete">> =>
       driven.delete(id)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Account", "delete")
         )
@@ -51,7 +50,6 @@ export const AccountUseCase = Layer.effect(
     ): Effect.Effect<AccountId, ErrorAccountNotFound, ActorAuthorized<"Account", "update">> =>
       driven.update(id, account)
         .pipe(
-          Effect.flatMap(() => Effect.succeed(id)),
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, account } }),
           policyRequire("Account", "update")
         )

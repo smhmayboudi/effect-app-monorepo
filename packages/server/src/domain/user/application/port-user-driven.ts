@@ -13,7 +13,7 @@ export class PortUserDriven extends Context.Tag("PortUserDriven")<PortUserDriven
   create: (
     user: Omit<DomainUserWithSensitive, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never>
-  delete: (id: UserId) => Effect.Effect<void, ErrorUserNotFound, never>
+  delete: (id: UserId) => Effect.Effect<UserId, ErrorUserNotFound, never>
   readAll: () => Effect.Effect<Array<DomainUser>, never, never>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound, never>
@@ -21,5 +21,5 @@ export class PortUserDriven extends Context.Tag("PortUserDriven")<PortUserDriven
   update: (
     id: UserId,
     user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<void, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never>
+  ) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never>
 }>() {}
