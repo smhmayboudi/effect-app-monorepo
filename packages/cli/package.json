@@ -30,13 +30,6 @@
     "@template/domain": "workspace:^",
     "effect": "latest"
   },
-  "devDependencies": {
-    "@effect/cli": "latest",
-    "@effect/platform": "latest",
-    "@effect/platform-node": "latest",
-    "@template/domain": "workspace:^",
-    "effect": "latest"
-  },
   "effect": {
     "generateExports": {
       "include": [
