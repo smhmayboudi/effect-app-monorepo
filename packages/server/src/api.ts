@@ -1,5 +1,4 @@
 import { HttpApiBuilder } from "@effect/platform"
-import { NodeContext } from "@effect/platform-node"
 import { Api } from "@template/domain/api"
 import { AccountDriven } from "@template/server/domain/account/adapter/account-driven"
 import { AccountDriving } from "@template/server/domain/account/adapter/account-driving"
@@ -60,6 +59,5 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(AccountPolicy)
   )
   .pipe(
-    Layer.provide(Sql),
-    Layer.provide(NodeContext.layer)
+    Layer.provide(Sql)
   )
