@@ -18,8 +18,8 @@ export const MiddlewareAuthenticationLive = Layer.effect(
               Effect.fail(
                 new ErrorActorUnauthorized({
                   actorId: UserId.make(-1),
-                  entity: "User",
-                  action: "read"
+                  entity: "",
+                  action: ""
                 })
               )),
             Effect.flatMap(Effect.succeed),

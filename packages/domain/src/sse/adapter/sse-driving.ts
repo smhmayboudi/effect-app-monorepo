@@ -5,11 +5,9 @@ import { MiddlewareAuthentication } from "../../middleware-authentication.js"
 export class SSEDriving extends HttpApiGroup.make("sse")
   .add(
     HttpApiEndpoint.get("connect", "/connect")
-      // TODO
       .addSuccess(Schema.Unknown)
       .annotate(OpenApi.Description, "SSE connect")
       .annotate(OpenApi.Summary, "SSE connect")
-      .setPayload(Schema.Struct({ text: Schema.NonEmptyTrimmedString }))
   )
   .add(
     HttpApiEndpoint.post("notify", "/notify")
