@@ -7,6 +7,16 @@ export class DomainActor extends Context.Tag("DomainActor")<
   DomainUser
 >() {}
 
+export const ActorAuthorizedId: unique symbol = Symbol.for("ActorAuthorized")
+export type ActorAuthorizedId = typeof ActorAuthorizedId
+
+export interface ActorAuthorized<Entity extends string, Action extends string> extends DomainUser {
+  readonly [ActorAuthorizedId]: {
+    readonly _Entity: Entity
+    readonly _Action: Action
+  }
+}
+
 export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnauthorized>()(
   "ErrorActorUnauthorized",
   {
@@ -31,17 +41,9 @@ export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnautho
       effect.pipe(Effect.catchIf(
         (e) => !ErrorActorUnauthorized.is(e),
         () =>
-          DomainActor.pipe(Effect.flatMap((actor) => new ErrorActorUnauthorized({ actorId: actor.id, entity, action })))
+          DomainActor.pipe(
+            Effect.flatMap((actor) => new ErrorActorUnauthorized({ actorId: actor.id, entity, action }))
+          )
       ))
-  }
-}
-
-export const TypeId: unique symbol = Symbol.for("ActorAuthorized")
-export type TypeId = typeof TypeId
-
-export interface ActorAuthorized<Entity extends string, Action extends string> extends DomainUser {
-  readonly [TypeId]: {
-    readonly _Entity: Entity
-    readonly _Action: Action
   }
 }
