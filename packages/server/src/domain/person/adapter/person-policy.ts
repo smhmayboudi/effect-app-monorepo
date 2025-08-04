@@ -1,9 +1,9 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized, DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
 import type { PersonId } from "@template/domain/person/application/domain-person"
-import { PortPersonPolicy } from "@template/server/domain/person/application/person-policy"
-import { policy } from "@template/server/util/policy"
 import { Effect, Layer } from "effect"
+import { policy } from "../../../util/policy.js"
+import { PortPersonPolicy } from "../application/person-policy.js"
 
 const canCreate = (
   id: PersonId

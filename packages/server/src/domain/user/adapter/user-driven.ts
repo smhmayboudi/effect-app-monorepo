@@ -11,8 +11,8 @@ import {
 import { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
 import { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
 import { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
-import { PortUserDriven } from "@template/server/domain/user/application/port-user-driven"
 import { Effect, Layer, Redacted } from "effect"
+import { PortUserDriven } from "../application/port-user-driven.js"
 
 export const UserDriven = Layer.effect(
   PortUserDriven,

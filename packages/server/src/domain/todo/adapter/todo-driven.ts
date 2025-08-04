@@ -4,8 +4,8 @@ import { AccountId } from "@template/domain/account/application/domain-account"
 import { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 import type { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
-import { PortTodoDriven } from "@template/server/domain/todo/application/port-todo-driven"
 import { Effect, Layer } from "effect"
+import { PortTodoDriven } from "../application/port-todo-driven.js"
 
 export const TodoDriven = Layer.effect(
   PortTodoDriven,

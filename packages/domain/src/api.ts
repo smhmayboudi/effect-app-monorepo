@@ -1,10 +1,10 @@
 import { HttpApi, OpenApi } from "@effect/platform"
-import { AccountDriving } from "@template/domain/account/adapter/user-driving"
-import { GroupDriving } from "@template/domain/group/adapter/group-driving"
-import { PersonDriving } from "@template/domain/person/adapter/person-driving"
-import { TodoDriving } from "@template/domain/todo/adapter/todo-driving"
-import { UserDriving } from "@template/domain/user/adapter/user-driving"
+import { AccountDriving } from "./account/adapter/user-driving.js"
+import { GroupDriving } from "./group/adapter/group-driving.js"
+import { PersonDriving } from "./person/adapter/person-driving.js"
 import { SSEDriving } from "./sse/adapter/sse-driving.js"
+import { TodoDriving } from "./todo/adapter/todo-driving.js"
+import { UserDriving } from "./user/adapter/user-driving.js"
 
 export const Api = HttpApi.make("api")
   .add(AccountDriving)

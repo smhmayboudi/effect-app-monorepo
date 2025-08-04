@@ -2,8 +2,8 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { ErrorActorUnauthorized } from "@template/domain/actor"
 import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
 import { AccessToken, UserId } from "@template/domain/user/application/domain-user"
-import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
 import { Effect, Layer } from "effect"
+import { PortUserDriving } from "./domain/user/application/port-user-driving.js"
 
 export const MiddlewareAuthenticationLive = Layer.effect(
   MiddlewareAuthentication,

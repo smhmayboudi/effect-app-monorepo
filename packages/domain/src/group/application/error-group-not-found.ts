@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
-import { GroupId } from "@template/domain/group/application/domain-group"
 import { Schema } from "effect"
+import { GroupId } from "./domain-group.js"
 
 export class ErrorGroupNotFound extends Schema.TaggedError<ErrorGroupNotFound>("ErrorGroupNotFound")(
   "ErrorGroupNotFound",

@@ -3,10 +3,10 @@ import type { ActorAuthorized } from "@template/domain/actor"
 import type { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
 import type { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
 import type { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
-import { PortTodoDriven } from "@template/server/domain/todo/application/port-todo-driven"
-import { PortTodoDriving } from "@template/server/domain/todo/application/port-todo-driving"
-import { policyRequire } from "@template/server/util/policy"
 import { Effect, Layer } from "effect"
+import { policyRequire } from "../../../util/policy.js"
+import { PortTodoDriven } from "./port-todo-driven.js"
+import { PortTodoDriving } from "./port-todo-driving.js"
 
 export const TodoUseCase = Layer.effect(
   PortTodoDriving,

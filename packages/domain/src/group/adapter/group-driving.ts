@@ -1,9 +1,9 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
-import { GroupId } from "@template/domain/group/application/domain-group"
-import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
-import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
-import { ResponseSuccess } from "@template/domain/shared/adapter/response"
 import { Schema } from "effect"
+import { MiddlewareAuthentication } from "../../middleware-authentication.js"
+import { ResponseSuccess } from "../../shared/adapter/response.js"
+import { GroupId } from "../application/domain-group.js"
+import { ErrorGroupNotFound } from "../application/error-group-not-found.js"
 
 export const GroupIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(GroupId)

@@ -1,6 +1,6 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
-import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
 import { Schema } from "effect"
+import { MiddlewareAuthentication } from "../../middleware-authentication.js"
 
 export class SSEDriving extends HttpApiGroup.make("sse")
   .add(

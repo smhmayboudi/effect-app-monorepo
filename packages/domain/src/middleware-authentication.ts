@@ -1,5 +1,5 @@
 import { HttpApiMiddleware, HttpApiSecurity } from "@effect/platform"
-import { DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
+import { DomainActor, ErrorActorUnauthorized } from "./actor.js"
 
 export class MiddlewareAuthentication extends HttpApiMiddleware.Tag<MiddlewareAuthentication>()(
   "MiddlewareAuthentication",

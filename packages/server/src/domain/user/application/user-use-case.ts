@@ -5,12 +5,12 @@ import type { DomainUser, DomainUserWithSensitive, UserId } from "@template/doma
 import type { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
 import type { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
 import type { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
-import { PortAccountDriving } from "@template/server/domain/account/application/port-account-driving"
-import { PortUserDriven } from "@template/server/domain/user/application/port-user-driven"
-import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
-import { PortUUID } from "@template/server/infrastructure/application/port/uuid"
-import { policyRequire } from "@template/server/util/policy"
 import { Effect, Layer, Redacted } from "effect"
+import { PortUUID } from "../../../infrastructure/application/port/uuid.js"
+import { policyRequire } from "../../../util/policy.js"
+import { PortAccountDriving } from "../../account/application/port-account-driving.js"
+import { PortUserDriven } from "./port-user-driven.js"
+import { PortUserDriving } from "./port-user-driving.js"
 
 export const UserUseCase = Layer.effect(
   PortUserDriving,

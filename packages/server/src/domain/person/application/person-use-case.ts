@@ -2,10 +2,10 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/actor"
 import type { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 import type { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
-import { PortPersonDriven } from "@template/server/domain/person/application/port-person-driven"
-import { PortPersonDriving } from "@template/server/domain/person/application/port-person-driving"
-import { policyRequire } from "@template/server/util/policy"
 import { Effect, Layer } from "effect"
+import { policyRequire } from "../../../util/policy.js"
+import { PortPersonDriven } from "./port-person-driven.js"
+import { PortPersonDriving } from "./port-person-driving.js"
 
 export const PersonUseCase = Layer.effect(
   PortPersonDriving,

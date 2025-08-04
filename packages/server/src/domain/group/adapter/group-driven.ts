@@ -3,8 +3,8 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { AccountId } from "@template/domain/account/application/domain-account"
 import { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
-import { PortGroupDriven } from "@template/server/domain/group/application/port-group-driven"
 import { Effect, Layer } from "effect"
+import { PortGroupDriven } from "../application/port-group-driven.js"
 
 export const GroupDriven = Layer.effect(
   PortGroupDriven,

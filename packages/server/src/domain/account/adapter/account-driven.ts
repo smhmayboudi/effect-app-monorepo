@@ -2,8 +2,8 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { AccountId, DomainAccount } from "@template/domain/account/application/domain-account"
 import { ErrorAccountNotFound } from "@template/domain/account/application/error-account-not-found"
-import { PortAccountDriven } from "@template/server/domain/account/application/port-account-driven"
 import { Effect, Layer } from "effect"
+import { PortAccountDriven } from "../application/port-account-driven.js"
 
 export const AccountDriven = Layer.effect(
   PortAccountDriven,

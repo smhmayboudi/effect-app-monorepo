@@ -3,11 +3,11 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { DomainActor } from "@template/domain/actor"
 import { Api } from "@template/domain/api"
 import { GroupId } from "@template/domain/group/application/domain-group"
-import { PortGroupPolicy } from "@template/server/domain/group/application/group-policy"
-import { PortGroupDriving } from "@template/server/domain/group/application/port-group-driving"
-import { response } from "@template/server/shared/application/response"
-import { policyUse } from "@template/server/util/policy"
 import { Effect } from "effect"
+import { response } from "../../../shared/application/response.js"
+import { policyUse } from "../../../util/policy.js"
+import { PortGroupPolicy } from "../application/group-policy.js"
+import { PortGroupDriving } from "../application/port-group-driving.js"
 
 export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
   Effect.gen(function*() {

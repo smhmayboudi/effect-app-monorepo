@@ -3,11 +3,11 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { DomainActor } from "@template/domain/actor"
 import { Api } from "@template/domain/api"
 import { TodoId } from "@template/domain/todo/application/domain-todo"
-import { PortTodoDriving } from "@template/server/domain/todo/application/port-todo-driving"
-import { PortTodoPolicy } from "@template/server/domain/todo/application/todo-policy"
-import { response } from "@template/server/shared/application/response"
-import { policyUse } from "@template/server/util/policy"
 import { Effect } from "effect"
+import { response } from "../../../shared/application/response.js"
+import { policyUse } from "../../../util/policy.js"
+import { PortTodoDriving } from "../application/port-todo-driving.js"
+import { PortTodoPolicy } from "../application/todo-policy.js"
 
 export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
   Effect.gen(function*() {

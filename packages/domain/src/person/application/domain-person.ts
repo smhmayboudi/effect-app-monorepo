@@ -1,5 +1,5 @@
-import { GroupId } from "@template/domain/group/application/domain-group"
 import { Schema } from "effect"
+import { GroupId } from "../../group/application/domain-group.js"
 
 export const PersonId = Schema.Number.pipe(Schema.brand("PersonId"))
 export type PersonId = Schema.Schema.Type<typeof PersonId>

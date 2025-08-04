@@ -1,6 +1,6 @@
-import { PortUUID } from "@template/server/infrastructure/application/port/uuid"
 import { Effect, Layer } from "effect"
 import { v7 } from "uuid"
+import { PortUUID } from "../application/port/uuid.js"
 
 export const UUID = Layer.effect(
   PortUUID,

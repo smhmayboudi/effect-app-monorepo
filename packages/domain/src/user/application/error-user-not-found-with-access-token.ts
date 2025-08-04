@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
-import { AccessToken } from "@template/domain/user/application/domain-user"
 import { Schema } from "effect"
+import { AccessToken } from "./domain-user.js"
 
 export class ErrorUserNotFoundWithAccessToken
   extends Schema.TaggedError<ErrorUserNotFoundWithAccessToken>("ErrorUserNotFoundWithAccessToken")(

@@ -4,11 +4,11 @@ import { DomainActor } from "@template/domain/actor"
 import { Api } from "@template/domain/api"
 import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
 import { UserId } from "@template/domain/user/application/domain-user"
-import { PortUserDriving } from "@template/server/domain/user/application/port-user-driving"
-import { PortUserPolicy } from "@template/server/domain/user/application/user-policy"
-import { response } from "@template/server/shared/application/response"
-import { policyUse, withSystemActor } from "@template/server/util/policy"
 import { Effect } from "effect"
+import { response } from "../../../shared/application/response.js"
+import { policyUse, withSystemActor } from "../../../util/policy.js"
+import { PortUserDriving } from "../application/port-user-driving.js"
+import { PortUserPolicy } from "../application/user-policy.js"
 
 export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
   Effect.gen(function*() {

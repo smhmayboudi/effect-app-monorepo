@@ -2,10 +2,10 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/actor"
 import type { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
 import type { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
-import { PortGroupDriven } from "@template/server/domain/group/application/port-group-driven"
-import { PortGroupDriving } from "@template/server/domain/group/application/port-group-driving"
-import { policyRequire } from "@template/server/util/policy"
 import { Effect, Layer } from "effect"
+import { policyRequire } from "../../../util/policy.js"
+import { PortGroupDriven } from "./port-group-driven.js"
+import { PortGroupDriving } from "./port-group-driving.js"
 
 export const GroupUseCase = Layer.effect(
   PortGroupDriving,

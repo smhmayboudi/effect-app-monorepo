@@ -3,8 +3,8 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { GroupId } from "@template/domain/group/application/domain-group"
 import { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
 import { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
-import { PortPersonDriven } from "@template/server/domain/person/application/port-person-driven"
 import { Effect, Layer } from "effect"
+import { PortPersonDriven } from "../application/port-person-driven.js"
 
 export const PersonDriven = Layer.effect(
   PortPersonDriven,

@@ -2,10 +2,10 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { AccountId, DomainAccount } from "@template/domain/account/application/domain-account"
 import type { ErrorAccountNotFound } from "@template/domain/account/application/error-account-not-found"
 import type { ActorAuthorized } from "@template/domain/actor"
-import { PortAccountDriven } from "@template/server/domain/account/application/port-account-driven"
-import { PortAccountDriving } from "@template/server/domain/account/application/port-account-driving"
-import { policyRequire } from "@template/server/util/policy"
 import { Effect, Layer } from "effect"
+import { policyRequire } from "../../../util/policy.js"
+import { PortAccountDriven } from "./port-account-driven.js"
+import { PortAccountDriving } from "./port-account-driving.js"
 
 export const AccountUseCase = Layer.effect(
   PortAccountDriving,

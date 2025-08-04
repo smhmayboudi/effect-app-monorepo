@@ -1,11 +1,11 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { DomainSSE } from "@template/domain/sse/application/domain-sse"
 import type { UserId } from "@template/domain/user/application/domain-user"
-import { PortSSEDriving } from "@template/server/domain/sse/application/port-sse-driving"
-import { PortSSEManager } from "@template/server/infrastructure/application/port/sse-manager"
 import type { Queue } from "effect"
 import { Effect, Layer } from "effect"
 import type { Scope } from "effect/Scope"
+import { PortSSEManager } from "../../../infrastructure/application/port/sse-manager.js"
+import { PortSSEDriving } from "./port-sse-driving.js"
 
 export const SSEUseCase = Layer.effect(
   PortSSEDriving,

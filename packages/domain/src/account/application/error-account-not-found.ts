@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
-import { AccountId } from "@template/domain/account/application/domain-account"
 import { Schema } from "effect"
+import { AccountId } from "./domain-account.js"
 
 export class ErrorAccountNotFound extends Schema.TaggedError<ErrorAccountNotFound>("ErrorAccountNotFound")(
   "ErrorAccountNotFound",

@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
-import { Email } from "@template/domain/user/application/domain-user"
 import { Schema } from "effect"
+import { Email } from "./domain-user.js"
 
 export class ErrorUserEmailAlreadyTaken
   extends Schema.TaggedError<ErrorUserEmailAlreadyTaken>("ErrorUserEmailAlreadyTaken")(
