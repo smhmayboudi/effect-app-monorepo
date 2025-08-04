@@ -8,5 +8,5 @@ export class DomainAccount extends Schema.Class<DomainAccount>("DomainAccount")(
   createdAt: Schema.Date,
   updatedAt: Schema.Date
 }) {
-  static decodeUknown = Schema.decodeUnknown(DomainAccount)
+  static decodeUnknown = Schema.decodeUnknown(DomainAccount)
 }

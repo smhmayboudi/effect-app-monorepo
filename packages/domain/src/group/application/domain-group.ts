@@ -11,5 +11,5 @@ export class DomainGroup extends Schema.Class<DomainGroup>("DomainGroup")({
   createdAt: Schema.Date,
   updatedAt: Schema.Date
 }) {
-  static decodeUknown = Schema.decodeUnknown(DomainGroup)
+  static decodeUnknown = Schema.decodeUnknown(DomainGroup)
 }

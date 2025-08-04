@@ -16,5 +16,5 @@ export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
   createdAt: Schema.Date,
   updatedAt: Schema.Date
 }) {
-  static decodeUknown = Schema.decodeUnknown(DomainTodo)
+  static decodeUnknown = Schema.decodeUnknown(DomainTodo)
 }

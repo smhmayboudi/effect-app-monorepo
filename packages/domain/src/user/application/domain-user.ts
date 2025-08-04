@@ -32,7 +32,7 @@ export class DomainUser extends Schema.Class<DomainUser>("DomainUser")({
   createdAt: Schema.Date,
   updatedAt: Schema.Date
 }) {
-  static decodeUknown = Schema.decodeUnknown(DomainUser)
+  static decodeUnknown = Schema.decodeUnknown(DomainUser)
 }
 
 export class DomainUserWithSensitive extends Schema.Class<DomainUserWithSensitive>(

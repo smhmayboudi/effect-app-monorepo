@@ -13,5 +13,5 @@ export class DomainPerson extends Schema.Class<DomainPerson>("DomainPerson")({
   createdAt: Schema.Date,
   updatedAt: Schema.Date
 }) {
-  static decodeUknown = Schema.decodeUnknown(DomainPerson)
+  static decodeUnknown = Schema.decodeUnknown(DomainPerson)
 }
