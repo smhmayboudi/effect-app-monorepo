@@ -12,6 +12,6 @@ export class PortPersonDriving extends Context.Tag("PortPersonDriving")<PortPers
   readById: (id: PersonId) => Effect.Effect<DomainPerson, ErrorPersonNotFound, ActorAuthorized<"Person", "readById">>
   update: (
     id: PersonId,
-    person: Partial<Omit<DomainPerson, "id">>
+    person: Partial<Omit<DomainPerson, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<PersonId, ErrorPersonNotFound, ActorAuthorized<"Person", "update">>
 }>() {}

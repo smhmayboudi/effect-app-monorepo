@@ -12,6 +12,6 @@ export class PortGroupDriving extends Context.Tag("PortGroupDriving")<PortGroupD
   readById: (id: GroupId) => Effect.Effect<DomainGroup, ErrorGroupNotFound, ActorAuthorized<"Group", "readById">>
   update: (
     id: GroupId,
-    group: Partial<Omit<DomainGroup, "id">>
+    group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<GroupId, ErrorGroupNotFound, ActorAuthorized<"Group", "update">>
 }>() {}

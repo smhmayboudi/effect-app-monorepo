@@ -13,6 +13,6 @@ export class PortTodoDriving extends Context.Tag("PortTodoDriving")<PortTodoDriv
   readById: (id: TodoId) => Effect.Effect<DomainTodo, ErrorTodoNotFound, ActorAuthorized<"Todo", "readById">>
   update: (
     id: TodoId,
-    todo: Partial<Omit<DomainTodo, "id">>
+    todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<TodoId, ErrorTodoNotFound, ActorAuthorized<"Todo", "update">>
 }>() {}

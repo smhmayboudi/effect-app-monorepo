@@ -85,7 +85,7 @@ export const UserUseCase = Layer.effect(
 
     const update = (
       id: UserId,
-      user: Partial<Omit<DomainUser, "id">>
+      user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, ActorAuthorized<"User", "update">> =>
       driven.update(id, user)
         .pipe(

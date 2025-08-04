@@ -47,7 +47,7 @@ export const GroupUseCase = Layer.effect(
 
     const update = (
       id: GroupId,
-      group: Partial<Omit<DomainGroup, "id">>
+      group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<GroupId, ErrorGroupNotFound, ActorAuthorized<"Group", "update">> =>
       driven.update(id, group)
         .pipe(

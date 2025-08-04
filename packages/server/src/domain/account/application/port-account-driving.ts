@@ -14,6 +14,6 @@ export class PortAccountDriving extends Context.Tag("PortAccountDriving")<PortAc
   ) => Effect.Effect<DomainAccount, ErrorAccountNotFound, ActorAuthorized<"Account", "readById">>
   update: (
     id: AccountId,
-    account: Partial<Omit<DomainAccount, "id">>
+    account: Partial<Omit<DomainAccount, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<AccountId, ErrorAccountNotFound, ActorAuthorized<"Account", "update">>
 }>() {}

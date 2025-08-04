@@ -29,6 +29,6 @@ export class PortUserDriving extends Context.Tag("PortUserDriving")<PortUserDriv
   ) => Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">>
   update: (
     id: UserId,
-    user: Partial<Omit<DomainUser, "id">>
+    user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, ActorAuthorized<"User", "update">>
 }>() {}

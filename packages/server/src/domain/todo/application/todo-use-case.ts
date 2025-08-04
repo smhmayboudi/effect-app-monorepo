@@ -44,7 +44,7 @@ export const TodoUseCase = Layer.effect(
 
     const update = (
       id: TodoId,
-      todo: Partial<Omit<DomainTodo, "id">>
+      todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<TodoId, ErrorTodoNotFound, ActorAuthorized<"Todo", "update">> =>
       driven.update(id, todo)
         .pipe(

@@ -7,5 +7,8 @@ export class PortGroupDriven extends Context.Tag("PortGroupDriven")<PortGroupDri
   delete: (id: GroupId) => Effect.Effect<void, ErrorGroupNotFound, never>
   readAll: () => Effect.Effect<Array<DomainGroup>, never, never>
   readById: (id: GroupId) => Effect.Effect<DomainGroup, ErrorGroupNotFound, never>
-  update: (id: GroupId, group: Partial<Omit<DomainGroup, "id">>) => Effect.Effect<void, ErrorGroupNotFound, never>
+  update: (
+    id: GroupId,
+    group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<void, ErrorGroupNotFound, never>
 }>() {}

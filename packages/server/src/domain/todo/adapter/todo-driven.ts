@@ -88,7 +88,7 @@ export const TodoDriven = Layer.effect(
 
     const updateQuery = (
       id: TodoId,
-      todo: Omit<DomainTodo, "id">
+      todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">
     ) =>
       sql`UPDATE tbl_todo SET
           owner_id = ${todo.ownerId},
@@ -99,7 +99,7 @@ export const TodoDriven = Layer.effect(
 
     const update = (
       id: TodoId,
-      todo: Partial<Omit<DomainTodo, "id">>
+      todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<void, ErrorTodoNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldTodo) => updateQuery(id, { ...oldTodo, ...todo })),

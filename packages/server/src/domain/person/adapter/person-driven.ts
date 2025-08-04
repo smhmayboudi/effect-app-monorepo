@@ -92,7 +92,7 @@ export const PersonDriven = Layer.effect(
 
     const updateQuery = (
       id: PersonId,
-      person: Omit<DomainPerson, "id">
+      person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">
     ) =>
       sql`UPDATE tbl_person SET
           group_id = ${person.groupId},
@@ -104,7 +104,7 @@ export const PersonDriven = Layer.effect(
 
     const update = (
       id: PersonId,
-      person: Partial<Omit<DomainPerson, "id">>
+      person: Partial<Omit<DomainPerson, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<void, ErrorPersonNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldPerson) => updateQuery(id, { ...oldPerson, ...person })),

@@ -47,7 +47,7 @@ export const AccountUseCase = Layer.effect(
 
     const update = (
       id: AccountId,
-      account: Partial<Omit<DomainAccount, "id">>
+      account: Partial<Omit<DomainAccount, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<AccountId, ErrorAccountNotFound, ActorAuthorized<"Account", "update">> =>
       driven.update(id, account)
         .pipe(

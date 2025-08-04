@@ -9,6 +9,6 @@ export class PortAccountDriven extends Context.Tag("PortAccountDriven")<PortAcco
   readById: (id: AccountId) => Effect.Effect<DomainAccount, ErrorAccountNotFound, never>
   update: (
     id: AccountId,
-    account: Partial<Omit<DomainAccount, "id">>
+    account: Partial<Omit<DomainAccount, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<void, ErrorAccountNotFound, never>
 }>() {}

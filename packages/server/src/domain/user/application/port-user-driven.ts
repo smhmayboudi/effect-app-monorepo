@@ -20,6 +20,6 @@ export class PortUserDriven extends Context.Tag("PortUserDriven")<PortUserDriven
   readByIdWithSensitive: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, never>
   update: (
     id: UserId,
-    user: Partial<Omit<DomainUser, "id">>
+    user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
   ) => Effect.Effect<void, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never>
 }>() {}

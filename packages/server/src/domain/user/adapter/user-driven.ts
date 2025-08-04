@@ -150,7 +150,7 @@ export const UserDriven = Layer.effect(
 
     const buildUpdateQuery = (
       id: UserId,
-      user: Omit<DomainUser, "id">
+      user: Omit<DomainUser, "id" | "createdAt" | "updatedAt">
     ) =>
       sql`UPDATE tbl_user SET
           owner_id = ${user.ownerId},
@@ -160,7 +160,7 @@ export const UserDriven = Layer.effect(
 
     const update = (
       id: UserId,
-      user: Partial<Omit<DomainUser, "id">>
+      user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<void, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldUser) => buildUpdateQuery(id, { ...oldUser, ...user })),

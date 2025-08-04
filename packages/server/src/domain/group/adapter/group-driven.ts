@@ -79,7 +79,7 @@ export const GroupDriven = Layer.effect(
 
     const updateQuery = (
       id: GroupId,
-      group: Omit<DomainGroup, "id">
+      group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">
     ) =>
       sql`UPDATE tbl_group SET
           owner_id = ${group.ownerId},
@@ -89,7 +89,7 @@ export const GroupDriven = Layer.effect(
 
     const update = (
       id: GroupId,
-      group: Partial<Omit<DomainGroup, "id">>
+      group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<void, ErrorGroupNotFound, never> =>
       readById(id).pipe(
         Effect.flatMap((oldGroup) => updateQuery(id, { ...oldGroup, ...group })),
