@@ -1,7 +1,7 @@
 import { DomainSSE } from "@template/domain/sse/application/domain-sse"
 import type { UserId } from "@template/domain/user/application/domain-user"
 import { Array, Effect, Layer, MutableHashMap, Option, type Queue, Ref, Schema } from "effect"
-import { PortSSEManager } from "../application/port/sse-manager.js"
+import { PortSSEManager } from "../application/port-sse-manager.js"
 
 interface ActiveConnection {
   readonly connectionId: string

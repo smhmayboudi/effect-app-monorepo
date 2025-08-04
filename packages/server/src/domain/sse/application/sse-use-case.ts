@@ -4,7 +4,7 @@ import type { UserId } from "@template/domain/user/application/domain-user"
 import type { Queue } from "effect"
 import { Effect, Layer } from "effect"
 import type { Scope } from "effect/Scope"
-import { PortSSEManager } from "../../../infrastructure/application/port/sse-manager.js"
+import { PortSSEManager } from "../../../infrastructure/application/port-sse-manager.js"
 import { PortSSEDriving } from "./port-sse-driving.js"
 
 export const SSEUseCase = Layer.effect(

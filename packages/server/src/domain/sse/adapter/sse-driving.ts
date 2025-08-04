@@ -4,7 +4,7 @@ import { DomainActor } from "@template/domain/actor"
 import { Api } from "@template/domain/api"
 import { DomainSSE } from "@template/domain/sse/application/domain-sse"
 import { Effect, Queue, Schedule, Stream } from "effect"
-import { PortUUID } from "../../../infrastructure/application/port/uuid.js"
+import { PortUUID } from "../../../infrastructure/application/port-uuid.js"
 import { PortSSEDriving } from "../application/port-sse-driving.js"
 
 export const SSEDriving = HttpApiBuilder.group(Api, "sse", (handlers) =>

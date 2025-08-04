@@ -6,7 +6,7 @@ import type { ErrorUserEmailAlreadyTaken } from "@template/domain/user/applicati
 import type { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
 import type { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
 import { Effect, Layer, Redacted } from "effect"
-import { PortUUID } from "../../../infrastructure/application/port/uuid.js"
+import { PortUUID } from "../../../infrastructure/application/port-uuid.js"
 import { policyRequire } from "../../../util/policy.js"
 import { PortAccountDriving } from "../../account/application/port-account-driving.js"
 import { PortUserDriven } from "./port-user-driven.js"
