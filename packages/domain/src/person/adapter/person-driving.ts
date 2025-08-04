@@ -17,21 +17,17 @@ export class PersonDriving extends HttpApiGroup.make("person")
       .addError(ErrorGroupNotFound)
       .addSuccess(ResponseSuccess(PersonId))
       .setPath(Schema.Struct({ groupId: GroupIdFromString }))
-      .setPayload(Schema.Struct({
-        birthday: Schema.Date,
-        firstName: Schema.NonEmptyString,
-        lastName: Schema.NonEmptyString
-      }))
+      .setPayload(DomainPerson.pipe(Schema.pick("birthday", "firstName", "lastName")))
       .annotate(OpenApi.Description, "Person create")
       .annotate(OpenApi.Summary, "Person create")
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
-      .setPath(Schema.Struct({ id: PersonIdFromString }))
-      .addSuccess(ResponseSuccess(DomainPerson))
       .addError(ErrorPersonNotFound)
+      .addSuccess(ResponseSuccess(DomainPerson))
       .annotate(OpenApi.Description, "Person readById")
       .annotate(OpenApi.Summary, "Person readById")
+      .setPath(Schema.Struct({ id: PersonIdFromString }))
   )
   .middlewareEndpoints(MiddlewareAuthentication)
   .annotate(OpenApi.Description, "Manage Person")

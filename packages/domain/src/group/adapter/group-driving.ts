@@ -2,7 +2,7 @@ import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 import { MiddlewareAuthentication } from "../../middleware-authentication.js"
 import { ResponseSuccess } from "../../shared/adapter/response.js"
-import { GroupId } from "../application/domain-group.js"
+import { DomainGroup, GroupId } from "../application/domain-group.js"
 import { ErrorGroupNotFound } from "../application/error-group-not-found.js"
 
 export const GroupIdFromString = Schema.NumberFromString.pipe(
@@ -13,7 +13,7 @@ export class GroupDriving extends HttpApiGroup.make("group")
   .add(
     HttpApiEndpoint.post("create", "/")
       .addSuccess(ResponseSuccess(GroupId))
-      .setPayload(Schema.Struct({ name: Schema.NonEmptyString }))
+      .setPayload(DomainGroup.pipe(Schema.pick("name")))
       .annotate(OpenApi.Description, "Group create")
       .annotate(OpenApi.Summary, "Group create")
   )
@@ -22,7 +22,7 @@ export class GroupDriving extends HttpApiGroup.make("group")
       .addError(ErrorGroupNotFound)
       .addSuccess(ResponseSuccess(GroupId))
       .setPath(Schema.Struct({ id: GroupIdFromString }))
-      .setPayload(Schema.Struct({ name: Schema.NonEmptyString }))
+      .setPayload(DomainGroup.pipe(Schema.pick("name")))
       .annotate(OpenApi.Description, "Group update")
       .annotate(OpenApi.Summary, "Group update")
   )

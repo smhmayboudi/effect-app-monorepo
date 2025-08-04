@@ -2,7 +2,7 @@ import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 import { MiddlewareAuthentication } from "../../middleware-authentication.js"
 import { ResponseSuccess } from "../../shared/adapter/response.js"
-import { DomainUser, DomainUserWithSensitive, Email, UserId } from "../application/domain-user.js"
+import { DomainUser, DomainUserWithSensitive, UserId } from "../application/domain-user.js"
 import { ErrorUserEmailAlreadyTaken } from "../application/error-user-email-already-taken.js"
 import { ErrorUserNotFound } from "../application/error-user-not-found.js"
 
@@ -15,9 +15,9 @@ export class UserDriving extends HttpApiGroup.make("user")
     HttpApiEndpoint.del("delete", "/:id")
       .addError(ErrorUserNotFound, { status: 404 })
       .addSuccess(ResponseSuccess(UserId))
+      .setPath(Schema.Struct({ id: UserIdFromString }))
       .annotate(OpenApi.Description, "User delete")
       .annotate(OpenApi.Summary, "User delete")
-      .setPath(Schema.Struct({ id: UserIdFromString }))
   )
   .add(
     HttpApiEndpoint.get("readAll", "/")
@@ -44,19 +44,19 @@ export class UserDriving extends HttpApiGroup.make("user")
       .addError(ErrorUserEmailAlreadyTaken)
       .addError(ErrorUserNotFound)
       .addSuccess(ResponseSuccess(UserId))
+      .setPath(Schema.Struct({ id: UserIdFromString }))
+      .setPayload(DomainUser.pipe(Schema.pick("email")))
       .annotate(OpenApi.Description, "User update")
       .annotate(OpenApi.Summary, "User update")
-      .setPath(Schema.Struct({ id: UserIdFromString }))
-      .setPayload(Schema.Struct({ email: Email }))
   )
   .middlewareEndpoints(MiddlewareAuthentication)
   .add(
     HttpApiEndpoint.post("create", "/")
       .addError(ErrorUserEmailAlreadyTaken)
       .addSuccess(ResponseSuccess(DomainUserWithSensitive))
+      .setPayload(DomainUser.pipe(Schema.pick("email")))
       .annotate(OpenApi.Description, "User create")
       .annotate(OpenApi.Summary, "User create")
-      .setPayload(Schema.Struct({ email: Email }))
   )
   .annotate(OpenApi.Description, "Manage User")
   .annotate(OpenApi.Summary, "Manage User")
