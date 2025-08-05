@@ -15,7 +15,9 @@ export const PersonDriven = Layer.effect(
     ): Effect.Effect<PersonId, never, never> =>
       sql<
         { id: number }
-      >`INSERT INTO tbl_person ${sql.insert({ ...person, birthday: person.birthday.toJSON() })} RETURNING id`
+      >`INSERT INTO tbl_person ${
+        sql.insert({ ...person, birthday: person.birthday.toISOString().slice(0, 10) })
+      } RETURNING id`
         .pipe(
           Effect.catchTag("SqlError", Effect.die),
           Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -23,7 +25,7 @@ export const PersonDriven = Layer.effect(
           Effect.withSpan("PersonDriven", {
             attributes: {
               [ATTR_CODE_FUNCTION_NAME]: "create",
-              person: { ...person, birthday: person.birthday.toString() }
+              person: { ...person, birthday: person.birthday.toISOString().slice(0, 10) }
             }
           })
         )
@@ -64,7 +66,7 @@ export const PersonDriven = Layer.effect(
       person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">
     ) =>
       sql<{ id: number }>`UPDATE tbl_person SET ${
-        sql.update({ ...person, birthday: person.birthday.toJSON() })
+        sql.update({ ...person, birthday: person.birthday.toISOString().slice(0, 10) })
       }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
@@ -84,7 +86,13 @@ export const PersonDriven = Layer.effect(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
         Effect.map((row) => PersonId.make(row.id)),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } })
+        Effect.withSpan("PersonDriven", {
+          attributes: {
+            [ATTR_CODE_FUNCTION_NAME]: "update",
+            id,
+            person: { ...person, birthday: person.birthday?.toISOString().slice(0, 10) }
+          }
+        })
       )
 
     return {

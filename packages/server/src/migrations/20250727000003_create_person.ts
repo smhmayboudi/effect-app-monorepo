@@ -8,7 +8,7 @@ export default Effect.gen(function*() {
       sql`CREATE TABLE tbl_person (
       id SERIAL PRIMARY KEY,
       group_id INTEGER NOT NULL,
-      birthday DATE,
+      birthday DATE NOT NULL,
       first_name VARCHAR(255) NOT NULL,
       last_name VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -19,7 +19,7 @@ export default Effect.gen(function*() {
       sql`CREATE TABLE tbl_person (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       group_id INTEGER NOT NULL,
-      birthday DATE,
+      birthday DATE NOT NULL,
       first_name TEXT NOT NULL,
       last_name TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
