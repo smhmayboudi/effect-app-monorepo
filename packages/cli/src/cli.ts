@@ -27,7 +27,7 @@ const list = Command.make("list").pipe(
 
 const remove = Command.make("remove", { id: todoId }).pipe(
   Command.withDescription("Remove a todo"),
-  Command.withHandler(({ id }) => TodoClient.del(id))
+  Command.withHandler(({ id }) => TodoClient.delete(id))
 )
 
 const command = Command.make("todo").pipe(

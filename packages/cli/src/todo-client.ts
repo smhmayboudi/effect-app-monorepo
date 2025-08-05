@@ -40,7 +40,7 @@ export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
 
     return {
       create,
-      del,
+      delete: del,
       readAll,
       readById,
       update
