@@ -30,16 +30,16 @@ import { MiddlewareAuthenticationLive } from "./middleware-authentication.js"
 
 export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(
-    Layer.provide(GroupDriving),
-    Layer.provide(GroupUseCase),
-    Layer.provide(GroupDriven),
-    Layer.provide(GroupPolicy)
-  )
-  .pipe(
     Layer.provide(PersonDriving),
     Layer.provide(PersonUseCase),
     Layer.provide(PersonDriven),
     Layer.provide(PersonPolicy)
+  )
+  .pipe(
+    Layer.provide(GroupDriving),
+    Layer.provide(GroupUseCase),
+    Layer.provide(GroupDriven),
+    Layer.provide(GroupPolicy)
   )
   .pipe(
     Layer.provide(SSEDriving),

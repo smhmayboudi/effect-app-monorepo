@@ -15,12 +15,17 @@ export const PersonDriven = Layer.effect(
     ): Effect.Effect<PersonId, never, never> =>
       sql<
         { id: number }
-      >`INSERT INTO tbl_person ${sql.insert(person)} RETURNING id`
+      >`INSERT INTO tbl_person ${sql.insert({ ...person, birthday: person.birthday.toJSON() })} RETURNING id`
         .pipe(
           Effect.catchTag("SqlError", Effect.die),
           Effect.flatMap((rows) => Effect.succeed(rows[0])),
           Effect.map((row) => PersonId.make(row.id)),
-          Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person } })
+          Effect.withSpan("PersonDriven", {
+            attributes: {
+              [ATTR_CODE_FUNCTION_NAME]: "create",
+              person: { ...person, birthday: person.birthday.toString() }
+            }
+          })
         )
 
     const del = (id: PersonId): Effect.Effect<PersonId, ErrorPersonNotFound, never> =>
@@ -59,7 +64,7 @@ export const PersonDriven = Layer.effect(
       person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">
     ) =>
       sql<{ id: number }>`UPDATE tbl_person SET ${
-        sql.update(person)
+        sql.update({ ...person, birthday: person.birthday.toJSON() })
       }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
