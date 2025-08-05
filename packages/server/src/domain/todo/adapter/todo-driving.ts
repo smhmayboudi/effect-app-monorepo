@@ -18,11 +18,11 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
       .handle("create", ({ payload }) =>
         DomainActor.pipe(
           Effect.flatMap((user) =>
-            driving.create({ ...payload, ownerId: user.ownerId, done: false }).pipe(
+            driving.create({ ...payload, ownerId: user.ownerId, done: 0 }).pipe(
               Effect.withSpan("TodoDriving", {
                 attributes: {
                   [ATTR_CODE_FUNCTION_NAME]: "create",
-                  todo: { ...payload, ownerId: user.ownerId, done: false }
+                  todo: { ...payload, ownerId: user.ownerId, done: 0 }
                 }
               })
             )
@@ -49,8 +49,8 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
           response
         ))
       .handle("update", ({ path: { id } }) =>
-        driving.update(id, { done: true }).pipe(
-          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", todo: { done: true } } }),
+        driving.update(id, { done: 1 }).pipe(
+          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", todo: { done: 1 } } }),
           policyUse(policy.canUpdate(TodoId.make(0))),
           response
         ))
