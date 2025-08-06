@@ -7,7 +7,7 @@ export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
   accessors: true,
   effect: Effect.gen(function*() {
     const client = yield* HttpApiClient.make(Api, {
-      baseUrl: "http://localhost:3000"
+      baseUrl: "http://localhost:3001"
     })
 
     const create = (text: string) =>
