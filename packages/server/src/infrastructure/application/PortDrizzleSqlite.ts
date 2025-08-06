@@ -48,7 +48,7 @@ export class DatabaseError extends Data.TaggedError("DatabaseError")<{
   }
 }
 
-export class DatabaseConnectionLostError extends Data.TaggedError("DatabaseConnectionLostError")<{
+export class DatabaseErrorConnectionLost extends Data.TaggedError("DatabaseErrorConnectionLost")<{
   cause: unknown
   message: string
 }> {}

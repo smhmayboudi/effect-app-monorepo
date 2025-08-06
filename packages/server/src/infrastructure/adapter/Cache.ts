@@ -1,3 +1,5 @@
+// reference: https://github.com/lucas-barake/effect-monorepo/blob/main/packages/domain/src/ManualCache.ts
+
 import type * as Duration from "effect/Duration"
 import type * as Effect from "effect/Effect"
 import type * as Option from "effect/Option"

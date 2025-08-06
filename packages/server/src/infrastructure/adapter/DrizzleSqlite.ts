@@ -11,8 +11,8 @@ import type {
   TransactionContextShape
 } from "../application/PortDrizzleSqlite.js"
 import {
-  DatabaseConnectionLostError,
   DatabaseError,
+  DatabaseErrorConnectionLost,
   PortDrizzleSqlite,
   TransactionContext
 } from "../application/PortDrizzleSqlite.js"
@@ -57,7 +57,7 @@ export const drizzleSqlite = (config: Config) =>
         Effect.timeoutFail({
           duration: "10 seconds",
           onTimeout: () =>
-            new DatabaseConnectionLostError({
+            new DatabaseErrorConnectionLost({
               cause: new Error("[Database] Failed to connect: timeout"),
               message: "[Database] Failed to connect: timeout"
             })
@@ -65,7 +65,7 @@ export const drizzleSqlite = (config: Config) =>
         Effect.catchTag(
           "UnknownException",
           (error) =>
-            new DatabaseConnectionLostError({
+            new DatabaseErrorConnectionLost({
               cause: error.cause,
               message: "[Database] Failed to connect"
             })

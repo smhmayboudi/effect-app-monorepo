@@ -4,7 +4,7 @@ import { type User, UserId } from "./user/application/UserApplicationDomain.js"
 
 export class Actor extends Context.Tag("Actor")<Actor, User>() {}
 
-export const ActorAuthorizedId: unique symbol = Symbol.for("ActorAuthorized")
+export const ActorAuthorizedId: unique symbol = Symbol.for("ActorAuthorizedId")
 export type ActorAuthorizedId = typeof ActorAuthorizedId
 
 export interface ActorAuthorized<Entity extends string, Action extends string> extends User {
@@ -28,7 +28,7 @@ export class ActorErrorUnauthorized extends Schema.TaggedError<ActorErrorUnautho
   }
 
   static is(u: unknown): u is ActorErrorUnauthorized {
-    return Predicate.isTagged(u, "UnauthorizedActor")
+    return Predicate.isTagged(u, "ActorErrorUnauthorized")
   }
 
   static refail(entity: string, action: string) {

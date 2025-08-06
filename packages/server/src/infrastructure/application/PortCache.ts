@@ -1,3 +1,5 @@
+// reference: https://github.com/lucas-barake/effect-monorepo/blob/main/packages/domain/src/internal/manual-cache.ts
+
 import type * as Clock from "effect/Clock"
 import * as Data from "effect/Data"
 import * as Duration from "effect/Duration"
