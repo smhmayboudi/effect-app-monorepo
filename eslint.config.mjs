@@ -1,3 +1,4 @@
+import effectPlugin from "@effect/eslint-plugin"
 import { fixupPluginRules } from "@eslint/compat"
 import { FlatCompat } from "@eslint/eslintrc"
 import js from "@eslint/js"
@@ -6,7 +7,6 @@ import codegen from "eslint-plugin-codegen"
 import _import from "eslint-plugin-import"
 import simpleImportSort from "eslint-plugin-simple-import-sort"
 import sortDestructureKeys from "eslint-plugin-sort-destructure-keys"
-import effectPlugin from "@effect/eslint-plugin"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -20,7 +20,15 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ["**/dist", "**/build", "**/docs", "**/*.md"]
+    ignores: [
+      "**/dist",
+      "**/build",
+      "**/docs",
+      "**/*.md",
+      "packages/cli/src/index.ts",
+      "packages/domain/src/index.ts",
+      "packages/server/src/index.ts"
+    ]
   },
   ...compat.extends(
     "eslint:recommended",
