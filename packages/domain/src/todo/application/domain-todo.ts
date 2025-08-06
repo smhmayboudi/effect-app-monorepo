@@ -9,12 +9,12 @@ export const TodoIdFromString = Schema.NumberFromString.pipe(
 )
 
 export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
-  id: TodoId,
-  ownerId: AccountId,
-  done: Schema.Literal(0, 1),
-  text: Schema.NonEmptyTrimmedString,
-  createdAt: Schema.Date,
-  updatedAt: Schema.Date
+  id: TodoId.annotations({ description: "Todo identification" }),
+  ownerId: AccountId.annotations({ description: "Account identification" }),
+  done: Schema.Literal(0, 1).annotations({ description: "Done" }),
+  text: Schema.NonEmptyTrimmedString.annotations({ description: "Text" }),
+  createdAt: Schema.Date.annotations({ description: "Created at" }),
+  updatedAt: Schema.Date.annotations({ description: "Updated at" })
 }) {
   static decodeUnknown = Schema.decodeUnknown(DomainTodo)
 }

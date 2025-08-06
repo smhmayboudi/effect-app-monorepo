@@ -5,13 +5,13 @@ export const PersonId = Schema.Number.pipe(Schema.brand("PersonId"))
 export type PersonId = Schema.Schema.Type<typeof PersonId>
 
 export class DomainPerson extends Schema.Class<DomainPerson>("DomainPerson")({
-  id: PersonId,
-  groupId: GroupId,
-  birthday: Schema.Date,
-  firstName: Schema.NonEmptyTrimmedString,
-  lastName: Schema.NonEmptyTrimmedString,
-  createdAt: Schema.Date,
-  updatedAt: Schema.Date
+  id: PersonId.annotations({ description: "Person identification" }),
+  groupId: GroupId.annotations({ description: "Group identification" }),
+  birthday: Schema.Date.annotations({ description: "Birthday" }),
+  firstName: Schema.NonEmptyTrimmedString.annotations({ description: "First name" }),
+  lastName: Schema.NonEmptyTrimmedString.annotations({ description: "Last name" }),
+  createdAt: Schema.Date.annotations({ description: "Created at" }),
+  updatedAt: Schema.Date.annotations({ description: "Updated at" })
 }) {
   static decodeUnknown = Schema.decodeUnknown(DomainPerson)
 }

@@ -18,11 +18,11 @@ export const UserId = Schema.Number.pipe(Schema.brand("UserId"))
 export type UserId = Schema.Schema.Type<typeof UserId>
 
 export class DomainUser extends Schema.Class<DomainUser>("DomainUser")({
-  id: UserId,
-  ownerId: AccountId,
-  email: Email,
-  createdAt: Schema.Date,
-  updatedAt: Schema.Date
+  id: UserId.annotations({ description: "User identification" }),
+  ownerId: AccountId.annotations({ description: "Owner identification" }),
+  email: Email.annotations({ description: "Email address" }),
+  createdAt: Schema.Date.annotations({ description: "Created at" }),
+  updatedAt: Schema.Date.annotations({ description: "Updated at" })
 }) {
   static decodeUnknown = Schema.decodeUnknown(DomainUser)
 }
