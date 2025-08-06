@@ -3,12 +3,12 @@ import { ActorErrorUnauthorized } from "@template/domain/Actor"
 import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthentication"
 import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer } from "effect"
-import { PortUserDriving } from "./domain/user/application/port-user-driving.js"
+import { UserPortDriving } from "./domain/user/application/UserApplicationPortDriving.js"
 
 export const MiddlewareAuthenticationLive = Layer.effect(
   MiddlewareAuthentication,
   Effect.gen(function*() {
-    const user = yield* PortUserDriving
+    const user = yield* UserPortDriving
 
     return MiddlewareAuthentication.of({
       cookie: (token) =>

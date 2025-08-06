@@ -9,7 +9,7 @@ import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
 import { Layer } from "effect"
 import { createServer } from "node:http"
-import { ApiLive } from "./api.js"
+import { ApiLive } from "./Api.js"
 
 const NodeSdkLive = NodeSdk.layer(() => ({
   logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),
