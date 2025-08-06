@@ -3,7 +3,7 @@
 import { NodeContext, NodeHttpClient, NodeRuntime } from "@effect/platform-node"
 import { Effect, Layer } from "effect"
 import { cli } from "./cli.js"
-import { TodoClient } from "./todo-client.js"
+import { TodoClient } from "./TodoClient.js"
 
 const MainLive = TodoClient.Default.pipe(
   Layer.provide(NodeHttpClient.layerUndici),
