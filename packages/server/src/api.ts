@@ -1,5 +1,5 @@
 import { HttpApiBuilder } from "@effect/platform"
-import { Api } from "@template/domain/api"
+import { Api } from "@template/domain/Api"
 import { Layer } from "effect"
 import { AccountDriven } from "./domain/account/adapter/account-driven.js"
 import { AccountDriving } from "./domain/account/adapter/account-driving.js"
@@ -26,7 +26,7 @@ import { UserUseCase } from "./domain/user/application/user-use-case.js"
 import { Sql } from "./infrastructure/adapter/sql.js"
 import { SSEManager } from "./infrastructure/adapter/sse-manager.js"
 import { UUID } from "./infrastructure/adapter/uuid.js"
-import { MiddlewareAuthenticationLive } from "./middleware-authentication.js"
+import { MiddlewareAuthenticationLive } from "./MiddlewareAuthentication.js"
 
 export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(

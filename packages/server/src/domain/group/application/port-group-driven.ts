@@ -1,14 +1,14 @@
-import type { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
-import type { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
+import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
+import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import { Context, type Effect } from "effect"
 
 export class PortGroupDriven extends Context.Tag("PortGroupDriven")<PortGroupDriven, {
-  create: (group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">) => Effect.Effect<GroupId, never, never>
-  delete: (id: GroupId) => Effect.Effect<GroupId, ErrorGroupNotFound, never>
-  readAll: () => Effect.Effect<Array<DomainGroup>, never, never>
-  readById: (id: GroupId) => Effect.Effect<DomainGroup, ErrorGroupNotFound, never>
+  create: (group: Omit<Group, "id" | "createdAt" | "updatedAt">) => Effect.Effect<GroupId, never, never>
+  delete: (id: GroupId) => Effect.Effect<GroupId, GroupErrorNotFound, never>
+  readAll: () => Effect.Effect<Array<Group>, never, never>
+  readById: (id: GroupId) => Effect.Effect<Group, GroupErrorNotFound, never>
   update: (
     id: GroupId,
-    group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<GroupId, ErrorGroupNotFound, never>
+    group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<GroupId, GroupErrorNotFound, never>
 }>() {}

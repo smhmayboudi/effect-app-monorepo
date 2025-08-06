@@ -1,34 +1,34 @@
-import type { ActorAuthorized } from "@template/domain/actor"
+import type { ActorAuthorized } from "@template/domain/Actor"
 import type {
   AccessToken,
-  DomainUser,
-  DomainUserWithSensitive,
-  UserId
-} from "@template/domain/user/application/domain-user"
-import type { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
-import type { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
-import type { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
+  User,
+  UserId,
+  UserWithSensitive
+} from "@template/domain/user/application/UserApplicationDomain"
+import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
+import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
+import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Context, type Effect } from "effect"
 
 export class PortUserDriving extends Context.Tag("PortUserDriving")<PortUserDriving, {
   create: (
-    user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">
+    user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt">
   ) => Effect.Effect<
-    DomainUserWithSensitive,
-    ErrorUserEmailAlreadyTaken,
+    UserWithSensitive,
+    UserErrorEmailAlreadyTaken,
     | ActorAuthorized<"Account", "create">
     | ActorAuthorized<"User", "create">
     | ActorAuthorized<"User", "readByIdWithSensitive">
   >
-  delete: (id: UserId) => Effect.Effect<UserId, ErrorUserNotFound, ActorAuthorized<"User", "delete">>
-  readAll: () => Effect.Effect<Array<DomainUser>, never, ActorAuthorized<"User", "readAll">>
-  readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>
-  readById: (id: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound, ActorAuthorized<"User", "readById">>
+  delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">>
+  readAll: () => Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">>
+  readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
+  readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">>
   readByIdWithSensitive: (
     id: UserId
-  ) => Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">>
+  ) => Effect.Effect<UserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">>
   update: (
     id: UserId,
-    user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, ActorAuthorized<"User", "update">>
+    user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">>
 }>() {}

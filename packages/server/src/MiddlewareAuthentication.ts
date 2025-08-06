@@ -1,7 +1,7 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { ErrorActorUnauthorized } from "@template/domain/actor"
-import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
-import { AccessToken, UserId } from "@template/domain/user/application/domain-user"
+import { ActorErrorUnauthorized } from "@template/domain/Actor"
+import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthentication"
+import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer } from "effect"
 import { PortUserDriving } from "./domain/user/application/port-user-driving.js"
 
@@ -14,9 +14,9 @@ export const MiddlewareAuthenticationLive = Layer.effect(
       cookie: (token) =>
         user.readByAccessToken(AccessToken.make(token))
           .pipe(
-            Effect.catchTag("ErrorUserNotFoundWithAccessToken", () =>
+            Effect.catchTag("UserErrorNotFoundWithAccessToken", () =>
               Effect.fail(
-                new ErrorActorUnauthorized({
+                new ActorErrorUnauthorized({
                   actorId: UserId.make(-1),
                   entity: "",
                   action: ""

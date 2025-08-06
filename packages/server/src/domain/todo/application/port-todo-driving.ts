@@ -1,18 +1,18 @@
-import type { ActorAuthorized } from "@template/domain/actor"
-import type { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
-import type { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
-import type { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
+import type { ActorAuthorized } from "@template/domain/Actor"
+import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
+import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
+import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Context, type Effect } from "effect"
 
 export class PortTodoDriving extends Context.Tag("PortTodoDriving")<PortTodoDriving, {
   create: (
-    todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">
-  ) => Effect.Effect<TodoId, ErrorTodoAlreadyExists, ActorAuthorized<"Todo", "create">>
-  delete: (id: TodoId) => Effect.Effect<TodoId, ErrorTodoNotFound, ActorAuthorized<"Todo", "delete">>
-  readAll: () => Effect.Effect<Array<DomainTodo>, never, ActorAuthorized<"Todo", "readAll">>
-  readById: (id: TodoId) => Effect.Effect<DomainTodo, ErrorTodoNotFound, ActorAuthorized<"Todo", "readById">>
+    todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
+  ) => Effect.Effect<TodoId, TodoErrorAlreadyExists, ActorAuthorized<"Todo", "create">>
+  delete: (id: TodoId) => Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "delete">>
+  readAll: () => Effect.Effect<Array<Todo>, never, ActorAuthorized<"Todo", "readAll">>
+  readById: (id: TodoId) => Effect.Effect<Todo, TodoErrorNotFound, ActorAuthorized<"Todo", "readById">>
   update: (
     id: TodoId,
-    todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<TodoId, ErrorTodoNotFound, ActorAuthorized<"Todo", "update">>
+    todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "update">>
 }>() {}

@@ -1,9 +1,9 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
-import { TodoId } from "./domain-todo.js"
+import { TodoId } from "./TodoApplicationDomain.js"
 
-export class ErrorTodoNotFound extends Schema.TaggedError<ErrorTodoNotFound>("ErrorTodoNotFound")(
-  "ErrorTodoNotFound",
+export class TodoErrorNotFound extends Schema.TaggedError<TodoErrorNotFound>("TodoErrorNotFound")(
+  "TodoErrorNotFound",
   { id: TodoId },
   HttpApiSchema.annotations({ status: 404 })
 ) {

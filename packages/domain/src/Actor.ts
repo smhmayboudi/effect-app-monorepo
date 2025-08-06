@@ -1,24 +1,21 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Context, Effect, Predicate, Schema } from "effect"
-import { type DomainUser, UserId } from "./user/application/domain-user.js"
+import { type User, UserId } from "./user/application/UserApplicationDomain.js"
 
-export class DomainActor extends Context.Tag("DomainActor")<
-  DomainActor,
-  DomainUser
->() {}
+export class Actor extends Context.Tag("Actor")<Actor, User>() {}
 
 export const ActorAuthorizedId: unique symbol = Symbol.for("ActorAuthorized")
 export type ActorAuthorizedId = typeof ActorAuthorizedId
 
-export interface ActorAuthorized<Entity extends string, Action extends string> extends DomainUser {
+export interface ActorAuthorized<Entity extends string, Action extends string> extends User {
   readonly [ActorAuthorizedId]: {
     readonly _Entity: Entity
     readonly _Action: Action
   }
 }
 
-export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnauthorized>()(
-  "ErrorActorUnauthorized",
+export class ActorErrorUnauthorized extends Schema.TaggedError<ActorErrorUnauthorized>("ActorErrorUnauthorized")(
+  "ActorErrorUnauthorized",
   {
     actorId: UserId,
     entity: Schema.String,
@@ -30,19 +27,19 @@ export class ErrorActorUnauthorized extends Schema.TaggedError<ErrorActorUnautho
     return `Actor (${this.actorId}) is not authorized to perform action "${this.action}" on entity "${this.entity}."`
   }
 
-  static is(u: unknown): u is ErrorActorUnauthorized {
+  static is(u: unknown): u is ActorErrorUnauthorized {
     return Predicate.isTagged(u, "UnauthorizedActor")
   }
 
   static refail(entity: string, action: string) {
     return <A, E, R>(
       effect: Effect.Effect<A, E, R>
-    ): Effect.Effect<A, E | ErrorActorUnauthorized, R | DomainActor> =>
+    ): Effect.Effect<A, E | ActorErrorUnauthorized, R | Actor> =>
       effect.pipe(Effect.catchIf(
-        (e) => !ErrorActorUnauthorized.is(e),
+        (e) => !ActorErrorUnauthorized.is(e),
         () =>
-          DomainActor.pipe(
-            Effect.flatMap((actor) => new ErrorActorUnauthorized({ actorId: actor.id, entity, action }))
+          Actor.pipe(
+            Effect.flatMap((actor) => new ActorErrorUnauthorized({ actorId: actor.id, entity, action }))
           )
       ))
   }

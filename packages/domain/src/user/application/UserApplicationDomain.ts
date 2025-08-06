@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { AccountId } from "../../account/application/domain-account.js"
+import { AccountId } from "../../account/application/AccountApplicationDomain.js"
 
 export const AccessToken = Schema.Redacted(Schema.String).pipe(Schema.brand("AccessToken"))
 export type AccessToken = Schema.Schema.Type<typeof AccessToken>
@@ -17,22 +17,22 @@ export type Email = typeof Email.Type
 export const UserId = Schema.Number.pipe(Schema.brand("UserId"))
 export type UserId = Schema.Schema.Type<typeof UserId>
 
-export class DomainUser extends Schema.Class<DomainUser>("DomainUser")({
+export class User extends Schema.Class<User>("User")({
   id: UserId.annotations({ description: "User identification" }),
   ownerId: AccountId.annotations({ description: "Owner identification" }),
   email: Email.annotations({ description: "Email address" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" })
 }) {
-  static decodeUnknown = Schema.decodeUnknown(DomainUser)
+  static decodeUnknown = Schema.decodeUnknown(User)
 }
 
-export class DomainUserWithSensitive extends Schema.Class<DomainUserWithSensitive>(
-  "DomainUserWithSensitive"
+export class UserWithSensitive extends Schema.Class<UserWithSensitive>(
+  "UserWithSensitive"
 )({
-  ...DomainUser.fields,
+  ...User.fields,
   accessToken: AccessToken
-  // account: DomainAccount
+  // account: Account
 }) {
-  static decodeUnknown = Schema.decodeUnknown(DomainUserWithSensitive)
+  static decodeUnknown = Schema.decodeUnknown(UserWithSensitive)
 }

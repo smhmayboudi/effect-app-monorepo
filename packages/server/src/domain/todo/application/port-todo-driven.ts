@@ -1,17 +1,17 @@
-import type { DomainTodo, TodoId } from "@template/domain/todo/application/domain-todo"
-import type { ErrorTodoAlreadyExists } from "@template/domain/todo/application/error-todo-already-exists"
-import type { ErrorTodoNotFound } from "@template/domain/todo/application/error-todo-not-found"
+import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
+import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
+import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Context, type Effect } from "effect"
 
 export class PortTodoDriven extends Context.Tag("PortTodoDriven")<PortTodoDriven, {
   create: (
-    todo: Omit<DomainTodo, "id" | "createdAt" | "updatedAt">
-  ) => Effect.Effect<TodoId, ErrorTodoAlreadyExists, never>
-  delete: (id: TodoId) => Effect.Effect<TodoId, ErrorTodoNotFound, never>
-  readAll: () => Effect.Effect<Array<DomainTodo>, never, never>
-  readById: (id: TodoId) => Effect.Effect<DomainTodo, ErrorTodoNotFound, never>
+    todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
+  ) => Effect.Effect<TodoId, TodoErrorAlreadyExists, never>
+  delete: (id: TodoId) => Effect.Effect<TodoId, TodoErrorNotFound, never>
+  readAll: () => Effect.Effect<Array<Todo>, never, never>
+  readById: (id: TodoId) => Effect.Effect<Todo, TodoErrorNotFound, never>
   update: (
     id: TodoId,
-    todo: Partial<Omit<DomainTodo, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<TodoId, ErrorTodoNotFound, never>
+    todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<TodoId, TodoErrorNotFound, never>
 }>() {}

@@ -1,5 +1,5 @@
 import { HttpApiBuilder } from "@effect/platform"
-import { Api } from "@template/domain/api"
+import { Api } from "@template/domain/Api"
 import { Effect } from "effect"
 import { PortAccountPolicy } from "../application/account-policy.js"
 import { PortAccountDriving } from "../application/port-account-driving.js"

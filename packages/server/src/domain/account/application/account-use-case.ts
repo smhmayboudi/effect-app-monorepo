@@ -1,7 +1,7 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { AccountId, DomainAccount } from "@template/domain/account/application/domain-account"
-import type { ErrorAccountNotFound } from "@template/domain/account/application/error-account-not-found"
-import type { ActorAuthorized } from "@template/domain/actor"
+import type { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
+import type { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
+import type { ActorAuthorized } from "@template/domain/Actor"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/policy.js"
 import { PortAccountDriven } from "./port-account-driven.js"
@@ -13,7 +13,7 @@ export const AccountUseCase = Layer.effect(
     const driven = yield* PortAccountDriven
 
     const create = (
-      account: Omit<DomainAccount, "id" | "createdAt" | "updatedAt">
+      account: Omit<Account, "id" | "createdAt" | "updatedAt">
     ): Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">> =>
       driven.create(account)
         .pipe(
@@ -21,14 +21,14 @@ export const AccountUseCase = Layer.effect(
           policyRequire("Account", "create")
         )
 
-    const del = (id: AccountId): Effect.Effect<AccountId, ErrorAccountNotFound, ActorAuthorized<"Account", "delete">> =>
+    const del = (id: AccountId): Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "delete">> =>
       driven.delete(id)
         .pipe(
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Account", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<DomainAccount>, never, ActorAuthorized<"Account", "readAll">> =>
+    const readAll = (): Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">> =>
       driven.readAll()
         .pipe(
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readlAll" } }),
@@ -37,7 +37,7 @@ export const AccountUseCase = Layer.effect(
 
     const readById = (
       id: AccountId
-    ): Effect.Effect<DomainAccount, ErrorAccountNotFound, ActorAuthorized<"Account", "readById">> =>
+    ): Effect.Effect<Account, AccountErrorNotFound, ActorAuthorized<"Account", "readById">> =>
       driven.readById(id)
         .pipe(
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readlById", id } }),
@@ -46,8 +46,8 @@ export const AccountUseCase = Layer.effect(
 
     const update = (
       id: AccountId,
-      account: Partial<Omit<DomainAccount, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<AccountId, ErrorAccountNotFound, ActorAuthorized<"Account", "update">> =>
+      account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">>
+    ): Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "update">> =>
       driven.update(id, account)
         .pipe(
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, account } }),

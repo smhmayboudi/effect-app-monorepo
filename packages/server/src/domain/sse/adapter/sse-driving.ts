@@ -1,8 +1,8 @@
 import { HttpApiBuilder, HttpServerResponse } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { DomainActor } from "@template/domain/actor"
-import { Api } from "@template/domain/api"
-import { DomainSSE } from "@template/domain/sse/application/domain-sse"
+import { Actor } from "@template/domain/Actor"
+import { Api } from "@template/domain/Api"
+import { SSE } from "@template/domain/sse/application/SseApplicationDomain"
 import { Effect, Queue, Schedule, Stream } from "effect"
 import { PortUUID } from "../../../infrastructure/application/port-uuid.js"
 import { PortSSEDriving } from "../application/port-sse-driving.js"
@@ -16,7 +16,7 @@ export const SSEDriving = HttpApiBuilder.group(Api, "sse", (handlers) =>
 
     return handlers
       .handle("connect", () =>
-        DomainActor.pipe(
+        Actor.pipe(
           Effect.flatMap((user) =>
             uuid.v7().pipe(
               Effect.flatMap((v7) =>
@@ -53,8 +53,8 @@ export const SSEDriving = HttpApiBuilder.group(Api, "sse", (handlers) =>
           })
         ))
       .handle("notify", () =>
-        DomainActor.pipe(
-          Effect.flatMap((user) => driving.notify(new DomainSSE({ message: `Hello ${user.email}!` }), user.id)),
+        Actor.pipe(
+          Effect.flatMap((user) => driving.notify(new SSE({ message: `Hello ${user.email}!` }), user.id)),
           Effect.withSpan("SSEDriving", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "notify" }
           })

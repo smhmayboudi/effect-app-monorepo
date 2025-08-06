@@ -1,7 +1,7 @@
 import { HttpApiClient, HttpClient, HttpClientRequest, HttpClientResponse } from "@effect/platform"
 import { describe, expect, it } from "@effect/vitest"
-import { Api } from "@template/domain/api"
-import { Email } from "@template/domain/user/application/domain-user"
+import { Api } from "@template/domain/Api"
+import { Email } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer, Redacted } from "effect"
 
 const myClient = HttpClient.make((req) => {

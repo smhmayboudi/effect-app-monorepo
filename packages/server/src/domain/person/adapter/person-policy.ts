@@ -1,13 +1,13 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { ActorAuthorized, DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
-import type { PersonId } from "@template/domain/person/application/domain-person"
+import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
+import type { PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { Effect, Layer } from "effect"
 import { policy } from "../../../util/policy.js"
 import { PortPersonPolicy } from "../application/person-policy.js"
 
 const canCreate = (
   id: PersonId
-): Effect.Effect<ActorAuthorized<"Person", "create">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Person", "create">, ActorErrorUnauthorized, Actor> =>
   policy("Person", "create", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("PersonPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canCreate", id, actor } })
@@ -15,7 +15,7 @@ const canCreate = (
 
 const canDelete = (
   id: PersonId
-): Effect.Effect<ActorAuthorized<"Person", "delete">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Person", "delete">, ActorErrorUnauthorized, Actor> =>
   policy("Person", "delete", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("PersonPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canDelete", id, actor } })
@@ -23,7 +23,7 @@ const canDelete = (
 
 const canReadAll = (
   id: PersonId
-): Effect.Effect<ActorAuthorized<"Person", "readAll">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Person", "readAll">, ActorErrorUnauthorized, Actor> =>
   policy("Person", "readAll", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("PersonPolicy", {
@@ -33,7 +33,7 @@ const canReadAll = (
 
 const canReadById = (
   id: PersonId
-): Effect.Effect<ActorAuthorized<"Person", "readById">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Person", "readById">, ActorErrorUnauthorized, Actor> =>
   policy("Person", "readById", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("PersonPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadById", id, actor } })
@@ -41,7 +41,7 @@ const canReadById = (
 
 const canUpdate = (
   id: PersonId
-): Effect.Effect<ActorAuthorized<"Person", "update">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Person", "update">, ActorErrorUnauthorized, Actor> =>
   policy("Person", "update", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("PersonPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canUpdate", id, actor } })

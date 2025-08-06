@@ -1,9 +1,9 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
-import { GroupId } from "./domain-group.js"
+import { GroupId } from "./GroupApplicationDomain.js"
 
-export class ErrorGroupNotFound extends Schema.TaggedError<ErrorGroupNotFound>("ErrorGroupNotFound")(
-  "ErrorGroupNotFound",
+export class GroupErrorNotFound extends Schema.TaggedError<GroupErrorNotFound>("GroupErrorNotFound")(
+  "GroupErrorNotFound",
   { id: GroupId },
   HttpApiSchema.annotations({ status: 404 })
 ) {

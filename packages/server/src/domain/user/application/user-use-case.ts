@@ -1,10 +1,10 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { ActorAuthorized } from "@template/domain/actor"
-import { AccessToken } from "@template/domain/user/application/domain-user"
-import type { DomainUser, DomainUserWithSensitive, UserId } from "@template/domain/user/application/domain-user"
-import type { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
-import type { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
-import type { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
+import type { ActorAuthorized } from "@template/domain/Actor"
+import { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
+import type { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
+import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
+import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
+import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
 import { PortUUID } from "../../../infrastructure/application/port-uuid.js"
 import { policyRequire } from "../../../util/policy.js"
@@ -20,10 +20,10 @@ export const UserUseCase = Layer.effect(
     const uuid = yield* PortUUID
 
     const create = (
-      user: Omit<DomainUser, "id" | "ownerId" | "createdAt" | "updatedAt">
+      user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt">
     ): Effect.Effect<
-      DomainUserWithSensitive,
-      ErrorUserEmailAlreadyTaken,
+      UserWithSensitive,
+      UserErrorEmailAlreadyTaken,
       | ActorAuthorized<"Account", "create">
       | ActorAuthorized<"User", "create">
       | ActorAuthorized<"User", "readByIdWithSensitive">
@@ -42,14 +42,14 @@ export const UserUseCase = Layer.effect(
         )
       )
 
-    const del = (id: UserId): Effect.Effect<UserId, ErrorUserNotFound, ActorAuthorized<"User", "delete">> =>
+    const del = (id: UserId): Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">> =>
       driven.delete(id)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("User", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<DomainUser>, never, ActorAuthorized<"User", "readAll">> =>
+    const readAll = (): Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">> =>
       driven.readAll()
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
@@ -58,7 +58,7 @@ export const UserUseCase = Layer.effect(
 
     const readByAccessToken = (
       accessToken: AccessToken
-    ): Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never> =>
+    ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, never> =>
       driven.readByAccessToken(accessToken)
         .pipe(
           Effect.withSpan("UserUseCase", {
@@ -66,7 +66,7 @@ export const UserUseCase = Layer.effect(
           })
         )
 
-    const readById = (id: UserId): Effect.Effect<DomainUser, ErrorUserNotFound, ActorAuthorized<"User", "readById">> =>
+    const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
       driven.readById(id)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
@@ -75,7 +75,7 @@ export const UserUseCase = Layer.effect(
 
     const readByIdWithSensitive = (
       id: UserId
-    ): Effect.Effect<DomainUserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
+    ): Effect.Effect<UserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
       driven.readByIdWithSensitive(id)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } }),
@@ -84,8 +84,8 @@ export const UserUseCase = Layer.effect(
 
     const update = (
       id: UserId,
-      user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, ActorAuthorized<"User", "update">> =>
+      user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
+    ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">> =>
       driven.update(id, user)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } }),

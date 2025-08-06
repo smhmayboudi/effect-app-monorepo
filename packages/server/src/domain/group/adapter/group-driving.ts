@@ -1,10 +1,10 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { DomainActor } from "@template/domain/actor"
-import { Api } from "@template/domain/api"
-import { GroupId } from "@template/domain/group/application/domain-group"
+import { Actor } from "@template/domain/Actor"
+import { Api } from "@template/domain/Api"
+import { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { Effect } from "effect"
-import { response } from "../../../shared/application/response.js"
+import { response } from "../../../shared/application/Response.js"
 import { policyUse } from "../../../util/policy.js"
 import { PortGroupPolicy } from "../application/group-policy.js"
 import { PortGroupDriving } from "../application/port-group-driving.js"
@@ -16,7 +16,7 @@ export const GroupDriving = HttpApiBuilder.group(Api, "group", (handlers) =>
 
     return handlers
       .handle("create", ({ payload }) =>
-        DomainActor.pipe(
+        Actor.pipe(
           Effect.flatMap((user) =>
             driving.create({ ...payload, ownerId: user.ownerId }).pipe(
               Effect.withSpan("GroupDriving", {

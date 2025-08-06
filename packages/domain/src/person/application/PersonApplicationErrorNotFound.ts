@@ -1,9 +1,9 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
-import { PersonId } from "./domain-person.js"
+import { PersonId } from "./PersonApplicationDomain.js"
 
-export class ErrorPersonNotFound extends Schema.TaggedError<ErrorPersonNotFound>("ErrorPersonNotFound")(
-  "ErrorPersonNotFound",
+export class PersonErrorNotFound extends Schema.TaggedError<PersonErrorNotFound>("PersonErrorNotFound")(
+  "PersonErrorNotFound",
   { id: PersonId },
   HttpApiSchema.annotations({ status: 404 })
 ) {

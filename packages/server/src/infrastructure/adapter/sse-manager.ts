@@ -1,5 +1,5 @@
-import { DomainSSE } from "@template/domain/sse/application/domain-sse"
-import type { UserId } from "@template/domain/user/application/domain-user"
+import { SSE } from "@template/domain/sse/application/SseApplicationDomain"
+import type { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Array, Effect, Layer, MutableHashMap, Option, type Queue, Ref, Schema } from "effect"
 import { PortSSEManager } from "../application/port-sse-manager.js"
 
@@ -13,7 +13,7 @@ export const SSEManager = Layer.effect(
   Effect.gen(function*() {
     const connectionsRef = yield* Ref.make(MutableHashMap.empty<UserId, Array<ActiveConnection>>())
 
-    const notifyAll = (event: DomainSSE): Effect.Effect<void, never, never> =>
+    const notifyAll = (event: SSE): Effect.Effect<void, never, never> =>
       Effect.gen(function*() {
         const connections = yield* Ref.get(connectionsRef)
         const connectionsAll = Array.flatten(MutableHashMap.values(connections))
@@ -22,7 +22,7 @@ export const SSEManager = Layer.effect(
           return
         }
 
-        const encodedEvent = yield* Schema.encode(Schema.parseJson(DomainSSE))(event).pipe(
+        const encodedEvent = yield* Schema.encode(Schema.parseJson(SSE))(event).pipe(
           Effect.orDie
         )
 
@@ -36,7 +36,7 @@ export const SSEManager = Layer.effect(
         )
       })
 
-    const notifyUser = (event: DomainSSE, id: UserId) =>
+    const notifyUser = (event: SSE, id: UserId) =>
       Effect.gen(function*() {
         const connections = yield* Ref.get(connectionsRef)
         const connectionsUser = MutableHashMap.get(connections, id)
@@ -44,7 +44,7 @@ export const SSEManager = Layer.effect(
           return
         }
 
-        const encodedEvent = yield* Schema.encode(Schema.parseJson(DomainSSE))(event).pipe(
+        const encodedEvent = yield* Schema.encode(Schema.parseJson(SSE))(event).pipe(
           Effect.orDie
         )
 

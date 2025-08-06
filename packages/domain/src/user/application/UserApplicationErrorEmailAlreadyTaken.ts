@@ -1,10 +1,10 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
-import { Email } from "./domain-user.js"
+import { Email } from "./UserApplicationDomain.js"
 
-export class ErrorUserEmailAlreadyTaken
-  extends Schema.TaggedError<ErrorUserEmailAlreadyTaken>("ErrorUserEmailAlreadyTaken")(
-    "ErrorUserEmailAlreadyTaken",
+export class UserErrorEmailAlreadyTaken
+  extends Schema.TaggedError<UserErrorEmailAlreadyTaken>("UserErrorEmailAlreadyTaken")(
+    "UserErrorEmailAlreadyTaken",
     { email: Email },
     HttpApiSchema.annotations({ status: 404 })
   )

@@ -1,7 +1,7 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { ActorAuthorized } from "@template/domain/actor"
-import type { DomainGroup, GroupId } from "@template/domain/group/application/domain-group"
-import type { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
+import type { ActorAuthorized } from "@template/domain/Actor"
+import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
+import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/policy.js"
 import { PortGroupDriven } from "./port-group-driven.js"
@@ -13,7 +13,7 @@ export const GroupUseCase = Layer.effect(
     const driven = yield* PortGroupDriven
 
     const create = (
-      group: Omit<DomainGroup, "id" | "createdAt" | "updatedAt">
+      group: Omit<Group, "id" | "createdAt" | "updatedAt">
     ): Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">> =>
       driven.create(group)
         .pipe(
@@ -21,14 +21,14 @@ export const GroupUseCase = Layer.effect(
           policyRequire("Group", "create")
         )
 
-    const del = (id: GroupId): Effect.Effect<GroupId, ErrorGroupNotFound, ActorAuthorized<"Group", "delete">> =>
+    const del = (id: GroupId): Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "delete">> =>
       driven.delete(id)
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Group", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<DomainGroup>, never, ActorAuthorized<"Group", "readAll">> =>
+    const readAll = (): Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">> =>
       driven.readAll()
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
@@ -37,7 +37,7 @@ export const GroupUseCase = Layer.effect(
 
     const readById = (
       id: GroupId
-    ): Effect.Effect<DomainGroup, ErrorGroupNotFound, ActorAuthorized<"Group", "readById">> =>
+    ): Effect.Effect<Group, GroupErrorNotFound, ActorAuthorized<"Group", "readById">> =>
       driven.readById(id)
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
@@ -46,8 +46,8 @@ export const GroupUseCase = Layer.effect(
 
     const update = (
       id: GroupId,
-      group: Partial<Omit<DomainGroup, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<GroupId, ErrorGroupNotFound, ActorAuthorized<"Group", "update">> =>
+      group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">>
+    ): Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "update">> =>
       driven.update(id, group)
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group } }),

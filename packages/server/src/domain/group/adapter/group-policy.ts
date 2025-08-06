@@ -1,13 +1,13 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { ActorAuthorized, DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
-import type { GroupId } from "@template/domain/group/application/domain-group"
+import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
+import type { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { Effect, Layer } from "effect"
 import { policy } from "../../../util/policy.js"
 import { PortGroupPolicy } from "../application/group-policy.js"
 
 const canCreate = (
   id: GroupId
-): Effect.Effect<ActorAuthorized<"Group", "create">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Group", "create">, ActorErrorUnauthorized, Actor> =>
   policy("Group", "create", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("GroupPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canCreate", id, actor } })
@@ -15,7 +15,7 @@ const canCreate = (
 
 const canDelete = (
   id: GroupId
-): Effect.Effect<ActorAuthorized<"Group", "delete">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Group", "delete">, ActorErrorUnauthorized, Actor> =>
   policy("Group", "delete", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("GroupPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canDelete", id, actor } })
@@ -23,7 +23,7 @@ const canDelete = (
 
 const canReadAll = (
   id: GroupId
-): Effect.Effect<ActorAuthorized<"Group", "readAll">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Group", "readAll">, ActorErrorUnauthorized, Actor> =>
   policy("Group", "readAll", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("GroupPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadAll", id, actor } })
@@ -31,7 +31,7 @@ const canReadAll = (
 
 const canReadById = (
   id: GroupId
-): Effect.Effect<ActorAuthorized<"Group", "readById">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Group", "readById">, ActorErrorUnauthorized, Actor> =>
   policy("Group", "readById", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("GroupPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadById", id, actor } })
@@ -39,7 +39,7 @@ const canReadById = (
 
 const canUpdate = (
   id: GroupId
-): Effect.Effect<ActorAuthorized<"Group", "update">, ErrorActorUnauthorized, DomainActor> =>
+): Effect.Effect<ActorAuthorized<"Group", "update">, ActorErrorUnauthorized, Actor> =>
   policy("Group", "update", (actor) =>
     Effect.succeed(true).pipe(
       Effect.withSpan("GroupPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canUpdate", id, actor } })

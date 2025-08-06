@@ -1,14 +1,14 @@
-import type { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
-import type { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
+import type { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
+import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import { Context, type Effect } from "effect"
 
 export class PortPersonDriven extends Context.Tag("PortPersonDriven")<PortPersonDriven, {
-  create: (person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">) => Effect.Effect<PersonId, never, never>
-  delete: (id: PersonId) => Effect.Effect<PersonId, ErrorPersonNotFound, never>
-  readAll: () => Effect.Effect<Array<DomainPerson>, never, never>
-  readById: (id: PersonId) => Effect.Effect<DomainPerson, ErrorPersonNotFound, never>
+  create: (person: Omit<Person, "id" | "createdAt" | "updatedAt">) => Effect.Effect<PersonId, never, never>
+  delete: (id: PersonId) => Effect.Effect<PersonId, PersonErrorNotFound, never>
+  readAll: () => Effect.Effect<Array<Person>, never, never>
+  readById: (id: PersonId) => Effect.Effect<Person, PersonErrorNotFound, never>
   update: (
     id: PersonId,
-    person: Partial<Omit<DomainPerson, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<PersonId, ErrorPersonNotFound, never>
+    person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<PersonId, PersonErrorNotFound, never>
 }>() {}

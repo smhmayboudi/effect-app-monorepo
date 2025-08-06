@@ -1,25 +1,25 @@
 import type {
   AccessToken,
-  DomainUser,
-  DomainUserWithSensitive,
-  UserId
-} from "@template/domain/user/application/domain-user"
-import type { ErrorUserEmailAlreadyTaken } from "@template/domain/user/application/error-user-email-already-taken"
-import type { ErrorUserNotFound } from "@template/domain/user/application/error-user-not-found"
-import type { ErrorUserNotFoundWithAccessToken } from "@template/domain/user/application/error-user-not-found-with-access-token"
+  User,
+  UserId,
+  UserWithSensitive
+} from "@template/domain/user/application/UserApplicationDomain"
+import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
+import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
+import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Context, type Effect } from "effect"
 
 export class PortUserDriven extends Context.Tag("PortUserDriven")<PortUserDriven, {
   create: (
-    user: Omit<DomainUserWithSensitive, "id" | "createdAt" | "updatedAt">
-  ) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken, never>
-  delete: (id: UserId) => Effect.Effect<UserId, ErrorUserNotFound, never>
-  readAll: () => Effect.Effect<Array<DomainUser>, never, never>
-  readByAccessToken: (accessToken: AccessToken) => Effect.Effect<DomainUser, ErrorUserNotFoundWithAccessToken, never>
-  readById: (id: UserId) => Effect.Effect<DomainUser, ErrorUserNotFound, never>
-  readByIdWithSensitive: (id: UserId) => Effect.Effect<DomainUserWithSensitive, never, never>
+    user: Omit<UserWithSensitive, "id" | "createdAt" | "updatedAt">
+  ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken, never>
+  delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, never>
+  readAll: () => Effect.Effect<Array<User>, never, never>
+  readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
+  readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, never>
+  readByIdWithSensitive: (id: UserId) => Effect.Effect<UserWithSensitive, never, never>
   update: (
     id: UserId,
-    user: Partial<Omit<DomainUser, "id" | "createdAt" | "updatedAt">>
-  ) => Effect.Effect<UserId, ErrorUserEmailAlreadyTaken | ErrorUserNotFound, never>
+    user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
+  ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, never>
 }>() {}

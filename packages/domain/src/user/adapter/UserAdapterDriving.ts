@@ -1,10 +1,10 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { MiddlewareAuthentication } from "../../middleware-authentication.js"
-import { ResponseSuccess } from "../../shared/adapter/response.js"
-import { DomainUser, DomainUserWithSensitive, UserId } from "../application/domain-user.js"
-import { ErrorUserEmailAlreadyTaken } from "../application/error-user-email-already-taken.js"
-import { ErrorUserNotFound } from "../application/error-user-not-found.js"
+import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
+import { ResponseSuccess } from "../../shared/adapter/Response.js"
+import { User, UserId, UserWithSensitive } from "../application/UserApplicationDomain.js"
+import { UserErrorEmailAlreadyTaken } from "../application/UserApplicationErrorEmailAlreadyTaken.js"
+import { UserErrorNotFound } from "../application/UserApplicationErrorNotFound.js"
 
 export const UserIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(UserId)
@@ -13,7 +13,7 @@ export const UserIdFromString = Schema.NumberFromString.pipe(
 export class UserDriving extends HttpApiGroup.make("user")
   .add(
     HttpApiEndpoint.del("delete", "/:id")
-      .addError(ErrorUserNotFound, { status: 404 })
+      .addError(UserErrorNotFound, { status: 404 })
       .addSuccess(ResponseSuccess(UserId))
       .setPath(Schema.Struct({ id: UserIdFromString }))
       .annotate(OpenApi.Description, "User delete")
@@ -21,40 +21,40 @@ export class UserDriving extends HttpApiGroup.make("user")
   )
   .add(
     HttpApiEndpoint.get("readAll", "/")
-      .addSuccess(ResponseSuccess(Schema.Array(DomainUser)))
+      .addSuccess(ResponseSuccess(Schema.Array(User)))
       .annotate(OpenApi.Description, "User readAll")
       .annotate(OpenApi.Summary, "User readAll")
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
-      .addError(ErrorUserNotFound)
-      .addSuccess(ResponseSuccess(DomainUser))
+      .addError(UserErrorNotFound)
+      .addSuccess(ResponseSuccess(User))
       .setPath(Schema.Struct({ id: UserIdFromString }))
       .annotate(OpenApi.Description, "User readById")
       .annotate(OpenApi.Summary, "User readById")
   )
   .add(
     HttpApiEndpoint.get("readByIdWithSensitive", "/me")
-      .addSuccess(ResponseSuccess(DomainUserWithSensitive))
+      .addSuccess(ResponseSuccess(UserWithSensitive))
       .annotate(OpenApi.Description, "User readByIdWithSensitive")
       .annotate(OpenApi.Summary, "User readByIdWithSensitive")
   )
   .add(
     HttpApiEndpoint.patch("update", "/:id")
-      .addError(ErrorUserEmailAlreadyTaken)
-      .addError(ErrorUserNotFound)
+      .addError(UserErrorEmailAlreadyTaken)
+      .addError(UserErrorNotFound)
       .addSuccess(ResponseSuccess(UserId))
       .setPath(Schema.Struct({ id: UserIdFromString }))
-      .setPayload(DomainUser.pipe(Schema.pick("email")))
+      .setPayload(User.pipe(Schema.pick("email")))
       .annotate(OpenApi.Description, "User update")
       .annotate(OpenApi.Summary, "User update")
   )
   .middlewareEndpoints(MiddlewareAuthentication)
   .add(
     HttpApiEndpoint.post("create", "/")
-      .addError(ErrorUserEmailAlreadyTaken)
-      .addSuccess(ResponseSuccess(DomainUserWithSensitive))
-      .setPayload(DomainUser.pipe(Schema.pick("email")))
+      .addError(UserErrorEmailAlreadyTaken)
+      .addSuccess(ResponseSuccess(UserWithSensitive))
+      .setPayload(User.pipe(Schema.pick("email")))
       .annotate(OpenApi.Description, "User create")
       .annotate(OpenApi.Summary, "User create")
   )

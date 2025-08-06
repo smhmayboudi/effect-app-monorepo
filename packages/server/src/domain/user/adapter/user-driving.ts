@@ -1,11 +1,11 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { DomainActor } from "@template/domain/actor"
-import { Api } from "@template/domain/api"
-import { MiddlewareAuthentication } from "@template/domain/middleware-authentication"
-import { UserId } from "@template/domain/user/application/domain-user"
+import { Actor } from "@template/domain/Actor"
+import { Api } from "@template/domain/Api"
+import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthentication"
+import { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect } from "effect"
-import { response } from "../../../shared/application/response.js"
+import { response } from "../../../shared/application/Response.js"
 import { policyUse, withSystemActor } from "../../../util/policy.js"
 import { PortUserDriving } from "../application/port-user-driving.js"
 import { PortUserPolicy } from "../application/user-policy.js"
@@ -47,7 +47,7 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
           response
         ))
       .handle("readByIdWithSensitive", () =>
-        DomainActor.pipe(
+        Actor.pipe(
           Effect.flatMap((user) =>
             driving.readByIdWithSensitive(user.id).pipe(
               Effect.withSpan("UserDriving", {

@@ -1,32 +1,32 @@
-import { type ActorAuthorized, DomainActor, ErrorActorUnauthorized } from "@template/domain/actor"
-import type { DomainUser } from "@template/domain/user/application/domain-user"
+import { Actor, type ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
+import type { User } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect } from "effect"
 
 const actorAuthorized = <Entity extends string, Action extends string>(
-  user: DomainUser
+  user: User
 ): ActorAuthorized<Entity, Action> => user as any
 
 export const policy = <Entity extends string, Action extends string, E, R>(
   entity: Entity,
   action: Action,
-  f: (actor: DomainUser) => Effect.Effect<boolean, E, R>
+  f: (actor: User) => Effect.Effect<boolean, E, R>
 ): Effect.Effect<
   ActorAuthorized<Entity, Action>,
-  E | ErrorActorUnauthorized,
-  R | DomainActor
+  E | ActorErrorUnauthorized,
+  R | Actor
 > =>
-  Effect.flatMap(DomainActor, (actor) =>
+  Effect.flatMap(Actor, (actor) =>
     Effect.flatMap(f(actor), (can) =>
       can
         ? Effect.succeed(actorAuthorized<Entity, Action>(actor))
-        : Effect.fail(new ErrorActorUnauthorized({ actorId: actor.id, entity, action }))))
+        : Effect.fail(new ActorErrorUnauthorized({ actorId: actor.id, entity, action }))))
 
 export const policyCompose = <Actor extends ActorAuthorized<any, any>, E, R>(
   that: Effect.Effect<Actor, E, R>
 ) =>
 <Actor2 extends ActorAuthorized<any, any>, E2, R2>(
   self: Effect.Effect<Actor2, E2, R2>
-): Effect.Effect<Actor | Actor2, E | ErrorActorUnauthorized, R | DomainActor> => Effect.zipRight(self, that) as any
+): Effect.Effect<Actor | Actor2, E | ActorErrorUnauthorized, R | Actor> => Effect.zipRight(self, that) as any
 
 export const policyUse = <Actor extends ActorAuthorized<any, any>, E, R>(
   policy: Effect.Effect<Actor, E, R>

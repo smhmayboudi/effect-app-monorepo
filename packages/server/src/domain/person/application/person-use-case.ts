@@ -1,8 +1,8 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { ActorAuthorized } from "@template/domain/actor"
-import type { ErrorGroupNotFound } from "@template/domain/group/application/error-group-not-found"
-import type { DomainPerson, PersonId } from "@template/domain/person/application/domain-person"
-import type { ErrorPersonNotFound } from "@template/domain/person/application/error-person-not-found"
+import type { ActorAuthorized } from "@template/domain/Actor"
+import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
+import type { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
+import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/policy.js"
 import { PortGroupDriving } from "../../group/application/port-group-driving.js"
@@ -16,10 +16,10 @@ export const PersonUseCase = Layer.effect(
     const group = yield* PortGroupDriving
 
     const create = (
-      person: Omit<DomainPerson, "id" | "createdAt" | "updatedAt">
+      person: Omit<Person, "id" | "createdAt" | "updatedAt">
     ): Effect.Effect<
       PersonId,
-      ErrorGroupNotFound,
+      GroupErrorNotFound,
       ActorAuthorized<"Person", "create"> | ActorAuthorized<"Group", "readById">
     > =>
       group.readById(person.groupId).pipe(
@@ -32,14 +32,14 @@ export const PersonUseCase = Layer.effect(
         )
       )
 
-    const del = (id: PersonId): Effect.Effect<PersonId, ErrorPersonNotFound, ActorAuthorized<"Person", "delete">> =>
+    const del = (id: PersonId): Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "delete">> =>
       driven.delete(id)
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Person", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<DomainPerson>, never, ActorAuthorized<"Person", "readAll">> =>
+    const readAll = (): Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">> =>
       driven.readAll()
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
@@ -48,7 +48,7 @@ export const PersonUseCase = Layer.effect(
 
     const readById = (
       id: PersonId
-    ): Effect.Effect<DomainPerson, ErrorPersonNotFound, ActorAuthorized<"Person", "readById">> =>
+    ): Effect.Effect<Person, PersonErrorNotFound, ActorAuthorized<"Person", "readById">> =>
       driven.readById(id)
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
@@ -57,8 +57,8 @@ export const PersonUseCase = Layer.effect(
 
     const update = (
       id: PersonId,
-      person: Partial<Omit<DomainPerson, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<PersonId, ErrorPersonNotFound, ActorAuthorized<"Person", "update">> =>
+      person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>
+    ): Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "update">> =>
       driven.update(id, person)
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } }),

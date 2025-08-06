@@ -1,4 +1,4 @@
-import type { ResponseSuccess } from "@template/domain/shared/adapter/response"
+import type { ResponseSuccess } from "@template/domain/shared/adapter/Response"
 import { Effect } from "effect"
 
 export const response = <A, E, R>(

@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { AccountId } from "../../account/application/domain-account.js"
+import { AccountId } from "../../account/application/AccountApplicationDomain.js"
 
 export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"))
 export type TodoId = typeof TodoId.Type
@@ -8,7 +8,7 @@ export const TodoIdFromString = Schema.NumberFromString.pipe(
   Schema.compose(TodoId)
 )
 
-export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
+export class Todo extends Schema.Class<Todo>("Todo")({
   id: TodoId.annotations({ description: "Todo identification" }),
   ownerId: AccountId.annotations({ description: "Account identification" }),
   done: Schema.Literal(0, 1).annotations({ description: "Done" }),
@@ -16,5 +16,5 @@ export class DomainTodo extends Schema.Class<DomainTodo>("DomainTodo")({
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" })
 }) {
-  static decodeUnknown = Schema.decodeUnknown(DomainTodo)
+  static decodeUnknown = Schema.decodeUnknown(Todo)
 }

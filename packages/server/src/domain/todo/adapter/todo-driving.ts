@@ -1,10 +1,10 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { DomainActor } from "@template/domain/actor"
-import { Api } from "@template/domain/api"
-import { TodoId } from "@template/domain/todo/application/domain-todo"
+import { Actor } from "@template/domain/Actor"
+import { Api } from "@template/domain/Api"
+import { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { Effect } from "effect"
-import { response } from "../../../shared/application/response.js"
+import { response } from "../../../shared/application/Response.js"
 import { policyUse } from "../../../util/policy.js"
 import { PortTodoDriving } from "../application/port-todo-driving.js"
 import { PortTodoPolicy } from "../application/todo-policy.js"
@@ -16,7 +16,7 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
 
     return handlers
       .handle("create", ({ payload }) =>
-        DomainActor.pipe(
+        Actor.pipe(
           Effect.flatMap((user) =>
             driving.create({ ...payload, ownerId: user.ownerId, done: 0 }).pipe(
               Effect.withSpan("TodoDriving", {
