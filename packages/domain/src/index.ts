@@ -54,6 +54,9 @@ export * as Pagination from "./shared/adapter/Pagination.js"
 export * as Response from "./shared/adapter/Response.js"
 
 
+export * as URLParams from "./shared/adapter/URLParams.js"
+
+
 export * as SSEAdapterDriving from "./sse/adapter/SSEAdapterDriving.js"
 
 

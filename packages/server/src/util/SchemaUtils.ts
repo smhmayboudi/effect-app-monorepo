@@ -27,9 +27,9 @@ export class DurationFromSeconds extends Schema.transform(
   }),
   Schema.DurationFromSelf,
   {
-    strict: true,
     decode: (i) => Duration.seconds(i),
-    encode: (a) => Duration.toSeconds(a)
+    encode: (a) => Duration.toSeconds(a),
+    strict: true
   }
 ) {}
 
@@ -391,9 +391,9 @@ export const HashSetFromIterable = <A, I, R>(
   Schema.SchemaClass<HashSet.HashSet<A>, HashSet.HashSet<A>, never>
 > =>
   Schema.transform(Schema.Array(schema), Schema.typeSchema(Schema.HashSet(schema)), {
-    strict: true,
     decode: (array) => HashSet.fromIterable(array),
-    encode: (hashSet) => Array.fromIterable(hashSet)
+    encode: (hashSet) => Array.fromIterable(hashSet),
+    strict: true
   })
 
 // ---------------
