@@ -3,7 +3,7 @@ import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 import { GroupPortDriving } from "./GroupApplicationPortDriving.js"
 

@@ -7,7 +7,7 @@ import type { UserErrorNotFound } from "@template/domain/user/application/UserAp
 import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
 import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriving } from "../../account/application/AccountApplicationPortDriving.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 import { UserPortDriving } from "./UserApplicationPortDriving.js"

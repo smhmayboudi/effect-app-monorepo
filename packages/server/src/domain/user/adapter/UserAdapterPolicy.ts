@@ -2,7 +2,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer } from "effect"
-import { policy } from "../../../util/policy.js"
+import { policy } from "../../../util/Policy.js"
 import { UserPortPolicy } from "../application/UserApplicationPortPolicy.js"
 
 const canCreate = (

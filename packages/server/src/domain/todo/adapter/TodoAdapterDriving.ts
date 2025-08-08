@@ -5,7 +5,7 @@ import { Api } from "@template/domain/Api"
 import { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { Effect } from "effect"
 import { response } from "../../../shared/application/Response.js"
-import { policyUse } from "../../../util/policy.js"
+import { policyUse } from "../../../util/Policy.js"
 import { TodoPortDriving } from "../application/TodoApplicationPortDriving.js"
 import { TodoPortPolicy } from "../application/TodoApplicationPortPolicy.js"
 

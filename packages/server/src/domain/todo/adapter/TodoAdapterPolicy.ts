@@ -2,7 +2,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { Effect, Layer } from "effect"
-import { policy } from "../../../util/policy.js"
+import { policy } from "../../../util/Policy.js"
 import { TodoPortPolicy } from "../application/TodoApplicationPortPolicy.js"
 
 const canCreate = (

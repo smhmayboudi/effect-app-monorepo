@@ -5,7 +5,7 @@ import { Api } from "@template/domain/Api"
 import { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { Effect } from "effect"
 import { response } from "../../../shared/application/Response.js"
-import { policyUse } from "../../../util/policy.js"
+import { policyUse } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../application/GroupApplicationPortDriving.js"
 import { GroupPortPolicy } from "../application/GroupApplicationPortPolicy.js"
 

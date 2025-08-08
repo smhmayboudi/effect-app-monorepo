@@ -2,7 +2,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { Effect, Layer } from "effect"
-import { policy } from "../../../util/policy.js"
+import { policy } from "../../../util/Policy.js"
 import { GroupPortPolicy } from "../application/GroupApplicationPortPolicy.js"
 
 const canCreate = (

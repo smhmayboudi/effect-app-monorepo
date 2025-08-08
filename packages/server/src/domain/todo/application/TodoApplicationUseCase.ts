@@ -4,7 +4,7 @@ import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplica
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "../../../util/Policy.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 import { TodoPortDriving } from "./TodoApplicationPortDriving.js"
 

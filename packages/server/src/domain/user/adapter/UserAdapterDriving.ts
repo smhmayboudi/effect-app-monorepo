@@ -6,7 +6,7 @@ import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthenticat
 import { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect } from "effect"
 import { response } from "../../../shared/application/Response.js"
-import { policyUse, withSystemActor } from "../../../util/policy.js"
+import { policyUse, withSystemActor } from "../../../util/Policy.js"
 import { UserPortDriving } from "../application/UserApplicationPortDriving.js"
 import { UserPortPolicy } from "../application/UserApplicationPortPolicy.js"
 

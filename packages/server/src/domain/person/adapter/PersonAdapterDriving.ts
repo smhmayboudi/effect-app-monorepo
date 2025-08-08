@@ -5,7 +5,7 @@ import { GroupId } from "@template/domain/group/application/GroupApplicationDoma
 import { PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { Effect } from "effect"
 import { response } from "../../../shared/application/Response.js"
-import { policyUse } from "../../../util/policy.js"
+import { policyUse } from "../../../util/Policy.js"
 import { GroupPortPolicy } from "../../group/application/GroupApplicationPortPolicy.js"
 import { PersonPortDriving } from "../application/PersonApplicationPortDriving.js"
 import { PersonPortPolicy } from "../application/PersonApplicationPortPolicy.js"

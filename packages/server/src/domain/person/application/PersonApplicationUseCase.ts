@@ -4,7 +4,7 @@ import type { GroupErrorNotFound } from "@template/domain/group/application/Grou
 import type { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../../group/application/GroupApplicationPortDriving.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 import { PersonPortDriving } from "./PersonApplicationPortDriving.js"

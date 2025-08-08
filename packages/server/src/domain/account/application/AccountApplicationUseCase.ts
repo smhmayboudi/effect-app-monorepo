@@ -3,7 +3,7 @@ import type { Account, AccountId } from "@template/domain/account/application/Ac
 import type { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import { Effect, Layer } from "effect"
-import { policyRequire } from "../../../util/policy.js"
+import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
 import { AccountPortDriving } from "./AccountApplicationPortDriving.js"
 
