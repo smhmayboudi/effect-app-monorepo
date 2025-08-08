@@ -75,7 +75,7 @@ export const drizzleSqlite = (config: Config) =>
 
       const db = drizzle(client, { schema: config.dbSchema })
 
-      const execute = Effect.fn(<T>(fn: (client: Client) => Promise<T>) =>
+      const execute = Effect.fn(<A>(fn: (client: Client) => Promise<A>) =>
         Effect.tryPromise({
           try: () => fn(db),
           catch: (cause) => {
@@ -98,11 +98,11 @@ export const drizzleSqlite = (config: Config) =>
         )
 
       const transaction = Effect.fn("Database.transaction")(
-        <T, E, R>(txExecute: (tx: TransactionContextShape) => Effect.Effect<T, E, R>) =>
+        <A, E, R>(txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>) =>
           Effect.runtime<R>().pipe(
             Effect.map((runtime) => Runtime.runPromiseExit(runtime)),
             Effect.flatMap((runPromiseExit) =>
-              Effect.async<T, DatabaseError | E, R>((resume) => {
+              Effect.async<A, DatabaseError | E, R>((resume) => {
                 db.transaction(async (tx: TransactionClient) => {
                   const txWrapper = (fn: (client: TransactionClient) => Promise<any>) =>
                     Effect.tryPromise({

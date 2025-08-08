@@ -16,13 +16,13 @@ export type Client = LibSQLDatabase<DBSchema> & {
   $client: LibsqClient
 }
 
-export type TransactionContextShape = <U>(
-  fn: (client: TransactionClient) => Promise<U>
-) => Effect.Effect<U, DatabaseError>
+export type TransactionContextShape = <A>(
+  fn: (client: TransactionClient) => Promise<A>
+) => Effect.Effect<A, DatabaseError>
 
-export type ExecuteFn = <T>(
-  fn: (client: Client | TransactionClient) => Promise<T>
-) => Effect.Effect<T, DatabaseError>
+export type ExecuteFn = <A>(
+  fn: (client: Client | TransactionClient) => Promise<A>
+) => Effect.Effect<A, DatabaseError>
 
 export class TransactionContext extends Context.Tag("TransactionContext")<
   TransactionContext,
@@ -54,10 +54,10 @@ export class DatabaseErrorConnectionLost extends Data.TaggedError("DatabaseError
 }> {}
 
 export class PortDrizzleSqlite extends Context.Tag("PortDrizzleSqlite")<PortDrizzleSqlite, {
-  execute: <T>(fn: (client: Client) => Promise<T>) => Effect.Effect.AsEffect<Effect.Effect<T, DatabaseError, never>>
-  transaction: <T, E, R>(
-    txExecute: (tx: TransactionContextShape) => Effect.Effect<T, E, R>
-  ) => Effect.Effect.AsEffect<Effect.Effect<T, DatabaseError | E, R>>
+  execute: <A>(fn: (client: Client) => Promise<A>) => Effect.Effect.AsEffect<Effect.Effect<A, DatabaseError, never>>
+  transaction: <A, E, R>(
+    txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>
+  ) => Effect.Effect.AsEffect<Effect.Effect<A, DatabaseError | E, R>>
   setupConnectionListeners: Effect.Effect<void, never, never>
   makeQuery: <A, E, R, Input = never>(
     queryFn: (execute: ExecuteFn, input: Input) => Effect.Effect<A, E, R>

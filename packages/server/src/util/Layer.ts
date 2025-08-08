@@ -26,5 +26,6 @@ const makeUnimplementedProxy = <A extends object>(
     has: () => true
   })
 
-export const makeTestLayer = <I, S extends object>(tag: Context.Tag<I, S>) => (service: Partial<S>): Layer.Layer<I> =>
-  Layer.succeed(tag, makeUnimplementedProxy(tag.key, service))
+export const makeTestLayer =
+  <Id, Value extends object>(tag: Context.Tag<Id, Value>) => (service: Partial<Value>): Layer.Layer<Id> =>
+    Layer.succeed(tag, makeUnimplementedProxy(tag.key, service))

@@ -9,8 +9,8 @@ import { dual, type LazyArg } from "effect/Function"
  * This is equivalent to `Effect.zipRight(prerequisite, self)`.
  */
 export const pre: {
-  <B, E2, R2>(
-    prerequisite: Effect.Effect<B, E2, R2>
+  <A2, E2, R2>(
+    prerequisite: Effect.Effect<A2, E2, R2>
   ): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E | E2, R | R2>
   <A, E, R, B, E2, R2>(
     self: Effect.Effect<A, E, R>,
@@ -18,9 +18,9 @@ export const pre: {
   ): Effect.Effect<A, E | E2, R | R2>
 } = dual(
   2,
-  <A, E, R, B, E2, R2>(
+  <A, E, R, A2, E2, R2>(
     self: Effect.Effect<A, E, R>,
-    prerequisite: Effect.Effect<B, E2, R2>
+    prerequisite: Effect.Effect<A2, E2, R2>
   ): Effect.Effect<A, E | E2, R | R2> => Effect.zipRight(prerequisite, self)
 )
 

@@ -222,14 +222,14 @@ export const URLString: Schema.transform<typeof Schema.URL, typeof Schema.String
  *
  * @category schema
  */
-export function destructiveTransform<A, B>(
-  transform: (input: A) => B
-): <I, R>(self: Schema.Schema<A, I, R>) => Schema.Schema<Readonly<B>, I, R> {
-  return <I, R>(self: Schema.Schema<A, I, R>): Schema.Schema<Readonly<B>, I, R> => {
-    return Schema.transformOrFail(self, Schema.Any as Schema.Schema<Readonly<B>>, {
+export function destructiveTransform<A, A2>(
+  transform: (input: A) => A2
+): <E, R>(self: Schema.Schema<A, E, R>) => Schema.Schema<Readonly<A2>, E, R> {
+  return <E2, R2>(self: Schema.Schema<A, E2, R2>): Schema.Schema<Readonly<A2>, E2, R2> => {
+    return Schema.transformOrFail(self, Schema.Any as Schema.Schema<Readonly<A2>>, {
       decode: (input) =>
         ParseResult.try({
-          try: () => transform(input) as Readonly<B>,
+          try: () => transform(input) as Readonly<A2>,
           catch: () => new ParseResult.Type(self.ast, input, "Error applying transformation")
         }),
       encode: () =>
@@ -569,7 +569,7 @@ export const fromKey: <const K extends string>(
  *
  * @category schema
  */
-export const reverseSchema = <A, I, R>(schema: Schema.Schema<A, I, R>): Schema.Schema<I, A, R> =>
+export const reverseSchema = <A, E, R>(schema: Schema.Schema<A, E, R>): Schema.Schema<E, A, R> =>
   Schema.transformOrFail(Schema.typeSchema(schema), Schema.encodedSchema(schema), {
     decode: ParseResult.encode(schema),
     encode: ParseResult.decode(schema)
