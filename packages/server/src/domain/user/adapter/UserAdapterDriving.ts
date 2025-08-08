@@ -5,7 +5,7 @@ import { Api } from "@template/domain/Api"
 import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthentication"
 import { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect } from "effect"
-import { response } from "../../../shared/adapter/Response.js"
+import { response, responseArray } from "../../../shared/adapter/Response.js"
 import { policyUse, withSystemActor } from "../../../util/Policy.js"
 import { UserPortDriving } from "../application/UserApplicationPortDriving.js"
 import { UserPortPolicy } from "../application/UserApplicationPortPolicy.js"
@@ -38,7 +38,7 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
         driving.readAll(urlParams).pipe(
           Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyUse(policy.canReadAll(UserId.make(0))),
-          response
+          responseArray(urlParams)
         ))
       .handle("readById", ({ path: { id } }) =>
         driving.readById(id).pipe(

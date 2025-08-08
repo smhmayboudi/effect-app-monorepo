@@ -1,7 +1,7 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
-import { ResponseSuccess } from "../../shared/adapter/Response.js"
+import { ResponseSuccess, ResponseSuccessArray } from "../../shared/adapter/Response.js"
 import { URLParams } from "../../shared/adapter/URLParams.js"
 import { Todo, TodoId } from "../application/TodoApplicationDomain.js"
 import { TodoErrorAlreadyExists } from "../application/TodoApplicationErrorAlreadyExists.js"
@@ -30,7 +30,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
   )
   .add(
     HttpApiEndpoint.get("readAll", "/")
-      .addSuccess(ResponseSuccess(Schema.Array(Todo)))
+      .addSuccess(ResponseSuccessArray(Todo))
       .setUrlParams(URLParams(Todo))
       .annotate(OpenApi.Description, "Todo readAll")
       .annotate(OpenApi.Summary, "Todo readAll")
