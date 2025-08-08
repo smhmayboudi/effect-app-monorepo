@@ -22,7 +22,7 @@ export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
       )
 
     const readAll = () =>
-      client.todo.readAll().pipe(
+      client.todo.readAll({ urlParams: {} }).pipe(
         Effect.flatMap((todo) => Effect.logInfo(todo))
       )
 

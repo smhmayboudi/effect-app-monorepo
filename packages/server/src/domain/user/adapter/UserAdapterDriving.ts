@@ -34,9 +34,9 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
           policyUse(policy.canDelete(UserId.make(0))),
           response
         ))
-      .handle("readAll", () =>
-        driving.readAll().pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
+      .handle("readAll", ({ urlParams }) =>
+        driving.readAll(urlParams).pipe(
+          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyUse(policy.canReadAll(UserId.make(0))),
           response
         ))

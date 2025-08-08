@@ -2,6 +2,7 @@ import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
 import { ResponseSuccess } from "../../shared/adapter/Response.js"
+import { URLParams } from "../../shared/adapter/URLParams.js"
 import { User, UserId, UserWithSensitive } from "../application/UserApplicationDomain.js"
 import { UserErrorEmailAlreadyTaken } from "../application/UserApplicationErrorEmailAlreadyTaken.js"
 import { UserErrorNotFound } from "../application/UserApplicationErrorNotFound.js"
@@ -22,6 +23,7 @@ export class UserDriving extends HttpApiGroup.make("user")
   .add(
     HttpApiEndpoint.get("readAll", "/")
       .addSuccess(ResponseSuccess(Schema.Array(User)))
+      .setUrlParams(URLParams(User))
       .annotate(OpenApi.Description, "User readAll")
       .annotate(OpenApi.Summary, "User readAll")
   )

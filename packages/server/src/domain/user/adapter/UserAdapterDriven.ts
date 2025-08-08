@@ -1,5 +1,6 @@
 import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
 import { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
 import { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
@@ -38,12 +39,12 @@ export const UserDriven = Layer.effect(
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<Array<User>, never, never> =>
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<User>, never, never> =>
       sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((users) => Effect.all(users.map((user) => User.decodeUnknown(user)))),
         Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
       )
 
     const readByAccessToken = (

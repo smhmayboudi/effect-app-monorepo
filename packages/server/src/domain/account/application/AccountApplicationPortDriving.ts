@@ -1,6 +1,7 @@
 import type { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import type { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
 import type { ActorAuthorized } from "@template/domain/Actor"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Context, type Effect } from "effect"
 
 export class AccountPortDriving extends Context.Tag("AccountPortDriving")<AccountPortDriving, {
@@ -8,7 +9,7 @@ export class AccountPortDriving extends Context.Tag("AccountPortDriving")<Accoun
     account: Omit<Account, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">>
   delete: (id: AccountId) => Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "delete">>
-  readAll: () => Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">>
+  readAll: (urlParams: URLParams) => Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">>
   readById: (
     id: AccountId
   ) => Effect.Effect<Account, AccountErrorNotFound, ActorAuthorized<"Account", "readById">>

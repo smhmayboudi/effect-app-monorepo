@@ -36,9 +36,9 @@ export const TodoDriving = HttpApiBuilder.group(Api, "todo", (handlers) =>
           policyUse(policy.canDelete(TodoId.make(0))),
           response
         ))
-      .handle("readAll", () =>
-        driving.readAll().pipe(
-          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
+      .handle("readAll", ({ urlParams }) =>
+        driving.readAll(urlParams).pipe(
+          Effect.withSpan("TodoDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyUse(policy.canReadAll(TodoId.make(0))),
           response
         ))

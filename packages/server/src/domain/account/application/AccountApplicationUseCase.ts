@@ -2,6 +2,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import type { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
 import type { ActorAuthorized } from "@template/domain/Actor"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
@@ -28,8 +29,10 @@ export const AccountUseCase = Layer.effect(
           policyRequire("Account", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">> =>
-      driven.readAll()
+    const readAll = (
+      urlParams: URLParams
+    ): Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">> =>
+      driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readlAll" } }),
           policyRequire("Account", "readAll")

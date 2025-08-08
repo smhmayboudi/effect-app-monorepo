@@ -2,6 +2,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
@@ -28,10 +29,10 @@ export const GroupUseCase = Layer.effect(
           policyRequire("Group", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">> =>
-      driven.readAll()
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">> =>
+      driven.readAll(urlParams)
         .pipe(
-          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
+          Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyRequire("Group", "readAll")
         )
 

@@ -1,5 +1,6 @@
 import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
@@ -33,12 +34,12 @@ export const TodoDriven = Layer.effect(
         Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<Array<Todo>, never, never> =>
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<Todo>, never, never> =>
       sql`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((todos) => Effect.all(todos.map((todo) => Todo.decodeUnknown(todo)))),
         Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
       )
 
     const readById = (id: TodoId): Effect.Effect<Todo, TodoErrorNotFound, never> =>

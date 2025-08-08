@@ -33,8 +33,8 @@ export const PersonDriving = HttpApiBuilder.group(Api, "person", (handlers) =>
       //     response
       //   )
       // )
-      // .handle("readAll", () =>
-      //   driving.readAll().pipe(
+      // .handle("readAll", ({ urlParams }) =>
+      //   driving.readAll(urlParams).pipe(
       //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
       //     policyUse(policy.canReadAll(PersonId.make(0))),
       //     response

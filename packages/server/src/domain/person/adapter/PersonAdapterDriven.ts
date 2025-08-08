@@ -2,6 +2,7 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { PersonPortDriven } from "../application/PersonApplicationPortDriven.js"
 
@@ -39,12 +40,12 @@ export const PersonDriven = Layer.effect(
         Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<Array<Person>, never, never> =>
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<Person>, never, never> =>
       sql`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((persons) => Effect.all(persons.map((person) => Person.decodeUnknown(person)))),
         Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
+        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
       )
 
     const readById = (id: PersonId): Effect.Effect<Person, PersonErrorNotFound, never> =>

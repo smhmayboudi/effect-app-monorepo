@@ -1,5 +1,6 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
 import type { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
 import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
@@ -49,10 +50,10 @@ export const UserUseCase = Layer.effect(
           policyRequire("User", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">> =>
-      driven.readAll()
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">> =>
+      driven.readAll(urlParams)
         .pipe(
-          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
+          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyRequire("User", "readAll")
         )
 

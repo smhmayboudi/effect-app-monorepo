@@ -2,6 +2,7 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { GroupPortDriven } from "../application/GroupApplicationPortDriven.js"
 
@@ -28,12 +29,12 @@ export const GroupDriven = Layer.effect(
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<Array<Group>, never, never> =>
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<Group>, never, never> =>
       sql`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
         Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
+        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
       )
 
     const readById = (id: GroupId): Effect.Effect<Group, GroupErrorNotFound, never> =>

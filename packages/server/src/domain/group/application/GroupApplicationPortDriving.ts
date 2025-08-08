@@ -1,6 +1,7 @@
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Context, type Effect } from "effect"
 
 export class GroupPortDriving extends Context.Tag("GroupPortDriving")<GroupPortDriving, {
@@ -8,7 +9,7 @@ export class GroupPortDriving extends Context.Tag("GroupPortDriving")<GroupPortD
     group: Omit<Group, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">>
   delete: (id: GroupId) => Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "delete">>
-  readAll: () => Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">>
+  readAll: (urlParams: URLParams) => Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">>
   readById: (id: GroupId) => Effect.Effect<Group, GroupErrorNotFound, ActorAuthorized<"Group", "readById">>
   update: (
     id: GroupId,

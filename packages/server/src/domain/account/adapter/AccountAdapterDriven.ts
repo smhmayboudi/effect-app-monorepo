@@ -2,6 +2,7 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { AccountPortDriven } from "../application/AccountApplicationPortDriven.js"
 
@@ -29,12 +30,12 @@ export const AccountDriven = Layer.effect(
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (): Effect.Effect<Array<Account>, never, never> =>
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<Account>, never, never> =>
       sql`SELECT id, created_at, updated_at FROM tbl_account`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((accounts) => Effect.all(accounts.map((account) => Account.decodeUnknown(account)))),
         Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } })
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
       )
 
     const readById = (id: AccountId): Effect.Effect<Account, AccountErrorNotFound, never> =>

@@ -3,6 +3,7 @@ import type { ActorAuthorized } from "@template/domain/Actor"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import type { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
+import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../../group/application/GroupApplicationPortDriving.js"
@@ -39,10 +40,10 @@ export const PersonUseCase = Layer.effect(
           policyRequire("Person", "delete")
         )
 
-    const readAll = (): Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">> =>
-      driven.readAll()
+    const readAll = (urlParams: URLParams): Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">> =>
+      driven.readAll(urlParams)
         .pipe(
-          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" } }),
+          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyRequire("Person", "readAll")
         )
 
