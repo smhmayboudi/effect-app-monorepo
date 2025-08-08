@@ -5,6 +5,7 @@ import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationD
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
+import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { TodoPortDriven } from "../application/TodoApplicationPortDriven.js"
 
 export const TodoDriven = Layer.effect(
@@ -35,7 +36,7 @@ export const TodoDriven = Layer.effect(
       )
 
     const readAll = (urlParams: URLParams): Effect.Effect<Array<Todo>, never, never> =>
-      sql`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo`.pipe(
+      buildSelectQuery(sql, "tbl_todo", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((todos) => Effect.all(todos.map((todo) => Todo.decodeUnknown(todo)))),
         Effect.catchTag("ParseError", Effect.die),

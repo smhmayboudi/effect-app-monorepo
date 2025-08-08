@@ -4,6 +4,7 @@ import { Account, AccountId } from "@template/domain/account/application/Account
 import { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
+import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { AccountPortDriven } from "../application/AccountApplicationPortDriven.js"
 
 export const AccountDriven = Layer.effect(
@@ -31,7 +32,7 @@ export const AccountDriven = Layer.effect(
       )
 
     const readAll = (urlParams: URLParams): Effect.Effect<Array<Account>, never, never> =>
-      sql`SELECT id, created_at, updated_at FROM tbl_account`.pipe(
+      buildSelectQuery(sql, "tbl_account", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((accounts) => Effect.all(accounts.map((account) => Account.decodeUnknown(account)))),
         Effect.catchTag("ParseError", Effect.die),

@@ -7,6 +7,7 @@ import { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/Us
 import { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
+import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { UserPortDriven } from "../application/UserApplicationPortDriven.js"
 
 export const UserDriven = Layer.effect(
@@ -40,7 +41,7 @@ export const UserDriven = Layer.effect(
       )
 
     const readAll = (urlParams: URLParams): Effect.Effect<Array<User>, never, never> =>
-      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user`.pipe(
+      buildSelectQuery(sql, "tbl_user", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((users) => Effect.all(users.map((user) => User.decodeUnknown(user)))),
         Effect.catchTag("ParseError", Effect.die),

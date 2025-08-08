@@ -4,6 +4,7 @@ import { Group, GroupId } from "@template/domain/group/application/GroupApplicat
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
+import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { GroupPortDriven } from "../application/GroupApplicationPortDriven.js"
 
 export const GroupDriven = Layer.effect(
@@ -30,7 +31,7 @@ export const GroupDriven = Layer.effect(
       )
 
     const readAll = (urlParams: URLParams): Effect.Effect<Array<Group>, never, never> =>
-      sql`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group`.pipe(
+      buildSelectQuery(sql, "tbl_group", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
         Effect.catchTag("ParseError", Effect.die),

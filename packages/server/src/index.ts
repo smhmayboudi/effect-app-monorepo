@@ -168,13 +168,10 @@ export * as PortUUID from "./infrastructure/application/PortUUID.js"
 export * as server from "./server.js"
 
 
-export * as Pagination from "./shared/application/Pagination.js"
+export * as URLParams from "./shared/adapter/URLParams.js"
 
 
 export * as Response from "./shared/application/Response.js"
-
-
-export * as URLParams from "./shared/application/URLParams.js"
 
 /**
  * Runs a prerequisite effect before the main effect.

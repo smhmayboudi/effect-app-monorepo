@@ -4,6 +4,7 @@ import { Person, PersonId } from "@template/domain/person/application/PersonAppl
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
+import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { PersonPortDriven } from "../application/PersonApplicationPortDriven.js"
 
 export const PersonDriven = Layer.effect(
@@ -41,7 +42,7 @@ export const PersonDriven = Layer.effect(
       )
 
     const readAll = (urlParams: URLParams): Effect.Effect<Array<Person>, never, never> =>
-      sql`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person`.pipe(
+      buildSelectQuery(sql, "tbl_person", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((persons) => Effect.all(persons.map((person) => Person.decodeUnknown(person)))),
         Effect.catchTag("ParseError", Effect.die),
