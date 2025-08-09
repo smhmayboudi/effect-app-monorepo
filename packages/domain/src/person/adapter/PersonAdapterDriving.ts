@@ -4,7 +4,7 @@ import { GroupIdFromString } from "../../group/adapter/GroupAdapterDriving.js"
 import { GroupErrorNotFound } from "../../group/application/GroupApplicationErrorNotFound.js"
 import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
 import { ResponseSuccess } from "../../shared/adapter/Response.js"
-import { Person, PersonId } from "../application/PersonApplicationDomain.js"
+import { PersonId, PersonSchema } from "../application/PersonApplicationDomain.js"
 import { PersonErrorNotFound } from "../application/PersonApplicationErrorNotFound.js"
 
 export const PersonIdFromString = Schema.NumberFromString.pipe(
@@ -17,14 +17,14 @@ export class PersonDriving extends HttpApiGroup.make("person")
       .addError(GroupErrorNotFound)
       .addSuccess(ResponseSuccess(PersonId))
       .setPath(Schema.Struct({ groupId: GroupIdFromString }))
-      .setPayload(Person.pipe(Schema.pick("birthday", "firstName", "lastName")))
+      .setPayload(PersonSchema.pipe(Schema.pick("birthday", "firstName", "lastName")))
       .annotate(OpenApi.Description, "Person create")
       .annotate(OpenApi.Summary, "Person create")
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
       .addError(PersonErrorNotFound)
-      .addSuccess(ResponseSuccess(Person))
+      .addSuccess(ResponseSuccess(PersonSchema))
       .annotate(OpenApi.Description, "Person readById")
       .annotate(OpenApi.Summary, "Person readById")
       .setPath(Schema.Struct({ id: PersonIdFromString }))

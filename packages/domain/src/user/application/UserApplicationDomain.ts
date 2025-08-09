@@ -17,22 +17,28 @@ export type Email = typeof Email.Type
 export const UserId = Schema.Number.pipe(Schema.brand("UserId"))
 export type UserId = Schema.Schema.Type<typeof UserId>
 
-export class User extends Schema.Class<User>("User")({
+export const UserSchema = Schema.Struct({
   id: UserId.annotations({ description: "User identification" }),
   ownerId: AccountId.annotations({ description: "Owner identification" }),
   email: Email.annotations({ description: "Email address" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" })
-}) {
+})
+export type UserSchema = Schema.Schema.Type<typeof UserSchema>
+
+export class User extends Schema.Class<User>("User")(UserSchema) {
   static decodeUnknown = Schema.decodeUnknown(User)
 }
 
-export class UserWithSensitive extends Schema.Class<UserWithSensitive>(
-  "UserWithSensitive"
-)({
+export const UserWithSensitiveSchema = Schema.Struct({
   ...User.fields,
   accessToken: AccessToken
   // account: Account
-}) {
+})
+export type UserWithSensitiveSchema = Schema.Schema.Type<typeof UserWithSensitiveSchema>
+
+export class UserWithSensitive extends Schema.Class<UserWithSensitive>(
+  "UserWithSensitive"
+)(UserWithSensitiveSchema) {
   static decodeUnknown = Schema.decodeUnknown(UserWithSensitive)
 }

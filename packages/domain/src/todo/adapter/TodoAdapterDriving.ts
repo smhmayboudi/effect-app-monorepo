@@ -3,7 +3,7 @@ import { Schema } from "effect"
 import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
 import { ResponseSuccess, ResponseSuccessArray } from "../../shared/adapter/Response.js"
 import { URLParams } from "../../shared/adapter/URLParams.js"
-import { Todo, TodoId } from "../application/TodoApplicationDomain.js"
+import { TodoId, TodoSchema } from "../application/TodoApplicationDomain.js"
 import { TodoErrorAlreadyExists } from "../application/TodoApplicationErrorAlreadyExists.js"
 import { TodoErrorNotFound } from "../application/TodoApplicationErrorNotFound.js"
 
@@ -16,7 +16,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.post("create", "/")
       .addError(TodoErrorAlreadyExists, { status: 404 })
       .addSuccess(ResponseSuccess(TodoId))
-      .setPayload(Todo.pipe(Schema.pick("text")))
+      .setPayload(TodoSchema.pipe(Schema.pick("text")))
       .annotate(OpenApi.Description, "Todo create")
       .annotate(OpenApi.Summary, "Todo create")
   )
@@ -30,15 +30,15 @@ export class TodoDriving extends HttpApiGroup.make("todo")
   )
   .add(
     HttpApiEndpoint.get("readAll", "/")
-      .addSuccess(ResponseSuccessArray(Todo))
-      .setUrlParams(URLParams(Todo))
+      .addSuccess(ResponseSuccessArray(TodoSchema))
+      .setUrlParams(URLParams(TodoSchema))
       .annotate(OpenApi.Description, "Todo readAll")
       .annotate(OpenApi.Summary, "Todo readAll")
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
       .addError(TodoErrorNotFound, { status: 404 })
-      .addSuccess(ResponseSuccess(Todo))
+      .addSuccess(ResponseSuccess(TodoSchema))
       .setPath(Schema.Struct({ id: TodoIdFromString }))
       .annotate(OpenApi.Description, "Todo readById")
       .annotate(OpenApi.Summary, "Todo readById")
