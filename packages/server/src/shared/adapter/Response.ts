@@ -10,21 +10,17 @@ export const responseArray =
   <A extends Record<string, any>, E, R>(urlParams: URLParams) =>
   (effect: Effect.Effect<Array<A>, E, R>): Effect.Effect<ResponseSuccessArray<A>, E, R> =>
     effect.pipe(
-      Effect.map((data) => {
-        if (urlParams.fields) {
-          return {
-            data: data.map((item) => {
-              const result: Partial<A> = {}
-              for (const field of urlParams.fields!) {
-                if (field in item) {
-                  result[field as keyof A] = item[field as keyof A]
-                }
+      Effect.map((data) => ({
+        data: urlParams.fields
+          ? data.map((item) => {
+            const result: Partial<A> = {}
+            for (const field of urlParams.fields!) {
+              if (field in item) {
+                result[field as keyof A] = item[field as keyof A]
               }
-
-              return result
-            })
-          }
-        }
-        return { data }
-      })
+            }
+            return result
+          })
+          : data
+      }))
     )
