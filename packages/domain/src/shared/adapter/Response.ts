@@ -8,7 +8,7 @@ export const ResponseError = Schema.Struct({
     status: Schema.Number
   })
 })
-export type ResponseError = Schema.Schema.Type<typeof ResponseError>
+export type ResponseError = typeof ResponseError.Type
 
 export const ResponseSuccess = <A, E, R>(schema: Schema.Schema<A, E, R>) => Schema.Struct({ data: schema })
 export type ResponseSuccess<A, E, R> = Schema.Schema.Type<ReturnType<typeof ResponseSuccess<A, E, R>>>

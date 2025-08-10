@@ -2,7 +2,7 @@ import { Schema } from "effect"
 
 export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
   const KeysUnion = Schema.keyof(schema)
-  type KeysUnion = Schema.Schema.Type<typeof KeysUnion>
+  type KeysUnion = typeof KeysUnion.Type
   const isKeysUnion = (key: any): key is KeysUnion => Schema.is(KeysUnion)(key)
   const keys = Object.keys((schema as any).fields).join(", ")
 
@@ -10,22 +10,16 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
     expands: Schema.optional(Schema.String.pipe(
       Schema.filter(
         (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
-        {
-          description: `Fields must be a comma-separated list of: ${keys}`
-        }
+        { description: `Fields must be a comma-separated list of: ${keys}` }
       ),
       Schema.annotations({
-        jsonSchema: {
-          description: "Auto expand record relations"
-        }
+        jsonSchema: { description: "Auto expand record relations" }
       })
     )),
     fields: Schema.optional(Schema.String.pipe(
       Schema.filter(
         (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
-        {
-          description: `Fields must be a comma-separated list of: ${keys}`
-        }
+        { description: `Fields must be a comma-separated list of: ${keys}` }
       ),
       Schema.annotations({
         jsonSchema: {

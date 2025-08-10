@@ -5,7 +5,7 @@ export const AccessToken = Schema.Redacted(Schema.String).pipe(
   Schema.brand("AccessToken"),
   Schema.annotations({ description: "Access Token" })
 )
-export type AccessToken = Schema.Schema.Type<typeof AccessToken>
+export type AccessToken = typeof AccessToken.Type
 
 export const Email = Schema.String.pipe(
   Schema.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
@@ -18,7 +18,7 @@ export const UserId = Schema.Number.pipe(
   Schema.brand("UserId"),
   Schema.annotations({ description: "User identification" })
 )
-export type UserId = Schema.Schema.Type<typeof UserId>
+export type UserId = typeof UserId.Type
 
 export const UserSchema = Schema.Struct({
   id: UserId,
@@ -27,7 +27,7 @@ export const UserSchema = Schema.Struct({
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" })
 }).pipe(Schema.annotations({ description: "User", identifier: "User" }))
-export type UserSchema = Schema.Schema.Type<typeof UserSchema>
+export type UserSchema = typeof UserSchema.Type
 
 export class User extends Schema.Class<User>("User")(UserSchema) {
   static decodeUnknown = Schema.decodeUnknown(User)
@@ -38,7 +38,7 @@ export const UserWithSensitiveSchema = Schema.Struct({
   accessToken: AccessToken
   // account: Account
 }).pipe(Schema.annotations({ description: "UserWithSensitive", identifier: "UserWithSensitive" }))
-export type UserWithSensitiveSchema = Schema.Schema.Type<typeof UserWithSensitiveSchema>
+export type UserWithSensitiveSchema = typeof UserWithSensitiveSchema.Type
 
 export class UserWithSensitive extends Schema.Class<UserWithSensitive>(
   "UserWithSensitive"
