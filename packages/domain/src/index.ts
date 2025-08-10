@@ -34,22 +34,6 @@ export * as PersonApplicationDomain from "./person/application/PersonApplication
 
 export * as PersonApplicationErrorNotFound from "./person/application/PersonApplicationErrorNotFound.js"
 
-/**
- * Creates a schema for paginated results containing an array of items and pagination metadata.
- *
- * @category schema
- * @param itemSchema The schema for individual items in the data array
- * @returns A schema for the complete pagination result
- * @example
- * ```ts
- * import { Asset } from "./assets/AssetsContract.js"
- *
- * const AssetPaginationSchema = PaginationSchema(Asset)
- * // Result type: { data: Asset[], total: number, limit: number, offset: number, hasMore: boolean }
- * ```
- */
-export * as Pagination from "./shared/adapter/Pagination.js"
-
 
 export * as Response from "./shared/adapter/Response.js"
 
