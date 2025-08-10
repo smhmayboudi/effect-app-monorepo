@@ -1,29 +1,32 @@
 import { Schema } from "effect"
 import { AccountId } from "../../account/application/AccountApplicationDomain.js"
 
-export const AccessToken = Schema.Redacted(Schema.String).pipe(Schema.brand("AccessToken"))
+export const AccessToken = Schema.Redacted(Schema.String).pipe(
+  Schema.brand("AccessToken"),
+  Schema.annotations({ description: "Access Token" })
+)
 export type AccessToken = Schema.Schema.Type<typeof AccessToken>
 
 export const Email = Schema.String.pipe(
   Schema.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
   Schema.brand("Email"),
-  Schema.annotations({
-    description: "An email address",
-    title: "Email"
-  })
+  Schema.annotations({ description: "Email Address" })
 )
 export type Email = typeof Email.Type
 
-export const UserId = Schema.Number.pipe(Schema.brand("UserId"))
+export const UserId = Schema.Number.pipe(
+  Schema.brand("UserId"),
+  Schema.annotations({ description: "User identification" })
+)
 export type UserId = Schema.Schema.Type<typeof UserId>
 
 export const UserSchema = Schema.Struct({
-  id: UserId.annotations({ description: "User identification" }),
-  ownerId: AccountId.annotations({ description: "Owner identification" }),
-  email: Email.annotations({ description: "Email address" }),
+  id: UserId,
+  ownerId: AccountId,
+  email: Email,
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" })
-})
+}).pipe(Schema.annotations({ description: "User", identifier: "User" }))
 export type UserSchema = Schema.Schema.Type<typeof UserSchema>
 
 export class User extends Schema.Class<User>("User")(UserSchema) {
@@ -34,7 +37,7 @@ export const UserWithSensitiveSchema = Schema.Struct({
   ...User.fields,
   accessToken: AccessToken
   // account: Account
-})
+}).pipe(Schema.annotations({ description: "UserWithSensitive", identifier: "UserWithSensitive" }))
 export type UserWithSensitiveSchema = Schema.Schema.Type<typeof UserWithSensitiveSchema>
 
 export class UserWithSensitive extends Schema.Class<UserWithSensitive>(

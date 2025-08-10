@@ -1,7 +1,10 @@
 import { Schema } from "effect"
 import { AccountId } from "../../account/application/AccountApplicationDomain.js"
 
-export const TodoId = Schema.Number.pipe(Schema.brand("TodoId"))
+export const TodoId = Schema.Number.pipe(
+  Schema.brand("TodoId"),
+  Schema.annotations({ description: "Todo identification" })
+)
 export type TodoId = typeof TodoId.Type
 
 export const TodoIdFromString = Schema.NumberFromString.pipe(
@@ -9,13 +12,13 @@ export const TodoIdFromString = Schema.NumberFromString.pipe(
 )
 
 export const TodoSchema = Schema.Struct({
-  id: TodoId.annotations({ description: "Todo identification" }),
-  ownerId: AccountId.annotations({ description: "Account identification" }),
+  id: TodoId,
+  ownerId: AccountId,
   done: Schema.Literal(0, 1).annotations({ description: "Done" }),
   text: Schema.NonEmptyTrimmedString.annotations({ description: "Text" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" })
-})
+}).pipe(Schema.annotations({ description: "Todo", identifier: "Todo" }))
 export type TodoSchema = Schema.Schema.Type<typeof TodoSchema>
 
 export class Todo extends Schema.Class<Todo>("Todo")(TodoSchema) {
