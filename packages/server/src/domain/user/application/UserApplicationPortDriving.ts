@@ -1,4 +1,5 @@
 import type { ActorAuthorized } from "@template/domain/Actor"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type {
   AccessToken,
@@ -22,7 +23,9 @@ export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriv
     | ActorAuthorized<"User", "readByIdWithSensitive">
   >
   delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">>
-  readAll: (urlParams: URLParams<User>) => Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">>
+  readAll: (
+    urlParams: URLParams<User>
+  ) => Effect.Effect<SuccessArray<User, never, never>, never, ActorAuthorized<"User", "readAll">>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">>
   readByIdWithSensitive: (

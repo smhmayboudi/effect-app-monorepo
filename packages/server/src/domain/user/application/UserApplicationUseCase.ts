@@ -1,5 +1,6 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
 import type { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
@@ -52,7 +53,7 @@ export const UserUseCase = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<User>
-    ): Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">> =>
+    ): Effect.Effect<SuccessArray<User, never, never>, never, ActorAuthorized<"User", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

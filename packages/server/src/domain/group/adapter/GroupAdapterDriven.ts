@@ -2,9 +2,10 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
-import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
+import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { GroupPortDriven } from "../application/GroupApplicationPortDriven.js"
 
 export const GroupDriven = Layer.effect(
@@ -30,12 +31,23 @@ export const GroupDriven = Layer.effect(
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams<Group>): Effect.Effect<Array<Group>, never, never> =>
-      buildSelectQuery<Group>(sql, "tbl_group", urlParams).pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
+    const readAll = (
+      urlParams: URLParams<Group>
+    ): Effect.Effect<SuccessArray<Group, never, never>, never, never> =>
+      Effect.all({
+        data: buildSelectQuery<Group>(sql, "tbl_group", urlParams).pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
+          Effect.catchTag("ParseError", Effect.die)
+        ),
+        total: buildSelectCountQuery(sql, "tbl_group").pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.map((rows) => rows[0]?.countId ?? 0)
+        )
+      }).pipe(
+        Effect.withSpan("GroupDriven", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
+        })
       )
 
     const readById = (id: GroupId): Effect.Effect<Group, GroupErrorNotFound, never> =>

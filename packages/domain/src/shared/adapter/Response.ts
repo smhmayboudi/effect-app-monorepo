@@ -13,6 +13,13 @@ export type ResponseError = typeof ResponseError.Type
 export const ResponseSuccess = <A, E, R>(schema: Schema.Schema<A, E, R>) => Schema.Struct({ data: schema })
 export type ResponseSuccess<A, E, R> = Schema.Schema.Type<ReturnType<typeof ResponseSuccess<A, E, R>>>
 
+export const SuccessArray = <A, E, R>(schema: Schema.Schema<A, E, R>) =>
+  Schema.Struct({
+    data: Schema.Array(schema),
+    total: Schema.Number
+  })
+export type SuccessArray<A, E, R> = Schema.Schema.Type<ReturnType<typeof SuccessArray<A, E, R>>>
+
 export const ResponseSuccessArray = <A, E, R>(schema: Schema.Schema<A, E, R>) =>
   Schema.Struct({
     data: Schema.Array(Schema.partial(schema)),

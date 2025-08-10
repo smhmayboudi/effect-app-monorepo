@@ -2,9 +2,10 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
-import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
+import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { PersonPortDriven } from "../application/PersonApplicationPortDriven.js"
 
 export const PersonDriven = Layer.effect(
@@ -41,12 +42,23 @@ export const PersonDriven = Layer.effect(
         Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams<Person>): Effect.Effect<Array<Person>, never, never> =>
-      buildSelectQuery<Person>(sql, "tbl_person", urlParams).pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((persons) => Effect.all(persons.map((person) => Person.decodeUnknown(person)))),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
+    const readAll = (
+      urlParams: URLParams<Person>
+    ): Effect.Effect<SuccessArray<Person, never, never>, never, never> =>
+      Effect.all({
+        data: buildSelectQuery<Person>(sql, "tbl_person", urlParams).pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((persons) => Effect.all(persons.map((person) => Person.decodeUnknown(person)))),
+          Effect.catchTag("ParseError", Effect.die)
+        ),
+        total: buildSelectCountQuery(sql, "tbl_person").pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.map((rows) => rows[0]?.countId ?? 0)
+        )
+      }).pipe(
+        Effect.withSpan("PersonDriven", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
+        })
       )
 
     const readById = (id: PersonId): Effect.Effect<Person, PersonErrorNotFound, never> =>

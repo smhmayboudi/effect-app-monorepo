@@ -1,11 +1,12 @@
 import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
-import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
+import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { TodoPortDriven } from "../application/TodoApplicationPortDriven.js"
 
 export const TodoDriven = Layer.effect(
@@ -35,12 +36,23 @@ export const TodoDriven = Layer.effect(
         Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams<Todo>): Effect.Effect<Array<Todo>, never, never> =>
-      buildSelectQuery<Todo>(sql, "tbl_todo", urlParams).pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((todos) => Effect.all(todos.map((todo) => Todo.decodeUnknown(todo)))),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
+    const readAll = (
+      urlParams: URLParams<Todo>
+    ): Effect.Effect<SuccessArray<Todo, never, never>, never, never> =>
+      Effect.all({
+        data: buildSelectQuery<Todo>(sql, "tbl_todo", urlParams).pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((todos) => Effect.all(todos.map((todo) => Todo.decodeUnknown(todo)))),
+          Effect.catchTag("ParseError", Effect.die)
+        ),
+        total: buildSelectCountQuery(sql, "tbl_todo").pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.map((rows) => rows[0]?.countId ?? 0)
+        )
+      }).pipe(
+        Effect.withSpan("TodoDriven", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
+        })
       )
 
     const readById = (id: TodoId): Effect.Effect<Todo, TodoErrorNotFound, never> =>

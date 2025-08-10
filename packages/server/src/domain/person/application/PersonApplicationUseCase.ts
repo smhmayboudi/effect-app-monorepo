@@ -3,6 +3,7 @@ import type { ActorAuthorized } from "@template/domain/Actor"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import type { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
@@ -42,7 +43,7 @@ export const PersonUseCase = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Person>
-    ): Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">> =>
+    ): Effect.Effect<SuccessArray<Person, never, never>, never, ActorAuthorized<"Person", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

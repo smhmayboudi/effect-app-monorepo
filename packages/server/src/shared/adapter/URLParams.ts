@@ -15,3 +15,6 @@ export const buildSelectQuery = <A>(sql: SqlClient.SqlClient, tableName: string,
       sql.unsafe(urlParams.sort!.map((v) => `${v.by.toString()} ${v.sort}`).join(", "))
     }`
     : sql`SELECT * FROM ${sql(tableName)} ORDER BY id ASC`
+
+export const buildSelectCountQuery = (sql: SqlClient.SqlClient, tableName: string) =>
+  sql<{ countId: number }>`SELECT COUNT(id) AS count_id FROM ${sql(tableName)}`

@@ -1,5 +1,6 @@
 import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
 import { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
@@ -7,7 +8,7 @@ import { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/Us
 import { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
-import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
+import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { UserPortDriven } from "../application/UserApplicationPortDriven.js"
 
 export const UserDriven = Layer.effect(
@@ -40,12 +41,23 @@ export const UserDriven = Layer.effect(
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams<User>): Effect.Effect<Array<User>, never, never> =>
-      buildSelectQuery<User>(sql, "tbl_user", urlParams).pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((users) => Effect.all(users.map((user) => User.decodeUnknown(user)))),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
+    const readAll = (
+      urlParams: URLParams<User>
+    ): Effect.Effect<SuccessArray<User, never, never>, never, never> =>
+      Effect.all({
+        data: buildSelectQuery<User>(sql, "tbl_user", urlParams).pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((users) => Effect.all(users.map((user) => User.decodeUnknown(user)))),
+          Effect.catchTag("ParseError", Effect.die)
+        ),
+        total: buildSelectCountQuery(sql, "tbl_user").pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.map((rows) => rows[0]?.countId ?? 0)
+        )
+      }).pipe(
+        Effect.withSpan("UserDriven", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
+        })
       )
 
     const readByAccessToken = (

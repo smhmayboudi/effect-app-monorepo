@@ -1,3 +1,4 @@
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type {
   AccessToken,
@@ -15,7 +16,7 @@ export class UserPortDriven extends Context.Tag("UserPortDriven")<UserPortDriven
     user: Omit<UserWithSensitive, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken, never>
   delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, never>
-  readAll: (urlParams: URLParams<User>) => Effect.Effect<Array<User>, never, never>
+  readAll: (urlParams: URLParams<User>) => Effect.Effect<SuccessArray<User, never, never>, never, never>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, never>
   readByIdWithSensitive: (id: UserId) => Effect.Effect<UserWithSensitive, never, never>

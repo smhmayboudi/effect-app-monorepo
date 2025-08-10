@@ -2,6 +2,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
@@ -31,7 +32,7 @@ export const GroupUseCase = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Group>
-    ): Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">> =>
+    ): Effect.Effect<SuccessArray<Group, never, never>, never, ActorAuthorized<"Group", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

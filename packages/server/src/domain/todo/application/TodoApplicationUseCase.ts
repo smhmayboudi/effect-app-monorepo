@@ -1,5 +1,6 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
@@ -32,7 +33,7 @@ export const TodoUseCase = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Todo>
-    ): Effect.Effect<Array<Todo>, never, ActorAuthorized<"Todo", "readAll">> =>
+    ): Effect.Effect<SuccessArray<Todo, never, never>, never, ActorAuthorized<"Todo", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

@@ -2,9 +2,10 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
+import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
-import { buildSelectQuery } from "../../../shared/adapter/URLParams.js"
+import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { AccountPortDriven } from "../application/AccountApplicationPortDriven.js"
 
 export const AccountDriven = Layer.effect(
@@ -31,12 +32,23 @@ export const AccountDriven = Layer.effect(
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams<Account>): Effect.Effect<Array<Account>, never, never> =>
-      buildSelectQuery<Account>(sql, "tbl_account", urlParams).pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((accounts) => Effect.all(accounts.map((account) => Account.decodeUnknown(account)))),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } })
+    const readAll = (
+      urlParams: URLParams<Account>
+    ): Effect.Effect<SuccessArray<Account, never, never>, never, never> =>
+      Effect.all({
+        data: buildSelectQuery<Account>(sql, "tbl_account", urlParams).pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((accounts) => Effect.all(accounts.map((account) => Account.decodeUnknown(account)))),
+          Effect.catchTag("ParseError", Effect.die)
+        ),
+        total: buildSelectCountQuery(sql, "tbl_account").pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.map((rows) => rows[0]?.countId ?? 0)
+        )
+      }).pipe(
+        Effect.withSpan("AccountDriven", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
+        })
       )
 
     const readById = (id: AccountId): Effect.Effect<Account, AccountErrorNotFound, never> =>
