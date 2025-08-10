@@ -10,7 +10,7 @@ export class TodoPortDriving extends Context.Tag("TodoPortDriving")<TodoPortDriv
     todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<TodoId, TodoErrorAlreadyExists, ActorAuthorized<"Todo", "create">>
   delete: (id: TodoId) => Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "delete">>
-  readAll: (urlParams: URLParams) => Effect.Effect<Array<Todo>, never, ActorAuthorized<"Todo", "readAll">>
+  readAll: (urlParams: URLParams<Todo>) => Effect.Effect<Array<Todo>, never, ActorAuthorized<"Todo", "readAll">>
   readById: (id: TodoId) => Effect.Effect<Todo, TodoErrorNotFound, ActorAuthorized<"Todo", "readById">>
   update: (
     id: TodoId,

@@ -9,7 +9,9 @@ export class AccountPortDriving extends Context.Tag("AccountPortDriving")<Accoun
     account: Omit<Account, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">>
   delete: (id: AccountId) => Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "delete">>
-  readAll: (urlParams: URLParams) => Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">>
+  readAll: (
+    urlParams: URLParams<Account>
+  ) => Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">>
   readById: (
     id: AccountId
   ) => Effect.Effect<Account, AccountErrorNotFound, ActorAuthorized<"Account", "readById">>

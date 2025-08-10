@@ -30,7 +30,9 @@ export const TodoUseCase = Layer.effect(
           policyRequire("Todo", "delete")
         )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<Todo>, never, ActorAuthorized<"Todo", "readAll">> =>
+    const readAll = (
+      urlParams: URLParams<Todo>
+    ): Effect.Effect<Array<Todo>, never, ActorAuthorized<"Todo", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

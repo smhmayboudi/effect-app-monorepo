@@ -29,7 +29,9 @@ export const GroupUseCase = Layer.effect(
           policyRequire("Group", "delete")
         )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">> =>
+    const readAll = (
+      urlParams: URLParams<Group>
+    ): Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

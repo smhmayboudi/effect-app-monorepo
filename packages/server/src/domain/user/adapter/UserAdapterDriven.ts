@@ -40,8 +40,8 @@ export const UserDriven = Layer.effect(
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<User>, never, never> =>
-      buildSelectQuery(sql, "tbl_user", urlParams).pipe(
+    const readAll = (urlParams: URLParams<User>): Effect.Effect<Array<User>, never, never> =>
+      buildSelectQuery<User>(sql, "tbl_user", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((users) => Effect.all(users.map((user) => User.decodeUnknown(user)))),
         Effect.catchTag("ParseError", Effect.die),

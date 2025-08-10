@@ -40,7 +40,9 @@ export const PersonUseCase = Layer.effect(
           policyRequire("Person", "delete")
         )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">> =>
+    const readAll = (
+      urlParams: URLParams<Person>
+    ): Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),

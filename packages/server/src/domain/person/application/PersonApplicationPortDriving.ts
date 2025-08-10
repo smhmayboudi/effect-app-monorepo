@@ -14,7 +14,7 @@ export class PersonPortDriving extends Context.Tag("PersonPortDriving")<PersonPo
     ActorAuthorized<"Person", "create"> | ActorAuthorized<"Group", "readById">
   >
   delete: (id: PersonId) => Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "delete">>
-  readAll: (urlParams: URLParams) => Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">>
+  readAll: (urlParams: URLParams<Person>) => Effect.Effect<Array<Person>, never, ActorAuthorized<"Person", "readAll">>
   readById: (id: PersonId) => Effect.Effect<Person, PersonErrorNotFound, ActorAuthorized<"Person", "readById">>
   update: (
     id: PersonId,

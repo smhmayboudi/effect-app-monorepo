@@ -31,8 +31,8 @@ export const AccountDriven = Layer.effect(
         Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<Account>, never, never> =>
-      buildSelectQuery(sql, "tbl_account", urlParams).pipe(
+    const readAll = (urlParams: URLParams<Account>): Effect.Effect<Array<Account>, never, never> =>
+      buildSelectQuery<Account>(sql, "tbl_account", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((accounts) => Effect.all(accounts.map((account) => Account.decodeUnknown(account)))),
         Effect.catchTag("ParseError", Effect.die),

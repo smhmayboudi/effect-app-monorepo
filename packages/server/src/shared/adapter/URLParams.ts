@@ -1,7 +1,7 @@
 import type { SqlClient } from "@effect/sql"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 
-export const buildSelectQuery = (sql: SqlClient.SqlClient, tableName: string, urlParams: URLParams) =>
+export const buildSelectQuery = <A>(sql: SqlClient.SqlClient, tableName: string, urlParams: URLParams<A>) =>
   urlParams.limit !== undefined && urlParams.offset !== undefined ?
     urlParams.sort && 0 < urlParams.sort.length
       ? sql`SELECT * FROM ${sql(tableName)} ORDER BY ${

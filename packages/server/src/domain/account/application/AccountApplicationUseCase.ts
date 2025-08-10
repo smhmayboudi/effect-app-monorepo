@@ -30,7 +30,7 @@ export const AccountUseCase = Layer.effect(
         )
 
     const readAll = (
-      urlParams: URLParams
+      urlParams: URLParams<Account>
     ): Effect.Effect<Array<Account>, never, ActorAuthorized<"Account", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(

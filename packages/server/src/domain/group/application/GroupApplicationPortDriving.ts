@@ -9,7 +9,7 @@ export class GroupPortDriving extends Context.Tag("GroupPortDriving")<GroupPortD
     group: Omit<Group, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">>
   delete: (id: GroupId) => Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "delete">>
-  readAll: (urlParams: URLParams) => Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">>
+  readAll: (urlParams: URLParams<Group>) => Effect.Effect<Array<Group>, never, ActorAuthorized<"Group", "readAll">>
   readById: (id: GroupId) => Effect.Effect<Group, GroupErrorNotFound, ActorAuthorized<"Group", "readById">>
   update: (
     id: GroupId,

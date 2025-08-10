@@ -22,7 +22,7 @@ export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriv
     | ActorAuthorized<"User", "readByIdWithSensitive">
   >
   delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">>
-  readAll: (urlParams: URLParams) => Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">>
+  readAll: (urlParams: URLParams<User>) => Effect.Effect<Array<User>, never, ActorAuthorized<"User", "readAll">>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">>
   readByIdWithSensitive: (

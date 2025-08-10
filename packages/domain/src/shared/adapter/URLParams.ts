@@ -1,14 +1,15 @@
 import { Schema } from "effect"
 
-export const URLParams = <S extends Schema.Schema<any>>(schema: S) => {
+export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
   const KeysUnion = Schema.keyof(schema)
-  const isField = (key: string) => Schema.is(KeysUnion)(key)
+  type KeysUnion = Schema.Schema.Type<typeof KeysUnion>
+  const isKeysUnion = (key: any): key is KeysUnion => Schema.is(KeysUnion)(key)
   const keys = Object.keys((schema as any).fields).join(", ")
 
   const inputSchema = Schema.Struct({
     expands: Schema.optional(Schema.String.pipe(
       Schema.filter(
-        (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isField),
+        (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
         {
           description: `Fields must be a comma-separated list of: ${keys}`
         }
@@ -21,7 +22,7 @@ export const URLParams = <S extends Schema.Schema<any>>(schema: S) => {
     )),
     fields: Schema.optional(Schema.String.pipe(
       Schema.filter(
-        (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isField),
+        (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
         {
           description: `Fields must be a comma-separated list of: ${keys}`
         }
@@ -48,7 +49,7 @@ export const URLParams = <S extends Schema.Schema<any>>(schema: S) => {
     )),
     sort: Schema.optional(Schema.String.pipe(
       Schema.filter(
-        (s) => s.split(",").map((v) => v.trim().replace(/^-/, "")).filter(Boolean).every(isField),
+        (s) => s.split(",").map((v) => v.trim().replace(/^-/, "")).filter(Boolean).every(isKeysUnion),
         {
           description: `Sort must be a comma-separated list of fields (optionally prefixed with '-'): ${keys}`
         }
@@ -80,15 +81,17 @@ export const URLParams = <S extends Schema.Schema<any>>(schema: S) => {
         expands: fromA.expands?.split(",")
           .map((v) => v.trim())
           .filter(Boolean)
-          .filter(isField),
+          .filter(isKeysUnion)
+          .map((v) => v as KeysUnion),
         fields: fromA.fields?.split(",")
           .map((v) => v.trim())
           .filter(Boolean)
-          .filter(isField),
+          .filter(isKeysUnion)
+          .map((v) => v as KeysUnion),
         limit: fromA.limit,
         offset: fromA.offset,
         sort: fromA.sort?.split(",").map((v) => ({
-          by: v.replace(/^-/, ""),
+          by: v.replace(/^-/, "") as KeysUnion,
           sort: v.includes("-") ? "DESC" as const : "ASC" as const
         }))
       }),
@@ -103,4 +106,4 @@ export const URLParams = <S extends Schema.Schema<any>>(schema: S) => {
     }
   )
 }
-export type URLParams = Schema.Schema.Type<ReturnType<typeof URLParams>>
+export type URLParams<A> = Schema.Schema.Type<ReturnType<typeof URLParams<A>>>

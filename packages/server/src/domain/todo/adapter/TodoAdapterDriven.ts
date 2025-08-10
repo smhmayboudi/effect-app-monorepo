@@ -35,8 +35,8 @@ export const TodoDriven = Layer.effect(
         Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<Todo>, never, never> =>
-      buildSelectQuery(sql, "tbl_todo", urlParams).pipe(
+    const readAll = (urlParams: URLParams<Todo>): Effect.Effect<Array<Todo>, never, never> =>
+      buildSelectQuery<Todo>(sql, "tbl_todo", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((todos) => Effect.all(todos.map((todo) => Todo.decodeUnknown(todo)))),
         Effect.catchTag("ParseError", Effect.die),

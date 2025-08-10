@@ -30,8 +30,8 @@ export const GroupDriven = Layer.effect(
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
       )
 
-    const readAll = (urlParams: URLParams): Effect.Effect<Array<Group>, never, never> =>
-      buildSelectQuery(sql, "tbl_group", urlParams).pipe(
+    const readAll = (urlParams: URLParams<Group>): Effect.Effect<Array<Group>, never, never> =>
+      buildSelectQuery<Group>(sql, "tbl_group", urlParams).pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
         Effect.catchTag("ParseError", Effect.die),
