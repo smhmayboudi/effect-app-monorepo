@@ -15,11 +15,13 @@ export const policy = <Entity extends string, Action extends string, E, R>(
   E | ActorErrorUnauthorized,
   R | Actor
 > =>
-  Effect.flatMap(Actor, (actor) =>
-    Effect.flatMap(f(actor), (can) =>
+  Actor.pipe(Effect.flatMap((actor) =>
+    f(actor).pipe(Effect.flatMap((can) =>
       can
         ? Effect.succeed(actorAuthorized<Entity, Action>(actor))
-        : Effect.fail(new ActorErrorUnauthorized({ actorId: actor.id, entity, action }))))
+        : Effect.fail(new ActorErrorUnauthorized({ actorId: actor.id, entity, action }))
+    ))
+  ))
 
 export const policyCompose = <Actor extends ActorAuthorized<any, any>, E, R>(
   that: Effect.Effect<Actor, E, R>

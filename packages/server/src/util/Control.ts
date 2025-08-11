@@ -48,7 +48,7 @@ export const whenOrFail: {
   ): Effect.Effect<A, E | E2, R> =>
     // @ts-expect-error - Effect.fail returns Effect<never, E2> and TypeScript tries to unify the success types (A | never).
     // At runtime, Effect.fail short-circuits execution, so the success type is actually just A when the condition is true.
-    Effect.flatMap(Effect.sync(condition), (bool) => (bool ? self : Effect.fail(orFailWith())))
+    Effect.sync(condition).pipe(Effect.flatMap((bool) => (bool ? self : Effect.fail(orFailWith()))))
 )
 
 /**
@@ -75,5 +75,5 @@ export const whenEffectOrFail: {
   ): Effect.Effect<A, E | E2 | E3, R | R2> =>
     // @ts-expect-error - Effect.fail returns Effect<never, E3> and TypeScript tries to unify the success types (A | never).
     // At runtime, Effect.fail short-circuits execution, so the success type is actually just A when the condition is true.
-    Effect.flatMap(condition, (bool) => (bool ? self : Effect.fail(orFailWith())))
+    condition.pipe(Effect.flatMap((bool) => (bool ? self : Effect.fail(orFailWith()))))
 )
