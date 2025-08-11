@@ -52,5 +52,31 @@ services:
       - ./.docker/otel-lgtm/tempo-config.yaml:/otel-lgtm/tempo-config.yaml:ro
       - otel-lgtm:/data
 
+  redis:
+    # command:
+    #   - /usr/local/etc/redis/redis.conf
+    container_name: effect-app-monorepo-redis
+    expose:
+      - 6379 # Default Protocol
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD-SHELL
+        - redis-cli --raw incr ping
+      timeout: 10s
+    image: redis:8.2.0-bookworm
+    labels:
+      namespace: service
+    logging: *logging
+    ports:
+      - "6379:6379"
+    restart: "no"
+    volumes:
+      - ./.docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis:/data
+
 volumes:
   otel-lgtm: {}
+  redis: {}
