@@ -77,6 +77,34 @@ export const UserDriven = Layer.effect(
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken } })
       )
 
+    const readByAccessTokens = (
+      accessTokens: Array<AccessToken>
+    ): Effect.Effect<Array<User>, UserErrorNotFoundWithAccessToken, never> =>
+      sql`SELECT id, owner_id, email, created_at, updated_at, access_token FROM tbl_user WHERE access_token IN ${
+        sql.in(accessTokens.map((accessToken) => Redacted.value(accessToken)))
+      }`.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          Effect.all(
+            accessTokens.map((accessToken) => {
+              const row = rows.find((r) => r.accessToken === Redacted.value(accessToken))
+              if (!row) {
+                return Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken }))
+              }
+              return User.decodeUnknown(rows[0]).pipe(
+                Effect.catchTag(
+                  "ParseError",
+                  (err) => Effect.die(`Failed to decode user with token ${accessToken}: ${err.message}`)
+                )
+              )
+            })
+          )
+        ),
+        Effect.withSpan("UserDriven", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessTokens", accessTokens }
+        })
+      )
+
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, never> =>
       sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
@@ -89,6 +117,29 @@ export const UserDriven = Layer.effect(
         Effect.catchTag("ParseError", Effect.die),
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
       )
+
+    const readByIds = (ids: Array<UserId>): Effect.Effect<Array<User>, UserErrorNotFound, never> =>
+      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id IN ${sql.in(ids)}`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) =>
+            Effect.all(
+              ids.map((id) => {
+                const row = rows.find((r) => r.id === id)
+                if (!row) {
+                  return Effect.fail(new UserErrorNotFound({ id }))
+                }
+                return User.decodeUnknown(rows[0]).pipe(
+                  Effect.catchTag(
+                    "ParseError",
+                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
+                  )
+                )
+              })
+            )
+          ),
+          Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+        )
 
     const readByIdWithSensitive = (id: UserId): Effect.Effect<UserWithSensitive, never, never> =>
       sql`SELECT id, owner_id, access_token, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
@@ -127,7 +178,9 @@ export const UserDriven = Layer.effect(
       delete: del,
       readAll,
       readByAccessToken,
+      readByAccessTokens,
       readById,
+      readByIds,
       readByIdWithSensitive,
       update
     } as const

@@ -9,6 +9,7 @@ export class AccountPortDriven extends Context.Tag("AccountPortDriven")<AccountP
   delete: (id: AccountId) => Effect.Effect<AccountId, AccountErrorNotFound, never>
   readAll: (urlParams: URLParams<Account>) => Effect.Effect<SuccessArray<Account, never, never>, never, never>
   readById: (id: AccountId) => Effect.Effect<Account, AccountErrorNotFound, never>
+  readByIds: (ids: Array<AccountId>) => Effect.Effect<Array<Account>, AccountErrorNotFound, never>
   update: (
     id: AccountId,
     account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">>

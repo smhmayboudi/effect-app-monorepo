@@ -9,6 +9,7 @@ export class GroupPortDriven extends Context.Tag("GroupPortDriven")<GroupPortDri
   delete: (id: GroupId) => Effect.Effect<GroupId, GroupErrorNotFound, never>
   readAll: (urlParams: URLParams<Group>) => Effect.Effect<SuccessArray<Group, never, never>, never, never>
   readById: (id: GroupId) => Effect.Effect<Group, GroupErrorNotFound, never>
+  readByIds: (ids: Array<GroupId>) => Effect.Effect<Array<Group>, GroupErrorNotFound, never>
   update: (
     id: GroupId,
     group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">>

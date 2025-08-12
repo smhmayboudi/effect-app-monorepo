@@ -63,6 +63,31 @@ export const GroupDriven = Layer.effect(
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
       )
 
+    const readByIds = (ids: Array<GroupId>): Effect.Effect<Array<Group>, GroupErrorNotFound, never> =>
+      sql`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id IN ${
+        sql.in(ids)
+      }`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) =>
+            Effect.all(
+              ids.map((id) => {
+                const row = rows.find((r) => r.id === id)
+                if (!row) {
+                  return Effect.fail(new GroupErrorNotFound({ id }))
+                }
+                return Group.decodeUnknown(rows[0]).pipe(
+                  Effect.catchTag(
+                    "ParseError",
+                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
+                  )
+                )
+              })
+            )
+          ),
+          Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+        )
+
     const updateQuery = (
       id: GroupId,
       group: Omit<Group, "id" | "createdAt" | "updatedAt">
@@ -88,6 +113,7 @@ export const GroupDriven = Layer.effect(
       delete: del,
       readAll,
       readById,
+      readByIds,
       update
     } as const
   })

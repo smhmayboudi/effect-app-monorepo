@@ -5,7 +5,9 @@ import type { ActorAuthorized } from "@template/domain/Actor"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
+import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { policyRequire } from "../../../util/Policy.js"
+import { AccountReadById, makeAccountReadResolver } from "./AccountApplicationCache.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
 import { AccountPortDriving } from "./AccountApplicationPortDriving.js"
 
@@ -13,6 +15,7 @@ export const AccountUseCase = Layer.effect(
   AccountPortDriving,
   Effect.gen(function*() {
     const driven = yield* AccountPortDriven
+    const resolver = yield* makeAccountReadResolver
 
     const create = (
       account: Omit<Account, "id" | "createdAt" | "updatedAt">
@@ -42,11 +45,11 @@ export const AccountUseCase = Layer.effect(
     const readById = (
       id: AccountId
     ): Effect.Effect<Account, AccountErrorNotFound, ActorAuthorized<"Account", "readById">> =>
-      driven.readById(id)
+      Effect.request(new AccountReadById({ id }), resolver)
         .pipe(
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readlById", id } }),
+          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Account", "readById")
-        )
+        ).pipe(Effect.scoped, Effect.provide(Redis))
 
     const update = (
       id: AccountId,

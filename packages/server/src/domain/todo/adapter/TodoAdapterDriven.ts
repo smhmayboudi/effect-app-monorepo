@@ -68,6 +68,29 @@ export const TodoDriven = Layer.effect(
         Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
       )
 
+    const readByIds = (ids: Array<TodoId>): Effect.Effect<Array<Todo>, TodoErrorNotFound, never> =>
+      sql`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo WHERE id IN ${sql.in(ids)}`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) =>
+            Effect.all(
+              ids.map((id) => {
+                const row = rows.find((r) => r.id === id)
+                if (!row) {
+                  return Effect.fail(new TodoErrorNotFound({ id }))
+                }
+                return Todo.decodeUnknown(rows[0]).pipe(
+                  Effect.catchTag(
+                    "ParseError",
+                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
+                  )
+                )
+              })
+            )
+          ),
+          Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+        )
+
     const updateQuery = (
       id: TodoId,
       todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
@@ -95,6 +118,7 @@ export const TodoDriven = Layer.effect(
       delete: del,
       readAll,
       readById,
+      readByIds,
       update
     } as const
   })

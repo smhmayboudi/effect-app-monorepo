@@ -9,6 +9,7 @@ export class PersonPortDriven extends Context.Tag("PersonPortDriven")<PersonPort
   delete: (id: PersonId) => Effect.Effect<PersonId, PersonErrorNotFound, never>
   readAll: (urlParams: URLParams<Person>) => Effect.Effect<SuccessArray<Person, never, never>, never, never>
   readById: (id: PersonId) => Effect.Effect<Person, PersonErrorNotFound, never>
+  readByIds: (ids: Array<PersonId>) => Effect.Effect<Array<Person>, PersonErrorNotFound, never>
   update: (
     id: PersonId,
     person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>

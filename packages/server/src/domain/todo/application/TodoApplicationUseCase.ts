@@ -6,7 +6,9 @@ import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplica
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
+import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { policyRequire } from "../../../util/Policy.js"
+import { makeTodoReadResolver, TodoReadById } from "./TodoApplicationCache.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 import { TodoPortDriving } from "./TodoApplicationPortDriving.js"
 
@@ -14,6 +16,7 @@ export const TodoUseCase = Layer.effect(
   TodoPortDriving,
   Effect.gen(function*() {
     const driven = yield* TodoPortDriven
+    const resolver = yield* makeTodoReadResolver
 
     const create = (
       todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
@@ -41,10 +44,11 @@ export const TodoUseCase = Layer.effect(
         )
 
     const readById = (id: TodoId): Effect.Effect<Todo, TodoErrorNotFound, ActorAuthorized<"Todo", "readById">> =>
-      driven.readById(id).pipe(
-        Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-        policyRequire("Todo", "readById")
-      )
+      Effect.request(new TodoReadById({ id }), resolver)
+        .pipe(
+          Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+          policyRequire("Todo", "readById")
+        ).pipe(Effect.scoped, Effect.provide(Redis))
 
     const update = (
       id: TodoId,

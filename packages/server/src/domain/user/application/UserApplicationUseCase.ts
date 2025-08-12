@@ -2,15 +2,17 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
 import type { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
+import { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
 import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
 import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
+import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriving } from "../../account/application/AccountApplicationPortDriving.js"
+import { makeUserReadResolver, UserReadByAccessToken, UserReadById } from "./UserApplicationCache.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 import { UserPortDriving } from "./UserApplicationPortDriving.js"
 
@@ -20,6 +22,7 @@ export const UserUseCase = Layer.effect(
     const account = yield* AccountPortDriving
     const driven = yield* UserPortDriven
     const uuid = yield* PortUUID
+    const resolver = yield* makeUserReadResolver
 
     const create = (
       user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt">
@@ -63,19 +66,19 @@ export const UserUseCase = Layer.effect(
     const readByAccessToken = (
       accessToken: AccessToken
     ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, never> =>
-      driven.readByAccessToken(accessToken)
+      Effect.request(new UserReadByAccessToken({ accessToken }), resolver)
         .pipe(
           Effect.withSpan("UserUseCase", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
           })
-        )
+        ).pipe(Effect.scoped, Effect.provide(Redis))
 
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
-      driven.readById(id)
+      Effect.request(new UserReadById({ id }), resolver)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("User", "readById")
-        )
+        ).pipe(Effect.scoped, Effect.provide(Redis))
 
     const readByIdWithSensitive = (
       id: UserId

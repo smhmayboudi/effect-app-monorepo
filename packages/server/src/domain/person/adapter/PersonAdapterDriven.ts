@@ -75,6 +75,31 @@ export const PersonDriven = Layer.effect(
           Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
         )
 
+    const readByIds = (ids: Array<PersonId>): Effect.Effect<Array<Person>, PersonErrorNotFound, never> =>
+      sql`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id IN ${
+        sql.in(ids)
+      }`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) =>
+            Effect.all(
+              ids.map((id) => {
+                const row = rows.find((r) => r.id === id)
+                if (!row) {
+                  return Effect.fail(new PersonErrorNotFound({ id }))
+                }
+                return Person.decodeUnknown(rows[0]).pipe(
+                  Effect.catchTag(
+                    "ParseError",
+                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
+                  )
+                )
+              })
+            )
+          ),
+          Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+        )
+
     const updateQuery = (
       id: PersonId,
       person: Omit<Person, "id" | "createdAt" | "updatedAt">
@@ -114,6 +139,7 @@ export const PersonDriven = Layer.effect(
       delete: del,
       readAll,
       readById,
+      readByIds,
       update
     } as const
   })

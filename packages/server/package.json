@@ -20,6 +20,7 @@
     "coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@effect/experimental": "latest",
     "@effect/opentelemetry": "latest",
     "@effect/platform": "latest",
     "@effect/platform-node": "latest",
@@ -38,6 +39,7 @@
     "@template/domain": "workspace:^",
     "drizzle-orm": "^0.44.4",
     "effect": "latest",
+    "ioredis": "^5.7.0",
     "uuid": "^11.1.0"
   },
   "effect": {

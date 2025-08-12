@@ -6,8 +6,10 @@ import type { PersonErrorNotFound } from "@template/domain/person/application/Pe
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
+import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../../group/application/GroupApplicationPortDriving.js"
+import { makePersonReadResolver, PersonReadById } from "./PersonApplicationCache.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 import { PersonPortDriving } from "./PersonApplicationPortDriving.js"
 
@@ -16,6 +18,7 @@ export const PersonUseCase = Layer.effect(
   Effect.gen(function*() {
     const driven = yield* PersonPortDriven
     const group = yield* GroupPortDriving
+    const resolver = yield* makePersonReadResolver
 
     const create = (
       person: Omit<Person, "id" | "createdAt" | "updatedAt">
@@ -53,11 +56,11 @@ export const PersonUseCase = Layer.effect(
     const readById = (
       id: PersonId
     ): Effect.Effect<Person, PersonErrorNotFound, ActorAuthorized<"Person", "readById">> =>
-      driven.readById(id)
+      Effect.request(new PersonReadById({ id }), resolver)
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Person", "readById")
-        )
+        ).pipe(Effect.scoped, Effect.provide(Redis))
 
     const update = (
       id: PersonId,
