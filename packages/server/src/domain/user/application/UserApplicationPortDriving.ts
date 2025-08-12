@@ -26,7 +26,9 @@ export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriv
   readAll: (
     urlParams: URLParams<User>
   ) => Effect.Effect<SuccessArray<User, never, never>, never, ActorAuthorized<"User", "readAll">>
-  readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
+  readByAccessToken: (
+    accessToken: AccessToken
+  ) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, ActorAuthorized<"User", "readByAccessToken">>
   readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">>
   readByIdWithSensitive: (
     id: UserId

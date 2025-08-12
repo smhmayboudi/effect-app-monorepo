@@ -4,6 +4,7 @@ import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthenticat
 import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer } from "effect"
 import { UserPortDriving } from "./domain/user/application/UserApplicationPortDriving.js"
+import { withSystemActor } from "./util/Policy.js"
 
 export const MiddlewareAuthenticationLive = Layer.effect(
   MiddlewareAuthentication,
@@ -23,7 +24,8 @@ export const MiddlewareAuthenticationLive = Layer.effect(
                 })
               )),
             Effect.flatMap(Effect.succeed),
-            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token } })
+            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token } }),
+            withSystemActor
           )
     })
   })

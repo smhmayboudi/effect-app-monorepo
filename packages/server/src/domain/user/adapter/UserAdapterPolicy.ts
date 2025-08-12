@@ -29,6 +29,14 @@ const canReadAll = (
       Effect.withSpan("TodoPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadAll", id, actor } })
     ))
 
+const canReadByAccessToken = (
+  id: UserId
+): Effect.Effect<ActorAuthorized<"User", "readByAccessToken">, ActorErrorUnauthorized, Actor> =>
+  policy("User", "readByAccessToken", (actor) =>
+    Effect.succeed(true).pipe(
+      Effect.withSpan("TodoPolicy", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadByAccessToken", id, actor } })
+    ))
+
 const canReadById = (
   id: UserId
 ): Effect.Effect<ActorAuthorized<"User", "readById">, ActorErrorUnauthorized, Actor> =>
@@ -61,6 +69,7 @@ export const UserPolicy = Layer.effect(
     canCreate,
     canDelete,
     canReadAll,
+    canReadByAccessToken,
     canReadById,
     canReadByIdWithSensitive,
     canUpdate

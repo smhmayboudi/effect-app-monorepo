@@ -65,12 +65,13 @@ export const UserUseCase = Layer.effect(
 
     const readByAccessToken = (
       accessToken: AccessToken
-    ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, never> =>
+    ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, ActorAuthorized<"User", "readByAccessToken">> =>
       Effect.request(new UserReadByAccessToken({ accessToken }), resolver)
         .pipe(
           Effect.withSpan("UserUseCase", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
-          })
+          }),
+          policyRequire("User", "readByAccessToken")
         ).pipe(Effect.scoped, Effect.provide(Redis))
 
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
