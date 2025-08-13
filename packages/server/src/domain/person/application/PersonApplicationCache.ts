@@ -3,6 +3,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import { PersonConfig } from "./PersonApplicationConfig.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 
 export class PersonReadById extends Schema.TaggedRequest<PersonReadById>()("PersonReadById", {
@@ -16,6 +17,7 @@ export class PersonReadById extends Schema.TaggedRequest<PersonReadById>()("Pers
 }
 
 export const makePersonReadResolver = Effect.gen(function*() {
+  const { cacheTTLMs } = yield* PersonConfig
   const driven = yield* PersonPortDriven
   const resolver = yield* RequestResolver.fromEffectTagged<PersonReadById>()({
     PersonReadById: (requests) =>
@@ -28,7 +30,7 @@ export const makePersonReadResolver = Effect.gen(function*() {
   }).pipe(
     persisted({
       storeId: "Person",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
+      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
     })
   )
 

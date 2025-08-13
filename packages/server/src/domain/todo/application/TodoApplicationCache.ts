@@ -3,6 +3,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import { TodoConfig } from "./TodoApplicationConfig.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 
 export class TodoReadById extends Schema.TaggedRequest<TodoReadById>()("TodoReadById", {
@@ -16,6 +17,7 @@ export class TodoReadById extends Schema.TaggedRequest<TodoReadById>()("TodoRead
 }
 
 export const makeTodoReadResolver = Effect.gen(function*() {
+  const { cacheTTLMs } = yield* TodoConfig
   const driven = yield* TodoPortDriven
   const resolver = yield* RequestResolver.fromEffectTagged<TodoReadById>()({
     TodoReadById: (requests) =>
@@ -28,7 +30,7 @@ export const makeTodoReadResolver = Effect.gen(function*() {
   }).pipe(
     persisted({
       storeId: "Todo",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
+      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
     })
   )
 

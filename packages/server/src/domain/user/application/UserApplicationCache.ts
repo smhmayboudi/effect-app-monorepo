@@ -4,6 +4,7 @@ import { AccessToken, User, UserId } from "@template/domain/user/application/Use
 import { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Exit, PrimaryKey, Redacted, RequestResolver, Schema } from "effect"
+import { UserConfig } from "./UserApplicationConfig.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 
 export class UserReadByAccessToken extends Schema.TaggedRequest<UserReadByAccessToken>()("UserReadByAccessToken", {
@@ -27,6 +28,7 @@ export class UserReadById extends Schema.TaggedRequest<UserReadById>()("UserRead
 }
 
 export const makeUserReadResolver = Effect.gen(function*() {
+  const { cacheTTLMs } = yield* UserConfig
   const driven = yield* UserPortDriven
   const resolver = yield* RequestResolver.fromEffectTagged<UserReadByAccessToken | UserReadById>()({
     UserReadByAccessToken: (requests) =>
@@ -49,12 +51,12 @@ export const makeUserReadResolver = Effect.gen(function*() {
       timeToLive: (req, exit) =>
         (req._tag === "UserReadByAccessToken" &&
             Exit.isSuccess(exit as Exit.Exit<User, UserErrorNotFoundWithAccessToken>)) ?
-          30_000
+          cacheTTLMs
           : (
               req._tag === "UserReadById" &&
               Exit.isSuccess(exit as Exit.Exit<User, UserErrorNotFound>)
             ) ?
-          30_000
+          cacheTTLMs
           : 0
     })
   )

@@ -17,6 +17,9 @@ export * as AccountAdapterPolicy from "./domain/account/adapter/AccountAdapterPo
 export * as AccountApplicationCache from "./domain/account/application/AccountApplicationCache.js"
 
 
+export * as AccountApplicationConfig from "./domain/account/application/AccountApplicationConfig.js"
+
+
 export * as AccountApplicationPortDriven from "./domain/account/application/AccountApplicationPortDriven.js"
 
 
@@ -41,6 +44,9 @@ export * as GroupAdapterPolicy from "./domain/group/adapter/GroupAdapterPolicy.j
 export * as GroupApplicationCache from "./domain/group/application/GroupApplicationCache.js"
 
 
+export * as GroupApplicationConfig from "./domain/group/application/GroupApplicationConfig.js"
+
+
 export * as GroupApplicationPortDriven from "./domain/group/application/GroupApplicationPortDriven.js"
 
 
@@ -63,6 +69,9 @@ export * as PersonAdapterPolicy from "./domain/person/adapter/PersonAdapterPolic
 
 
 export * as PersonApplicationCache from "./domain/person/application/PersonApplicationCache.js"
+
+
+export * as PersonApplicationConfig from "./domain/person/application/PersonApplicationConfig.js"
 
 
 export * as PersonApplicationPortDriven from "./domain/person/application/PersonApplicationPortDriven.js"
@@ -98,6 +107,9 @@ export * as TodoAdapterPolicy from "./domain/todo/adapter/TodoAdapterPolicy.js"
 export * as TodoApplicationCache from "./domain/todo/application/TodoApplicationCache.js"
 
 
+export * as TodoApplicationConfig from "./domain/todo/application/TodoApplicationConfig.js"
+
+
 export * as TodoApplicationPortDriven from "./domain/todo/application/TodoApplicationPortDriven.js"
 
 
@@ -120,6 +132,9 @@ export * as UserAdapterPolicy from "./domain/user/adapter/UserAdapterPolicy.js"
 
 
 export * as UserApplicationCache from "./domain/user/application/UserApplicationCache.js"
+
+
+export * as UserApplicationConfig from "./domain/user/application/UserApplicationConfig.js"
 
 
 export * as UserApplicationPortDriven from "./domain/user/application/UserApplicationPortDriven.js"

@@ -3,6 +3,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import { GroupConfig } from "./GroupApplicationConfig.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 
 export class GroupReadById extends Schema.TaggedRequest<GroupReadById>()("GroupReadById", {
@@ -16,6 +17,7 @@ export class GroupReadById extends Schema.TaggedRequest<GroupReadById>()("GroupR
 }
 
 export const makeGroupReadResolver = Effect.gen(function*() {
+  const { cacheTTLMs } = yield* GroupConfig
   const driven = yield* GroupPortDriven
   const resolver = yield* RequestResolver.fromEffectTagged<GroupReadById>()({
     GroupReadById: (requests) =>
@@ -28,7 +30,7 @@ export const makeGroupReadResolver = Effect.gen(function*() {
   }).pipe(
     persisted({
       storeId: "Group",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
+      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
     })
   )
 
