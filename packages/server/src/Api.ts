@@ -27,35 +27,39 @@ import { Redis } from "./infrastructure/adapter/Redis.js"
 import { Sql } from "./infrastructure/adapter/Sql.js"
 import { SSEManager } from "./infrastructure/adapter/SSEManager.js"
 import { UUID } from "./infrastructure/adapter/UUID.js"
-import { MiddlewareAuthenticationLive } from "./MiddlewareAuthentication.js"
+import { MiddlewareAuthentication } from "./MiddlewareAuthentication.js"
 
 export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(
     Layer.provide(PersonDriving),
+    Layer.provide(MiddlewareAuthentication),
     Layer.provide(PersonUseCase),
     Layer.provide(PersonDriven),
     Layer.provide(PersonPolicy)
   )
   .pipe(
     Layer.provide(GroupDriving),
+    Layer.provide(MiddlewareAuthentication),
     Layer.provide(GroupUseCase),
     Layer.provide(GroupDriven),
     Layer.provide(GroupPolicy)
   )
   .pipe(
     Layer.provide(SSEDriving),
+    Layer.provide(MiddlewareAuthentication),
     Layer.provide(SSEUseCase),
     Layer.provide(SSEManager)
   )
   .pipe(
     Layer.provide(TodoDriving),
+    Layer.provide(MiddlewareAuthentication),
     Layer.provide(TodoUseCase),
     Layer.provide(TodoDriven),
     Layer.provide(TodoPolicy)
   )
   .pipe(
     Layer.provide(UserDriving),
-    Layer.provide(MiddlewareAuthenticationLive),
+    Layer.provide(MiddlewareAuthentication),
     Layer.provide(UserUseCase),
     Layer.provide(UUID),
     Layer.provide(UserDriven),
@@ -63,6 +67,7 @@ export const ApiLive = HttpApiBuilder.api(Api)
   )
   .pipe(
     Layer.provide(AccountDriving),
+    // Layer.provide(MiddlewareAuthenticationLive),
     Layer.provide(AccountUseCase),
     Layer.provide(AccountDriven),
     Layer.provide(AccountPolicy)

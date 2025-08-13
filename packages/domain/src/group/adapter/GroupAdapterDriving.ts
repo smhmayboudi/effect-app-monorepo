@@ -1,6 +1,6 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
+import { PortMiddlewareAuthentication } from "../../PortMiddlewareAuthentication.js"
 import { ResponseSuccess } from "../../shared/adapter/Response.js"
 import { GroupId, GroupSchema } from "../application/GroupApplicationDomain.js"
 import { GroupErrorNotFound } from "../application/GroupApplicationErrorNotFound.js"
@@ -26,7 +26,7 @@ export class GroupDriving extends HttpApiGroup.make("group")
       .annotate(OpenApi.Description, "Group update")
       .annotate(OpenApi.Summary, "Group update")
   )
-  .middlewareEndpoints(MiddlewareAuthentication)
+  .middlewareEndpoints(PortMiddlewareAuthentication)
   .annotate(OpenApi.Description, "Manage Group")
   .annotate(OpenApi.Summary, "Manage Group")
   .annotate(OpenApi.Title, "Group")

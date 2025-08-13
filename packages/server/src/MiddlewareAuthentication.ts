@@ -1,17 +1,17 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { ActorErrorUnauthorized } from "@template/domain/Actor"
-import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthentication"
+import { PortMiddlewareAuthentication } from "@template/domain/PortMiddlewareAuthentication"
 import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer } from "effect"
 import { UserPortDriving } from "./domain/user/application/UserApplicationPortDriving.js"
 import { withSystemActor } from "./util/Policy.js"
 
-export const MiddlewareAuthenticationLive = Layer.effect(
-  MiddlewareAuthentication,
+export const MiddlewareAuthentication = Layer.effect(
+  PortMiddlewareAuthentication,
   Effect.gen(function*() {
     const user = yield* UserPortDriving
 
-    return MiddlewareAuthentication.of({
+    return PortMiddlewareAuthentication.of({
       cookie: (token) =>
         user.readByAccessToken(AccessToken.make(token))
           .pipe(
@@ -24,7 +24,9 @@ export const MiddlewareAuthenticationLive = Layer.effect(
                 })
               )),
             Effect.flatMap(Effect.succeed),
-            Effect.withSpan("MiddlewareAuthentication", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token } }),
+            Effect.withSpan("PortMiddlewareAuthentication", {
+              attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
+            }),
             withSystemActor
           )
     })

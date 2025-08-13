@@ -1,6 +1,6 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
+import { PortMiddlewareAuthentication } from "../../PortMiddlewareAuthentication.js"
 
 export class SSEDriving extends HttpApiGroup.make("sse")
   .add(
@@ -15,7 +15,7 @@ export class SSEDriving extends HttpApiGroup.make("sse")
       .annotate(OpenApi.Description, "SSE notify")
       .annotate(OpenApi.Summary, "SSE notify")
   )
-  .middlewareEndpoints(MiddlewareAuthentication)
+  .middlewareEndpoints(PortMiddlewareAuthentication)
   .annotate(OpenApi.Description, "Manage SSE")
   .annotate(OpenApi.Summary, "Manage SSE")
   .annotate(OpenApi.Title, "SSE")

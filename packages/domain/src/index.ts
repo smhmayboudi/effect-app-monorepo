@@ -5,7 +5,7 @@ export * as Actor from "./Actor.js"
 export * as Api from "./Api.js"
 
 
-export * as MiddlewareAuthentication from "./MiddlewareAuthentication.js"
+export * as PortMiddlewareAuthentication from "./PortMiddlewareAuthentication.js"
 
 
 export * as AccountAdapterDriving from "./account/adapter/AccountAdapterDriving.js"

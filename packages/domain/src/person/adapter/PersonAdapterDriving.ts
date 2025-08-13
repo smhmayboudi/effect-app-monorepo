@@ -2,7 +2,7 @@ import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
 import { GroupIdFromString } from "../../group/adapter/GroupAdapterDriving.js"
 import { GroupErrorNotFound } from "../../group/application/GroupApplicationErrorNotFound.js"
-import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
+import { PortMiddlewareAuthentication } from "../../PortMiddlewareAuthentication.js"
 import { ResponseSuccess } from "../../shared/adapter/Response.js"
 import { PersonId, PersonSchema } from "../application/PersonApplicationDomain.js"
 import { PersonErrorNotFound } from "../application/PersonApplicationErrorNotFound.js"
@@ -29,7 +29,7 @@ export class PersonDriving extends HttpApiGroup.make("person")
       .annotate(OpenApi.Summary, "Person readById")
       .setPath(Schema.Struct({ id: PersonIdFromString }))
   )
-  .middlewareEndpoints(MiddlewareAuthentication)
+  .middlewareEndpoints(PortMiddlewareAuthentication)
   .annotate(OpenApi.Description, "Manage Person")
   .annotate(OpenApi.Summary, "Manage Person")
   .annotate(OpenApi.Title, "Person")

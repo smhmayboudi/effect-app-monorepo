@@ -2,7 +2,7 @@ import { HttpApiBuilder } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Actor } from "@template/domain/Actor"
 import { Api } from "@template/domain/Api"
-import { MiddlewareAuthentication } from "@template/domain/MiddlewareAuthentication"
+import { PortMiddlewareAuthentication } from "@template/domain/PortMiddlewareAuthentication"
 import { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect } from "effect"
 import { response, responseArray } from "../../../shared/adapter/Response.js"
@@ -20,7 +20,7 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
         driving.create(payload).pipe(
           Effect.tap((user) =>
             HttpApiBuilder.securitySetCookie(
-              MiddlewareAuthentication.security.cookie,
+              PortMiddlewareAuthentication.security.cookie,
               user.accessToken
             )
           ),

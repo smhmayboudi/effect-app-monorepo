@@ -1,6 +1,6 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
+import { PortMiddlewareAuthentication } from "../../PortMiddlewareAuthentication.js"
 import { ResponseSuccess, ResponseSuccessArray } from "../../shared/adapter/Response.js"
 import { URLParams } from "../../shared/adapter/URLParams.js"
 import { UserId, UserSchema, UserWithSensitiveSchema } from "../application/UserApplicationDomain.js"
@@ -51,7 +51,7 @@ export class UserDriving extends HttpApiGroup.make("user")
       .annotate(OpenApi.Description, "User update")
       .annotate(OpenApi.Summary, "User update")
   )
-  .middlewareEndpoints(MiddlewareAuthentication)
+  .middlewareEndpoints(PortMiddlewareAuthentication)
   .add(
     HttpApiEndpoint.post("create", "/")
       .addError(UserErrorEmailAlreadyTaken)

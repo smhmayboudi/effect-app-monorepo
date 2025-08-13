@@ -1,6 +1,6 @@
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
 import { Schema } from "effect"
-import { MiddlewareAuthentication } from "../../MiddlewareAuthentication.js"
+import { PortMiddlewareAuthentication } from "../../PortMiddlewareAuthentication.js"
 import { ResponseSuccess, ResponseSuccessArray } from "../../shared/adapter/Response.js"
 import { URLParams } from "../../shared/adapter/URLParams.js"
 import { TodoId, TodoSchema } from "../application/TodoApplicationDomain.js"
@@ -51,7 +51,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
       .annotate(OpenApi.Description, "Todo update")
       .annotate(OpenApi.Summary, "Todo update")
   )
-  .middlewareEndpoints(MiddlewareAuthentication)
+  .middlewareEndpoints(PortMiddlewareAuthentication)
   .annotate(OpenApi.Description, "Manage Todo")
   .annotate(OpenApi.Summary, "Manage Todo")
   .annotate(OpenApi.Title, "Todo")
