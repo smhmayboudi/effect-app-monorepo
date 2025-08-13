@@ -17,8 +17,7 @@ export class TodoReadById extends Schema.TaggedRequest<TodoReadById>()("TodoRead
 
 export const makeTodoReadResolver = Effect.gen(function*() {
   const driven = yield* TodoPortDriven
-
-  return RequestResolver.fromEffectTagged<TodoReadById>()({
+  const resolver = yield* RequestResolver.fromEffectTagged<TodoReadById>()({
     TodoReadById: (requests) =>
       driven.readByIds(requests.map((req) => req.id)).pipe(
         Effect.withSpan("TodoUseCase", {
@@ -32,4 +31,6 @@ export const makeTodoReadResolver = Effect.gen(function*() {
       timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
     })
   )
+
+  return resolver
 })

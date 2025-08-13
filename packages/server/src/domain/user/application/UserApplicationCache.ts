@@ -28,8 +28,7 @@ export class UserReadById extends Schema.TaggedRequest<UserReadById>()("UserRead
 
 export const makeUserReadResolver = Effect.gen(function*() {
   const driven = yield* UserPortDriven
-
-  return RequestResolver.fromEffectTagged<UserReadByAccessToken | UserReadById>()({
+  const resolver = yield* RequestResolver.fromEffectTagged<UserReadByAccessToken | UserReadById>()({
     UserReadByAccessToken: (requests) =>
       driven.readByAccessTokens(requests.map((req) => req.accessToken)).pipe(
         Effect.withSpan("UserUseCase", {
@@ -59,4 +58,6 @@ export const makeUserReadResolver = Effect.gen(function*() {
           : 0
     })
   )
+
+  return resolver
 })

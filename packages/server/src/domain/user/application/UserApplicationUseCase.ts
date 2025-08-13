@@ -8,7 +8,6 @@ import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/applicati
 import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
-import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriving } from "../../account/application/AccountApplicationPortDriving.js"
@@ -72,14 +71,14 @@ export const UserUseCase = Layer.effect(
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
           }),
           policyRequire("User", "readByAccessToken")
-        ).pipe(Effect.scoped, Effect.provide(Redis))
+        )
 
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
       Effect.request(new UserReadById({ id }), resolver)
         .pipe(
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("User", "readById")
-        ).pipe(Effect.scoped, Effect.provide(Redis))
+        )
 
     const readByIdWithSensitive = (
       id: UserId

@@ -5,7 +5,6 @@ import type { GroupErrorNotFound } from "@template/domain/group/application/Grou
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
-import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupReadById, makeGroupReadResolver } from "./GroupApplicationCache.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
@@ -49,7 +48,7 @@ export const GroupUseCase = Layer.effect(
         .pipe(
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Group", "readById")
-        ).pipe(Effect.scoped, Effect.provide(Redis))
+        )
 
     const update = (
       id: GroupId,

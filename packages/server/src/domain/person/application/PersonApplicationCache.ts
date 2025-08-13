@@ -17,8 +17,7 @@ export class PersonReadById extends Schema.TaggedRequest<PersonReadById>()("Pers
 
 export const makePersonReadResolver = Effect.gen(function*() {
   const driven = yield* PersonPortDriven
-
-  return RequestResolver.fromEffectTagged<PersonReadById>()({
+  const resolver = yield* RequestResolver.fromEffectTagged<PersonReadById>()({
     PersonReadById: (requests) =>
       driven.readByIds(requests.map((req) => req.id)).pipe(
         Effect.withSpan("PersonUseCase", {
@@ -32,4 +31,6 @@ export const makePersonReadResolver = Effect.gen(function*() {
       timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
     })
   )
+
+  return resolver
 })

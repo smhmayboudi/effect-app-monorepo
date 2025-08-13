@@ -17,8 +17,7 @@ export class AccountReadById extends Schema.TaggedRequest<AccountReadById>()("Ac
 
 export const makeAccountReadResolver = Effect.gen(function*() {
   const driven = yield* AccountPortDriven
-
-  return RequestResolver.fromEffectTagged<AccountReadById>()({
+  const resolver = yield* RequestResolver.fromEffectTagged<AccountReadById>()({
     AccountReadById: (requests) =>
       driven.readByIds(requests.map((req) => req.id)).pipe(
         Effect.withSpan("AccountUseCase", {
@@ -32,4 +31,6 @@ export const makeAccountReadResolver = Effect.gen(function*() {
       timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
     })
   )
+
+  return resolver
 })

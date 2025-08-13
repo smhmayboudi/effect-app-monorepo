@@ -6,7 +6,6 @@ import type { PersonErrorNotFound } from "@template/domain/person/application/Pe
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
-import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../../group/application/GroupApplicationPortDriving.js"
 import { makePersonReadResolver, PersonReadById } from "./PersonApplicationCache.js"
@@ -60,7 +59,7 @@ export const PersonUseCase = Layer.effect(
         .pipe(
           Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Person", "readById")
-        ).pipe(Effect.scoped, Effect.provide(Redis))
+        )
 
     const update = (
       id: PersonId,

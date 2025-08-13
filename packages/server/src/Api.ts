@@ -23,6 +23,7 @@ import { UserDriven } from "./domain/user/adapter/UserAdapterDriven.js"
 import { UserDriving } from "./domain/user/adapter/UserAdapterDriving.js"
 import { UserPolicy } from "./domain/user/adapter/UserAdapterPolicy.js"
 import { UserUseCase } from "./domain/user/application/UserApplicationUseCase.js"
+import { Redis } from "./infrastructure/adapter/Redis.js"
 import { Sql } from "./infrastructure/adapter/Sql.js"
 import { SSEManager } from "./infrastructure/adapter/SSEManager.js"
 import { UUID } from "./infrastructure/adapter/UUID.js"
@@ -67,5 +68,6 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(AccountPolicy)
   )
   .pipe(
+    Layer.provide(Redis),
     Layer.provide(Sql)
   )

@@ -17,8 +17,7 @@ export class GroupReadById extends Schema.TaggedRequest<GroupReadById>()("GroupR
 
 export const makeGroupReadResolver = Effect.gen(function*() {
   const driven = yield* GroupPortDriven
-
-  return RequestResolver.fromEffectTagged<GroupReadById>()({
+  const resolver = yield* RequestResolver.fromEffectTagged<GroupReadById>()({
     GroupReadById: (requests) =>
       driven.readByIds(requests.map((req) => req.id)).pipe(
         Effect.withSpan("GroupUseCase", {
@@ -32,4 +31,6 @@ export const makeGroupReadResolver = Effect.gen(function*() {
       timeToLive: (_req, exit) => Exit.isSuccess(exit) ? 30_000 : 0
     })
   )
+
+  return resolver
 })

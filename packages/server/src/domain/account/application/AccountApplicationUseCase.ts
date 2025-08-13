@@ -5,7 +5,6 @@ import type { ActorAuthorized } from "@template/domain/Actor"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
-import { Redis } from "../../../infrastructure/adapter/Redis.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountReadById, makeAccountReadResolver } from "./AccountApplicationCache.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
@@ -49,7 +48,7 @@ export const AccountUseCase = Layer.effect(
         .pipe(
           Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Account", "readById")
-        ).pipe(Effect.scoped, Effect.provide(Redis))
+        )
 
     const update = (
       id: AccountId,
