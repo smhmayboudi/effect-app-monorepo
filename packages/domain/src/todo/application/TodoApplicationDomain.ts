@@ -7,10 +7,6 @@ export const TodoId = Schema.Number.pipe(
 )
 export type TodoId = typeof TodoId.Type
 
-export const TodoIdFromString = Schema.NumberFromString.pipe(
-  Schema.compose(TodoId)
-)
-
 export const TodoSchema = Schema.Struct({
   id: TodoId,
   ownerId: AccountId,
