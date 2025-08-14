@@ -34,7 +34,7 @@ export class User extends Schema.Class<User>("User")(UserSchema) {
 }
 
 export const UserWithSensitiveSchema = Schema.Struct({
-  ...User.fields,
+  ...UserSchema.fields,
   accessToken: AccessToken
   // account: Account
 }).pipe(Schema.annotations({ description: "UserWithSensitive", identifier: "UserWithSensitive" }))
