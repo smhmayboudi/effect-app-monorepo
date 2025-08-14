@@ -9,8 +9,8 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
   const inputSchema = Schema.Struct({
     expands: Schema.optional(Schema.String.pipe(
       Schema.filter(
-        (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
-        { description: `Fields must be a comma-separated list of: ${keys}` }
+        (a) => a.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
+        { description: `Fields must be a comma-separated list of: ${keys}`, identifier: "ExpandsFilter" }
       ),
       Schema.annotations({
         jsonSchema: { description: "Auto expand record relations" }
@@ -18,8 +18,8 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
     )),
     fields: Schema.optional(Schema.String.pipe(
       Schema.filter(
-        (s) => s.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
-        { description: `Fields must be a comma-separated list of: ${keys}` }
+        (a) => a.split(",").map((v) => v.trim()).filter(Boolean).every(isKeysUnion),
+        { description: `Fields must be a comma-separated list of: ${keys}`, identifier: "FieldsFilter" }
       ),
       Schema.annotations({
         jsonSchema: {
@@ -43,9 +43,10 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
     )),
     sort: Schema.optional(Schema.String.pipe(
       Schema.filter(
-        (s) => s.split(",").map((v) => v.trim().replace(/^-/, "")).filter(Boolean).every(isKeysUnion),
+        (a) => a.split(",").map((v) => v.trim().replace(/^-/, "")).filter(Boolean).every(isKeysUnion),
         {
-          description: `Sort must be a comma-separated list of fields (optionally prefixed with '-'): ${keys}`
+          description: `Sort must be a comma-separated list of fields (optionally prefixed with '-'): ${keys}`,
+          identifier: "SortFilter"
         }
       ),
       Schema.annotations({
