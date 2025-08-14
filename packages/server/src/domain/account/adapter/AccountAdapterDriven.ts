@@ -77,7 +77,7 @@ export const AccountDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new AccountErrorNotFound({ id }))
                 }
-                return Account.decodeUnknown(rows[0]).pipe(
+                return Account.decodeUnknown(row).pipe(
                   Effect.catchTag(
                     "ParseError",
                     (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)

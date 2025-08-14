@@ -76,7 +76,7 @@ export const GroupDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new GroupErrorNotFound({ id }))
                 }
-                return Group.decodeUnknown(rows[0]).pipe(
+                return Group.decodeUnknown(row).pipe(
                   Effect.catchTag(
                     "ParseError",
                     (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)

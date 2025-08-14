@@ -79,7 +79,7 @@ export const TodoDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new TodoErrorNotFound({ id }))
                 }
-                return Todo.decodeUnknown(rows[0]).pipe(
+                return Todo.decodeUnknown(row).pipe(
                   Effect.catchTag(
                     "ParseError",
                     (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)

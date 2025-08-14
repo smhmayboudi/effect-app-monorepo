@@ -88,7 +88,7 @@ export const PersonDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new PersonErrorNotFound({ id }))
                 }
-                return Person.decodeUnknown(rows[0]).pipe(
+                return Person.decodeUnknown(row).pipe(
                   Effect.catchTag(
                     "ParseError",
                     (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)

@@ -91,7 +91,7 @@ export const UserDriven = Layer.effect(
               if (!row) {
                 return Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken }))
               }
-              return User.decodeUnknown(rows[0]).pipe(
+              return User.decodeUnknown(row).pipe(
                 Effect.catchTag(
                   "ParseError",
                   (err) => Effect.die(`Failed to decode user with token ${accessToken}: ${err.message}`)
@@ -129,7 +129,7 @@ export const UserDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new UserErrorNotFound({ id }))
                 }
-                return User.decodeUnknown(rows[0]).pipe(
+                return User.decodeUnknown(row).pipe(
                   Effect.catchTag(
                     "ParseError",
                     (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
