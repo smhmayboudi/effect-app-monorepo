@@ -3,7 +3,7 @@ import { Schema } from "effect"
 export const ResponseError = Schema.Struct({
   error: Schema.Struct({
     _tag: Schema.String,
-    details: Schema.optional(Schema.Unknown),
+    details: Schema.partialWith(Schema.Unknown, { exact: true }),
     message: Schema.String,
     status: Schema.Number
   })
@@ -22,7 +22,7 @@ export type SuccessArray<A, E, R> = Schema.Schema.Type<ReturnType<typeof Success
 
 export const ResponseSuccessArray = <A, E, R>(schema: Schema.Schema<A, E, R>) =>
   Schema.Struct({
-    data: Schema.Array(Schema.partial(schema)),
+    data: Schema.Array(Schema.partialWith(schema, { exact: true })),
     hasMore: Schema.Boolean,
     limit: Schema.Number,
     offset: Schema.Number,
