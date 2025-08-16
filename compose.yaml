@@ -12,6 +12,36 @@ x-default-logging: &logging
     max-size: 5m
 
 services:
+  elasticsearch:
+    container_name: hono-poc-elasticsearch
+    environment:
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      # - cluster.name=docker-cluster
+      - discovery.type=single-node
+      # - logger.discovery.name = org.elasticsearch.discovery
+      # - logger.discovery.level = trace
+      - network.host=0.0.0.0
+      - xpack.security.enabled=false
+    expose:
+      - 9200 # API Call
+      - 9300 # Custom Binary Protocol
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD-SHELL
+        - curl --fail http://elasticsearch:9200/_cluster/health?timeout=50s&wait_for_status=green || exit 1
+      timeout: 10s
+    image: elasticsearch:9.1.1
+    labels:
+      namespace: service
+    logging: *logging
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: "no"
+
   otel-lgtm:
     container_name: effect-app-monorepo-otel-lgtm
     environment:
@@ -78,5 +108,6 @@ services:
       - redis:/data
 
 volumes:
+  # elasticsearch: {}
   otel-lgtm: {}
   redis: {}

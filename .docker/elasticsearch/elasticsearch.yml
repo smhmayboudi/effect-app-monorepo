@@ -1,0 +1,6 @@
+# cluster.name: docker-cluster
+discovery.type: single-node
+# logger.discovery.level: trace
+# logger.discovery.name: org.elasticsearch.discovery
+network.host: 0.0.0.0
+xpack.security.enabled: false
