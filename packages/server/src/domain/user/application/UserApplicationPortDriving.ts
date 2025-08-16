@@ -19,6 +19,7 @@ export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriv
     UserWithSensitive,
     UserErrorEmailAlreadyTaken,
     | ActorAuthorized<"Account", "create">
+    | ActorAuthorized<"Account", "delete">
     | ActorAuthorized<"User", "create">
     | ActorAuthorized<"User", "readByIdWithSensitive">
   >

@@ -31,6 +31,7 @@ export const UserUseCase = Layer.effect(
       UserWithSensitive,
       UserErrorEmailAlreadyTaken,
       | ActorAuthorized<"Account", "create">
+      | ActorAuthorized<"Account", "delete">
       | ActorAuthorized<"User", "create">
       | ActorAuthorized<"User", "readByIdWithSensitive">
     > =>
@@ -39,6 +40,7 @@ export const UserUseCase = Layer.effect(
           account.create({}).pipe(
             Effect.flatMap((accountId) =>
               driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId }).pipe(
+                Effect.onError(() => account.delete(accountId).pipe(Effect.ignore)),
                 Effect.flatMap((userId) => readByIdWithSensitive(userId)),
                 Effect.tapBoth({
                   onFailure: (out) =>
