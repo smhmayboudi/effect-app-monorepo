@@ -6,15 +6,15 @@ import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Exit, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
-import { AccountEventEmitter } from "../adapter/AccountAdapterEventEmitter.js"
 import { AccountReadById, makeAccountReadResolver } from "./AccountApplicationCache.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
 import { AccountPortDriving } from "./AccountApplicationPortDriving.js"
+import { AccountPortEventEmitter } from "./AccountApplicationPortEventEmitter.js"
 
 export const AccountUseCase = Layer.effect(
   AccountPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* AccountEventEmitter
+    const eventEmitter = yield* AccountPortEventEmitter
     const driven = yield* AccountPortDriven
     const resolver = yield* makeAccountReadResolver
 

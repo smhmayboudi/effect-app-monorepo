@@ -5,19 +5,19 @@ import { AccountDriven } from "./domain/account/adapter/AccountAdapterDriven.js"
 import { AccountDriving } from "./domain/account/adapter/AccountAdapterDriving.js"
 import { AccountEventEmitter } from "./domain/account/adapter/AccountAdapterEventEmitter.js"
 import { AccountPolicy } from "./domain/account/adapter/AccountAdapterPolicy.js"
-import { AccountEventEmitterLive } from "./domain/account/application/AccountApplicationEventEmitter.js"
+import { AccountPortEventEmitter } from "./domain/account/application/AccountApplicationPortEventEmitter.js"
 import { AccountUseCase } from "./domain/account/application/AccountApplicationUseCase.js"
 import { GroupDriven } from "./domain/group/adapter/GroupAdapterDriven.js"
 import { GroupDriving } from "./domain/group/adapter/GroupAdapterDriving.js"
 import { GroupEventEmitter } from "./domain/group/adapter/GroupAdapterEventEmitter.js"
 import { GroupPolicy } from "./domain/group/adapter/GroupAdapterPolicy.js"
-import { GroupEventEmitterLive } from "./domain/group/application/GroupApplicationEventEmitter.js"
+import { GroupPortEventEmitter } from "./domain/group/application/GroupApplicationPortEventEmitter.js"
 import { GroupUseCase } from "./domain/group/application/GroupApplicationUseCase.js"
 import { PersonDriven } from "./domain/person/adapter/PersonAdapterDriven.js"
 import { PersonDriving } from "./domain/person/adapter/PersonAdapterDriving.js"
 import { PersonEventEmitter } from "./domain/person/adapter/PersonAdapterEventEmitter.js"
 import { PersonPolicy } from "./domain/person/adapter/PersonAdapterPolicy.js"
-import { PersonEventEmitterLive } from "./domain/person/application/PersonApplicationEventEmitter.js"
+import { PersonPortEventEmitter } from "./domain/person/application/PersonApplicationPortEventEmitter.js"
 import { PersonUseCase } from "./domain/person/application/PersonApplicationUseCase.js"
 import { SSEDriving } from "./domain/sse/adapter/SSEAdapterDriving.js"
 import { SSEUseCase } from "./domain/sse/application/SSEApplicationUseCase.js"
@@ -25,13 +25,13 @@ import { TodoDriven } from "./domain/todo/adapter/TodoAdapterDriven.js"
 import { TodoDriving } from "./domain/todo/adapter/TodoAdapterDriving.js"
 import { TodoEventEmitter } from "./domain/todo/adapter/TodoAdapterEventEmitter.js"
 import { TodoPolicy } from "./domain/todo/adapter/TodoAdapterPolicy.js"
-import { TodoEventEmitterLive } from "./domain/todo/application/TodoApplicationEventEmitter.js"
+import { TodoPortEventEmitter } from "./domain/todo/application/TodoApplicationPortEventEmitter.js"
 import { TodoUseCase } from "./domain/todo/application/TodoApplicationUseCase.js"
 import { UserDriven } from "./domain/user/adapter/UserAdapterDriven.js"
 import { UserDriving } from "./domain/user/adapter/UserAdapterDriving.js"
 import { UserEventEmitter } from "./domain/user/adapter/UserAdapterEventEmitter.js"
 import { UserPolicy } from "./domain/user/adapter/UserAdapterPolicy.js"
-import { UserEventEmitterLive } from "./domain/user/application/UserApplicationEventEmitter.js"
+import { UserPortEventEmitter } from "./domain/user/application/UserApplicationPortEventEmitter.js"
 import { UserUseCase } from "./domain/user/application/UserApplicationUseCase.js"
 import { make } from "./infrastructure/adapter/EventEmitter.js"
 import { Redis } from "./infrastructure/adapter/Redis.js"
@@ -47,8 +47,8 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(PersonUseCase),
     Layer.provide(PersonDriven),
     Layer.provide(PersonPolicy),
-    Layer.provide(PersonEventEmitterLive),
-    Layer.provide(Layer.effect(PersonEventEmitter, make()))
+    Layer.provide(PersonEventEmitter),
+    Layer.provide(Layer.effect(PersonPortEventEmitter, make()))
   )
   .pipe(
     Layer.provide(GroupDriving),
@@ -56,8 +56,8 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(GroupUseCase),
     Layer.provide(GroupDriven),
     Layer.provide(GroupPolicy),
-    Layer.provide(GroupEventEmitterLive),
-    Layer.provide(Layer.effect(GroupEventEmitter, make()))
+    Layer.provide(GroupEventEmitter),
+    Layer.provide(Layer.effect(GroupPortEventEmitter, make()))
   )
   .pipe(
     Layer.provide(SSEDriving),
@@ -71,8 +71,8 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(TodoUseCase),
     Layer.provide(TodoDriven),
     Layer.provide(TodoPolicy),
-    Layer.provide(TodoEventEmitterLive),
-    Layer.provide(Layer.effect(TodoEventEmitter, make()))
+    Layer.provide(TodoEventEmitter),
+    Layer.provide(Layer.effect(TodoPortEventEmitter, make()))
   )
   .pipe(
     Layer.provide(UserDriving),
@@ -81,8 +81,8 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(UUID),
     Layer.provide(UserDriven),
     Layer.provide(UserPolicy),
-    Layer.provide(UserEventEmitterLive),
-    Layer.provide(Layer.effect(UserEventEmitter, make()))
+    Layer.provide(UserEventEmitter),
+    Layer.provide(Layer.effect(UserPortEventEmitter, make()))
   )
   .pipe(
     Layer.provide(AccountDriving),
@@ -90,8 +90,8 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(AccountUseCase),
     Layer.provide(AccountDriven),
     Layer.provide(AccountPolicy),
-    Layer.provide(AccountEventEmitterLive),
-    Layer.provide(Layer.effect(AccountEventEmitter, make()))
+    Layer.provide(AccountEventEmitter),
+    Layer.provide(Layer.effect(AccountPortEventEmitter, make()))
   )
   .pipe(
     Layer.provide(Redis),

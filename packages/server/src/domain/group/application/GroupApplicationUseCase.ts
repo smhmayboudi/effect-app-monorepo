@@ -6,15 +6,15 @@ import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Exit, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
-import { GroupEventEmitter } from "../adapter/GroupAdapterEventEmitter.js"
 import { GroupReadById, makeGroupReadResolver } from "./GroupApplicationCache.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 import { GroupPortDriving } from "./GroupApplicationPortDriving.js"
+import { GroupPortEventEmitter } from "./GroupApplicationPortEventEmitter.js"
 
 export const GroupUseCase = Layer.effect(
   GroupPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* GroupEventEmitter
+    const eventEmitter = yield* GroupPortEventEmitter
     const driven = yield* GroupPortDriven
     const resolver = yield* makeGroupReadResolver
 

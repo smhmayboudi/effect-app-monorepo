@@ -7,15 +7,15 @@ import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/T
 import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Exit, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
-import { TodoEventEmitter } from "../adapter/TodoAdapterEventEmitter.js"
 import { makeTodoReadResolver, TodoReadById } from "./TodoApplicationCache.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 import { TodoPortDriving } from "./TodoApplicationPortDriving.js"
+import { TodoPortEventEmitter } from "./TodoApplicationPortEventEmitter.js"
 
 export const TodoUseCase = Layer.effect(
   TodoPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* TodoEventEmitter
+    const eventEmitter = yield* TodoPortEventEmitter
     const driven = yield* TodoPortDriven
     const resolver = yield* makeTodoReadResolver
 

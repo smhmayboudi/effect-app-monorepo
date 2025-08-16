@@ -8,15 +8,15 @@ import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Exit, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../../group/application/GroupApplicationPortDriving.js"
-import { PersonEventEmitter } from "../adapter/PersonAdapterEventEmitter.js"
 import { makePersonReadResolver, PersonReadById } from "./PersonApplicationCache.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 import { PersonPortDriving } from "./PersonApplicationPortDriving.js"
+import { PersonPortEventEmitter } from "./PersonApplicationPortEventEmitter.js"
 
 export const PersonUseCase = Layer.effect(
   PersonPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* PersonEventEmitter
+    const eventEmitter = yield* PersonPortEventEmitter
     const driven = yield* PersonPortDriven
     const group = yield* GroupPortDriving
     const resolver = yield* makePersonReadResolver

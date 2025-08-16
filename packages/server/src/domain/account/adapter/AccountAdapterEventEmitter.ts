@@ -1,25 +1,16 @@
-import type { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
-import type { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
-import type { SuccessArray } from "@template/domain/shared/adapter/Response"
-import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import type { Exit } from "effect"
-import { PortEventEmitter } from "../../../infrastructure/application/PortEventEmitter.js"
+import { Effect, Layer } from "effect"
+import { AccountPortEventEmitter } from "../application/AccountApplicationPortEventEmitter.js"
 
-type AccountEvents = {
-  AccountUseCaseCreate: {
-    in: { account: Omit<Account, "id" | "createdAt" | "updatedAt"> }
-    out: Exit.Exit<AccountId>
-  }
-  AccountUseCaseDelete: { in: { id: AccountId }; out: Exit.Exit<AccountId, AccountErrorNotFound> }
-  AccountUseCaseReadAll: {
-    in: { urlParams: URLParams<Account> }
-    out: Exit.Exit<SuccessArray<Account, never, never>>
-  }
-  AccountUseCaseReadById: { in: { id: AccountId }; out: Exit.Exit<Account, AccountErrorNotFound> }
-  AccountUseCaseUpdate: {
-    in: { id: AccountId; account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">> }
-    out: Exit.Exit<AccountId, AccountErrorNotFound>
-  }
-}
-
-export const AccountEventEmitter = PortEventEmitter<AccountEvents>()
+export const AccountEventEmitter = Layer.effectDiscard(
+  Effect.flatMap(
+    AccountPortEventEmitter,
+    (eventEmitter) =>
+      Effect.all([
+        eventEmitter.on("AccountUseCaseCreate", Effect.logDebug),
+        eventEmitter.on("AccountUseCaseDelete", Effect.logDebug),
+        eventEmitter.on("AccountUseCaseReadAll", Effect.logDebug),
+        eventEmitter.on("AccountUseCaseReadById", Effect.logDebug),
+        eventEmitter.on("AccountUseCaseUpdate", Effect.logInfo)
+      ], { concurrency: "unbounded" })
+  )
+)

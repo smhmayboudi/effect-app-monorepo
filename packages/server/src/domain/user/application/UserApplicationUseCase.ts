@@ -11,15 +11,15 @@ import { Effect, Exit, Layer, Redacted } from "effect"
 import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriving } from "../../account/application/AccountApplicationPortDriving.js"
-import { UserEventEmitter } from "../adapter/UserAdapterEventEmitter.js"
 import { makeUserReadResolver, UserReadByAccessToken, UserReadById } from "./UserApplicationCache.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 import { UserPortDriving } from "./UserApplicationPortDriving.js"
+import { UserPortEventEmitter } from "./UserApplicationPortEventEmitter.js"
 
 export const UserUseCase = Layer.effect(
   UserPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* UserEventEmitter
+    const eventEmitter = yield* UserPortEventEmitter
     const account = yield* AccountPortDriving
     const driven = yield* UserPortDriven
     const uuid = yield* PortUUID
