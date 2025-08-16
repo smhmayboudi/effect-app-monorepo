@@ -5,8 +5,9 @@ import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
-import { Effect, Layer } from "effect"
+import { Effect, Exit, Layer } from "effect"
 import { policyRequire } from "../../../util/Policy.js"
+import { TodoEventEmitter } from "../adapter/TodoAdapterEventEmitter.js"
 import { makeTodoReadResolver, TodoReadById } from "./TodoApplicationCache.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 import { TodoPortDriving } from "./TodoApplicationPortDriving.js"
@@ -14,6 +15,7 @@ import { TodoPortDriving } from "./TodoApplicationPortDriving.js"
 export const TodoUseCase = Layer.effect(
   TodoPortDriving,
   Effect.gen(function*() {
+    const eventEmitter = yield* TodoEventEmitter
     const driven = yield* TodoPortDriven
     const resolver = yield* makeTodoReadResolver
 
@@ -22,6 +24,12 @@ export const TodoUseCase = Layer.effect(
     ): Effect.Effect<TodoId, TodoErrorAlreadyExists, ActorAuthorized<"Todo", "create">> =>
       driven.create(todo)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("TodoUseCaseCreate", {
+              in: { todo },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", todo } }),
           policyRequire("Todo", "create")
         )
@@ -29,6 +37,12 @@ export const TodoUseCase = Layer.effect(
     const del = (id: TodoId): Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "delete">> =>
       driven.delete(id)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("TodoUseCaseDelete", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Todo", "delete")
         )
@@ -38,6 +52,12 @@ export const TodoUseCase = Layer.effect(
     ): Effect.Effect<SuccessArray<Todo, never, never>, never, ActorAuthorized<"Todo", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("TodoUseCaseReadAll", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyRequire("Todo", "readAll")
         )
@@ -45,6 +65,12 @@ export const TodoUseCase = Layer.effect(
     const readById = (id: TodoId): Effect.Effect<Todo, TodoErrorNotFound, ActorAuthorized<"Todo", "readById">> =>
       Effect.request(new TodoReadById({ id }), resolver)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("TodoUseCaseReadById", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Todo", "readById")
         )
@@ -55,6 +81,12 @@ export const TodoUseCase = Layer.effect(
     ): Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "update">> =>
       driven.update(id, todo)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("TodoUseCaseUpdate", {
+              in: { id, todo },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo } }),
           policyRequire("Todo", "update")
         )

@@ -11,6 +11,9 @@ export * as AccountAdapterDriven from "./domain/account/adapter/AccountAdapterDr
 export * as AccountAdapterDriving from "./domain/account/adapter/AccountAdapterDriving.js"
 
 
+export * as AccountAdapterEventEmitter from "./domain/account/adapter/AccountAdapterEventEmitter.js"
+
+
 export * as AccountAdapterPolicy from "./domain/account/adapter/AccountAdapterPolicy.js"
 
 
@@ -38,6 +41,9 @@ export * as GroupAdapterDriven from "./domain/group/adapter/GroupAdapterDriven.j
 export * as GroupAdapterDriving from "./domain/group/adapter/GroupAdapterDriving.js"
 
 
+export * as GroupAdapterEventEmitter from "./domain/group/adapter/GroupAdapterEventEmitter.js"
+
+
 export * as GroupAdapterPolicy from "./domain/group/adapter/GroupAdapterPolicy.js"
 
 
@@ -63,6 +69,9 @@ export * as PersonAdapterDriven from "./domain/person/adapter/PersonAdapterDrive
 
 
 export * as PersonAdapterDriving from "./domain/person/adapter/PersonAdapterDriving.js"
+
+
+export * as PersonAdapterEventEmitter from "./domain/person/adapter/PersonAdapterEventEmitter.js"
 
 
 export * as PersonAdapterPolicy from "./domain/person/adapter/PersonAdapterPolicy.js"
@@ -101,6 +110,9 @@ export * as TodoAdapterDriven from "./domain/todo/adapter/TodoAdapterDriven.js"
 export * as TodoAdapterDriving from "./domain/todo/adapter/TodoAdapterDriving.js"
 
 
+export * as TodoAdapterEventEmitter from "./domain/todo/adapter/TodoAdapterEventEmitter.js"
+
+
 export * as TodoAdapterPolicy from "./domain/todo/adapter/TodoAdapterPolicy.js"
 
 
@@ -126,6 +138,9 @@ export * as UserAdapterDriven from "./domain/user/adapter/UserAdapterDriven.js"
 
 
 export * as UserAdapterDriving from "./domain/user/adapter/UserAdapterDriving.js"
+
+
+export * as UserAdapterEventEmitter from "./domain/user/adapter/UserAdapterEventEmitter.js"
 
 
 export * as UserAdapterPolicy from "./domain/user/adapter/UserAdapterPolicy.js"

@@ -7,10 +7,11 @@ import { AccessToken } from "@template/domain/user/application/UserApplicationDo
 import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
 import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
-import { Effect, Layer, Redacted } from "effect"
+import { Effect, Exit, Layer, Redacted } from "effect"
 import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountPortDriving } from "../../account/application/AccountApplicationPortDriving.js"
+import { UserEventEmitter } from "../adapter/UserAdapterEventEmitter.js"
 import { makeUserReadResolver, UserReadByAccessToken, UserReadById } from "./UserApplicationCache.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 import { UserPortDriving } from "./UserApplicationPortDriving.js"
@@ -18,6 +19,7 @@ import { UserPortDriving } from "./UserApplicationPortDriving.js"
 export const UserUseCase = Layer.effect(
   UserPortDriving,
   Effect.gen(function*() {
+    const eventEmitter = yield* UserEventEmitter
     const account = yield* AccountPortDriving
     const driven = yield* UserPortDriven
     const uuid = yield* PortUUID
@@ -38,6 +40,12 @@ export const UserUseCase = Layer.effect(
             Effect.flatMap((accountId) =>
               driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId }).pipe(
                 Effect.flatMap((userId) => readByIdWithSensitive(userId)),
+                Effect.tap((out) =>
+                  eventEmitter.emit("UserUseCaseCreate", {
+                    in: { user: { ...user, ownerId: accountId } },
+                    out: Exit.succeed(out)
+                  })
+                ),
                 Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user } }),
                 policyRequire("User", "create")
               )
@@ -49,6 +57,12 @@ export const UserUseCase = Layer.effect(
     const del = (id: UserId): Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">> =>
       driven.delete(id)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("UserUseCaseDelete", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("User", "delete")
         )
@@ -58,6 +72,12 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<SuccessArray<User, never, never>, never, ActorAuthorized<"User", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("UserUseCaseReadAll", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyRequire("User", "readAll")
         )
@@ -67,6 +87,12 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, ActorAuthorized<"User", "readByAccessToken">> =>
       Effect.request(new UserReadByAccessToken({ accessToken }), resolver)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("UserUseCaseReadByAccessToken", {
+              in: { accessToken },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("UserUseCase", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
           }),
@@ -76,6 +102,12 @@ export const UserUseCase = Layer.effect(
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
       Effect.request(new UserReadById({ id }), resolver)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("UserUseCaseReadById", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("User", "readById")
         )
@@ -85,6 +117,12 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<UserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
       driven.readByIdWithSensitive(id)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } }),
           policyRequire("User", "readByIdWithSensitive")
         )
@@ -95,6 +133,12 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">> =>
       driven.update(id, user)
         .pipe(
+          Effect.tap((out) =>
+            eventEmitter.emit("UserUseCaseUpdate", {
+              in: { id, user },
+              out: Exit.succeed(out)
+            })
+          ),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } }),
           policyRequire("User", "update")
         )
