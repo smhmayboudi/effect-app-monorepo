@@ -25,7 +25,7 @@ export const makeGroupReadResolver = Effect.gen(function*() {
         Effect.withSpan("GroupUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "GroupReadById", requests }
         }),
-        Effect.tap(() => Effect.logInfo("DB hit: GroupReadById", requests.length))
+        Effect.tap(() => Effect.logDebug("DB hit: GroupReadById", requests.length))
       )
   }).pipe(
     persisted({

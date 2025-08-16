@@ -25,7 +25,7 @@ export const makeTodoReadResolver = Effect.gen(function*() {
         Effect.withSpan("TodoUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "TodoReadById", requests }
         }),
-        Effect.tap(() => Effect.logInfo("DB hit: TodoReadById", requests.length))
+        Effect.tap(() => Effect.logDebug("DB hit: TodoReadById", requests.length))
       )
   }).pipe(
     persisted({

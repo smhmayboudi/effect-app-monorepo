@@ -25,7 +25,7 @@ export const makePersonReadResolver = Effect.gen(function*() {
         Effect.withSpan("PersonUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "PersonReadById", requests }
         }),
-        Effect.tap(() => Effect.logInfo("DB hit: PersonReadById", requests.length))
+        Effect.tap(() => Effect.logDebug("DB hit: PersonReadById", requests.length))
       )
   }).pipe(
     persisted({

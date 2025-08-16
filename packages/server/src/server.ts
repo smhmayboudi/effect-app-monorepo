@@ -7,7 +7,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
-import { Effect, Layer } from "effect"
+import { Effect, Layer, Logger, LogLevel } from "effect"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
 
@@ -31,6 +31,7 @@ const HttpApiLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
   Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
   Layer.provide(ApiLive),
   Layer.provide(NodeContext.layer),
+  Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),
   HttpServer.withLogAddress,
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 }))
 )

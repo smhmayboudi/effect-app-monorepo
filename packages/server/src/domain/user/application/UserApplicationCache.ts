@@ -36,14 +36,14 @@ export const makeUserReadResolver = Effect.gen(function*() {
         Effect.withSpan("UserUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "UserReadByAccessToken", requests }
         }),
-        Effect.tap(() => Effect.logInfo("DB hit: UserReadByAccessToken", requests.length))
+        Effect.tap(() => Effect.logDebug("DB hit: UserReadByAccessToken", requests.length))
       ),
     UserReadById: (requests) =>
       driven.readByIds(requests.map((req) => req.id)).pipe(
         Effect.withSpan("UserUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "UserReadById", requests }
         }),
-        Effect.tap(() => Effect.logInfo("DB hit: UserReadById", requests.length))
+        Effect.tap(() => Effect.logDebug("DB hit: UserReadById", requests.length))
       )
   }).pipe(
     persisted({

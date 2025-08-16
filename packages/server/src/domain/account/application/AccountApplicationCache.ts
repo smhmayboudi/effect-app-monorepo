@@ -25,7 +25,7 @@ export const makeAccountReadResolver = Effect.gen(function*() {
         Effect.withSpan("AccountUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "AccountReadById", requests }
         }),
-        Effect.tap(() => Effect.logInfo("DB hit: AccountReadById", requests.length))
+        Effect.tap(() => Effect.logDebug("DB hit: AccountReadById", requests.length))
       )
   }).pipe(
     persisted({
