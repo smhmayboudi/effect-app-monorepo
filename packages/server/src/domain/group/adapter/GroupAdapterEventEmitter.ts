@@ -1,3 +1,4 @@
+import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Effect, Layer } from "effect"
 import { GroupPortEventEmitter } from "../application/GroupApplicationPortEventEmitter.js"
 
@@ -6,11 +7,16 @@ export const GroupEventEmitter = Layer.effectDiscard(
     GroupPortEventEmitter,
     (eventEmitter) =>
       Effect.all([
-        eventEmitter.on("GroupUseCaseCreate", Effect.logDebug),
-        eventEmitter.on("GroupUseCaseDelete", Effect.logDebug),
-        eventEmitter.on("GroupUseCaseReadAll", Effect.logDebug),
-        eventEmitter.on("GroupUseCaseReadById", Effect.logDebug),
-        eventEmitter.on("GroupUseCaseUpdate", Effect.logInfo)
+        eventEmitter.on("GroupUseCaseCreate", (data) =>
+          Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "GroupUseCaseCreate", ...data })),
+        eventEmitter.on("GroupUseCaseDelete", (data) =>
+          Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "GroupUseCaseDelete", ...data })),
+        eventEmitter.on("GroupUseCaseReadAll", (data) =>
+          Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "GroupUseCaseReadAll", ...data })),
+        eventEmitter.on("GroupUseCaseReadById", (data) =>
+          Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "GroupUseCaseReadById", ...data })),
+        eventEmitter.on("GroupUseCaseUpdate", (data) =>
+          Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "GroupUseCaseUpdate", ...data }))
       ], { concurrency: "unbounded" })
   )
 )
