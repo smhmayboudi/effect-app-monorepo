@@ -30,7 +30,7 @@ type UserEvents = {
   UserUseCaseReadByIdWithSensitive: { in: { id: UserId }; out: Exit.Exit<UserWithSensitive> }
   UserUseCaseUpdate: {
     in: { id: UserId; user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">> }
-    out: Exit.Exit<UserId, UserErrorNotFound>
+    out: Exit.Exit<UserId, UserErrorNotFound | UserErrorEmailAlreadyTaken>
   }
 }
 

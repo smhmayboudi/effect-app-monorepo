@@ -23,12 +23,18 @@ export const GroupUseCase = Layer.effect(
     ): Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">> =>
       driven.create(group)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("GroupUseCaseCreate", {
-              in: { group },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("GroupUseCaseCreate", {
+                in: { group },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("GroupUseCaseCreate", {
+                in: { group },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", group } }),
           policyRequire("Group", "create")
         )
@@ -36,12 +42,18 @@ export const GroupUseCase = Layer.effect(
     const del = (id: GroupId): Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "delete">> =>
       driven.delete(id)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("GroupUseCaseDelete", {
-              in: { id },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("GroupUseCaseDelete", {
+                in: { id },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("GroupUseCaseDelete", {
+                in: { id },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("Group", "delete")
         )
@@ -51,12 +63,18 @@ export const GroupUseCase = Layer.effect(
     ): Effect.Effect<SuccessArray<Group, never, never>, never, ActorAuthorized<"Group", "readAll">> =>
       driven.readAll(urlParams)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("GroupUseCaseReadAll", {
-              in: { urlParams },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("GroupUseCaseReadAll", {
+                in: { urlParams },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("GroupUseCaseReadAll", {
+                in: { urlParams },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
           policyRequire("Group", "readAll")
         )
@@ -66,12 +84,18 @@ export const GroupUseCase = Layer.effect(
     ): Effect.Effect<Group, GroupErrorNotFound, ActorAuthorized<"Group", "readById">> =>
       Effect.request(new GroupReadById({ id }), resolver)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("GroupUseCaseReadById", {
-              in: { id },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("GroupUseCaseReadById", {
+                in: { id },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("GroupUseCaseReadById", {
+                in: { id },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("Group", "readById")
         )
@@ -82,12 +106,18 @@ export const GroupUseCase = Layer.effect(
     ): Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "update">> =>
       driven.update(id, group)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("GroupUseCaseUpdate", {
-              in: { id, group },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("GroupUseCaseUpdate", {
+                in: { id, group },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("GroupUseCaseUpdate", {
+                in: { id, group },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group } }),
           policyRequire("Group", "update")
         )

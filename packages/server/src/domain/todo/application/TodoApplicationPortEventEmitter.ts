@@ -1,6 +1,7 @@
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
+import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import type { Exit } from "effect"
 import { PortEventEmitter } from "../../../infrastructure/application/PortEventEmitter.js"
@@ -8,7 +9,7 @@ import { PortEventEmitter } from "../../../infrastructure/application/PortEventE
 type TodoEvents = {
   TodoUseCaseCreate: {
     in: { todo: Omit<Todo, "id" | "createdAt" | "updatedAt"> }
-    out: Exit.Exit<TodoId>
+    out: Exit.Exit<TodoId, TodoErrorAlreadyExists>
   }
   TodoUseCaseDelete: { in: { id: TodoId }; out: Exit.Exit<TodoId, TodoErrorNotFound> }
   TodoUseCaseReadAll: {

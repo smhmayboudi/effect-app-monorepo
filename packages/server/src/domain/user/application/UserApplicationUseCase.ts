@@ -40,12 +40,18 @@ export const UserUseCase = Layer.effect(
             Effect.flatMap((accountId) =>
               driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId }).pipe(
                 Effect.flatMap((userId) => readByIdWithSensitive(userId)),
-                Effect.tap((out) =>
-                  eventEmitter.emit("UserUseCaseCreate", {
-                    in: { user: { ...user, ownerId: accountId } },
-                    out: Exit.succeed(out)
-                  })
-                ),
+                Effect.tapBoth({
+                  onFailure: (out) =>
+                    eventEmitter.emit("UserUseCaseCreate", {
+                      in: { user: { ...user, ownerId: accountId } },
+                      out: Exit.fail(out)
+                    }),
+                  onSuccess: (out) =>
+                    eventEmitter.emit("UserUseCaseCreate", {
+                      in: { user: { ...user, ownerId: accountId } },
+                      out: Exit.succeed(out)
+                    })
+                }),
                 Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user } }),
                 policyRequire("User", "create")
               )
@@ -57,12 +63,18 @@ export const UserUseCase = Layer.effect(
     const del = (id: UserId): Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">> =>
       driven.delete(id)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("UserUseCaseDelete", {
-              in: { id },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("UserUseCaseDelete", {
+                in: { id },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("UserUseCaseDelete", {
+                in: { id },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
           policyRequire("User", "delete")
         )
@@ -87,12 +99,18 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, ActorAuthorized<"User", "readByAccessToken">> =>
       Effect.request(new UserReadByAccessToken({ accessToken }), resolver)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("UserUseCaseReadByAccessToken", {
-              in: { accessToken },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("UserUseCaseReadByAccessToken", {
+                in: { accessToken },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("UserUseCaseReadByAccessToken", {
+                in: { accessToken },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("UserUseCase", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
           }),
@@ -102,12 +120,18 @@ export const UserUseCase = Layer.effect(
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
       Effect.request(new UserReadById({ id }), resolver)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("UserUseCaseReadById", {
-              in: { id },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("UserUseCaseReadById", {
+                in: { id },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("UserUseCaseReadById", {
+                in: { id },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
           policyRequire("User", "readById")
         )
@@ -117,12 +141,18 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<UserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
       driven.readByIdWithSensitive(id)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
-              in: { id },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
+                in: { id },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
+                in: { id },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } }),
           policyRequire("User", "readByIdWithSensitive")
         )
@@ -133,12 +163,18 @@ export const UserUseCase = Layer.effect(
     ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">> =>
       driven.update(id, user)
         .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("UserUseCaseUpdate", {
-              in: { id, user },
-              out: Exit.succeed(out)
-            })
-          ),
+          Effect.tapBoth({
+            onFailure: (out) =>
+              eventEmitter.emit("UserUseCaseUpdate", {
+                in: { id, user },
+                out: Exit.fail(out)
+              }),
+            onSuccess: (out) =>
+              eventEmitter.emit("UserUseCaseUpdate", {
+                in: { id, user },
+                out: Exit.succeed(out)
+              })
+          }),
           Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } }),
           policyRequire("User", "update")
         )
