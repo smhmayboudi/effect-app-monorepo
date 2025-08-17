@@ -1,5 +1,6 @@
 import { Chunk, Effect, HashMap, Queue, Ref } from "effect"
-import type { EventEmitter } from "../application/PortEventEmitter.js"
+import { makeTestLayer } from "../../util/Layer.js"
+import { type EventEmitter, PortEventEmitter } from "../application/PortEventEmitter.js"
 
 export const make = <Events extends Record<string, any>>(): Effect.Effect<EventEmitter<Events>> =>
   Effect.gen(function*() {
@@ -58,3 +59,46 @@ export const make = <Events extends Record<string, any>>(): Effect.Effect<EventE
 
     return { emit, off, on, once } as const
   })
+
+export const makeTest = <Events extends Record<string, any>>() => {
+  const listeners = new Map<keyof Events, Array<(data: any) => Effect.Effect<any>>>()
+
+  const mock: EventEmitter<Events> = {
+    emit: <K extends keyof Events>(event: K, data: Events[K]) => {
+      const handlers = listeners.get(event) || []
+      return Effect.all(handlers.map((handler) => handler(data)), { concurrency: "unbounded" })
+    },
+    off: <K extends keyof Events>(event: K) => {
+      listeners.delete(event)
+      return Effect.void
+    },
+    on: <K extends keyof Events>(
+      event: K,
+      callback: (data: Events[K]) => Effect.Effect<any>
+    ) => {
+      if (!listeners.has(event)) {
+        listeners.set(event, [])
+      }
+      listeners.get(event)!.push(callback)
+      return Effect.void
+    },
+    once: <K extends keyof Events>(
+      event: K,
+      callback: (data: Events[K]) => Effect.Effect<any>
+    ) => {
+      const wrapper = (data: Events[K]) => {
+        const eventListeners = listeners.get(event)
+        if (eventListeners) {
+          const index = eventListeners.indexOf(wrapper)
+          if (index > -1) {
+            eventListeners.splice(index, 1)
+          }
+        }
+        return callback(data)
+      }
+      return mock.on(event, wrapper)
+    }
+  }
+
+  return makeTestLayer(PortEventEmitter<Events>())(mock)
+}
