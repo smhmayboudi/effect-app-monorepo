@@ -1,5 +1,7 @@
+import { ResultPersistence } from "@effect/experimental/Persistence"
 import { layerResultConfig } from "@effect/experimental/Persistence/Redis"
 import { Config } from "effect"
+import { makeTestLayer } from "../../util/Layer.js"
 
 const RedisConfig = Config.nested(
   Config.all({
@@ -14,3 +16,5 @@ const RedisConfig = Config.nested(
 )
 
 export const Redis = layerResultConfig(RedisConfig)
+
+export const RedisTest = makeTestLayer(ResultPersistence)({})
