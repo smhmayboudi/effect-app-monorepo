@@ -13,6 +13,8 @@ import { GroupEventEmitter } from "./domain/group/adapter/GroupAdapterEventEmitt
 import { GroupPolicy } from "./domain/group/adapter/GroupAdapterPolicy.js"
 import { GroupPortEventEmitter } from "./domain/group/application/GroupApplicationPortEventEmitter.js"
 import { GroupUseCase } from "./domain/group/application/GroupApplicationUseCase.js"
+import { HealthzDriving } from "./domain/healthz/adapter/HealthzAdapterDriving.js"
+import { HealthzUseCase } from "./domain/healthz/application/HealthzApplicationUseCase.js"
 import { PersonDriven } from "./domain/person/adapter/PersonAdapterDriven.js"
 import { PersonDriving } from "./domain/person/adapter/PersonAdapterDriving.js"
 import { PersonEventEmitter } from "./domain/person/adapter/PersonAdapterEventEmitter.js"
@@ -58,6 +60,10 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(GroupPolicy),
     Layer.provide(GroupEventEmitter),
     Layer.provide(Layer.effect(GroupPortEventEmitter, make()))
+  )
+  .pipe(
+    Layer.provide(HealthzDriving),
+    Layer.provide(HealthzUseCase)
   )
   .pipe(
     Layer.provide(SSEDriving),

@@ -26,6 +26,9 @@ export * as GroupApplicationDomain from "./group/application/GroupApplicationDom
 export * as GroupApplicationErrorNotFound from "./group/application/GroupApplicationErrorNotFound.js"
 
 
+export * as HealthzAdapterDriving from "./healthz/adapter/HealthzAdapterDriving.js"
+
+
 export * as PersonAdapterDriving from "./person/adapter/PersonAdapterDriving.js"
 
 
