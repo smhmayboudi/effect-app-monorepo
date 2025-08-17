@@ -101,6 +101,6 @@ export const SSEManager = Layer.effect(
       notifyUser,
       registerConnection,
       unregisterConnection
-    }
+    } as const
   })
 )
