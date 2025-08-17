@@ -1,6 +1,16 @@
-import { layerResult } from "@effect/experimental/Persistence/Redis"
+import { layerResultConfig } from "@effect/experimental/Persistence/Redis"
+import { Config } from "effect"
 
-export const Redis = layerResult({
-  host: "127.0.0.1",
-  port: 6379
-})
+const RedisConfig = Config.nested(
+  Config.all({
+    host: Config.string("HOST").pipe(
+      Config.withDefault("127.0.0.1")
+    ),
+    port: Config.integer("PORT").pipe(
+      Config.withDefault(6379)
+    )
+  }),
+  "REDIS"
+)
+
+export const Redis = layerResultConfig(RedisConfig)
