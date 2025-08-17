@@ -107,6 +107,43 @@ services:
       - ./.docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
       - redis:/data
 
+  server:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: server
+    container_name: effect-app-monorepo-server
+    depends_on:
+      redis:
+        condition: service_healthy
+      otel-lgtm:
+        condition: service_healthy
+    environment:
+      - CLIENT_REDIS_HOST=redis
+      - CLIENT_REDIS_PORT=6379
+      - CLIENT_SQLITE_FILENAME=./db.sqlite
+      - SERVER_ACCOUNT_CACHE_TTL_MS=30000
+      - SERVER_GROUP_CACHE_TTL_MS=30000
+      - SERVER_PERSON_CACHE_TTL_MS=30000
+      - SERVER_TODO_CACHE_TTL_MS=30000
+      - SERVER_USER_CACHE_TTL_MS=30000
+    expose:
+      - 3001
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD-SHELL
+        - wget --no-verbose --spider --tries=1 http://server:3001/healthz
+      timeout: 10s
+    labels:
+      namespace: server
+    logging: *logging
+    ports:
+      - "3001:3001"
+    restart: "no"
+
 volumes:
   # elasticsearch: {}
   otel-lgtm: {}

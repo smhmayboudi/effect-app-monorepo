@@ -1,0 +1,7 @@
+**/.tsbuildinfo/**
+**/build/**
+**/coverage/**
+**/dist/**
+**/node_modules/**
+db.sqlite
+db.sqlite-*
