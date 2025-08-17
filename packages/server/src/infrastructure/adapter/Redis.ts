@@ -10,7 +10,7 @@ const RedisConfig = Config.nested(
       Config.withDefault(6379)
     )
   }),
-  "REDIS"
+  "CLIENT_REDIS"
 )
 
 export const Redis = layerResultConfig(RedisConfig)

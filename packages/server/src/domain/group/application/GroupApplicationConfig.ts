@@ -6,5 +6,5 @@ export const GroupConfig = Config.nested(
       Config.withDefault(30_000)
     )
   }),
-  "GROUP"
+  "SERVER_GROUP"
 )

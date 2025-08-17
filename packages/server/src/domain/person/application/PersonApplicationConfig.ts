@@ -6,5 +6,5 @@ export const PersonConfig = Config.nested(
       Config.withDefault(30_000)
     )
   }),
-  "PERSON"
+  "SERVER_PERSON"
 )

@@ -6,5 +6,5 @@ export const TodoConfig = Config.nested(
       Config.withDefault(30_000)
     )
   }),
-  "TODO"
+  "SERVER_TODO"
 )

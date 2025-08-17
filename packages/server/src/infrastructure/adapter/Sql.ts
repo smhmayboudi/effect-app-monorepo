@@ -10,7 +10,7 @@ const SqliteConfig = Config.nested(
       Config.withDefault("./db.sqlite")
     )
   }),
-  "SQLITE"
+  "CLIENT_SQLITE"
 )
 
 const Client = Layer.unwrapEffect(
