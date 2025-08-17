@@ -92,7 +92,7 @@ export const ApiLive = HttpApiBuilder.api(Api)
   )
   .pipe(
     Layer.provide(AccountDriving),
-    // Layer.provide(MiddlewareAuthenticationLive),
+    // Layer.provide(MiddlewareAuthentication),
     Layer.provide(AccountUseCase),
     Layer.provide(AccountDriven),
     Layer.provide(AccountPolicy),
