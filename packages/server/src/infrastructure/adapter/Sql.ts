@@ -1,14 +1,27 @@
 import { SqlClient } from "@effect/sql"
 import { SqliteClient, SqliteMigrator } from "@effect/sql-sqlite-node"
-import { identity, Layer, String } from "effect"
+import { Config, Effect, identity, Layer, String } from "effect"
 import { fileURLToPath } from "url"
 import { makeTestLayer } from "../../util/Layer.js"
 
-const Client = SqliteClient.layer({
-  filename: "./db.sqlite",
-  transformQueryNames: String.camelToSnake,
-  transformResultNames: String.snakeToCamel
-})
+const SqliteConfig = Config.nested(
+  Config.all({
+    filename: Config.string("FILENAME").pipe(
+      Config.withDefault("./db.sqlite")
+    )
+  }),
+  "SQLITE"
+)
+
+const Client = Layer.unwrapEffect(
+  Config.unwrap(SqliteConfig).pipe(Effect.map((config) =>
+    SqliteClient.layer({
+      filename: config.filename,
+      transformQueryNames: String.camelToSnake,
+      transformResultNames: String.snakeToCamel
+    })
+  ))
+)
 
 const Migrator = SqliteMigrator.layer({
   loader: SqliteMigrator.fromFileSystem(
