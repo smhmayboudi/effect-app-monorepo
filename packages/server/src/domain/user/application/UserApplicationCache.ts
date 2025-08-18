@@ -4,6 +4,7 @@ import { AccessToken, User, UserId } from "@template/domain/user/application/Use
 import { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Exit, PrimaryKey, Redacted, RequestResolver, Schema } from "effect"
+import { logDebugWithTrace } from "../../../util/Logger.js"
 import { UserConfig } from "./UserApplicationConfig.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 
@@ -36,14 +37,14 @@ export const makeUserReadResolver = Effect.gen(function*() {
         Effect.withSpan("UserUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "UserReadByAccessToken", requests }
         }),
-        Effect.tap(() => Effect.logDebug("DB hit: UserReadByAccessToken", requests.length))
+        Effect.tap(() => logDebugWithTrace(`DB hit: UserReadByAccessToken ${requests.length}`))
       ),
     UserReadById: (requests) =>
       driven.readByIds(requests.map((req) => req.id)).pipe(
         Effect.withSpan("UserUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "UserReadById", requests }
         }),
-        Effect.tap(() => Effect.logDebug("DB hit: UserReadById", requests.length))
+        Effect.tap(() => logDebugWithTrace(`DB hit: UserReadById ${requests.length}`))
       )
   }).pipe(
     persisted({

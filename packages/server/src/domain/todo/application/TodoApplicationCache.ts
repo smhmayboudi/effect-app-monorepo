@@ -3,6 +3,7 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import { logDebugWithTrace } from "../../../util/Logger.js"
 import { TodoConfig } from "./TodoApplicationConfig.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 
@@ -25,7 +26,7 @@ export const makeTodoReadResolver = Effect.gen(function*() {
         Effect.withSpan("TodoUseCase", {
           attributes: { [ATTR_CODE_FUNCTION_NAME]: "TodoReadById", requests }
         }),
-        Effect.tap(() => Effect.logDebug("DB hit: TodoReadById", requests.length))
+        Effect.tap(() => logDebugWithTrace(`DB hit: TodoReadById ${requests.length}`))
       )
   }).pipe(
     persisted({
