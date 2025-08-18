@@ -56,7 +56,7 @@ describe("AccountUseCase", () => {
 
   it.scoped("should be readAll", () => {
     const now = new Date()
-    const acc = new Account({
+    const AccountTest = new Account({
       id: AccountId.make(1),
       createdAt: now,
       updatedAt: now
@@ -68,7 +68,7 @@ describe("AccountUseCase", () => {
         withSystemActor
       )
       assert.deepStrictEqual(accountList, {
-        data: [acc],
+        data: [AccountTest],
         total: 1
       })
     }).pipe(
@@ -78,7 +78,7 @@ describe("AccountUseCase", () => {
         makeTestLayer(AccountPortDriven)({
           readAll: (_urlParams) =>
             Effect.succeed({
-              data: [acc],
+              data: [AccountTest],
               total: 1
             })
         })
@@ -89,7 +89,7 @@ describe("AccountUseCase", () => {
 
   it.scoped("should be readById", () => {
     const now = new Date()
-    const acc = new Account({
+    const AccountTest = new Account({
       id: AccountId.make(1),
       createdAt: now,
       updatedAt: now
@@ -100,14 +100,14 @@ describe("AccountUseCase", () => {
       const account = yield* accounts.readById(AccountId.make(1)).pipe(
         withSystemActor
       )
-      assert.strictEqual(account, acc)
+      assert.strictEqual(account, AccountTest)
     }).pipe(
       Effect.provide(AccountUseCase),
       Effect.provide(makeTest()),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({
-          readById: (_id) => Effect.succeed(acc),
-          readByIds: (_ids) => Effect.succeed([acc])
+          readById: (_id) => Effect.succeed(AccountTest),
+          readByIds: (_ids) => Effect.succeed([AccountTest])
         })
       ),
       Effect.provide(RedisTest)
