@@ -5,6 +5,9 @@ export * as Api from "./Api.js"
 export * as MiddlewareAuthentication from "./MiddlewareAuthentication.js"
 
 
+export * as MiddlewareMetric from "./MiddlewareMetric.js"
+
+
 export * as AccountAdapterDriven from "./domain/account/adapter/AccountAdapterDriven.js"
 
 

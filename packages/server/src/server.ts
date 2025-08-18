@@ -7,9 +7,10 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
-import { Effect, Layer, Logger, LogLevel } from "effect"
+import { Effect, flow, Layer, Logger, LogLevel } from "effect"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
+import { MiddlewareMetric } from "./MiddlewareMetric.js"
 
 const NodeSdkLive = NodeSdk.layer(() => ({
   logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),
@@ -18,7 +19,7 @@ const NodeSdkLive = NodeSdk.layer(() => ({
   spanProcessor: new BatchSpanProcessor(new OTLPTraceExporter())
 }))
 
-const HttpApiLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
+const HttpApiLive = HttpApiBuilder.serve(flow(HttpMiddleware.logger, MiddlewareMetric)).pipe(
   Layer.provide(NodeSdkLive),
   Layer.provide(HttpApiBuilder.middlewareCors({
     allowedOrigins: ["*"],
