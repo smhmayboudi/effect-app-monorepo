@@ -5,7 +5,7 @@ import { Email } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer, Redacted } from "effect"
 
 const myClient = HttpClient.make((req) => {
-  if (req.method === "POST" && req.url === "http://localhost:3001/user") {
+  if (req.method === "POST" && req.url === "http://localhost:3001/api/v1/user") {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
@@ -22,7 +22,7 @@ const myClient = HttpClient.make((req) => {
       )
     )
   }
-  if (req.method === "GET" && req.url === "http://localhost:3001/todo") {
+  if (req.method === "GET" && req.url === "http://localhost:3001/api/v1/todo") {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
@@ -30,7 +30,7 @@ const myClient = HttpClient.make((req) => {
       )
     )
   }
-  if (req.method === "DELETE" && req.url === "http://localhost:3001/user/1") {
+  if (req.method === "DELETE" && req.url === "http://localhost:3001/api/v1/user/1") {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,

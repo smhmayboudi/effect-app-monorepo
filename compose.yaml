@@ -135,7 +135,7 @@ services:
       start_period: 10s
       test:
         - CMD-SHELL
-        - wget --no-verbose --spider --tries=1 http://server:3001/healthz
+        - wget --no-verbose --spider --tries=1 http://server:3001/api/v1/healthz
       timeout: 10s
     labels:
       namespace: server
