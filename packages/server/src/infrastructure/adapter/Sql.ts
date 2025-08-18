@@ -25,7 +25,7 @@ const Client = Layer.unwrapEffect(
 
 const Migrator = SqliteMigrator.layer({
   loader: SqliteMigrator.fromFileSystem(
-    fileURLToPath(new URL("../../migrations/", import.meta.url))
+    fileURLToPath(new URL("../../migration/", import.meta.url))
   ),
   table: "tbl_sql_migration"
 })

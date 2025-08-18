@@ -1,0 +1,19 @@
+import { SqlClient } from "@effect/sql"
+import { Effect } from "effect"
+
+export default Effect.gen(function*() {
+  const sql = yield* SqlClient.SqlClient
+  yield* sql`CREATE VIEW vw_user_todo AS
+    SELECT 
+      u.id as user_id,
+      u.email as user_email,
+      u.created_at as user_created_at,
+      u.updated_at as user_updated_at,
+      t.id as todo_id,
+      t.text as todo_text,
+      t.done as todo_done,
+      t.created_at as todo_created_at,
+      t.updated_at as todo_updated_at
+    FROM tbl_user u
+    JOIN tbl_todo t ON u.owner_id = t.owner_id`
+})

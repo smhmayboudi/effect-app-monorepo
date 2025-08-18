@@ -46,7 +46,7 @@
   "effect": {
     "generateExports": {
       "exclude": [
-        "**/migrations/*.ts"
+        "**/migration/*.ts"
       ],
       "include": [
         "**/*.ts"
@@ -54,7 +54,7 @@
     },
     "generateIndex": {
       "exclude": [
-        "**/migrations/*.ts"
+        "**/migration/*.ts"
       ],
       "include": [
         "**/*.ts"
