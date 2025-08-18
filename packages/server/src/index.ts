@@ -198,6 +198,9 @@ export * as Cache from "./infrastructure/adapter/Cache.js"
 export * as DrizzleSqlite from "./infrastructure/adapter/DrizzleSqlite.js"
 
 
+export * as Elasticsearch from "./infrastructure/adapter/Elasticsearch.js"
+
+
 export * as EventEmitter from "./infrastructure/adapter/EventEmitter.js"
 
 
@@ -229,6 +232,9 @@ export * as PortCache from "./infrastructure/application/PortCache.js"
 
 
 export * as PortDrizzleSqlite from "./infrastructure/application/PortDrizzleSqlite.js"
+
+
+export * as PortElasticsearch from "./infrastructure/application/PortElasticsearch.js"
 
 
 export * as PortEventEmitter from "./infrastructure/application/PortEventEmitter.js"
