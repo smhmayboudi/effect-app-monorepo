@@ -26,7 +26,7 @@ const myClient = HttpClient.make((req) => {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
-        new Response(JSON.stringify({ data: [] }))
+        new Response(JSON.stringify({ data: [], hasMore: false, limit: 0, offset: 0, total: 0 }))
       )
     )
   }
@@ -67,7 +67,7 @@ describe("TodoApi", () => {
           })
         })
       )
-      const todos = yield* clientWithAuth.todo.readAll()
+      const todos = yield* clientWithAuth.todo.readAll({ urlParams: {} })
       expect(todos.data.length).toEqual(0)
       yield* clientWithAuth.user.delete({ path: { id: user.data.id } })
     }).pipe(

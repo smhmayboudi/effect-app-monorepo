@@ -1,5 +1,6 @@
 import { assert, describe, it } from "@effect/vitest"
 import { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
+import { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
 import { AccountPortDriven } from "@template/server/domain/account/application/AccountApplicationPortDriven"
 import { AccountPortDriving } from "@template/server/domain/account/application/AccountApplicationPortDriving"
 import { AccountUseCase } from "@template/server/domain/account/application/AccountApplicationUseCase"
@@ -8,7 +9,6 @@ import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
 import { Effect } from "effect"
-import { AccountErrorNotFound } from "../../domain/src/account/application/AccountApplicationErrorNotFound.js"
 
 describe("AccountUseCase", () => {
   it.scoped("should be created", () =>
@@ -42,7 +42,7 @@ describe("AccountUseCase", () => {
   it.scoped.fails("should be deleted with AccountErrorNotFound", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      const _accountId = yield* accounts.delete(AccountId.make(1)).pipe(
+      yield* accounts.delete(AccountId.make(1)).pipe(
         withSystemActor
       )
     }).pipe(
@@ -117,7 +117,7 @@ describe("AccountUseCase", () => {
   it.scoped.fails("should be readById with AccountErrorNotFound", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      const _account = yield* accounts.readById(AccountId.make(1)).pipe(
+      yield* accounts.readById(AccountId.make(1)).pipe(
         withSystemActor
       )
     }).pipe(
@@ -153,7 +153,7 @@ describe("AccountUseCase", () => {
   it.scoped.fails("should be update with AccountErrorNotFound", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      const _accountId = yield* accounts.update(AccountId.make(1), {}).pipe(
+      yield* accounts.update(AccountId.make(1), {}).pipe(
         withSystemActor
       )
     }).pipe(
