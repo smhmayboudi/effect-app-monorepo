@@ -200,6 +200,9 @@ export * as VWAdapterDriven from "./domain/vw/adapter/VWAdapterDriven.js"
 export * as VWAdapterDriving from "./domain/vw/adapter/VWAdapterDriving.js"
 
 
+export * as VWAdapterElasticsearch from "./domain/vw/adapter/VWAdapterElasticsearch.js"
+
+
 export * as VWAdapterEventEmitter from "./domain/vw/adapter/VWAdapterEventEmitter.js"
 
 
@@ -210,6 +213,9 @@ export * as VWApplicationPortDriven from "./domain/vw/application/VWApplicationP
 
 
 export * as VWApplicationPortDriving from "./domain/vw/application/VWApplicationPortDriving.js"
+
+
+export * as VWApplicationPortElasticsearch from "./domain/vw/application/VWApplicationPortElasticsearch.js"
 
 
 export * as VWApplicationPortEventEmitter from "./domain/vw/application/VWApplicationPortEventEmitter.js"

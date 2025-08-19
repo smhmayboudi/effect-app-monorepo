@@ -38,6 +38,7 @@ import { UserPortEventEmitter } from "./domain/user/application/UserApplicationP
 import { UserUseCase } from "./domain/user/application/UserApplicationUseCase.js"
 import { VWDriven } from "./domain/vw/adapter/VWAdapterDriven.js"
 import { VWDriving } from "./domain/vw/adapter/VWAdapterDriving.js"
+import { VWElasticsearch } from "./domain/vw/adapter/VWAdapterElasticsearch.js"
 import { VWEventEmitter } from "./domain/vw/adapter/VWAdapterEventEmitter.js"
 import { VWPolicy } from "./domain/vw/adapter/VWAdapterPolicy.js"
 import { VWPortEventEmitter } from "./domain/vw/application/VWApplicationPortEventEmitter.js"
@@ -85,6 +86,7 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(Layer.effect(TodoPortEventEmitter, make()))
   )
   .pipe(
+    Layer.provide(VWElasticsearch),
     Layer.provide(VWDriving),
     Layer.provide(VWUseCase),
     Layer.provide(VWDriven),

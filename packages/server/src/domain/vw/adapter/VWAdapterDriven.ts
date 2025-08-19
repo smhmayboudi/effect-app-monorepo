@@ -17,33 +17,21 @@ export const VWDriven = Layer.effect(
     ): Effect.Effect<SuccessArray<UserGroupPerson, never, never>, never, never> =>
       Effect.tryPromise(() =>
         elasticsearch.search<UserGroupPerson>({
-          index: "user_group_person",
-          query: {
-            bool: {
-              must: [
-                {
-                  multi_match: {
-                    fields: ["person_first_name"],
-                    query: "TODO: data.query"
-                  }
-                }
-              ]
-            }
-          }
+          index: "vw_user_group_person",
+          query: { match_all: {} }
         })
       ).pipe(
         Effect.flatMap((userGroupPersons) =>
           Effect.all(
-            userGroupPersons.hits.hits.map((userGroupPerson) => UserGroupPerson.decodeUnknown(userGroupPerson))
+            userGroupPersons.hits.hits.map((hit) => UserGroupPerson.decodeUnknown(hit._source))
+          ).pipe(
+            Effect.map((data) => ({
+              data,
+              total: typeof userGroupPersons.hits.total === "number"
+                ? userGroupPersons.hits.total
+                : userGroupPersons.hits.total?.value ?? 0
+            }))
           )
-            .pipe(
-              Effect.map((data) => ({
-                data,
-                total: typeof userGroupPersons.hits.total === "number"
-                  ? userGroupPersons.hits.total
-                  : userGroupPersons.hits.total?.value ?? 0
-              }))
-            )
         ),
         Effect.catchTag("ParseError", Effect.die),
         Effect.catchTag("UnknownException", Effect.die),
@@ -57,33 +45,21 @@ export const VWDriven = Layer.effect(
     ): Effect.Effect<SuccessArray<UserTodo, never, never>, never, never> =>
       Effect.tryPromise(() =>
         elasticsearch.search<UserTodo>({
-          index: "user_todo",
-          query: {
-            bool: {
-              must: [
-                {
-                  multi_match: {
-                    fields: ["person_first_name"],
-                    query: "TODO: data.query"
-                  }
-                }
-              ]
-            }
-          }
+          index: "vw_user_todo",
+          query: { match_all: {} }
         })
       ).pipe(
         Effect.flatMap((userGroupPersons) =>
           Effect.all(
-            userGroupPersons.hits.hits.map((userGroupPerson) => UserTodo.decodeUnknown(userGroupPerson))
+            userGroupPersons.hits.hits.map((hit) => UserTodo.decodeUnknown(hit._source))
+          ).pipe(
+            Effect.map((data) => ({
+              data,
+              total: typeof userGroupPersons.hits.total === "number"
+                ? userGroupPersons.hits.total
+                : userGroupPersons.hits.total?.value ?? 0
+            }))
           )
-            .pipe(
-              Effect.map((data) => ({
-                data,
-                total: typeof userGroupPersons.hits.total === "number"
-                  ? userGroupPersons.hits.total
-                  : userGroupPersons.hits.total?.value ?? 0
-              }))
-            )
         ),
         Effect.catchTag("ParseError", Effect.die),
         Effect.catchTag("UnknownException", Effect.die),
