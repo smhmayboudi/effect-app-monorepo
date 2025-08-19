@@ -46,9 +46,10 @@ export const whenOrFail: {
     condition: LazyArg<boolean>,
     orFailWith: LazyArg<E2>
   ): Effect.Effect<A, E | E2, R> =>
-    // @ts-expect-error - Effect.fail returns Effect<never, E2> and TypeScript tries to unify the success types (A | never).
     // At runtime, Effect.fail short-circuits execution, so the success type is actually just A when the condition is true.
-    Effect.sync(condition).pipe(Effect.flatMap((bool) => (bool ? self : Effect.fail(orFailWith()))))
+    Effect.sync(condition).pipe(
+      Effect.flatMap((bool): Effect.Effect<A, E | E2, R> => bool ? self : Effect.fail(orFailWith()))
+    )
 )
 
 /**
@@ -73,7 +74,6 @@ export const whenEffectOrFail: {
     condition: Effect.Effect<boolean, E2, R2>,
     orFailWith: LazyArg<E3>
   ): Effect.Effect<A, E | E2 | E3, R | R2> =>
-    // @ts-expect-error - Effect.fail returns Effect<never, E3> and TypeScript tries to unify the success types (A | never).
     // At runtime, Effect.fail short-circuits execution, so the success type is actually just A when the condition is true.
-    condition.pipe(Effect.flatMap((bool) => (bool ? self : Effect.fail(orFailWith()))))
+    Effect.flatMap(condition, (bool): Effect.Effect<A, E | E3, R> => bool ? self : Effect.fail(orFailWith()))
 )
