@@ -1,16 +1,8 @@
 import type { Context } from "effect"
 import { Effect, Layer } from "effect"
 
-const makeUnimplemented = (key: string, prop: PropertyKey) => {
-  const dead = Effect.die(`${key}: Unimplemented method "${prop.toString()}"`)
-  function unimplemented() {
-    return dead
-  }
-  Object.assign(unimplemented, dead)
-  Object.setPrototypeOf(unimplemented, Object.getPrototypeOf(dead))
-
-  return unimplemented
-}
+const makeUnimplemented = (key: string, prop: PropertyKey) => () =>
+  Effect.die(`${key}: Unimplemented method "${prop.toString()}"`)
 
 const makeUnimplementedProxy = <A extends object>(
   key: string,
