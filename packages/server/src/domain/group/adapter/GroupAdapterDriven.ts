@@ -64,9 +64,7 @@ export const GroupDriven = Layer.effect(
       )
 
     const readByIds = (ids: Array<GroupId>): Effect.Effect<Array<Group>, GroupErrorNotFound, never> =>
-      sql`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id IN ${
-        sql.in(ids)
-      }`
+      sql`SELECT id, owner_id, name, created_at, updated_at FROM tbl_group WHERE id IN ${sql.in(ids)}`
         .pipe(
           Effect.catchTag("SqlError", Effect.die),
           Effect.flatMap((rows) =>

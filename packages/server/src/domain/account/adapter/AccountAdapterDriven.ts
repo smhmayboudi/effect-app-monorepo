@@ -65,9 +65,7 @@ export const AccountDriven = Layer.effect(
       )
 
     const readByIds = (ids: Array<AccountId>): Effect.Effect<Array<Account>, AccountErrorNotFound, never> =>
-      sql`SELECT id, group_id, birthday, first_name, last_name, created_at, updated_at FROM tbl_person WHERE id IN ${
-        sql.in(ids)
-      }`
+      sql`id, created_at, updated_at FROM tbl_account WHERE id IN ${sql.in(ids)}`
         .pipe(
           Effect.catchTag("SqlError", Effect.die),
           Effect.flatMap((rows) =>
@@ -92,7 +90,7 @@ export const AccountDriven = Layer.effect(
     const buildUpdateQuery = (
       id: AccountId,
       _account: Omit<Account, "id" | "createdAt" | "updatedAt">
-    ) => sql<{ id: number }>`UPDATE tbl_user SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
+    ) => sql<{ id: number }>`UPDATE tbl_account SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: AccountId,
