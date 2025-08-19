@@ -3,7 +3,7 @@ import { Effect } from "effect"
 
 export default Effect.gen(function*() {
   const sql = yield* SqlClient.SqlClient
-  yield* sql`CREATE VIEW vw_user_group_people AS
+  yield* sql`CREATE VIEW vw_user_group_person AS
     SELECT 
       u.id as user_id,
       u.email as user_email,
