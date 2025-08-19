@@ -1,6 +1,7 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/Api"
-import { Layer } from "effect"
+import { Config, Layer } from "effect"
+import { ConfigLive } from "./Config.js"
 import { AccountDriven } from "./domain/account/adapter/AccountAdapterDriven.js"
 import { AccountDriving } from "./domain/account/adapter/AccountAdapterDriving.js"
 import { AccountEventEmitter } from "./domain/account/adapter/AccountAdapterEventEmitter.js"
@@ -110,7 +111,7 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(Layer.effect(AccountPortEventEmitter, make()))
   )
   .pipe(
-    Layer.provide(Elasticsearch({ node: "http://127.0.0.1:9200" })),
-    Layer.provide(Redis),
-    Layer.provide(Sql)
+    Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((opts) => opts.ElasticsearchLive)))),
+    Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
+    Layer.provide(Sql(ConfigLive.pipe(Config.map((opts) => opts.SqliteLive))))
   )

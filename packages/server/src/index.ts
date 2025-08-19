@@ -2,6 +2,9 @@
 export * as Api from "./Api.js"
 
 
+export * as Config from "./Config.js"
+
+
 export * as MiddlewareAuthentication from "./MiddlewareAuthentication.js"
 
 

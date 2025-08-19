@@ -1,23 +1,11 @@
 import type { ResultPersistenceStore } from "@effect/experimental/Persistence"
 import { ResultPersistence } from "@effect/experimental/Persistence"
 import { layerResultConfig } from "@effect/experimental/Persistence/Redis"
-import type { Exit } from "effect"
-import { Config, Duration, Effect, Option, Scope } from "effect"
+import { type Config, Duration, Effect, type Exit, Option, Scope } from "effect"
+import type { RedisOptions } from "ioredis"
 import { makeTestLayer } from "../../util/Layer.js"
 
-const RedisConfig = Config.nested(
-  Config.all({
-    host: Config.string("HOST").pipe(
-      Config.withDefault("127.0.0.1")
-    ),
-    port: Config.integer("PORT").pipe(
-      Config.withDefault(6379)
-    )
-  }),
-  "CLIENT_REDIS"
-)
-
-export const Redis = layerResultConfig(RedisConfig)
+export const Redis = (options: Config.Config.Wrap<RedisOptions>) => layerResultConfig(options)
 
 export const RedisTest = makeTestLayer(ResultPersistence)({
   make: (options: {
