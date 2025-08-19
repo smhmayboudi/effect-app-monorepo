@@ -6,6 +6,7 @@ import { PersonDriving } from "./person/adapter/PersonAdapterDriving.js"
 import { SSEDriving } from "./sse/adapter/SSEAdapterDriving.js"
 import { TodoDriving } from "./todo/adapter/TodoAdapterDriving.js"
 import { UserDriving } from "./user/adapter/UserAdapterDriving.js"
+import { VWDriving } from "./vw/adapter/VWAdapterDriving.js"
 
 export const Api = HttpApi.make("api")
   .add(AccountDriving)
@@ -15,6 +16,7 @@ export const Api = HttpApi.make("api")
   .add(SSEDriving)
   .add(TodoDriving)
   .add(UserDriving)
+  .add(VWDriving)
   .annotate(OpenApi.Description, "Manage API")
   .annotate(OpenApi.Summary, "Manage API")
   .annotate(OpenApi.Title, "API")

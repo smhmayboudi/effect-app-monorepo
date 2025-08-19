@@ -190,6 +190,33 @@ export * as UserApplicationPortPolicy from "./domain/user/application/UserApplic
 
 export * as UserApplicationUseCase from "./domain/user/application/UserApplicationUseCase.js"
 
+
+export * as VWAdapterDriven from "./domain/vw/adapter/VWAdapterDriven.js"
+
+
+export * as VWAdapterDriving from "./domain/vw/adapter/VWAdapterDriving.js"
+
+
+export * as VWAdapterEventEmitter from "./domain/vw/adapter/VWAdapterEventEmitter.js"
+
+
+export * as VWAdapterPolicy from "./domain/vw/adapter/VWAdapterPolicy.js"
+
+
+export * as VWApplicationPortDriven from "./domain/vw/application/VWApplicationPortDriven.js"
+
+
+export * as VWApplicationPortDriving from "./domain/vw/application/VWApplicationPortDriving.js"
+
+
+export * as VWApplicationPortEventEmitter from "./domain/vw/application/VWApplicationPortEventEmitter.js"
+
+
+export * as VWApplicationPortPolicy from "./domain/vw/application/VWApplicationPortPolicy.js"
+
+
+export * as VWApplicationUseCase from "./domain/vw/application/VWApplicationUseCase.js"
+
 /**
  * Type ID for the ManualCache interface.
  * @since 1.0.0
