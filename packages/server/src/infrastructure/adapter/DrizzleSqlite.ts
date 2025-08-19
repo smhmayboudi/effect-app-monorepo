@@ -40,7 +40,7 @@ export type Config = {
 }
 
 export const drizzleSqlite = (config: Config) =>
-  Layer.effect(
+  Layer.scoped(
     PortDrizzleSqlite,
     Effect.gen(function*() {
       const client = yield* Effect.acquireRelease(
