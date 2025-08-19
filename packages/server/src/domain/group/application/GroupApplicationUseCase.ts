@@ -11,7 +11,7 @@ import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 import { GroupPortDriving } from "./GroupApplicationPortDriving.js"
 import { GroupPortEventEmitter } from "./GroupApplicationPortEventEmitter.js"
 
-export const GroupUseCase = Layer.effect(
+export const GroupUseCase = Layer.scoped(
   GroupPortDriving,
   Effect.gen(function*() {
     const eventEmitter = yield* GroupPortEventEmitter

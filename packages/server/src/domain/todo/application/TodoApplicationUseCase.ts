@@ -12,7 +12,7 @@ import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 import { TodoPortDriving } from "./TodoApplicationPortDriving.js"
 import { TodoPortEventEmitter } from "./TodoApplicationPortEventEmitter.js"
 
-export const TodoUseCase = Layer.effect(
+export const TodoUseCase = Layer.scoped(
   TodoPortDriving,
   Effect.gen(function*() {
     const eventEmitter = yield* TodoPortEventEmitter

@@ -13,7 +13,7 @@ import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 import { PersonPortDriving } from "./PersonApplicationPortDriving.js"
 import { PersonPortEventEmitter } from "./PersonApplicationPortEventEmitter.js"
 
-export const PersonUseCase = Layer.effect(
+export const PersonUseCase = Layer.scoped(
   PersonPortDriving,
   Effect.gen(function*() {
     const eventEmitter = yield* PersonPortEventEmitter

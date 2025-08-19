@@ -16,7 +16,7 @@ import { UserPortDriven } from "./UserApplicationPortDriven.js"
 import { UserPortDriving } from "./UserApplicationPortDriving.js"
 import { UserPortEventEmitter } from "./UserApplicationPortEventEmitter.js"
 
-export const UserUseCase = Layer.effect(
+export const UserUseCase = Layer.scoped(
   UserPortDriving,
   Effect.gen(function*() {
     const eventEmitter = yield* UserPortEventEmitter
