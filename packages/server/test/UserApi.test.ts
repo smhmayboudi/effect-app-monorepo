@@ -24,7 +24,7 @@ const HttpClientTest = HttpClient.make((req) => {
       )
     )
   }
-  if (req.method === "GET" && req.url === `${baseUrl}/api/v1/todo`) {
+  if (req.method === "GET" && req.url === `${baseUrl}/api/v1/user`) {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
@@ -49,8 +49,8 @@ const HttpClientTest = HttpClient.make((req) => {
   )
 })
 
-describe("TodoApi", () => {
-  it.effect("should get the list of todos", () =>
+describe("UserApi", () => {
+  it.effect("should get the list of users", () =>
     Effect.gen(function*() {
       const client = yield* HttpApiClient.make(Api, { baseUrl })
       const user = yield* client.user.create({
@@ -65,8 +65,8 @@ describe("TodoApi", () => {
           return HttpApiClient.makeWith(Api, { baseUrl, httpClient })
         })
       )
-      const todos = yield* clientWithAuth.todo.readAll({ urlParams: {} })
-      expect(todos.data.length).toEqual(0)
+      const users = yield* clientWithAuth.user.readAll({ urlParams: {} })
+      expect(users.data.length).toEqual(0)
       yield* clientWithAuth.user.delete({ path: { id: user.data.id } })
     }).pipe(
       // Effect.provide(NodeHttpClient.layer)
