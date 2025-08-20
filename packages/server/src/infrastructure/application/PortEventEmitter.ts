@@ -5,11 +5,11 @@ export interface EventEmitter<Events extends Record<string, any>> {
   off<K extends keyof Events>(event: K): Effect.Effect<void>
   on<K extends keyof Events>(
     event: K,
-    callback: (data: Events[K]) => Effect.Effect<any>
+    callback: (data: Events[K]) => Effect.Effect<void>
   ): Effect.Effect<void>
   once<K extends keyof Events>(
     event: K,
-    callback: (data: Events[K]) => Effect.Effect<any>
+    callback: (data: Events[K]) => Effect.Effect<void>
   ): Effect.Effect<void>
 }
 

@@ -4,18 +4,18 @@ import { type EventEmitter, PortEventEmitter } from "../application/PortEventEmi
 
 export const make = <Events extends Record<string, any>>(): Effect.Effect<EventEmitter<Events>> =>
   Effect.gen(function*() {
-    const listeners = yield* Ref.make(HashMap.empty<keyof Events, Queue.Queue<(data: any) => Effect.Effect<any>>>())
+    const listeners = yield* Ref.make(HashMap.empty<keyof Events, Queue.Queue<(data: any) => Effect.Effect<void>>>())
 
     const getListeners = <K extends keyof Events>(
       event: K
-    ): Effect.Effect<Queue.Queue<(data: any) => Effect.Effect<any>>> =>
+    ): Effect.Effect<Queue.Queue<(data: any) => Effect.Effect<void>>> =>
       Ref.get(listeners).pipe(
         Effect.flatMap((map) => {
           const existing = HashMap.get(map, event)
           if (existing._tag === "Some") {
             return Effect.succeed(existing.value)
           }
-          return Queue.unbounded<(data: any) => Effect.Effect<any>>().pipe(
+          return Queue.unbounded<(data: any) => Effect.Effect<void>>().pipe(
             Effect.tap((newQueue) => Ref.update(listeners, (map) => HashMap.set(map, event, newQueue)))
           )
         })
@@ -61,7 +61,7 @@ export const make = <Events extends Record<string, any>>(): Effect.Effect<EventE
   })
 
 export const makeTest = <Events extends Record<string, any>>() => {
-  const listeners = new Map<keyof Events, Array<(data: any) => Effect.Effect<any>>>()
+  const listeners = new Map<keyof Events, Array<(data: any) => Effect.Effect<void>>>()
 
   const mock: EventEmitter<Events> = {
     emit: <K extends keyof Events>(event: K, data: Events[K]) => {
@@ -74,7 +74,7 @@ export const makeTest = <Events extends Record<string, any>>() => {
     },
     on: <K extends keyof Events>(
       event: K,
-      callback: (data: Events[K]) => Effect.Effect<any>
+      callback: (data: Events[K]) => Effect.Effect<void>
     ) => {
       if (!listeners.has(event)) {
         listeners.set(event, [])
@@ -84,7 +84,7 @@ export const makeTest = <Events extends Record<string, any>>() => {
     },
     once: <K extends keyof Events>(
       event: K,
-      callback: (data: Events[K]) => Effect.Effect<any>
+      callback: (data: Events[K]) => Effect.Effect<void>
     ) => {
       const wrapper = (data: Events[K]) => {
         const eventListeners = listeners.get(event)
