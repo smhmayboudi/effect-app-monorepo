@@ -6,9 +6,7 @@ import { Effect } from "effect"
 export class TodoClient extends Effect.Service<TodoClient>()("cli/TodoClient", {
   accessors: true,
   effect: Effect.gen(function*() {
-    const client = yield* HttpApiClient.make(Api, {
-      baseUrl: "http://localhost:3001"
-    })
+    const client = yield* HttpApiClient.make(Api, { baseUrl: "http://127.0.0.1:3001" })
 
     const create = (text: string) =>
       client.todo.create({ payload: { text } }).pipe(

@@ -4,8 +4,10 @@ import { Api } from "@template/domain/Api"
 import { Email } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer, Redacted } from "effect"
 
+const baseUrl = "http://127.0.0.1:3001"
+
 const myClient = HttpClient.make((req) => {
-  if (req.method === "POST" && req.url === "http://localhost:3001/api/v1/user") {
+  if (req.method === "POST" && req.url === `${baseUrl}/api/v1/user`) {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
@@ -22,7 +24,7 @@ const myClient = HttpClient.make((req) => {
       )
     )
   }
-  if (req.method === "GET" && req.url === "http://localhost:3001/api/v1/todo") {
+  if (req.method === "GET" && req.url === `${baseUrl}/api/v1/todo`) {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
@@ -30,7 +32,7 @@ const myClient = HttpClient.make((req) => {
       )
     )
   }
-  if (req.method === "DELETE" && req.url === "http://localhost:3001/api/v1/user/1") {
+  if (req.method === "DELETE" && req.url === `${baseUrl}/api/v1/user/1`) {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
@@ -50,9 +52,7 @@ const myClient = HttpClient.make((req) => {
 describe("TodoApi", () => {
   it.effect("should get the list of todos", () =>
     Effect.gen(function*() {
-      const client = yield* HttpApiClient.make(Api, {
-        baseUrl: "http://localhost:3001"
-      })
+      const client = yield* HttpApiClient.make(Api, { baseUrl })
       const user = yield* client.user.create({
         payload: { email: Email.make("smhmayboudi@gmail.com") }
       })
@@ -61,10 +61,8 @@ describe("TodoApi", () => {
           const httpClient = baseHttpClient.pipe(HttpClient.mapRequest(
             HttpClientRequest.setHeader("Cookie", `token=${Redacted.value(user.data.accessToken)}`)
           ))
-          return HttpApiClient.makeWith(Api, {
-            baseUrl: "http://localhost:3001",
-            httpClient
-          })
+
+          return HttpApiClient.makeWith(Api, { baseUrl, httpClient })
         })
       )
       const todos = yield* clientWithAuth.todo.readAll({ urlParams: {} })
