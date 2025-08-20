@@ -63,123 +63,117 @@ export const UserUseCase = Layer.scoped(
       )
 
     const del = (id: UserId): Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">> =>
-      driven.delete(id)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("UserUseCaseDelete", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("UserUseCaseDelete", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-          policyRequire("User", "delete")
-        )
+      driven.delete(id).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("UserUseCaseDelete", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("UserUseCaseDelete", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+        policyRequire("User", "delete")
+      )
 
     const readAll = (
       urlParams: URLParams<User>
     ): Effect.Effect<SuccessArray<User, never, never>, never, ActorAuthorized<"User", "readAll">> =>
-      driven.readAll(urlParams)
-        .pipe(
-          Effect.tap((out) =>
-            eventEmitter.emit("UserUseCaseReadAll", {
-              in: { urlParams },
-              out: Exit.succeed(out)
-            })
-          ),
-          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-          policyRequire("User", "readAll")
-        )
+      driven.readAll(urlParams).pipe(
+        Effect.tap((out) =>
+          eventEmitter.emit("UserUseCaseReadAll", {
+            in: { urlParams },
+            out: Exit.succeed(out)
+          })
+        ),
+        Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+        policyRequire("User", "readAll")
+      )
 
     const readByAccessToken = (
       accessToken: AccessToken
     ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, ActorAuthorized<"User", "readByAccessToken">> =>
-      Effect.request(new UserReadByAccessToken({ accessToken }), resolver)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("UserUseCaseReadByAccessToken", {
-                in: { accessToken },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("UserUseCaseReadByAccessToken", {
-                in: { accessToken },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("UserUseCase", {
-            attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
-          }),
-          policyRequire("User", "readByAccessToken")
-        )
+      Effect.request(new UserReadByAccessToken({ accessToken }), resolver).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("UserUseCaseReadByAccessToken", {
+              in: { accessToken },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("UserUseCaseReadByAccessToken", {
+              in: { accessToken },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("UserUseCase", {
+          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessToken", accessToken }
+        }),
+        policyRequire("User", "readByAccessToken")
+      )
 
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, ActorAuthorized<"User", "readById">> =>
-      Effect.request(new UserReadById({ id }), resolver)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("UserUseCaseReadById", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("UserUseCaseReadById", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-          policyRequire("User", "readById")
-        )
+      Effect.request(new UserReadById({ id }), resolver).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("UserUseCaseReadById", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("UserUseCaseReadById", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+        policyRequire("User", "readById")
+      )
 
     const readByIdWithSensitive = (
       id: UserId
     ): Effect.Effect<UserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">> =>
-      driven.readByIdWithSensitive(id)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } }),
-          policyRequire("User", "readByIdWithSensitive")
-        )
+      driven.readByIdWithSensitive(id).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("UserUseCaseReadByIdWithSensitive", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } }),
+        policyRequire("User", "readByIdWithSensitive")
+      )
 
     const update = (
       id: UserId,
       user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">> =>
-      driven.update(id, user)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("UserUseCaseUpdate", {
-                in: { id, user },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("UserUseCaseUpdate", {
-                in: { id, user },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } }),
-          policyRequire("User", "update")
-        )
+      driven.update(id, user).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("UserUseCaseUpdate", {
+              in: { id, user },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("UserUseCaseUpdate", {
+              in: { id, user },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user } }),
+        policyRequire("User", "update")
+      )
 
     return {
       create,

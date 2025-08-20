@@ -65,27 +65,26 @@ export const AccountDriven = Layer.effect(
       )
 
     const readByIds = (ids: Array<AccountId>): Effect.Effect<Array<Account>, AccountErrorNotFound, never> =>
-      sql`id, created_at, updated_at FROM tbl_account WHERE id IN ${sql.in(ids)}`
-        .pipe(
-          Effect.catchTag("SqlError", Effect.die),
-          Effect.flatMap((rows) =>
-            Effect.all(
-              ids.map((id) => {
-                const row = rows.find((r) => r.id === id)
-                if (!row) {
-                  return Effect.fail(new AccountErrorNotFound({ id }))
-                }
-                return Account.decodeUnknown(row).pipe(
-                  Effect.catchTag(
-                    "ParseError",
-                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                  )
+      sql`id, created_at, updated_at FROM tbl_account WHERE id IN ${sql.in(ids)}`.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          Effect.all(
+            ids.map((id) => {
+              const row = rows.find((r) => r.id === id)
+              if (!row) {
+                return Effect.fail(new AccountErrorNotFound({ id }))
+              }
+              return Account.decodeUnknown(row).pipe(
+                Effect.catchTag(
+                  "ParseError",
+                  (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
                 )
-              })
-            )
-          ),
-          Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
-        )
+              )
+            })
+          )
+        ),
+        Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+      )
 
     const buildUpdateQuery = (
       id: AccountId,

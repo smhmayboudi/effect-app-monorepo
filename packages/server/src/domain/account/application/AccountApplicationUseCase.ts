@@ -21,106 +21,101 @@ export const AccountUseCase = Layer.scoped(
     const create = (
       account: Omit<Account, "id" | "createdAt" | "updatedAt">
     ): Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">> =>
-      driven.create(account)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("AccountUseCaseCreate", {
-                in: { account },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("AccountUseCaseCreate", {
-                in: { account },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account } }),
-          policyRequire("Account", "create")
-        )
+      driven.create(account).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("AccountUseCaseCreate", {
+              in: { account },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("AccountUseCaseCreate", {
+              in: { account },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account } }),
+        policyRequire("Account", "create")
+      )
 
     const del = (id: AccountId): Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "delete">> =>
-      driven.delete(id)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("AccountUseCaseDelete", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("AccountUseCaseDelete", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-          policyRequire("Account", "delete")
-        )
+      driven.delete(id).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("AccountUseCaseDelete", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("AccountUseCaseDelete", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+        policyRequire("Account", "delete")
+      )
 
     const readAll = (
       urlParams: URLParams<Account>
     ): Effect.Effect<SuccessArray<Account, never, never>, never, ActorAuthorized<"Account", "readAll">> =>
-      driven.readAll(urlParams)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("AccountUseCaseReadAll", {
-                in: { urlParams },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("AccountUseCaseReadAll", {
-                in: { urlParams },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readlAll" } }),
-          policyRequire("Account", "readAll")
-        )
+      driven.readAll(urlParams).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("AccountUseCaseReadAll", {
+              in: { urlParams },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("AccountUseCaseReadAll", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readlAll" } }),
+        policyRequire("Account", "readAll")
+      )
 
     const readById = (
       id: AccountId
     ): Effect.Effect<Account, AccountErrorNotFound, ActorAuthorized<"Account", "readById">> =>
-      Effect.request(new AccountReadById({ id }), resolver)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("AccountUseCaseReadById", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("AccountUseCaseReadById", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-          policyRequire("Account", "readById")
-        )
+      Effect.request(new AccountReadById({ id }), resolver).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("AccountUseCaseReadById", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("AccountUseCaseReadById", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+        policyRequire("Account", "readById")
+      )
 
     const update = (
       id: AccountId,
       account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "update">> =>
-      driven.update(id, account)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("AccountUseCaseUpdate", {
-                in: { id, account },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("AccountUseCaseUpdate", {
-                in: { id, account },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, account } }),
-          policyRequire("Account", "update")
-        )
+      driven.update(id, account).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("AccountUseCaseUpdate", {
+              in: { id, account },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("AccountUseCaseUpdate", {
+              in: { id, account },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, account } }),
+        policyRequire("Account", "update")
+      )
 
     return {
       create,

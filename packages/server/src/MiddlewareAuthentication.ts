@@ -13,22 +13,21 @@ export const MiddlewareAuthentication = Layer.effect(
 
     return PortMiddlewareAuthentication.of({
       cookie: (token) =>
-        user.readByAccessToken(AccessToken.make(token))
-          .pipe(
-            Effect.catchTag("UserErrorNotFoundWithAccessToken", () =>
-              Effect.fail(
-                new ActorErrorUnauthorized({
-                  actorId: UserId.make(-1),
-                  entity: "",
-                  action: ""
-                })
-              )),
-            Effect.flatMap(Effect.succeed),
-            Effect.withSpan("PortMiddlewareAuthentication", {
-              attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
-            }),
-            withSystemActor
-          )
+        user.readByAccessToken(AccessToken.make(token)).pipe(
+          Effect.catchTag("UserErrorNotFoundWithAccessToken", () =>
+            Effect.fail(
+              new ActorErrorUnauthorized({
+                actorId: UserId.make(-1),
+                entity: "",
+                action: ""
+              })
+            )),
+          Effect.flatMap(Effect.succeed),
+          Effect.withSpan("PortMiddlewareAuthentication", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
+          }),
+          withSystemActor
+        )
     })
   })
 )

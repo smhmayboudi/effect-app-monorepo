@@ -30,108 +30,103 @@ export const PersonUseCase = Layer.scoped(
     > =>
       group.readById(person.groupId).pipe(
         Effect.zipRight(
-          driven.create(person)
-            .pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("PersonUseCaseCreate", {
-                    in: { person },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("PersonUseCaseCreate", {
-                    in: { person },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", person } }),
-              policyRequire("Person", "create")
-            )
+          driven.create(person).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("PersonUseCaseCreate", {
+                  in: { person },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("PersonUseCaseCreate", {
+                  in: { person },
+                  out: Exit.succeed(out)
+                })
+            }),
+            Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", person } }),
+            policyRequire("Person", "create")
+          )
         )
       )
 
     const del = (id: PersonId): Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "delete">> =>
-      driven.delete(id)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("PersonUseCaseDelete", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("PersonUseCaseDelete", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-          policyRequire("Person", "delete")
-        )
+      driven.delete(id).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("PersonUseCaseDelete", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("PersonUseCaseDelete", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+        policyRequire("Person", "delete")
+      )
 
     const readAll = (
       urlParams: URLParams<Person>
     ): Effect.Effect<SuccessArray<Person, never, never>, never, ActorAuthorized<"Person", "readAll">> =>
-      driven.readAll(urlParams)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("PersonUseCaseReadAll", {
-                in: { urlParams },
-                out: Exit.succeed(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("PersonUseCaseReadAll", {
-                in: { urlParams },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-          policyRequire("Person", "readAll")
-        )
+      driven.readAll(urlParams).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("PersonUseCaseReadAll", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("PersonUseCaseReadAll", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+        policyRequire("Person", "readAll")
+      )
 
     const readById = (
       id: PersonId
     ): Effect.Effect<Person, PersonErrorNotFound, ActorAuthorized<"Person", "readById">> =>
-      Effect.request(new PersonReadById({ id }), resolver)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("PersonUseCaseReadById", {
-                in: { id },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("PersonUseCaseReadById", {
-                in: { id },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-          policyRequire("Person", "readById")
-        )
+      Effect.request(new PersonReadById({ id }), resolver).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("PersonUseCaseReadById", {
+              in: { id },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("PersonUseCaseReadById", {
+              in: { id },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+        policyRequire("Person", "readById")
+      )
 
     const update = (
       id: PersonId,
       person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "update">> =>
-      driven.update(id, person)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("PersonUseCaseUpdate", {
-                in: { id, person },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("PersonUseCaseUpdate", {
-                in: { id, person },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } }),
-          policyRequire("Person", "update")
-        )
+      driven.update(id, person).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("PersonUseCaseUpdate", {
+              in: { id, person },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("PersonUseCaseUpdate", {
+              in: { id, person },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person } }),
+        policyRequire("Person", "update")
+      )
 
     return {
       create,

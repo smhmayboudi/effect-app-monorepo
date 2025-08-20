@@ -119,27 +119,26 @@ export const UserDriven = Layer.effect(
       )
 
     const readByIds = (ids: Array<UserId>): Effect.Effect<Array<User>, UserErrorNotFound, never> =>
-      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id IN ${sql.in(ids)}`
-        .pipe(
-          Effect.catchTag("SqlError", Effect.die),
-          Effect.flatMap((rows) =>
-            Effect.all(
-              ids.map((id) => {
-                const row = rows.find((r) => r.id === id)
-                if (!row) {
-                  return Effect.fail(new UserErrorNotFound({ id }))
-                }
-                return User.decodeUnknown(row).pipe(
-                  Effect.catchTag(
-                    "ParseError",
-                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                  )
+      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id IN ${sql.in(ids)}`.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          Effect.all(
+            ids.map((id) => {
+              const row = rows.find((r) => r.id === id)
+              if (!row) {
+                return Effect.fail(new UserErrorNotFound({ id }))
+              }
+              return User.decodeUnknown(row).pipe(
+                Effect.catchTag(
+                  "ParseError",
+                  (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
                 )
-              })
-            )
-          ),
-          Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
-        )
+              )
+            })
+          )
+        ),
+        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+      )
 
     const readByIdWithSensitive = (id: UserId): Effect.Effect<UserWithSensitive, never, never> =>
       sql`SELECT id, owner_id, access_token, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(

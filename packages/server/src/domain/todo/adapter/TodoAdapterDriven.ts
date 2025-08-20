@@ -19,13 +19,12 @@ export const TodoDriven = Layer.effect(
     ): Effect.Effect<TodoId, TodoErrorAlreadyExists, never> =>
       sql<
         { id: number }
-      >`INSERT INTO tbl_todo ${sql.insert(todo)} RETURNING id`
-        .pipe(
-          Effect.catchTag("SqlError", Effect.die),
-          Effect.flatMap((rows) => Effect.succeed(rows[0])),
-          Effect.map((row) => TodoId.make(row.id)),
-          Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", todo } })
-        )
+      >`INSERT INTO tbl_todo ${sql.insert(todo)} RETURNING id`.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) => Effect.succeed(rows[0])),
+        Effect.map((row) => TodoId.make(row.id)),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", todo } })
+      )
 
     const del = (id: TodoId): Effect.Effect<TodoId, TodoErrorNotFound, never> =>
       readById(id).pipe(
@@ -69,27 +68,26 @@ export const TodoDriven = Layer.effect(
       )
 
     const readByIds = (ids: Array<TodoId>): Effect.Effect<Array<Todo>, TodoErrorNotFound, never> =>
-      sql`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo WHERE id IN ${sql.in(ids)}`
-        .pipe(
-          Effect.catchTag("SqlError", Effect.die),
-          Effect.flatMap((rows) =>
-            Effect.all(
-              ids.map((id) => {
-                const row = rows.find((r) => r.id === id)
-                if (!row) {
-                  return Effect.fail(new TodoErrorNotFound({ id }))
-                }
-                return Todo.decodeUnknown(row).pipe(
-                  Effect.catchTag(
-                    "ParseError",
-                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                  )
+      sql`SELECT id, owner_id, done, text, created_at, updated_at FROM tbl_todo WHERE id IN ${sql.in(ids)}`.pipe(
+        Effect.catchTag("SqlError", Effect.die),
+        Effect.flatMap((rows) =>
+          Effect.all(
+            ids.map((id) => {
+              const row = rows.find((r) => r.id === id)
+              if (!row) {
+                return Effect.fail(new TodoErrorNotFound({ id }))
+              }
+              return Todo.decodeUnknown(row).pipe(
+                Effect.catchTag(
+                  "ParseError",
+                  (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
                 )
-              })
-            )
-          ),
-          Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
-        )
+              )
+            })
+          )
+        ),
+        Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+      )
 
     const updateQuery = (
       id: TodoId,

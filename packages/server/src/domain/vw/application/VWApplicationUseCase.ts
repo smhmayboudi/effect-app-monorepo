@@ -23,44 +23,42 @@ export const VWUseCase = Layer.scoped(
       never,
       ActorAuthorized<"VW", "readAllUserGroupPerson">
     > =>
-      driven.readAllUserGroupPerson(urlParams)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("VWUseCaseReadAllUserGroupPerson", {
-                in: { urlParams },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("VWUseCaseReadAllUserGroupPerson", {
-                in: { urlParams },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-          policyRequire("VW", "readAllUserGroupPerson")
-        )
+      driven.readAllUserGroupPerson(urlParams).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("VWUseCaseReadAllUserGroupPerson", {
+              in: { urlParams },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("VWUseCaseReadAllUserGroupPerson", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+        policyRequire("VW", "readAllUserGroupPerson")
+      )
 
     const readAllUserTodo = (
       urlParams: URLParams<UserTodo>
     ): Effect.Effect<SuccessArray<UserTodo, never, never>, never, ActorAuthorized<"VW", "readAllUserTodo">> =>
-      driven.readAllUserTodo(urlParams)
-        .pipe(
-          Effect.tapBoth({
-            onFailure: (out) =>
-              eventEmitter.emit("VWUseCaseReadAllUserTodo", {
-                in: { urlParams },
-                out: Exit.fail(out)
-              }),
-            onSuccess: (out) =>
-              eventEmitter.emit("VWUseCaseReadAllUserTodo", {
-                in: { urlParams },
-                out: Exit.succeed(out)
-              })
-          }),
-          Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-          policyRequire("VW", "readAllUserTodo")
-        )
+      driven.readAllUserTodo(urlParams).pipe(
+        Effect.tapBoth({
+          onFailure: (out) =>
+            eventEmitter.emit("VWUseCaseReadAllUserTodo", {
+              in: { urlParams },
+              out: Exit.fail(out)
+            }),
+          onSuccess: (out) =>
+            eventEmitter.emit("VWUseCaseReadAllUserTodo", {
+              in: { urlParams },
+              out: Exit.succeed(out)
+            })
+        }),
+        Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+        policyRequire("VW", "readAllUserTodo")
+      )
 
     return {
       readAllUserGroupPerson,
