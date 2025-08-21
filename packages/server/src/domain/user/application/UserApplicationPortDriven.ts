@@ -16,14 +16,14 @@ export class UserPortDriven extends Context.Tag("UserPortDriven")<UserPortDriven
     user: Omit<UserWithSensitive, "id" | "createdAt" | "updatedAt">
   ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken, never>
   delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, never>
-  readAll: (urlParams: URLParams<User>) => Effect.Effect<SuccessArray<User, never, never>, never, never>
+  readAll: (urlParams: URLParams<User>) => Effect.Effect<SuccessArray<User, never, never>>
   readByAccessToken: (accessToken: AccessToken) => Effect.Effect<User, UserErrorNotFoundWithAccessToken, never>
   readByAccessTokens: (
     accessTokens: Array<AccessToken>
   ) => Effect.Effect<Array<User>, UserErrorNotFoundWithAccessToken, never>
   readById: (id: UserId) => Effect.Effect<User, UserErrorNotFound, never>
   readByIds: (ids: Array<UserId>) => Effect.Effect<Array<User>, UserErrorNotFound, never>
-  readByIdWithSensitive: (id: UserId) => Effect.Effect<UserWithSensitive, never, never>
+  readByIdWithSensitive: (id: UserId) => Effect.Effect<UserWithSensitive>
   update: (
     id: UserId,
     user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>

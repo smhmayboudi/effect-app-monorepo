@@ -7,6 +7,6 @@ import { Context, type Effect } from "effect"
 export class VWPortDriven extends Context.Tag("VWPortDriven")<VWPortDriven, {
   readAllUserGroupPerson: (
     urlParams: URLParams<UserGroupPerson>
-  ) => Effect.Effect<SuccessArray<UserGroupPerson, never, never>, never, never>
-  readAllUserTodo: (urlParams: URLParams<UserTodo>) => Effect.Effect<SuccessArray<UserTodo, never, never>, never, never>
+  ) => Effect.Effect<SuccessArray<UserGroupPerson, never, never>>
+  readAllUserTodo: (urlParams: URLParams<UserTodo>) => Effect.Effect<SuccessArray<UserTodo, never, never>>
 }>() {}

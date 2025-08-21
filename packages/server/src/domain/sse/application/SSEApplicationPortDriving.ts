@@ -13,5 +13,5 @@ export class SSEPortDriving extends Context.Tag("SSEPortDriving")<SSEPortDriving
     never,
     Scope
   >
-  notify: (sse: SSE, id: UserId) => Effect.Effect<void, never, never>
+  notify: (sse: SSE, id: UserId) => Effect.Effect<void>
 }>() {}

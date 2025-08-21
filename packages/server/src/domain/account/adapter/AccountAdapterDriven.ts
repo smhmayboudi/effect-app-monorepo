@@ -15,7 +15,7 @@ export const AccountDriven = Layer.effect(
 
     const create = (
       account: Omit<Account, "id" | "createdAt" | "updatedAt">
-    ): Effect.Effect<AccountId, never, never> =>
+    ): Effect.Effect<AccountId> =>
       sql<{ id: number }>`INSERT INTO tbl_account DEFAULT VALUES RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -34,7 +34,7 @@ export const AccountDriven = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Account>
-    ): Effect.Effect<SuccessArray<Account, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<Account, never, never>> =>
       Effect.all({
         data: buildSelectQuery<Account>(sql, "tbl_account", urlParams).pipe(
           Effect.catchTag("SqlError", Effect.die),

@@ -13,7 +13,7 @@ export const SSEManager = Layer.effect(
   Effect.gen(function*() {
     const connectionsRef = yield* Ref.make(MutableHashMap.empty<UserId, Array<ActiveConnection>>())
 
-    const notifyAll = (event: SSE): Effect.Effect<void, never, never> =>
+    const notifyAll = (event: SSE): Effect.Effect<void> =>
       Effect.gen(function*() {
         const connections = yield* Ref.get(connectionsRef)
         const connectionsAll = Array.flatten(MutableHashMap.values(connections))
@@ -62,7 +62,7 @@ export const SSEManager = Layer.effect(
       connectionId: string,
       queue: Queue.Queue<string>,
       id: UserId
-    ): Effect.Effect<void, never, never> =>
+    ): Effect.Effect<void> =>
       Ref.update(
         connectionsRef,
         (map) =>
@@ -73,7 +73,7 @@ export const SSEManager = Layer.effect(
             ))
       )
 
-    const unregisterConnection = (connectionId: string, id: UserId): Effect.Effect<void, never, never> =>
+    const unregisterConnection = (connectionId: string, id: UserId): Effect.Effect<void> =>
       Ref.modify(connectionsRef, (map) => {
         const connectionToRemove = MutableHashMap.get(map, id).pipe(
           Option.flatMap((connections) =>

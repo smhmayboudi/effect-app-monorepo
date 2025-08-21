@@ -5,9 +5,9 @@ import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Context, type Effect } from "effect"
 
 export class GroupPortDriven extends Context.Tag("GroupPortDriven")<GroupPortDriven, {
-  create: (group: Omit<Group, "id" | "createdAt" | "updatedAt">) => Effect.Effect<GroupId, never, never>
+  create: (group: Omit<Group, "id" | "createdAt" | "updatedAt">) => Effect.Effect<GroupId>
   delete: (id: GroupId) => Effect.Effect<GroupId, GroupErrorNotFound, never>
-  readAll: (urlParams: URLParams<Group>) => Effect.Effect<SuccessArray<Group, never, never>, never, never>
+  readAll: (urlParams: URLParams<Group>) => Effect.Effect<SuccessArray<Group, never, never>>
   readById: (id: GroupId) => Effect.Effect<Group, GroupErrorNotFound, never>
   readByIds: (ids: Array<GroupId>) => Effect.Effect<Array<Group>, GroupErrorNotFound, never>
   update: (

@@ -7,7 +7,7 @@ import { logDebugWithTrace } from "../../../util/Logger.js"
 import { TodoConfig } from "./TodoApplicationConfig.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 
-export class TodoReadById extends Schema.TaggedRequest<TodoReadById>()("TodoReadById", {
+export class TodoReadById extends Schema.TaggedRequest<TodoReadById>("TodoReadById")("TodoReadById", {
   failure: TodoErrorNotFound,
   payload: { id: TodoId },
   success: Todo

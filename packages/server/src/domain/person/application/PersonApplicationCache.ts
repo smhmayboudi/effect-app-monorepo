@@ -7,7 +7,7 @@ import { logDebugWithTrace } from "../../../util/Logger.js"
 import { PersonConfig } from "./PersonApplicationConfig.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 
-export class PersonReadById extends Schema.TaggedRequest<PersonReadById>()("PersonReadById", {
+export class PersonReadById extends Schema.TaggedRequest<PersonReadById>("PersonReadById")("PersonReadById", {
   failure: PersonErrorNotFound,
   payload: { id: PersonId },
   success: Person

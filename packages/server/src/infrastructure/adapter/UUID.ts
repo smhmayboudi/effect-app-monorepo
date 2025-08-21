@@ -5,13 +5,13 @@ import { PortUUID } from "../application/PortUUID.js"
 export const UUID = Layer.effect(
   PortUUID,
   Effect.sync(() => ({
-    v7: (): Effect.Effect<string, never, never> => Effect.sync(() => v7())
+    v7: (): Effect.Effect<string> => Effect.sync(() => v7())
   }))
 )
 
 export const UUIDTest = Layer.effect(
   PortUUID,
   Effect.sync(() => ({
-    v7: (): Effect.Effect<string, never, never> => Effect.sync(() => "v7")
+    v7: (): Effect.Effect<string> => Effect.sync(() => "v7")
   }))
 )

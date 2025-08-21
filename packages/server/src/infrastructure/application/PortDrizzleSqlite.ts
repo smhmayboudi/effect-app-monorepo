@@ -58,7 +58,7 @@ export class PortDrizzleSqlite extends Context.Tag("PortDrizzleSqlite")<PortDriz
   transaction: <A, E, R>(
     txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>
   ) => Effect.Effect.AsEffect<Effect.Effect<A, DatabaseError | E, R>>
-  setupConnectionListeners: Effect.Effect<void, never, never>
+  setupConnectionListeners: Effect.Effect<void>
   makeQuery: <A, E, R, Input = never>(
     queryFn: (execute: ExecuteFn, input: Input) => Effect.Effect<A, E, R>
   ) => (...args: [Input] extends [never] ? [] : [input: Input]) => Effect.Effect<A, E, R>

@@ -37,7 +37,7 @@ export const TodoDriven = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Todo>
-    ): Effect.Effect<SuccessArray<Todo, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<Todo, never, never>> =>
       Effect.all({
         data: buildSelectQuery<Todo>(sql, "tbl_todo", urlParams).pipe(
           Effect.catchTag("SqlError", Effect.die),

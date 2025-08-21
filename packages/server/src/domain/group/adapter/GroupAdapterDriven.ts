@@ -13,7 +13,7 @@ export const GroupDriven = Layer.effect(
   Effect.gen(function*() {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (group: Omit<Group, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId, never, never> =>
+    const create = (group: Omit<Group, "id" | "createdAt" | "updatedAt">): Effect.Effect<GroupId> =>
       sql<{ id: number }>`INSERT INTO tbl_group ${sql.insert(group)} RETURNING id`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -32,7 +32,7 @@ export const GroupDriven = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Group>
-    ): Effect.Effect<SuccessArray<Group, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<Group, never, never>> =>
       Effect.all({
         data: buildSelectQuery<Group>(sql, "tbl_group", urlParams).pipe(
           Effect.catchTag("SqlError", Effect.die),

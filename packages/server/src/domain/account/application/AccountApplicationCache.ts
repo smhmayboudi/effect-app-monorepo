@@ -7,7 +7,7 @@ import { logDebugWithTrace } from "../../../util/Logger.js"
 import { AccountConfig } from "./AccountApplicationConfig.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
 
-export class AccountReadById extends Schema.TaggedRequest<AccountReadById>()("AccountReadById", {
+export class AccountReadById extends Schema.TaggedRequest<AccountReadById>("AccountReadById")("AccountReadById", {
   failure: AccountErrorNotFound,
   payload: { id: AccountId },
   success: Account

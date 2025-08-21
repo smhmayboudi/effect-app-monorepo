@@ -22,12 +22,12 @@ export const SSEUseCase = Layer.effect(
         Effect.withSpan("SSEUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "connect" } })
       )
 
-    const notify = (sse: SSE, id: UserId): Effect.Effect<void, never, never> =>
+    const notify = (sse: SSE, id: UserId): Effect.Effect<void> =>
       sseManager.notifyUser(sse, id).pipe(
         Effect.withSpan("SSEUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "notify" } })
       )
 
-    const notifyAll = (sse: SSE): Effect.Effect<void, never, never> =>
+    const notifyAll = (sse: SSE): Effect.Effect<void> =>
       sseManager.notifyAll(sse).pipe(
         Effect.withSpan("SSEUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "notifyAll" } })
       )

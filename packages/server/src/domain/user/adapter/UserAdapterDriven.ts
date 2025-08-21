@@ -43,7 +43,7 @@ export const UserDriven = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<User>
-    ): Effect.Effect<SuccessArray<User, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<User, never, never>> =>
       Effect.all({
         data: buildSelectQuery<User>(sql, "tbl_user", urlParams).pipe(
           Effect.catchTag("SqlError", Effect.die),
@@ -140,7 +140,7 @@ export const UserDriven = Layer.effect(
         Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
       )
 
-    const readByIdWithSensitive = (id: UserId): Effect.Effect<UserWithSensitive, never, never> =>
+    const readByIdWithSensitive = (id: UserId): Effect.Effect<UserWithSensitive> =>
       sql`SELECT id, owner_id, access_token, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) => Effect.succeed(rows[0])),

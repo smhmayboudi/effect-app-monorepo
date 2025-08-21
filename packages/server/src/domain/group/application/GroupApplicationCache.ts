@@ -7,7 +7,7 @@ import { logDebugWithTrace } from "../../../util/Logger.js"
 import { GroupConfig } from "./GroupApplicationConfig.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 
-export class GroupReadById extends Schema.TaggedRequest<GroupReadById>()("GroupReadById", {
+export class GroupReadById extends Schema.TaggedRequest<GroupReadById>("GroupReadById")("GroupReadById", {
   failure: GroupErrorNotFound,
   payload: { id: GroupId },
   success: Group

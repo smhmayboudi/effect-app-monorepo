@@ -416,7 +416,7 @@ export const formatParseIssueMessages = (
     newLines?: number
     numbered?: boolean
   }
-): Effect.Effect<string, never, never> =>
+): Effect.Effect<string> =>
   ArrayFormatter.formatIssue(issue).pipe(
     Effect.map((issues) =>
       issues

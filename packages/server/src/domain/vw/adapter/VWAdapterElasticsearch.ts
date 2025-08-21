@@ -166,7 +166,7 @@ export const VWElasticsearch = Layer.scoped(
     const elasticsearch = yield* PortElasticsearch
     const sql = yield* SqlClient.SqlClient
 
-    const vwUserGroupPerson = (): Effect.Effect<void, never, never> =>
+    const vwUserGroupPerson = (): Effect.Effect<void> =>
       Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_user_group_person" })).pipe(
         Effect.flatMap((indexExists) =>
           indexExists ?
@@ -211,7 +211,7 @@ export const VWElasticsearch = Layer.scoped(
         Effect.asVoid
       )
 
-    const vwUserTodo = (): Effect.Effect<void, never, never> =>
+    const vwUserTodo = (): Effect.Effect<void> =>
       Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_user_todo" })).pipe(
         Effect.flatMap((indexExists) =>
           indexExists ?

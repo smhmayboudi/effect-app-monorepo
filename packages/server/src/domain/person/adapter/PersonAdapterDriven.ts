@@ -15,7 +15,7 @@ export const PersonDriven = Layer.effect(
 
     const create = (
       person: Omit<Person, "id" | "createdAt" | "updatedAt">
-    ): Effect.Effect<PersonId, never, never> =>
+    ): Effect.Effect<PersonId> =>
       sql<
         { id: number }
       >`INSERT INTO tbl_person ${
@@ -43,7 +43,7 @@ export const PersonDriven = Layer.effect(
 
     const readAll = (
       urlParams: URLParams<Person>
-    ): Effect.Effect<SuccessArray<Person, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<Person, never, never>> =>
       Effect.all({
         data: buildSelectQuery<Person>(sql, "tbl_person", urlParams).pipe(
           Effect.catchTag("SqlError", Effect.die),

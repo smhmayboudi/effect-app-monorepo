@@ -14,7 +14,7 @@ export const VWDriven = Layer.effect(
 
     const readAllUserGroupPerson = (
       urlParams: URLParams<UserGroupPerson>
-    ): Effect.Effect<SuccessArray<UserGroupPerson, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<UserGroupPerson, never, never>> =>
       Effect.tryPromise(() =>
         elasticsearch.search<UserGroupPerson>({
           index: "vw_user_group_person",
@@ -42,7 +42,7 @@ export const VWDriven = Layer.effect(
 
     const readAllUserTodo = (
       urlParams: URLParams<UserTodo>
-    ): Effect.Effect<SuccessArray<UserTodo, never, never>, never, never> =>
+    ): Effect.Effect<SuccessArray<UserTodo, never, never>> =>
       Effect.tryPromise(() =>
         elasticsearch.search<UserTodo>({
           index: "vw_user_todo",

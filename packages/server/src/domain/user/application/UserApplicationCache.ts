@@ -8,17 +8,19 @@ import { logDebugWithTrace } from "../../../util/Logger.js"
 import { UserConfig } from "./UserApplicationConfig.js"
 import { UserPortDriven } from "./UserApplicationPortDriven.js"
 
-export class UserReadByAccessToken extends Schema.TaggedRequest<UserReadByAccessToken>()("UserReadByAccessToken", {
-  failure: UserErrorNotFoundWithAccessToken,
-  payload: { accessToken: AccessToken },
-  success: User
-}) {
+export class UserReadByAccessToken
+  extends Schema.TaggedRequest<UserReadByAccessToken>("UserReadByAccessToken")("UserReadByAccessToken", {
+    failure: UserErrorNotFoundWithAccessToken,
+    payload: { accessToken: AccessToken },
+    success: User
+  })
+{
   [PrimaryKey.symbol]() {
     return `UserReadByAccessToken:${Redacted.value(this.accessToken)}`
   }
 }
 
-export class UserReadById extends Schema.TaggedRequest<UserReadById>()("UserReadById", {
+export class UserReadById extends Schema.TaggedRequest<UserReadById>("UserReadById")("UserReadById", {
   failure: UserErrorNotFound,
   payload: { id: UserId },
   success: User
