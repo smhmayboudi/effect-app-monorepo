@@ -19,14 +19,17 @@ const NodeSdkLive = NodeSdk.layer(() => ({
   spanProcessor: new BatchSpanProcessor(new OTLPTraceExporter())
 }))
 
-const HttpApiLive = HttpApiBuilder.serve(flow(HttpMiddleware.logger, MiddlewareMetric)).pipe(
-  Layer.provide(NodeSdkLive),
-  Layer.provide(HttpApiBuilder.middlewareCors({
+const HttpApiLive = HttpApiBuilder.serve(flow(
+  HttpMiddleware.cors({
     allowedOrigins: ["*"],
     allowedMethods: ["DELETE", "GET", "OPTION", "PATCH", "POST", "PUT"],
     allowedHeaders: ["Authorization", "B3", "Content-Type", "traceparent"],
     credentials: true
-  })),
+  }),
+  HttpMiddleware.logger,
+  MiddlewareMetric
+)).pipe(
+  Layer.provide(NodeSdkLive),
   Layer.provide(HttpApiBuilder.middlewareOpenApi({ path: "/openapi.json" })),
   Layer.provide(HttpApiScalar.layer({ path: "/references" })),
   Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
