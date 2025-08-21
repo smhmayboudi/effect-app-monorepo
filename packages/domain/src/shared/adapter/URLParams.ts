@@ -91,7 +91,7 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
     inputSchema,
     outputSchema,
     {
-      decode: (fromA, _fromI) => ({
+      decode: (fromA) => ({
         ...(fromA.expands && {
           expands: fromA.expands.split(",")
             .map((v) => v.trim())
@@ -115,7 +115,7 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
           }))
         })
       }),
-      encode: (toI, _toA) => ({
+      encode: (toI) => ({
         ...(toI.expands && { expands: toI.expands.join(",") }),
         ...(toI.fields && { fields: toI.fields.join(",") }),
         ...(toI.limit !== undefined && { limit: toI.limit }),

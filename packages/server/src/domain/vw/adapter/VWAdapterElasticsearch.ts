@@ -46,7 +46,7 @@ const UserGroupPersonSchema = () => {
     inputSchema,
     outputSchema,
     {
-      decode: (fromA, _fromI) => ({
+      decode: (fromA) => ({
         user: {
           id: fromA.userId,
           ownerId: fromA.userOwnerId,
@@ -71,7 +71,7 @@ const UserGroupPersonSchema = () => {
           updatedAt: fromA.personUpdatedAt
         }
       }),
-      encode: (toI, _toA) => ({
+      encode: (toI) => ({
         userId: UserId.make(toI.user.id),
         userOwnerId: AccountId.make(toI.user.ownerId),
         userEmail: Email.make(toI.user.email),
@@ -124,7 +124,7 @@ const UserTodoSchema = () => {
     inputSchema,
     outputSchema,
     {
-      decode: (fromA, _fromI) => ({
+      decode: (fromA) => ({
         user: {
           id: fromA.userId,
           ownerId: fromA.userOwnerId,
@@ -141,7 +141,7 @@ const UserTodoSchema = () => {
           updatedAt: fromA.todoUpdatedAt
         }
       }),
-      encode: (toI, _toA) => ({
+      encode: (toI) => ({
         userId: UserId.make(toI.user.id),
         userOwnerId: AccountId.make(toI.user.ownerId),
         userEmail: Email.make(toI.user.email),
