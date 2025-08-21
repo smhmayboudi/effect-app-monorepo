@@ -10,7 +10,7 @@ import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
 import { flow, Layer, Logger, LogLevel } from "effect"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
-import { MiddlewareMetric } from "./MiddlewareMetric.js"
+import { MiddlewareMetric } from "./middleware/MiddlewareMetric.js"
 
 const NodeSdkLive = NodeSdk.layer(() => ({
   logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),

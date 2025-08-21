@@ -49,7 +49,7 @@ import { Redis } from "./infrastructure/adapter/Redis.js"
 import { Sql } from "./infrastructure/adapter/Sql.js"
 import { SSEManager } from "./infrastructure/adapter/SSEManager.js"
 import { UUID } from "./infrastructure/adapter/UUID.js"
-import { MiddlewareAuthentication } from "./MiddlewareAuthentication.js"
+import { MiddlewareAuthentication } from "./middleware/MiddlewareAuthentication.js"
 
 export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(

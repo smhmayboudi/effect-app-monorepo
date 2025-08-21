@@ -3,8 +3,8 @@ import { ActorErrorUnauthorized } from "@template/domain/Actor"
 import { PortMiddlewareAuthentication } from "@template/domain/PortMiddlewareAuthentication"
 import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer } from "effect"
-import { UserPortDriving } from "./domain/user/application/UserApplicationPortDriving.js"
-import { withSystemActor } from "./util/Policy.js"
+import { UserPortDriving } from "../domain/user/application/UserApplicationPortDriving.js"
+import { withSystemActor } from "../util/Policy.js"
 
 export const MiddlewareAuthentication = Layer.effect(
   PortMiddlewareAuthentication,

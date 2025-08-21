@@ -5,6 +5,7 @@ export class PortMiddlewareAuthentication extends HttpApiMiddleware.Tag<PortMidd
   "PortMiddlewareAuthentication",
   {
     failure: ActorErrorUnauthorized,
+    optional: false,
     provides: Actor,
     security: {
       cookie: HttpApiSecurity.apiKey({ in: "header", key: "token" }).pipe(

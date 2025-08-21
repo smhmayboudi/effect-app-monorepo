@@ -5,12 +5,6 @@ export * as Api from "./Api.js"
 export * as Config from "./Config.js"
 
 
-export * as MiddlewareAuthentication from "./MiddlewareAuthentication.js"
-
-
-export * as MiddlewareMetric from "./MiddlewareMetric.js"
-
-
 export * as AccountAdapterDriven from "./domain/account/adapter/AccountAdapterDriven.js"
 
 
@@ -289,6 +283,12 @@ export * as PortSql from "./infrastructure/application/PortSql.js"
 
 
 export * as PortUUID from "./infrastructure/application/PortUUID.js"
+
+
+export * as MiddlewareAuthentication from "./middleware/MiddlewareAuthentication.js"
+
+
+export * as MiddlewareMetric from "./middleware/MiddlewareMetric.js"
 
 
 export * as server from "./server.js"
