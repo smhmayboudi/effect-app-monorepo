@@ -17,5 +17,6 @@ export default Effect.gen(function*() {
       t.created_at as todo_created_at,
       t.updated_at as todo_updated_at
     FROM tbl_user u
-    JOIN tbl_todo t ON u.owner_id = t.owner_id`
+    JOIN tbl_todo t ON u.owner_id = t.owner_id
+    WHERE u.deleted_at IS NULL AND t.deleted_at IS NULL`
 })

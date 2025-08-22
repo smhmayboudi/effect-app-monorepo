@@ -7,7 +7,7 @@ import { PortEventEmitter } from "../../../infrastructure/application/PortEventE
 
 type AccountEvents = {
   AccountUseCaseCreate: {
-    in: { account: Omit<Account, "id" | "createdAt" | "updatedAt"> }
+    in: { account: Omit<Account, "createdAt" | "updatedAt" | "deletedAt"> }
     out: Exit.Exit<AccountId>
   }
   AccountUseCaseDelete: { in: { id: AccountId }; out: Exit.Exit<AccountId, AccountErrorNotFound> }
@@ -17,7 +17,7 @@ type AccountEvents = {
   }
   AccountUseCaseReadById: { in: { id: AccountId }; out: Exit.Exit<Account, AccountErrorNotFound> }
   AccountUseCaseUpdate: {
-    in: { id: AccountId; account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">> }
+    in: { id: AccountId; account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt" | "deletedAt">> }
     out: Exit.Exit<AccountId, AccountErrorNotFound>
   }
 }

@@ -7,10 +7,6 @@ import { TodoId, TodoSchema } from "../application/TodoApplicationDomain.js"
 import { TodoErrorAlreadyExists } from "../application/TodoApplicationErrorAlreadyExists.js"
 import { TodoErrorNotFound } from "../application/TodoApplicationErrorNotFound.js"
 
-export const TodoIdFromString = Schema.NumberFromString.pipe(
-  Schema.compose(TodoId)
-)
-
 export class TodoDriving extends HttpApiGroup.make("todo")
   .add(
     HttpApiEndpoint.post("create", "/")
@@ -24,7 +20,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.del("delete", "/:id")
       .addError(TodoErrorNotFound, { status: 404 })
       .addSuccess(ResponseSuccess(TodoId))
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
+      .setPath(Schema.Struct({ id: TodoId }))
       .annotate(OpenApi.Description, "Todo delete")
       .annotate(OpenApi.Summary, "Todo delete")
   )
@@ -39,7 +35,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.get("readById", "/:id")
       .addError(TodoErrorNotFound, { status: 404 })
       .addSuccess(ResponseSuccess(TodoSchema))
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
+      .setPath(Schema.Struct({ id: TodoId }))
       .annotate(OpenApi.Description, "Todo readById")
       .annotate(OpenApi.Summary, "Todo readById")
   )
@@ -47,7 +43,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
     HttpApiEndpoint.patch("update", "/:id")
       .addError(TodoErrorNotFound, { status: 404 })
       .addSuccess(ResponseSuccess(TodoId))
-      .setPath(Schema.Struct({ id: TodoIdFromString }))
+      .setPath(Schema.Struct({ id: TodoId }))
       .annotate(OpenApi.Description, "Todo update")
       .annotate(OpenApi.Summary, "Todo update")
   )

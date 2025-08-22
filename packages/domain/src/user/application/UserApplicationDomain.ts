@@ -14,7 +14,7 @@ export const Email = Schema.String.pipe(
 )
 export type Email = typeof Email.Type
 
-export const UserId = Schema.Number.pipe(
+export const UserId = Schema.UUID.pipe(
   Schema.brand("UserId"),
   Schema.annotations({ description: "User identification" })
 )
@@ -25,7 +25,8 @@ export const UserSchema = Schema.Struct({
   ownerId: AccountId,
   email: Email,
   createdAt: Schema.Date.annotations({ description: "Created at" }),
-  updatedAt: Schema.Date.annotations({ description: "Updated at" })
+  updatedAt: Schema.Date.annotations({ description: "Updated at" }),
+  deletedAt: Schema.NullOr(Schema.Date).annotations({ description: "Delete at" })
 }).pipe(Schema.annotations({ description: "User", identifier: "User" }))
 export type UserSchema = typeof UserSchema.Type
 

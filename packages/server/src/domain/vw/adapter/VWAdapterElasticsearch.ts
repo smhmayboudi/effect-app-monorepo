@@ -52,14 +52,16 @@ const UserGroupPersonSchema = () => {
           ownerId: fromA.userOwnerId,
           email: fromA.userEmail,
           createdAt: fromA.userCreatedAt,
-          updatedAt: fromA.userUpdatedAt
+          updatedAt: fromA.userUpdatedAt,
+          deletedAt: null
         },
         group: {
           id: fromA.groupId,
           ownerId: fromA.groupOwnerId,
           name: fromA.groupName,
           createdAt: fromA.groupCreatedAt,
-          updatedAt: fromA.groupUpdatedAt
+          updatedAt: fromA.groupUpdatedAt,
+          deletedAt: null
         },
         person: {
           id: fromA.personId,
@@ -68,7 +70,8 @@ const UserGroupPersonSchema = () => {
           firstName: fromA.personFirstName,
           lastName: fromA.personLastName,
           createdAt: fromA.personCreatedAt,
-          updatedAt: fromA.personUpdatedAt
+          updatedAt: fromA.personUpdatedAt,
+          deletedAt: null
         }
       }),
       encode: (toI) => ({
@@ -130,7 +133,8 @@ const UserTodoSchema = () => {
           ownerId: fromA.userOwnerId,
           email: fromA.userEmail,
           createdAt: fromA.userCreatedAt,
-          updatedAt: fromA.userUpdatedAt
+          updatedAt: fromA.userUpdatedAt,
+          deletedAt: null
         },
         todo: {
           id: fromA.todoId,
@@ -138,7 +142,8 @@ const UserTodoSchema = () => {
           done: fromA.todoDone,
           text: fromA.todoText,
           createdAt: fromA.todoCreatedAt,
-          updatedAt: fromA.todoUpdatedAt
+          updatedAt: fromA.todoUpdatedAt,
+          deletedAt: null
         }
       }),
       encode: (toI) => ({

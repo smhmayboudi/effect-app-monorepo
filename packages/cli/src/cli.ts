@@ -6,7 +6,7 @@ const todoArg = Args.text({ name: "todo" }).pipe(
   Args.withDescription("The message associated with a todo")
 )
 
-const todoId = Options.withSchema(Options.integer("id"), TodoId).pipe(
+const todoId = Options.withSchema(Options.text("id"), TodoId).pipe(
   Options.withDescription("The identifier of the todo")
 )
 

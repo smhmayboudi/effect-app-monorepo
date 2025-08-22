@@ -8,7 +8,7 @@ import { PortEventEmitter } from "../../../infrastructure/application/PortEventE
 
 type TodoEvents = {
   TodoUseCaseCreate: {
-    in: { todo: Omit<Todo, "id" | "createdAt" | "updatedAt"> }
+    in: { todo: Omit<Todo, "createdAt" | "updatedAt" | "deletedAt"> }
     out: Exit.Exit<TodoId, TodoErrorAlreadyExists>
   }
   TodoUseCaseDelete: { in: { id: TodoId }; out: Exit.Exit<TodoId, TodoErrorNotFound> }
@@ -18,7 +18,7 @@ type TodoEvents = {
   }
   TodoUseCaseReadById: { in: { id: TodoId }; out: Exit.Exit<Todo, TodoErrorNotFound> }
   TodoUseCaseUpdate: {
-    in: { id: TodoId; todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">> }
+    in: { id: TodoId; todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">> }
     out: Exit.Exit<TodoId, TodoErrorNotFound>
   }
 }

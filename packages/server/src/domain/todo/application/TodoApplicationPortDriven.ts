@@ -7,7 +7,7 @@ import { Context, type Effect } from "effect"
 
 export class TodoPortDriven extends Context.Tag("TodoPortDriven")<TodoPortDriven, {
   create: (
-    todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
+    todo: Omit<Todo, "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<TodoId, TodoErrorAlreadyExists, never>
   delete: (id: TodoId) => Effect.Effect<TodoId, TodoErrorNotFound, never>
   readAll: (urlParams: URLParams<Todo>) => Effect.Effect<SuccessArray<Todo, never, never>>
@@ -15,6 +15,6 @@ export class TodoPortDriven extends Context.Tag("TodoPortDriven")<TodoPortDriven
   readByIds: (ids: Array<TodoId>) => Effect.Effect<Array<Todo>, TodoErrorNotFound, never>
   update: (
     id: TodoId,
-    todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>
+    todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<TodoId, TodoErrorNotFound, never>
 }>() {}

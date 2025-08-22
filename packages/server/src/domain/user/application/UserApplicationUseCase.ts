@@ -2,8 +2,8 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import type { User, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
-import { AccessToken } from "@template/domain/user/application/UserApplicationDomain"
+import type { User, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
+import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
 import type { UserErrorEmailAlreadyTaken } from "@template/domain/user/application/UserApplicationErrorEmailAlreadyTaken"
 import type { UserErrorNotFound } from "@template/domain/user/application/UserApplicationErrorNotFound"
 import type { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
@@ -26,7 +26,7 @@ export const UserUseCase = Layer.scoped(
     const resolver = yield* makeUserReadResolver
 
     const create = (
-      user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt">
+      user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt" | "deletedAt">
     ): Effect.Effect<
       UserWithSensitive,
       UserErrorEmailAlreadyTaken,
@@ -35,22 +35,27 @@ export const UserUseCase = Layer.scoped(
       | ActorAuthorized<"User", "create">
       | ActorAuthorized<"User", "readByIdWithSensitive">
     > =>
-      uuid.v7().pipe(
-        Effect.flatMap((v7) =>
-          account.create({}).pipe(
-            Effect.flatMap((accountId) =>
-              driven.create({ ...user, accessToken: AccessToken.make(Redacted.make(v7)), ownerId: accountId }).pipe(
+      account.create({}).pipe(
+        Effect.flatMap((accountId) =>
+          Effect.all([uuid.v7(), uuid.v7()], { concurrency: 2 }).pipe(
+            Effect.flatMap((v7) =>
+              driven.create({
+                ...user,
+                accessToken: AccessToken.make(Redacted.make(v7[0])),
+                ownerId: accountId,
+                id: UserId.make(v7[1])
+              }).pipe(
                 Effect.onError(() => account.delete(accountId).pipe(Effect.ignore)),
                 Effect.flatMap((userId) => readByIdWithSensitive(userId)),
                 Effect.tapBoth({
                   onFailure: (out) =>
                     eventEmitter.emit("UserUseCaseCreate", {
-                      in: { user: { ...user, ownerId: accountId } },
+                      in: { user: { ...user, ownerId: accountId, id: UserId.make(v7[1]) } },
                       out: Exit.fail(out)
                     }),
                   onSuccess: (out) =>
                     eventEmitter.emit("UserUseCaseCreate", {
-                      in: { user: { ...user, ownerId: accountId } },
+                      in: { user: { ...user, ownerId: accountId, id: UserId.make(v7[1]) } },
                       out: Exit.succeed(out)
                     })
                 }),
@@ -156,7 +161,7 @@ export const UserUseCase = Layer.scoped(
 
     const update = (
       id: UserId,
-      user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
+      user: Partial<Omit<User, "id" | "createdAt" | "updatedAt" | "deletedAt">>
     ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">> =>
       driven.update(id, user).pipe(
         Effect.tapBoth({

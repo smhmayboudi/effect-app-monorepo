@@ -5,13 +5,13 @@ import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Context, type Effect } from "effect"
 
 export class PersonPortDriven extends Context.Tag("PersonPortDriven")<PersonPortDriven, {
-  create: (person: Omit<Person, "id" | "createdAt" | "updatedAt">) => Effect.Effect<PersonId>
+  create: (person: Omit<Person, "createdAt" | "updatedAt" | "deletedAt">) => Effect.Effect<PersonId>
   delete: (id: PersonId) => Effect.Effect<PersonId, PersonErrorNotFound, never>
   readAll: (urlParams: URLParams<Person>) => Effect.Effect<SuccessArray<Person, never, never>>
   readById: (id: PersonId) => Effect.Effect<Person, PersonErrorNotFound, never>
   readByIds: (ids: Array<PersonId>) => Effect.Effect<Array<Person>, PersonErrorNotFound, never>
   update: (
     id: PersonId,
-    person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>
+    person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<PersonId, PersonErrorNotFound, never>
 }>() {}

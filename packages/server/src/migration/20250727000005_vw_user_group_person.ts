@@ -24,5 +24,6 @@ export default Effect.gen(function*() {
       p.updated_at as person_updated_at
     FROM tbl_user u
     JOIN tbl_group g ON u.owner_id = u.owner_id
-    JOIN tbl_person p ON g.id = p.group_id`
+    JOIN tbl_person p ON g.id = p.group_id
+    WHERE u.deleted_at IS NULL AND g.deleted_at IS NULL AND p.deleted_at IS NULL`
 })

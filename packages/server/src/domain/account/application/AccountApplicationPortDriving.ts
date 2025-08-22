@@ -7,7 +7,7 @@ import { Context, type Effect } from "effect"
 
 export class AccountPortDriving extends Context.Tag("AccountPortDriving")<AccountPortDriving, {
   create: (
-    account: Omit<Account, "id" | "createdAt" | "updatedAt">
+    account: Omit<Account, "id" | "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">>
   delete: (id: AccountId) => Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "delete">>
   readAll: (
@@ -18,6 +18,6 @@ export class AccountPortDriving extends Context.Tag("AccountPortDriving")<Accoun
   ) => Effect.Effect<Account, AccountErrorNotFound, ActorAuthorized<"Account", "readById">>
   update: (
     id: AccountId,
-    account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">>
+    account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "update">>
 }>() {}

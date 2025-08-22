@@ -7,7 +7,7 @@ import { PortEventEmitter } from "../../../infrastructure/application/PortEventE
 
 type PersonEvents = {
   PersonUseCaseCreate: {
-    in: { person: Omit<Person, "id" | "createdAt" | "updatedAt"> }
+    in: { person: Omit<Person, "createdAt" | "updatedAt" | "deletedAt"> }
     out: Exit.Exit<PersonId>
   }
   PersonUseCaseDelete: { in: { id: PersonId }; out: Exit.Exit<PersonId, PersonErrorNotFound> }
@@ -17,7 +17,7 @@ type PersonEvents = {
   }
   PersonUseCaseReadById: { in: { id: PersonId }; out: Exit.Exit<Person, PersonErrorNotFound> }
   PersonUseCaseUpdate: {
-    in: { id: PersonId; person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">> }
+    in: { id: PersonId; person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt" | "deletedAt">> }
     out: Exit.Exit<PersonId, PersonErrorNotFound>
   }
 }

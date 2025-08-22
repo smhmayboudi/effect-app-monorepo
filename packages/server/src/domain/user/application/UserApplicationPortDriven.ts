@@ -13,7 +13,7 @@ import { Context, type Effect } from "effect"
 
 export class UserPortDriven extends Context.Tag("UserPortDriven")<UserPortDriven, {
   create: (
-    user: Omit<UserWithSensitive, "id" | "createdAt" | "updatedAt">
+    user: Omit<UserWithSensitive, "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken, never>
   delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, never>
   readAll: (urlParams: URLParams<User>) => Effect.Effect<SuccessArray<User, never, never>>
@@ -26,6 +26,6 @@ export class UserPortDriven extends Context.Tag("UserPortDriven")<UserPortDriven
   readByIdWithSensitive: (id: UserId) => Effect.Effect<UserWithSensitive>
   update: (
     id: UserId,
-    user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
+    user: Partial<Omit<User, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, never>
 }>() {}

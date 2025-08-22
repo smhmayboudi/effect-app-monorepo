@@ -1,7 +1,7 @@
 import { Schema } from "effect"
 import { AccountId } from "../../account/application/AccountApplicationDomain.js"
 
-export const TodoId = Schema.Number.pipe(
+export const TodoId = Schema.UUID.pipe(
   Schema.brand("TodoId"),
   Schema.annotations({ description: "Todo identification" })
 )
@@ -13,7 +13,8 @@ export const TodoSchema = Schema.Struct({
   done: Schema.Literal(0, 1).annotations({ description: "Done" }),
   text: Schema.NonEmptyTrimmedString.annotations({ description: "Text" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
-  updatedAt: Schema.Date.annotations({ description: "Updated at" })
+  updatedAt: Schema.Date.annotations({ description: "Updated at" }),
+  deletedAt: Schema.NullOr(Schema.Date).annotations({ description: "Delete at" })
 }).pipe(Schema.annotations({ description: "Todo", identifier: "Todo" }))
 export type TodoSchema = typeof TodoSchema.Type
 

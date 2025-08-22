@@ -8,7 +8,7 @@ import { Context, type Effect } from "effect"
 
 export class TodoPortDriving extends Context.Tag("TodoPortDriving")<TodoPortDriving, {
   create: (
-    todo: Omit<Todo, "id" | "createdAt" | "updatedAt">
+    todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<TodoId, TodoErrorAlreadyExists, ActorAuthorized<"Todo", "create">>
   delete: (id: TodoId) => Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "delete">>
   readAll: (
@@ -17,6 +17,6 @@ export class TodoPortDriving extends Context.Tag("TodoPortDriving")<TodoPortDriv
   readById: (id: TodoId) => Effect.Effect<Todo, TodoErrorNotFound, ActorAuthorized<"Todo", "readById">>
   update: (
     id: TodoId,
-    todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>
+    todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "update">>
 }>() {}

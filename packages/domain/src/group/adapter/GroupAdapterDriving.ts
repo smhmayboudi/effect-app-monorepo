@@ -5,10 +5,6 @@ import { ResponseSuccess } from "../../shared/adapter/Response.js"
 import { GroupId, GroupSchema } from "../application/GroupApplicationDomain.js"
 import { GroupErrorNotFound } from "../application/GroupApplicationErrorNotFound.js"
 
-export const GroupIdFromString = Schema.NumberFromString.pipe(
-  Schema.compose(GroupId)
-)
-
 export class GroupDriving extends HttpApiGroup.make("group")
   .add(
     HttpApiEndpoint.post("create", "/")
@@ -21,7 +17,7 @@ export class GroupDriving extends HttpApiGroup.make("group")
     HttpApiEndpoint.patch("update", "/:id")
       .addError(GroupErrorNotFound)
       .addSuccess(ResponseSuccess(GroupId))
-      .setPath(Schema.Struct({ id: GroupIdFromString }))
+      .setPath(Schema.Struct({ id: GroupId }))
       .setPayload(GroupSchema.pipe(Schema.pick("name")))
       .annotate(OpenApi.Description, "Group update")
       .annotate(OpenApi.Summary, "Group update")

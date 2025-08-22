@@ -9,6 +9,7 @@ import { UserErrorNotFound } from "@template/domain/user/application/UserApplica
 import { UserErrorNotFoundWithAccessToken } from "@template/domain/user/application/UserApplicationErrorNotFoundWithAccessToken"
 import { Effect, Layer, Redacted } from "effect"
 import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
+import { formatDateTimeForSQL } from "../../../util/Date.js"
 import { UserPortDriven } from "../application/UserApplicationPortDriven.js"
 
 export const UserDriven = Layer.effect(
@@ -17,10 +18,10 @@ export const UserDriven = Layer.effect(
     const sql = yield* SqlClient.SqlClient
 
     const create = (
-      user: Omit<UserWithSensitive, "id" | "createdAt" | "updatedAt">
+      user: Omit<UserWithSensitive, "createdAt" | "updatedAt" | "deletedAt">
     ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken, never> =>
       sql<
-        { id: number }
+        { id: string }
       >`INSERT INTO tbl_user ${sql.insert({ ...user, accessToken: Redacted.value(user.accessToken) })} RETURNING id`
         .pipe(
           Effect.catchTag("SqlError", (error) =>
@@ -33,13 +34,7 @@ export const UserDriven = Layer.effect(
         )
 
     const del = (id: UserId): Effect.Effect<UserId, UserErrorNotFound, never> =>
-      readById(id).pipe(
-        Effect.flatMap(() => sql<{ id: number }>`DELETE FROM tbl_user WHERE id = ${id} RETURNING id`),
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => UserId.make(row.id)),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } })
-      )
+      update(id, { deletedAt: new Date() }).pipe(Effect.catchTag("UserErrorEmailAlreadyTaken", Effect.die))
 
     const readAll = (
       urlParams: URLParams<User>
@@ -63,7 +58,7 @@ export const UserDriven = Layer.effect(
     const readByAccessToken = (
       accessToken: AccessToken
     ): Effect.Effect<User, UserErrorNotFoundWithAccessToken, never> =>
-      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE access_token = ${
+      sql`SELECT id, owner_id, email, created_at, updated_at, deleted_at FROM tbl_user WHERE access_token = ${
         Redacted.value(accessToken)
       }`.pipe(
         Effect.catchTag("SqlError", Effect.die),
@@ -80,7 +75,7 @@ export const UserDriven = Layer.effect(
     const readByAccessTokens = (
       accessTokens: Array<AccessToken>
     ): Effect.Effect<Array<User>, UserErrorNotFoundWithAccessToken, never> =>
-      sql`SELECT id, owner_id, email, created_at, updated_at, access_token FROM tbl_user WHERE access_token IN ${
+      sql`SELECT id, owner_id, email, created_at, updated_at, deleted_at, access_token FROM tbl_user WHERE access_token IN ${
         sql.in(accessTokens.map((accessToken) => Redacted.value(accessToken)))
       }`.pipe(
         Effect.catchTag("SqlError", Effect.die),
@@ -106,7 +101,7 @@ export const UserDriven = Layer.effect(
       )
 
     const readById = (id: UserId): Effect.Effect<User, UserErrorNotFound, never> =>
-      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
+      sql`SELECT id, owner_id, email, created_at, updated_at, deleted_at FROM tbl_user WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           rows.length === 0
@@ -119,7 +114,7 @@ export const UserDriven = Layer.effect(
       )
 
     const readByIds = (ids: Array<UserId>): Effect.Effect<Array<User>, UserErrorNotFound, never> =>
-      sql`SELECT id, owner_id, email, created_at, updated_at FROM tbl_user WHERE id IN ${sql.in(ids)}`.pipe(
+      sql`SELECT id, owner_id, email, created_at, updated_at, deleted_at FROM tbl_user WHERE id IN ${sql.in(ids)}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
           Effect.all(
@@ -141,28 +136,40 @@ export const UserDriven = Layer.effect(
       )
 
     const readByIdWithSensitive = (id: UserId): Effect.Effect<UserWithSensitive> =>
-      sql`SELECT id, owner_id, access_token, email, created_at, updated_at FROM tbl_user WHERE id = ${id}`.pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.flatMap(UserWithSensitive.decodeUnknown),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } })
-      )
+      sql`SELECT id, owner_id, access_token, email, created_at, updated_at, deleted_at FROM tbl_user WHERE id = ${id}`
+        .pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) => Effect.succeed(rows[0])),
+          Effect.flatMap(UserWithSensitive.decodeUnknown),
+          Effect.catchTag("ParseError", Effect.die),
+          Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id } })
+        )
 
-    const buildUpdateQuery = (
-      id: UserId,
-      user: Omit<User, "id" | "createdAt" | "updatedAt">
-    ) =>
-      sql<{ id: number }>`UPDATE tbl_user SET ${
-        sql.update(user)
-      }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
+    const buildUpdateQuery = (id: UserId, user: Omit<User, "id">) =>
+      user.deletedAt ?
+        sql<{ id: string }>`UPDATE tbl_user SET ${
+          sql.update({
+            ...user,
+            createdAt: formatDateTimeForSQL(user.createdAt),
+            updatedAt: formatDateTimeForSQL(user.updatedAt),
+            deletedAt: formatDateTimeForSQL(user.deletedAt)
+          })
+        } WHERE id = ${id} RETURNING id` :
+        sql<{ id: string }>`UPDATE tbl_user SET ${
+          sql.update({
+            ...user,
+            createdAt: formatDateTimeForSQL(user.createdAt),
+            updatedAt: formatDateTimeForSQL(user.updatedAt),
+            deletedAt: formatDateTimeForSQL(user.deletedAt)
+          })
+        }, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING id`
 
     const update = (
       id: UserId,
       user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
     ): Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, never> =>
       readById(id).pipe(
-        Effect.flatMap((oldUser) => buildUpdateQuery(id, { ownerId: oldUser.ownerId, email: oldUser.email, ...user })),
+        Effect.flatMap((oldUser) => buildUpdateQuery(id, { ...oldUser, ...user })),
         Effect.catchTag("SqlError", (error) =>
           String(error.cause).includes("UNIQUE constraint failed: tbl_user.email")
             ? Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email! }))

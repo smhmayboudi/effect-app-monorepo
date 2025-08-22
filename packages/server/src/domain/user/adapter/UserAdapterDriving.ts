@@ -31,19 +31,19 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
       .handle("delete", ({ path: { id } }) =>
         driving.delete(id).pipe(
           Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-          policyUse(policy.canDelete(UserId.make(0))),
+          policyUse(policy.canDelete(UserId.make("00000000-0000-0000-0000-000000000000"))),
           response
         ))
       .handle("readAll", ({ urlParams }) =>
         driving.readAll(urlParams).pipe(
           Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-          policyUse(policy.canReadAll(UserId.make(0))),
+          policyUse(policy.canReadAll(UserId.make("00000000-0000-0000-0000-000000000000"))),
           responseArray(urlParams)
         ))
       .handle("readById", ({ path: { id } }) =>
         driving.readById(id).pipe(
           Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-          policyUse(policy.canReadById(UserId.make(0))),
+          policyUse(policy.canReadById(UserId.make("00000000-0000-0000-0000-000000000000"))),
           response
         ))
       .handle("readByIdWithSensitive", () =>
@@ -61,7 +61,7 @@ export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
       .handle("update", ({ path: { id }, payload }) =>
         driving.update(id, payload).pipe(
           Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user: payload } }),
-          policyUse(policy.canUpdate(UserId.make(0))),
+          policyUse(policy.canUpdate(UserId.make("00000000-0000-0000-0000-000000000000"))),
           response
         ))
   }))

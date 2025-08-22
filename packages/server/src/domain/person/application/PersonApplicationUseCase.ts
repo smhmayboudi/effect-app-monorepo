@@ -1,11 +1,13 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
-import type { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
+import type { Person } from "@template/domain/person/application/PersonApplicationDomain"
+import { PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Exit, Layer } from "effect"
+import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupPortDriving } from "../../group/application/GroupApplicationPortDriving.js"
 import { makePersonReadResolver, PersonReadById } from "./PersonApplicationCache.js"
@@ -16,13 +18,14 @@ import { PersonPortEventEmitter } from "./PersonApplicationPortEventEmitter.js"
 export const PersonUseCase = Layer.scoped(
   PersonPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* PersonPortEventEmitter
-    const driven = yield* PersonPortDriven
+    const uuid = yield* PortUUID
     const group = yield* GroupPortDriving
+    const driven = yield* PersonPortDriven
+    const eventEmitter = yield* PersonPortEventEmitter
     const resolver = yield* makePersonReadResolver
 
     const create = (
-      person: Omit<Person, "id" | "createdAt" | "updatedAt">
+      person: Omit<Person, "id" | "createdAt" | "updatedAt" | "deletedAt">
     ): Effect.Effect<
       PersonId,
       GroupErrorNotFound,
@@ -30,21 +33,25 @@ export const PersonUseCase = Layer.scoped(
     > =>
       group.readById(person.groupId).pipe(
         Effect.zipRight(
-          driven.create(person).pipe(
-            Effect.tapBoth({
-              onFailure: (out) =>
-                eventEmitter.emit("PersonUseCaseCreate", {
-                  in: { person },
-                  out: Exit.fail(out)
+          uuid.v7().pipe(
+            Effect.flatMap((v7) =>
+              driven.create({ ...person, id: PersonId.make(v7) }).pipe(
+                Effect.tapBoth({
+                  onFailure: (out) =>
+                    eventEmitter.emit("PersonUseCaseCreate", {
+                      in: { person: { ...person, id: PersonId.make(v7) } },
+                      out: Exit.fail(out)
+                    }),
+                  onSuccess: (out) =>
+                    eventEmitter.emit("PersonUseCaseCreate", {
+                      in: { person: { ...person, id: PersonId.make(v7) } },
+                      out: Exit.succeed(out)
+                    })
                 }),
-              onSuccess: (out) =>
-                eventEmitter.emit("PersonUseCaseCreate", {
-                  in: { person },
-                  out: Exit.succeed(out)
-                })
-            }),
-            Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", person } }),
-            policyRequire("Person", "create")
+                Effect.withSpan("PersonUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", person } }),
+                policyRequire("Person", "create")
+              )
+            )
           )
         )
       )
@@ -109,7 +116,7 @@ export const PersonUseCase = Layer.scoped(
 
     const update = (
       id: PersonId,
-      person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>
+      person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt" | "deletedAt">>
     ): Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "update">> =>
       driven.update(id, person).pipe(
         Effect.tapBoth({

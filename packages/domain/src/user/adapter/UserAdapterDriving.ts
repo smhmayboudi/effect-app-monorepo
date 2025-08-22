@@ -7,16 +7,12 @@ import { UserId, UserSchema, UserWithSensitiveSchema } from "../application/User
 import { UserErrorEmailAlreadyTaken } from "../application/UserApplicationErrorEmailAlreadyTaken.js"
 import { UserErrorNotFound } from "../application/UserApplicationErrorNotFound.js"
 
-export const UserIdFromString = Schema.NumberFromString.pipe(
-  Schema.compose(UserId)
-)
-
 export class UserDriving extends HttpApiGroup.make("user")
   .add(
     HttpApiEndpoint.del("delete", "/:id")
       .addError(UserErrorNotFound, { status: 404 })
       .addSuccess(ResponseSuccess(UserId))
-      .setPath(Schema.Struct({ id: UserIdFromString }))
+      .setPath(Schema.Struct({ id: UserId }))
       .annotate(OpenApi.Description, "User delete")
       .annotate(OpenApi.Summary, "User delete")
   )
@@ -31,7 +27,7 @@ export class UserDriving extends HttpApiGroup.make("user")
     HttpApiEndpoint.get("readById", "/:id")
       .addError(UserErrorNotFound)
       .addSuccess(ResponseSuccess(UserSchema))
-      .setPath(Schema.Struct({ id: UserIdFromString }))
+      .setPath(Schema.Struct({ id: UserId }))
       .annotate(OpenApi.Description, "User readById")
       .annotate(OpenApi.Summary, "User readById")
   )
@@ -46,7 +42,7 @@ export class UserDriving extends HttpApiGroup.make("user")
       .addError(UserErrorEmailAlreadyTaken)
       .addError(UserErrorNotFound)
       .addSuccess(ResponseSuccess(UserId))
-      .setPath(Schema.Struct({ id: UserIdFromString }))
+      .setPath(Schema.Struct({ id: UserId }))
       .setPayload(UserSchema.pipe(Schema.pick("email")))
       .annotate(OpenApi.Description, "User update")
       .annotate(OpenApi.Summary, "User update")

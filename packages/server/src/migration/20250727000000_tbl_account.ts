@@ -6,15 +6,17 @@ export default Effect.gen(function*() {
   yield* sql.onDialectOrElse({
     pg: () =>
       sql`CREATE TABLE tbl_account (
-      id SERIAL PRIMARY KEY,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    )`,
+            id UUID PRIMARY KEY,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            deleted_at TIMESTAMP NULL
+          )`,
     orElse: () =>
       sql`CREATE TABLE tbl_account (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
-    )`
+            id UUID PRIMARY KEY,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            deleted_at DATETIME NULL
+          )`
   })
 })

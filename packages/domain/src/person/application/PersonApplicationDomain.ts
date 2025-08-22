@@ -1,7 +1,7 @@
 import { Schema } from "effect"
 import { GroupId } from "../../group/application/GroupApplicationDomain.js"
 
-export const PersonId = Schema.Number.pipe(
+export const PersonId = Schema.UUID.pipe(
   Schema.brand("PersonId"),
   Schema.annotations({ description: "Person identification" })
 )
@@ -14,7 +14,8 @@ export const PersonSchema = Schema.Struct({
   firstName: Schema.NonEmptyTrimmedString.annotations({ description: "First name" }),
   lastName: Schema.NonEmptyTrimmedString.annotations({ description: "Last name" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
-  updatedAt: Schema.Date.annotations({ description: "Updated at" })
+  updatedAt: Schema.Date.annotations({ description: "Updated at" }),
+  deletedAt: Schema.NullOr(Schema.Date).annotations({ description: "Delete at" })
 }).pipe(Schema.annotations({ description: "Person", identifier: "Person" }))
 export type PersonSchema = typeof PersonSchema.Type
 

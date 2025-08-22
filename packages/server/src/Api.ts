@@ -98,7 +98,6 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(UserDriving),
     Layer.provide(MiddlewareAuthentication),
     Layer.provide(UserUseCase),
-    Layer.provide(UUID),
     Layer.provide(UserDriven),
     Layer.provide(UserPolicy),
     Layer.provide(UserEventEmitter),
@@ -115,5 +114,6 @@ export const ApiLive = HttpApiBuilder.api(Api)
   .pipe(
     Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((opts) => opts.ElasticsearchLive)))),
     Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
-    Layer.provide(Sql(ConfigLive.pipe(Config.map((opts) => opts.SqliteLive))))
+    Layer.provide(Sql(ConfigLive.pipe(Config.map((opts) => opts.SqliteLive)))),
+    Layer.provide(UUID)
   )

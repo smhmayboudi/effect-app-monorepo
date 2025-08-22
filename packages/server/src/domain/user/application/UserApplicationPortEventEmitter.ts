@@ -14,7 +14,7 @@ import { PortEventEmitter } from "../../../infrastructure/application/PortEventE
 
 type UserEvents = {
   UserUseCaseCreate: {
-    in: { user: Omit<User, "id" | "createdAt" | "updatedAt"> }
+    in: { user: Omit<User, "createdAt" | "updatedAt" | "deletedAt"> }
     out: Exit.Exit<UserWithSensitive, UserErrorEmailAlreadyTaken>
   }
   UserUseCaseDelete: { in: { id: UserId }; out: Exit.Exit<UserId, UserErrorNotFound> }
@@ -29,7 +29,7 @@ type UserEvents = {
   UserUseCaseReadById: { in: { id: UserId }; out: Exit.Exit<User, UserErrorNotFound> }
   UserUseCaseReadByIdWithSensitive: { in: { id: UserId }; out: Exit.Exit<UserWithSensitive> }
   UserUseCaseUpdate: {
-    in: { id: UserId; user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">> }
+    in: { id: UserId; user: Partial<Omit<User, "id" | "createdAt" | "updatedAt" | "deletedAt">> }
     out: Exit.Exit<UserId, UserErrorNotFound | UserErrorEmailAlreadyTaken>
   }
 }

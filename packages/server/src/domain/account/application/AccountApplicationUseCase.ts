@@ -1,10 +1,12 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { Account, AccountId } from "@template/domain/account/application/AccountApplicationDomain"
+import type { Account } from "@template/domain/account/application/AccountApplicationDomain"
+import { AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import type { AccountErrorNotFound } from "@template/domain/account/application/AccountApplicationErrorNotFound"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Exit, Layer } from "effect"
+import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { AccountReadById, makeAccountReadResolver } from "./AccountApplicationCache.js"
 import { AccountPortDriven } from "./AccountApplicationPortDriven.js"
@@ -14,28 +16,33 @@ import { AccountPortEventEmitter } from "./AccountApplicationPortEventEmitter.js
 export const AccountUseCase = Layer.scoped(
   AccountPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* AccountPortEventEmitter
+    const uuid = yield* PortUUID
     const driven = yield* AccountPortDriven
+    const eventEmitter = yield* AccountPortEventEmitter
     const resolver = yield* makeAccountReadResolver
 
     const create = (
-      account: Omit<Account, "id" | "createdAt" | "updatedAt">
+      account: Omit<Account, "id" | "createdAt" | "updatedAt" | "deletedAt">
     ): Effect.Effect<AccountId, never, ActorAuthorized<"Account", "create">> =>
-      driven.create(account).pipe(
-        Effect.tapBoth({
-          onFailure: (out) =>
-            eventEmitter.emit("AccountUseCaseCreate", {
-              in: { account },
-              out: Exit.fail(out)
+      uuid.v7().pipe(
+        Effect.flatMap((v7) =>
+          driven.create({ ...account, id: AccountId.make(v7) }).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("AccountUseCaseCreate", {
+                  in: { account: { ...account, id: AccountId.make(v7) } },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("AccountUseCaseCreate", {
+                  in: { account: { ...account, id: AccountId.make(v7) } },
+                  out: Exit.succeed(out)
+                })
             }),
-          onSuccess: (out) =>
-            eventEmitter.emit("AccountUseCaseCreate", {
-              in: { account },
-              out: Exit.succeed(out)
-            })
-        }),
-        Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account } }),
-        policyRequire("Account", "create")
+            Effect.withSpan("AccountUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", account } }),
+            policyRequire("Account", "create")
+          )
+        )
       )
 
     const del = (id: AccountId): Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "delete">> =>
@@ -98,7 +105,7 @@ export const AccountUseCase = Layer.scoped(
 
     const update = (
       id: AccountId,
-      account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt">>
+      account: Partial<Omit<Account, "id" | "createdAt" | "updatedAt" | "deletedAt">>
     ): Effect.Effect<AccountId, AccountErrorNotFound, ActorAuthorized<"Account", "update">> =>
       driven.update(id, account).pipe(
         Effect.tapBoth({

@@ -1,10 +1,12 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ActorAuthorized } from "@template/domain/Actor"
-import type { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
+import type { Group } from "@template/domain/group/application/GroupApplicationDomain"
+import { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Exit, Layer } from "effect"
+import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
 import { GroupReadById, makeGroupReadResolver } from "./GroupApplicationCache.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
@@ -14,28 +16,33 @@ import { GroupPortEventEmitter } from "./GroupApplicationPortEventEmitter.js"
 export const GroupUseCase = Layer.scoped(
   GroupPortDriving,
   Effect.gen(function*() {
-    const eventEmitter = yield* GroupPortEventEmitter
+    const uuid = yield* PortUUID
     const driven = yield* GroupPortDriven
+    const eventEmitter = yield* GroupPortEventEmitter
     const resolver = yield* makeGroupReadResolver
 
     const create = (
-      group: Omit<Group, "id" | "createdAt" | "updatedAt">
+      group: Omit<Group, "id" | "createdAt" | "updatedAt" | "deletedAt">
     ): Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">> =>
-      driven.create(group).pipe(
-        Effect.tapBoth({
-          onFailure: (out) =>
-            eventEmitter.emit("GroupUseCaseCreate", {
-              in: { group },
-              out: Exit.fail(out)
+      uuid.v7().pipe(
+        Effect.flatMap((v7) =>
+          driven.create({ ...group, id: GroupId.make(v7) }).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("GroupUseCaseCreate", {
+                  in: { group: { ...group, id: GroupId.make(v7) } },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("GroupUseCaseCreate", {
+                  in: { group: { ...group, id: GroupId.make(v7) } },
+                  out: Exit.succeed(out)
+                })
             }),
-          onSuccess: (out) =>
-            eventEmitter.emit("GroupUseCaseCreate", {
-              in: { group },
-              out: Exit.succeed(out)
-            })
-        }),
-        Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", group } }),
-        policyRequire("Group", "create")
+            Effect.withSpan("GroupUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", group } }),
+            policyRequire("Group", "create")
+          )
+        )
       )
 
     const del = (id: GroupId): Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "delete">> =>
@@ -98,7 +105,7 @@ export const GroupUseCase = Layer.scoped(
 
     const update = (
       id: GroupId,
-      group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">>
+      group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt" | "deletedAt">>
     ): Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "update">> =>
       driven.update(id, group).pipe(
         Effect.tapBoth({

@@ -7,7 +7,7 @@ import { PortEventEmitter } from "../../../infrastructure/application/PortEventE
 
 type GroupEvents = {
   GroupUseCaseCreate: {
-    in: { group: Omit<Group, "id" | "createdAt" | "updatedAt"> }
+    in: { group: Omit<Group, "createdAt" | "updatedAt" | "deletedAt"> }
     out: Exit.Exit<GroupId>
   }
   GroupUseCaseDelete: { in: { id: GroupId }; out: Exit.Exit<GroupId, GroupErrorNotFound> }
@@ -17,7 +17,7 @@ type GroupEvents = {
   }
   GroupUseCaseReadById: { in: { id: GroupId }; out: Exit.Exit<Group, GroupErrorNotFound> }
   GroupUseCaseUpdate: {
-    in: { id: GroupId; group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">> }
+    in: { id: GroupId; group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt" | "deletedAt">> }
     out: Exit.Exit<GroupId, GroupErrorNotFound>
   }
 }

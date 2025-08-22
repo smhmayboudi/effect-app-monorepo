@@ -7,7 +7,7 @@ import { Context, type Effect } from "effect"
 
 export class GroupPortDriving extends Context.Tag("GroupPortDriving")<GroupPortDriving, {
   create: (
-    group: Omit<Group, "id" | "createdAt" | "updatedAt">
+    group: Omit<Group, "id" | "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<GroupId, never, ActorAuthorized<"Group", "create">>
   delete: (id: GroupId) => Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "delete">>
   readAll: (
@@ -16,6 +16,6 @@ export class GroupPortDriving extends Context.Tag("GroupPortDriving")<GroupPortD
   readById: (id: GroupId) => Effect.Effect<Group, GroupErrorNotFound, ActorAuthorized<"Group", "readById">>
   update: (
     id: GroupId,
-    group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">>
+    group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<GroupId, GroupErrorNotFound, ActorAuthorized<"Group", "update">>
 }>() {}

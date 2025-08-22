@@ -307,6 +307,9 @@ export * as URLParams from "./shared/adapter/URLParams.js"
 export * as Control from "./util/Control.js"
 
 
+export * as Date from "./util/Date.js"
+
+
 export * as Layer from "./util/Layer.js"
 
 

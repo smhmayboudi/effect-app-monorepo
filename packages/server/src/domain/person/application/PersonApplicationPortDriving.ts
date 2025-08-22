@@ -8,7 +8,7 @@ import { Context, type Effect } from "effect"
 
 export class PersonPortDriving extends Context.Tag("PersonPortDriving")<PersonPortDriving, {
   create: (
-    person: Omit<Person, "id" | "createdAt" | "updatedAt">
+    person: Omit<Person, "id" | "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<
     PersonId,
     GroupErrorNotFound,
@@ -21,6 +21,6 @@ export class PersonPortDriving extends Context.Tag("PersonPortDriving")<PersonPo
   readById: (id: PersonId) => Effect.Effect<Person, PersonErrorNotFound, ActorAuthorized<"Person", "readById">>
   update: (
     id: PersonId,
-    person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt">>
+    person: Partial<Omit<Person, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<PersonId, PersonErrorNotFound, ActorAuthorized<"Person", "update">>
 }>() {}

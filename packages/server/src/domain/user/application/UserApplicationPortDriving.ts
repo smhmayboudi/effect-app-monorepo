@@ -14,7 +14,7 @@ import { Context, type Effect } from "effect"
 
 export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriving, {
   create: (
-    user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt">
+    user: Omit<User, "id" | "ownerId" | "createdAt" | "updatedAt" | "deletedAt">
   ) => Effect.Effect<
     UserWithSensitive,
     UserErrorEmailAlreadyTaken,
@@ -36,6 +36,6 @@ export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriv
   ) => Effect.Effect<UserWithSensitive, never, ActorAuthorized<"User", "readByIdWithSensitive">>
   update: (
     id: UserId,
-    user: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>
+    user: Partial<Omit<User, "id" | "createdAt" | "updatedAt" | "deletedAt">>
   ) => Effect.Effect<UserId, UserErrorEmailAlreadyTaken | UserErrorNotFound, ActorAuthorized<"User", "update">>
 }>() {}
