@@ -4,8 +4,9 @@ import { AccountErrorNotFound } from "@template/domain/account/application/Accou
 import { AccountPortDriven } from "@template/server/domain/account/application/AccountApplicationPortDriven"
 import { AccountPortDriving } from "@template/server/domain/account/application/AccountApplicationPortDriving"
 import { AccountUseCase } from "@template/server/domain/account/application/AccountApplicationUseCase"
-import { makeTest } from "@template/server/infrastructure/adapter/EventEmitter"
+import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
 import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
+import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
 import { Effect } from "effect"
@@ -17,49 +18,57 @@ describe("AccountUseCase", () => {
       const accountId = yield* accounts.create({}).pipe(
         withSystemActor
       )
-      assert.strictEqual(accountId, 1)
+      assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
-      Effect.provide(makeTestLayer(AccountPortDriven)({ create: (_account) => Effect.succeed(AccountId.make(1)) })),
+      Effect.provide(UUIDTest),
+      Effect.provide(
+        makeTestLayer(AccountPortDriven)({
+          create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
+        })
+      ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     ))
 
   it.scoped("should be deleted", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      const accountId = yield* accounts.delete(AccountId.make(1)).pipe(
+      const accountId = yield* accounts.delete(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
-      assert.strictEqual(accountId, 1)
+      assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.succeed(id) })),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     ))
 
   it.scoped.fails("should be deleted with AccountErrorNotFound", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      yield* accounts.delete(AccountId.make(1)).pipe(
+      yield* accounts.delete(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.fail(new AccountErrorNotFound({ id })) })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     ))
 
   it.scoped("should be readAll", () => {
     const now = new Date()
     const AccountTest = new Account({
-      id: AccountId.make(1),
+      id: AccountId.make("00000000-0000-0000-0000-000000000000"),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      deletedAt: null
     })
 
     return Effect.gen(function*() {
@@ -73,7 +82,7 @@ describe("AccountUseCase", () => {
       })
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({
           readAll: (_urlParams) =>
@@ -83,6 +92,7 @@ describe("AccountUseCase", () => {
             })
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     )
   })
@@ -90,26 +100,28 @@ describe("AccountUseCase", () => {
   it.scoped("should be readById", () => {
     const now = new Date()
     const AccountTest = new Account({
-      id: AccountId.make(1),
+      id: AccountId.make("00000000-0000-0000-0000-000000000000"),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      deletedAt: null
     })
 
     return Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      const account = yield* accounts.readById(AccountId.make(1)).pipe(
+      const account = yield* accounts.readById(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
       assert.strictEqual(account, AccountTest)
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({
           readById: (_id) => Effect.succeed(AccountTest),
           readByIds: (_ids) => Effect.succeed([AccountTest])
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     )
   })
@@ -117,53 +129,56 @@ describe("AccountUseCase", () => {
   it.scoped.fails("should be readById with AccountErrorNotFound", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      yield* accounts.readById(AccountId.make(1)).pipe(
+      yield* accounts.readById(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({
           readById: (id) => Effect.fail(new AccountErrorNotFound({ id })),
           readByIds: (ids) => Effect.fail(new AccountErrorNotFound({ id: ids[0] }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     ))
 
   it.scoped("should be update", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      const accountId = yield* accounts.update(AccountId.make(1), {}).pipe(
+      const accountId = yield* accounts.update(AccountId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
         withSystemActor
       )
-      assert.strictEqual(accountId, 1)
+      assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({
           update: (id, _account) => Effect.succeed(AccountId.make(id))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     ))
 
   it.scoped.fails("should be update with AccountErrorNotFound", () =>
     Effect.gen(function*() {
       const accounts = yield* AccountPortDriving
-      yield* accounts.update(AccountId.make(1), {}).pipe(
+      yield* accounts.update(AccountId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(AccountUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(AccountPortDriven)({
           update: (id, _account) => Effect.fail(new AccountErrorNotFound({ id }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest)
     ))
 })

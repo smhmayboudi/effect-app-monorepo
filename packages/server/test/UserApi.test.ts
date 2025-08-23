@@ -1,25 +1,29 @@
 import { HttpApiClient, HttpClient, HttpClientRequest, HttpClientResponse } from "@effect/platform"
 import { describe, expect, it } from "@effect/vitest"
+import { AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import { Api } from "@template/domain/Api"
-import { Email } from "@template/domain/user/application/UserApplicationDomain"
+import { AccessToken, Email, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer, Redacted } from "effect"
 
 const baseUrl = "http://127.0.0.1:3001"
 
 const HttpClientTest = HttpClient.make((req) => {
   if (req.method === "POST" && req.url === `${baseUrl}/api/v1/user`) {
+    const now = new Date()
+
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
         new Response(JSON.stringify({
-          data: {
-            id: 1,
-            ownerId: 1,
-            email: "smhmayboudi@gmail.com",
-            createdAt: "2025-08-08 08:08",
-            updatedAt: "2025-08-08 08:08",
-            accessToken: "access-token"
-          }
+          data: UserWithSensitive.make({
+            id: UserId.make("00000000-0000-0000-0000-000000000000"),
+            ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+            email: Email.make("smhmayboudi@gmail.com"),
+            createdAt: now,
+            updatedAt: now,
+            deletedAt: null,
+            accessToken: AccessToken.make(Redacted.make("access-token"))
+          })
         }))
       )
     )
@@ -32,11 +36,11 @@ const HttpClientTest = HttpClient.make((req) => {
       )
     )
   }
-  if (req.method === "DELETE" && req.url === `${baseUrl}/api/v1/user/1`) {
+  if (req.method === "DELETE" && req.url === `${baseUrl}/api/v1/user/00000000-0000-0000-0000-000000000000`) {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
-        new Response(JSON.stringify({ data: 1 }))
+        new Response(JSON.stringify({ data: "00000000-0000-0000-0000-000000000000" }))
       )
     )
   }

@@ -14,7 +14,7 @@ import { AccountPortDriving } from "@template/server/domain/account/application/
 import { UserPortDriven } from "@template/server/domain/user/application/UserApplicationPortDriven"
 import { UserPortDriving } from "@template/server/domain/user/application/UserApplicationPortDriving"
 import { UserUseCase } from "@template/server/domain/user/application/UserApplicationUseCase"
-import { makeTest } from "@template/server/infrastructure/adapter/EventEmitter"
+import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
 import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
@@ -25,11 +25,12 @@ describe("UserUseCase", () => {
   it.scoped("should be created", () => {
     const now = new Date()
     const userWithSensitiveTest = new UserWithSensitive({
-      id: UserId.make(1),
-      ownerId: AccountId.make(1),
+      id: UserId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
       email: Email.make("smhmayboudi@gmail.com"),
       createdAt: now,
       updatedAt: now,
+      deletedAt: null,
       accessToken: AccessToken.make(Redacted.make("v7"))
     })
 
@@ -43,16 +44,20 @@ describe("UserUseCase", () => {
       assert.strictEqual(userWithSensitive, userWithSensitiveTest)
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
-          create: (_user) => Effect.succeed(UserId.make(1)),
+          create: (_user) => Effect.succeed(UserId.make("00000000-0000-0000-0000-000000000000")),
           readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({ create: (_account) => Effect.succeed(AccountId.make(1)) })),
-      Effect.provide(UUIDTest)
+      Effect.provide(
+        makeTestLayer(AccountPortDriving)({
+          create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
+        })
+      )
     )
   })
 
@@ -69,69 +74,71 @@ describe("UserUseCase", () => {
       assert.strictEqual(
         userWithSensitive,
         new UserWithSensitive({
-          id: UserId.make(1),
-          ownerId: AccountId.make(1),
+          id: UserId.make("00000000-0000-0000-0000-000000000000"),
+          ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
           email: Email.make("smhmayboudi@gmail.com"),
           createdAt: now,
           updatedAt: now,
+          deletedAt: null,
           accessToken: AccessToken.make(Redacted.make("v7"))
         })
       )
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           create: (user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     )
   })
 
   it.scoped("should be deleted", () =>
     Effect.gen(function*() {
       const users = yield* UserPortDriving
-      const userId = yield* users.delete(UserId.make(1)).pipe(
+      const userId = yield* users.delete(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
-      assert.strictEqual(userId, 1)
+      assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(makeTestLayer(UserPortDriven)({ delete: (id) => Effect.succeed(id) })),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 
   it.scoped.fails("should be deleted with UserErrorNotFound", () =>
     Effect.gen(function*() {
       const users = yield* UserPortDriving
-      yield* users.delete(UserId.make(1)).pipe(
+      yield* users.delete(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({ delete: (id) => Effect.fail(new UserErrorNotFound({ id })) })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 
   it.scoped("should be readAll", () => {
     const now = new Date()
     const userTest = new User({
-      id: UserId.make(1),
-      ownerId: AccountId.make(1),
+      id: UserId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
       email: Email.make("smhmayboudi@gmail.com"),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      deletedAt: null
     })
 
     return Effect.gen(function*() {
@@ -145,7 +152,7 @@ describe("UserUseCase", () => {
       })
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           readAll: (_urlParams) =>
@@ -155,20 +162,21 @@ describe("UserUseCase", () => {
             })
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     )
   })
 
   it.scoped("should be readByAccessToken", () => {
     const now = new Date()
     const userTest = new User({
-      id: UserId.make(1),
-      ownerId: AccountId.make(1),
+      id: UserId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
       email: Email.make("smhmayboudi@gmail.com"),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      deletedAt: null
     })
 
     return Effect.gen(function*() {
@@ -179,16 +187,16 @@ describe("UserUseCase", () => {
       assert.strictEqual(user, userTest)
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           readByAccessToken: (_accessToken) => Effect.succeed(userTest),
           readByAccessTokens: (_accessTokens) => Effect.succeed([userTest])
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     )
   })
 
@@ -200,7 +208,7 @@ describe("UserUseCase", () => {
       )
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           readByAccessToken: (accessToken) => Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken })),
@@ -208,147 +216,150 @@ describe("UserUseCase", () => {
             Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken: accessTokens[0] }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 
   it.scoped("should be readById", () => {
     const now = new Date()
     const userTest = new User({
-      id: UserId.make(1),
-      ownerId: AccountId.make(1),
+      id: UserId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
       email: Email.make("smhmayboudi@gmail.com"),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      deletedAt: null
     })
 
     return Effect.gen(function*() {
       const users = yield* UserPortDriving
-      const user = yield* users.readById(UserId.make(1)).pipe(
+      const user = yield* users.readById(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
       assert.strictEqual(user, userTest)
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           readById: (_id) => Effect.succeed(userTest),
           readByIds: (_ids) => Effect.succeed([userTest])
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     )
   })
 
   it.scoped.fails("should be readById with UserErrorNotFound", () =>
     Effect.gen(function*() {
       const users = yield* UserPortDriving
-      yield* users.readById(UserId.make(1)).pipe(
+      yield* users.readById(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           readById: (id) => Effect.fail(new UserErrorNotFound({ id })),
           readByIds: (ids) => Effect.fail(new UserErrorNotFound({ id: ids[0] }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 
   it.scoped("should be readByIdWithSensitive", () => {
     const now = new Date()
     const userWithSensitiveTest = new UserWithSensitive({
-      id: UserId.make(1),
-      ownerId: AccountId.make(1),
+      id: UserId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
       email: Email.make("smhmayboudi@gmail.com"),
       createdAt: now,
       updatedAt: now,
+      deletedAt: null,
       accessToken: AccessToken.make(Redacted.make("v7"))
     })
     return Effect.gen(function*() {
       const users = yield* UserPortDriving
-      const userWithSensitive = yield* users.readByIdWithSensitive(UserId.make(1)).pipe(
-        withSystemActor
-      )
+      const userWithSensitive = yield* users.readByIdWithSensitive(UserId.make("00000000-0000-0000-0000-000000000000"))
+        .pipe(
+          withSystemActor
+        )
       assert.strictEqual(userWithSensitive, userWithSensitiveTest)
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     )
   })
 
   it.scoped("should be update", () =>
     Effect.gen(function*() {
       const users = yield* UserPortDriving
-      const userId = yield* users.update(UserId.make(1), {}).pipe(
+      const userId = yield* users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
         withSystemActor
       )
-      assert.strictEqual(userId, 1)
+      assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           update: (id, _user) => Effect.succeed(UserId.make(id))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 
   it.scoped.fails("should be update with UserErrorEmailAlreadyTaken", () =>
     Effect.gen(function*() {
       const users = yield* UserPortDriving
-      yield* users.update(UserId.make(1), {}).pipe(
+      yield* users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           update: (_id, user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email! }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 
   it.scoped.fails("should be update with UserErrorNotFound", () =>
     Effect.gen(function*() {
       const users = yield* UserPortDriving
-      yield* users.update(UserId.make(1), {}).pipe(
+      yield* users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
         withSystemActor
       )
     }).pipe(
       Effect.provide(UserUseCase),
-      Effect.provide(makeTest()),
+      Effect.provide(UUIDTest),
       Effect.provide(
         makeTestLayer(UserPortDriven)({
           update: (id, _user) => Effect.fail(new UserErrorNotFound({ id }))
         })
       ),
+      Effect.provide(EventEmitterTest()),
       Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({})),
-      Effect.provide(UUIDTest)
+      Effect.provide(makeTestLayer(AccountPortDriving)({}))
     ))
 })
