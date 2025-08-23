@@ -4,6 +4,7 @@ import { Context, type Effect } from "effect"
 
 export class AccountPortPolicy extends Context.Tag("AccountPortPolicy")<AccountPortPolicy, {
   canCreate: (id: AccountId) => Effect.Effect<ActorAuthorized<"Account", "create">, ActorErrorUnauthorized, Actor>
+  canDelete: (id: AccountId) => Effect.Effect<ActorAuthorized<"Account", "delete">, ActorErrorUnauthorized, Actor>
   canReadAll: (
     id: AccountId
   ) => Effect.Effect<ActorAuthorized<"Account", "readAll">, ActorErrorUnauthorized, Actor>

@@ -6,6 +6,9 @@ export class UserPortPolicy extends Context.Tag("UserPortPolicy")<UserPortPolicy
   canCreate: (id: UserId) => Effect.Effect<ActorAuthorized<"User", "create">, ActorErrorUnauthorized, Actor>
   canDelete: (id: UserId) => Effect.Effect<ActorAuthorized<"User", "delete">, ActorErrorUnauthorized, Actor>
   canReadAll: (id: UserId) => Effect.Effect<ActorAuthorized<"User", "readAll">, ActorErrorUnauthorized, Actor>
+  canReadByAccessToken: (
+    id: UserId
+  ) => Effect.Effect<ActorAuthorized<"User", "readByAccessToken">, ActorErrorUnauthorized, Actor>
   canReadById: (id: UserId) => Effect.Effect<ActorAuthorized<"User", "readById">, ActorErrorUnauthorized, Actor>
   canReadByIdWithSensitive: (
     id: UserId
