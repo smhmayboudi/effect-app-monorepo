@@ -74,7 +74,7 @@ export const SSEManager = Layer.effect(
             )
           )
           if (Option.isNone(connectionToRemove)) {
-            return [Effect.void, map] as const
+            return [Effect.void, map]
           }
 
           return [
@@ -85,7 +85,7 @@ export const SSEManager = Layer.effect(
                 Array.filter((connection) => connection.connectionId !== connectionId)
               )
             )
-          ] as const
+          ]
         })).pipe(Effect.flatten)
     })
   })
