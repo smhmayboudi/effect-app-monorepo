@@ -13,94 +13,80 @@ export const SSEManager = Layer.effect(
   Effect.gen(function*() {
     const connectionsRef = yield* Ref.make(MutableHashMap.empty<UserId, Array<ActiveConnection>>())
 
-    const notifyAll = (event: SSE): Effect.Effect<void> =>
-      Effect.gen(function*() {
-        const connections = yield* Ref.get(connectionsRef)
-        const connectionsAll = Array.flatten(MutableHashMap.values(connections))
+    return PortSSEManager.of({
+      notifyAll: (event) =>
+        Ref.get(connectionsRef).pipe(Effect.flatMap((connections) => {
+          const connectionsAll = Array.flatten(MutableHashMap.values(connections))
 
-        if (connectionsAll.length === 0) {
-          return
-        }
-
-        const encodedEvent = yield* Schema.encode(Schema.parseJson(SSE))(event).pipe(
-          Effect.orDie
-        )
-
-        yield* Effect.forEach(
-          connectionsAll,
-          (connection) => connection.queue.offer(encodedEvent),
-          {
-            concurrency: "unbounded",
-            discard: true
+          if (connectionsAll.length === 0) {
+            return Effect.void
           }
-        )
-      })
-
-    const notifyUser = (event: SSE, id: UserId) =>
-      Effect.gen(function*() {
-        const connections = yield* Ref.get(connectionsRef)
-        const connectionsUser = MutableHashMap.get(connections, id)
-        if (Option.isNone(connectionsUser) || connectionsUser.value.length === 0) {
-          return
-        }
-
-        const encodedEvent = yield* Schema.encode(Schema.parseJson(SSE))(event).pipe(
-          Effect.orDie
-        )
-
-        yield* Effect.forEach(
-          connectionsUser.value,
-          (connection) => connection.queue.offer(encodedEvent),
-          {
-            concurrency: "unbounded",
-            discard: true
-          }
-        )
-      })
-
-    const registerConnection = (
-      connectionId: string,
-      queue: Queue.Queue<string>,
-      id: UserId
-    ): Effect.Effect<void> =>
-      Ref.update(
-        connectionsRef,
-        (map) =>
-          MutableHashMap.modifyAt(map, id, (activeConnections) =>
-            activeConnections.pipe(
-              Option.map(Array.append({ connectionId, queue })),
-              Option.orElse(() => Option.some(Array.make({ connectionId, queue })))
-            ))
-      )
-
-    const unregisterConnection = (connectionId: string, id: UserId): Effect.Effect<void> =>
-      Ref.modify(connectionsRef, (map) => {
-        const connectionToRemove = MutableHashMap.get(map, id).pipe(
-          Option.flatMap((connections) =>
-            Array.findFirst(connections, (connection) => connection.connectionId === connectionId)
-          )
-        )
-
-        if (Option.isNone(connectionToRemove)) {
-          return [Effect.void, map] as const
-        }
-
-        return [
-          connectionToRemove.value.queue.shutdown,
-          map.pipe(
-            MutableHashMap.modify(
-              id,
-              Array.filter((connection) => connection.connectionId !== connectionId)
+          return Schema.encode(Schema.parseJson(SSE))(event).pipe(Effect.orDie).pipe(
+            Effect.flatMap(
+              (encodedEvent) =>
+                Effect.forEach(
+                  connectionsAll,
+                  (connection) => connection.queue.offer(encodedEvent),
+                  {
+                    concurrency: "unbounded",
+                    discard: true
+                  }
+                )
             )
           )
-        ] as const
-      }).pipe(Effect.flatten)
+        })),
+      notifyUser: (event, id) =>
+        Ref.get(connectionsRef).pipe(Effect.flatMap((connections) => {
+          const connectionsUser = MutableHashMap.get(connections, id)
+          if (Option.isNone(connectionsUser) || connectionsUser.value.length === 0) {
+            return Effect.void
+          }
 
-    return {
-      notifyAll,
-      notifyUser,
-      registerConnection,
-      unregisterConnection
-    } as const
+          return Schema.encode(Schema.parseJson(SSE))(event).pipe(Effect.orDie).pipe(
+            Effect.flatMap(
+              (encodedEvent) =>
+                Effect.forEach(
+                  connectionsUser.value,
+                  (connection) => connection.queue.offer(encodedEvent),
+                  {
+                    concurrency: "unbounded",
+                    discard: true
+                  }
+                )
+            )
+          )
+        })),
+      registerConnection: (connectionId, queue, id) =>
+        connectionsRef.pipe(
+          Ref.update((map) =>
+            MutableHashMap.modifyAt(map, id, (activeConnections) =>
+              activeConnections.pipe(
+                Option.map(Array.append({ connectionId, queue })),
+                Option.orElse(() => Option.some(Array.make({ connectionId, queue })))
+              ))
+          )
+        ),
+      unregisterConnection: (connectionId, id) =>
+        connectionsRef.pipe(Ref.modify((map) => {
+          const connectionToRemove = MutableHashMap.get(map, id).pipe(
+            Option.flatMap((connections) =>
+              Array.findFirst(connections, (connection) => connection.connectionId === connectionId)
+            )
+          )
+          if (Option.isNone(connectionToRemove)) {
+            return [Effect.void, map] as const
+          }
+
+          return [
+            connectionToRemove.value.queue.shutdown,
+            map.pipe(
+              MutableHashMap.modify(
+                id,
+                Array.filter((connection) => connection.connectionId !== connectionId)
+              )
+            )
+          ] as const
+        })).pipe(Effect.flatten)
+    })
   })
 )
