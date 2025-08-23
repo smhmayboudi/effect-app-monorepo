@@ -15,7 +15,7 @@ export const UUIDTest = Layer.effect(
   PortUUID,
   Effect.sync(() =>
     PortUUID.of({
-      v7: () => Effect.sync(() => "v7")
+      v7: () => Effect.sync(() => "00000000-0000-0000-0000-000000000000")
     })
   )
 )
