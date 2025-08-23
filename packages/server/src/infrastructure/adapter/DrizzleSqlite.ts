@@ -75,7 +75,7 @@ export const drizzleSqlite = (config: Config) =>
 
       const db = drizzle(client, { schema: config.dbSchema })
 
-      const execute = Effect.fn(<A>(fn: (client: Client) => Promise<A>) =>
+      const execute = <A>(fn: (client: Client) => Promise<A>) =>
         Effect.tryPromise({
           try: () => fn(db),
           catch: (cause) => {
@@ -86,7 +86,6 @@ export const drizzleSqlite = (config: Config) =>
             throw cause
           }
         })
-      )
 
       const makeQuery = <A, E, R, Input = never>(
         queryFn: (execute: ExecuteFn, input: Input) => Effect.Effect<A, E, R>
@@ -97,48 +96,46 @@ export const drizzleSqlite = (config: Config) =>
           Effect.flatMap((txOrNull) => queryFn(txOrNull ?? execute, args[0] as Input))
         )
 
-      const transaction = Effect.fn("Database.transaction")(
-        <A, E, R>(txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>) =>
-          Effect.runtime<R>().pipe(
-            Effect.map((runtime) => Runtime.runPromiseExit(runtime)),
-            Effect.flatMap((runPromiseExit) =>
-              Effect.async<A, DatabaseError | E, R>((resume) => {
-                db.transaction(async (tx: TransactionClient) => {
-                  const txWrapper = (fn: (client: TransactionClient) => Promise<any>) =>
-                    Effect.tryPromise({
-                      try: () => fn(tx),
-                      catch: (cause) => {
-                        const error = matchLibSQLError(cause)
-                        if (error !== null) {
-                          return error
-                        }
-                        throw cause
+      const transaction = <A, E, R>(txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>) =>
+        Effect.runtime<R>().pipe(
+          Effect.map((runtime) => Runtime.runPromiseExit(runtime)),
+          Effect.flatMap((runPromiseExit) =>
+            Effect.async<A, DatabaseError | E, R>((resume) => {
+              db.transaction(async (tx: TransactionClient) => {
+                const txWrapper = (fn: (client: TransactionClient) => Promise<any>) =>
+                  Effect.tryPromise({
+                    try: () => fn(tx),
+                    catch: (cause) => {
+                      const error = matchLibSQLError(cause)
+                      if (error !== null) {
+                        return error
                       }
-                    })
-                  const result = await runPromiseExit(txExecute(txWrapper))
-                  Exit.match(result, {
-                    onSuccess: (value) => resume(Effect.succeed(value)),
-                    onFailure: (cause) =>
-                      Cause.isFailure(cause)
-                        ? resume(Effect.fail(Cause.originalError(cause) as E))
-                        : resume(Effect.die(cause))
+                      throw cause
+                    }
                   })
-                }).catch((cause) => {
-                  const error = matchLibSQLError(cause)
-                  resume(error ? Effect.fail(error) : Effect.die(cause))
+                const result = await runPromiseExit(txExecute(txWrapper))
+                Exit.match(result, {
+                  onSuccess: (value) => resume(Effect.succeed(value)),
+                  onFailure: (cause) =>
+                    Cause.isFailure(cause)
+                      ? resume(Effect.fail(Cause.originalError(cause) as E))
+                      : resume(Effect.die(cause))
                 })
+              }).catch((cause) => {
+                const error = matchLibSQLError(cause)
+                resume(error ? Effect.fail(error) : Effect.die(cause))
               })
-            )
+            })
           )
-      )
+        )
 
-      return {
+      return PortDrizzleSqlite.of({
         execute,
         makeQuery,
         setupConnectionListeners: Effect.logInfo(
           "[Database client]: libsql has no persistent connection; listeners skipped."
         ),
         transaction
-      } as const
+      })
     })
   )

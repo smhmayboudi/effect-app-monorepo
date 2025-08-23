@@ -54,12 +54,12 @@ export class DatabaseErrorConnectionLost extends Data.TaggedError("DatabaseError
 }> {}
 
 export class PortDrizzleSqlite extends Context.Tag("PortDrizzleSqlite")<PortDrizzleSqlite, {
-  execute: <A>(fn: (client: Client) => Promise<A>) => Effect.Effect.AsEffect<Effect.Effect<A, DatabaseError, never>>
-  transaction: <A, E, R>(
-    txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>
-  ) => Effect.Effect.AsEffect<Effect.Effect<A, DatabaseError | E, R>>
-  setupConnectionListeners: Effect.Effect<void>
+  execute: <A>(fn: (client: Client) => Promise<A>) => Effect.Effect<A, DatabaseError, never>
   makeQuery: <A, E, R, Input = never>(
     queryFn: (execute: ExecuteFn, input: Input) => Effect.Effect<A, E, R>
   ) => (...args: [Input] extends [never] ? [] : [input: Input]) => Effect.Effect<A, E, R>
+  setupConnectionListeners: Effect.Effect<void>
+  transaction: <A, E, R>(
+    txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>
+  ) => Effect.Effect<A, DatabaseError | E, R>
 }>() {}
