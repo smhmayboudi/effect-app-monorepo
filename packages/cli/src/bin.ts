@@ -5,12 +5,12 @@ import { Effect, Layer } from "effect"
 import { cli } from "./cli.js"
 import { TodoClient } from "./TodoClient.js"
 
-const MainLive = TodoClient.Default.pipe(
+const Bin = TodoClient.pipe(
   Layer.provide(NodeHttpClient.layerUndici),
   Layer.merge(NodeContext.layer)
 )
 
-cli(process.argv).pipe(
-  Effect.provide(MainLive),
+Effect.suspend(() => cli(process.argv)).pipe(
+  Effect.provide(Bin),
   NodeRuntime.runMain
 )

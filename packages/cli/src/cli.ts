@@ -1,6 +1,7 @@
 import { Args, Command, Options } from "@effect/cli"
 import { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
-import { TodoClient } from "./TodoClient.js"
+import { Effect } from "effect"
+import { PortTodoClient } from "./TodoClient.js"
 
 const todoArg = Args.text({ name: "todo" }).pipe(
   Args.withDescription("The message associated with a todo")
@@ -12,22 +13,46 @@ const todoId = Options.withSchema(Options.text("id"), TodoId).pipe(
 
 const add = Command.make("add", { todo: todoArg }).pipe(
   Command.withDescription("Add a new todo"),
-  Command.withHandler(({ todo }) => TodoClient.create(todo))
+  Command.withHandler(({ todo }) =>
+    Effect.gen(function*() {
+      const todoClient = yield* PortTodoClient
+
+      return yield* todoClient.create(todo)
+    })
+  )
 )
 
 const done = Command.make("done", { id: todoId }).pipe(
   Command.withDescription("Mark a todo as done"),
-  Command.withHandler(({ id }) => TodoClient.update(id))
+  Command.withHandler(({ id }) =>
+    Effect.gen(function*() {
+      const todoClient = yield* PortTodoClient
+
+      return yield* todoClient.update(id)
+    })
+  )
 )
 
 const list = Command.make("list").pipe(
   Command.withDescription("List all todos"),
-  Command.withHandler(() => TodoClient.readAll())
+  Command.withHandler(() =>
+    Effect.gen(function*() {
+      const todoClient = yield* PortTodoClient
+
+      return yield* todoClient.readAll()
+    })
+  )
 )
 
 const remove = Command.make("remove", { id: todoId }).pipe(
   Command.withDescription("Remove a todo"),
-  Command.withHandler(({ id }) => TodoClient.delete(id))
+  Command.withHandler(({ id }) =>
+    Effect.gen(function*() {
+      const todoClient = yield* PortTodoClient
+
+      return yield* todoClient.delete(id)
+    })
+  )
 )
 
 const command = Command.make("todo").pipe(
