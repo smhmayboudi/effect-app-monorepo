@@ -2,8 +2,6 @@ import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
-import type { SuccessArray } from "@template/domain/shared/adapter/Response"
-import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { Effect, Layer } from "effect"
 import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
 import { formatDateTimeForSQL } from "../../../util/Date.js"
@@ -14,37 +12,7 @@ export const GroupDriven = Layer.effect(
   Effect.gen(function*() {
     const sql = yield* SqlClient.SqlClient
 
-    const create = (group: Omit<Group, "createdAt" | "updatedAt" | "deletedAt">): Effect.Effect<GroupId> =>
-      sql<{ id: string }>`INSERT INTO tbl_group ${sql.insert(group)} RETURNING id`.pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((rows) => Effect.succeed(rows[0])),
-        Effect.map((row) => GroupId.make(row.id)),
-        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group } })
-      )
-
-    const del = (id: GroupId): Effect.Effect<GroupId, GroupErrorNotFound, never> =>
-      update(id, { deletedAt: new Date() })
-
-    const readAll = (
-      urlParams: URLParams<Group>
-    ): Effect.Effect<SuccessArray<Group, never, never>> =>
-      Effect.all({
-        data: buildSelectQuery<Group>(sql, "tbl_group", urlParams).pipe(
-          Effect.catchTag("SqlError", Effect.die),
-          Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
-          Effect.catchTag("ParseError", Effect.die)
-        ),
-        total: buildSelectCountQuery(sql, "tbl_group").pipe(
-          Effect.catchTag("SqlError", Effect.die),
-          Effect.map((rows) => rows[0]?.countId ?? 0)
-        )
-      }).pipe(
-        Effect.withSpan("GroupDriven", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
-        })
-      )
-
-    const readById = (id: GroupId): Effect.Effect<Group, GroupErrorNotFound, never> =>
+    const readById = (id: GroupId) =>
       sql`SELECT id, owner_id, name, created_at, updated_at, deleted_at FROM tbl_group WHERE id = ${id}`.pipe(
         Effect.catchTag("SqlError", Effect.die),
         Effect.flatMap((rows) =>
@@ -55,28 +23,6 @@ export const GroupDriven = Layer.effect(
         Effect.flatMap(Group.decodeUnknown),
         Effect.catchTag("ParseError", Effect.die),
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } })
-      )
-
-    const readByIds = (ids: Array<GroupId>): Effect.Effect<Array<Group>, GroupErrorNotFound, never> =>
-      sql`SELECT id, owner_id, name, created_at, updated_at, deleted_at FROM tbl_group WHERE id IN ${sql.in(ids)}`.pipe(
-        Effect.catchTag("SqlError", Effect.die),
-        Effect.flatMap((rows) =>
-          Effect.all(
-            ids.map((id) => {
-              const row = rows.find((r) => r.id === id)
-              if (!row) {
-                return Effect.fail(new GroupErrorNotFound({ id }))
-              }
-              return Group.decodeUnknown(row).pipe(
-                Effect.catchTag(
-                  "ParseError",
-                  (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                )
-              )
-            })
-          )
-        ),
-        Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
       )
 
     const buildUpdateQuery = (id: GroupId, group: Omit<Group, "id">) =>
@@ -101,7 +47,7 @@ export const GroupDriven = Layer.effect(
     const update = (
       id: GroupId,
       group: Partial<Omit<Group, "id" | "createdAt" | "updatedAt">>
-    ): Effect.Effect<GroupId, GroupErrorNotFound, never> =>
+    ) =>
       readById(id).pipe(
         Effect.flatMap((oldGroup) => buildUpdateQuery(id, { ...oldGroup, ...group })),
         Effect.catchTag("SqlError", Effect.die),
@@ -110,13 +56,55 @@ export const GroupDriven = Layer.effect(
         Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, group } })
       )
 
-    return {
-      create,
-      delete: del,
-      readAll,
+    return GroupPortDriven.of({
+      create: (group) =>
+        sql<{ id: string }>`INSERT INTO tbl_group ${sql.insert(group)} RETURNING id`.pipe(
+          Effect.catchTag("SqlError", Effect.die),
+          Effect.flatMap((rows) => Effect.succeed(rows[0])),
+          Effect.map((row) => GroupId.make(row.id)),
+          Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group } })
+        ),
+      delete: (id) => update(id, { deletedAt: new Date() }),
+      readAll: (urlParams) =>
+        Effect.all({
+          data: buildSelectQuery<Group>(sql, "tbl_group", urlParams).pipe(
+            Effect.catchTag("SqlError", Effect.die),
+            Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
+            Effect.catchTag("ParseError", Effect.die)
+          ),
+          total: buildSelectCountQuery(sql, "tbl_group").pipe(
+            Effect.catchTag("SqlError", Effect.die),
+            Effect.map((rows) => rows[0]?.countId ?? 0)
+          )
+        }).pipe(
+          Effect.withSpan("GroupDriven", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams }
+          })
+        ),
       readById,
-      readByIds,
+      readByIds: (ids) =>
+        sql`SELECT id, owner_id, name, created_at, updated_at, deleted_at FROM tbl_group WHERE id IN ${sql.in(ids)}`
+          .pipe(
+            Effect.catchTag("SqlError", Effect.die),
+            Effect.flatMap((rows) =>
+              Effect.all(
+                ids.map((id) => {
+                  const row = rows.find((r) => r.id === id)
+                  if (!row) {
+                    return Effect.fail(new GroupErrorNotFound({ id }))
+                  }
+                  return Group.decodeUnknown(row).pipe(
+                    Effect.catchTag(
+                      "ParseError",
+                      (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
+                    )
+                  )
+                })
+              )
+            ),
+            Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
+          ),
       update
-    } as const
+    })
   })
 )

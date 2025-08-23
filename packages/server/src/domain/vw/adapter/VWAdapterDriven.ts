@@ -1,6 +1,4 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import type { SuccessArray } from "@template/domain/shared/adapter/Response"
-import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import { UserGroupPerson } from "@template/domain/vw/application/UserGroupPersonApplicationDomain"
 import { UserTodo } from "@template/domain/vw/application/UserTodoApplicationDomain"
 import { Effect, Layer } from "effect"
@@ -12,65 +10,57 @@ export const VWDriven = Layer.effect(
   Effect.gen(function*() {
     const elasticsearch = yield* PortElasticsearch
 
-    const readAllUserGroupPerson = (
-      urlParams: URLParams<UserGroupPerson>
-    ): Effect.Effect<SuccessArray<UserGroupPerson, never, never>> =>
-      Effect.tryPromise(() =>
-        elasticsearch.search<UserGroupPerson>({
-          index: "vw_user_group_person",
-          query: { match_all: {} }
-        })
-      ).pipe(
-        Effect.flatMap((userGroupPersons) =>
-          Effect.all(
-            userGroupPersons.hits.hits.map((hit) => UserGroupPerson.decodeUnknown(hit._source))
-          ).pipe(
-            Effect.map((data) => ({
-              data,
-              total: typeof userGroupPersons.hits.total === "number"
-                ? userGroupPersons.hits.total
-                : userGroupPersons.hits.total?.value ?? 0
-            }))
-          )
+    return VWPortDriven.of({
+      readAllUserGroupPerson: (urlParams) =>
+        Effect.tryPromise(() =>
+          elasticsearch.search<UserGroupPerson>({
+            index: "vw_user_group_person",
+            query: { match_all: {} }
+          })
+        ).pipe(
+          Effect.flatMap((userGroupPersons) =>
+            Effect.all(
+              userGroupPersons.hits.hits.map((hit) => UserGroupPerson.decodeUnknown(hit._source))
+            ).pipe(
+              Effect.map((data) => ({
+                data,
+                total: typeof userGroupPersons.hits.total === "number"
+                  ? userGroupPersons.hits.total
+                  : userGroupPersons.hits.total?.value ?? 0
+              }))
+            )
+          ),
+          Effect.catchTag("ParseError", Effect.die),
+          Effect.catchTag("UnknownException", Effect.die),
+          Effect.withSpan("VWDriven", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserGroupPerson", urlParams }
+          })
         ),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.catchTag("UnknownException", Effect.die),
-        Effect.withSpan("VWDriven", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserGroupPerson", urlParams }
-        })
-      )
-
-    const readAllUserTodo = (
-      urlParams: URLParams<UserTodo>
-    ): Effect.Effect<SuccessArray<UserTodo, never, never>> =>
-      Effect.tryPromise(() =>
-        elasticsearch.search<UserTodo>({
-          index: "vw_user_todo",
-          query: { match_all: {} }
-        })
-      ).pipe(
-        Effect.flatMap((userGroupPersons) =>
-          Effect.all(
-            userGroupPersons.hits.hits.map((hit) => UserTodo.decodeUnknown(hit._source))
-          ).pipe(
-            Effect.map((data) => ({
-              data,
-              total: typeof userGroupPersons.hits.total === "number"
-                ? userGroupPersons.hits.total
-                : userGroupPersons.hits.total?.value ?? 0
-            }))
-          )
-        ),
-        Effect.catchTag("ParseError", Effect.die),
-        Effect.catchTag("UnknownException", Effect.die),
-        Effect.withSpan("VWDriven", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserTodo", urlParams }
-        })
-      )
-
-    return {
-      readAllUserGroupPerson,
-      readAllUserTodo
-    } as const
+      readAllUserTodo: (urlParams) =>
+        Effect.tryPromise(() =>
+          elasticsearch.search<UserTodo>({
+            index: "vw_user_todo",
+            query: { match_all: {} }
+          })
+        ).pipe(
+          Effect.flatMap((userGroupPersons) =>
+            Effect.all(
+              userGroupPersons.hits.hits.map((hit) => UserTodo.decodeUnknown(hit._source))
+            ).pipe(
+              Effect.map((data) => ({
+                data,
+                total: typeof userGroupPersons.hits.total === "number"
+                  ? userGroupPersons.hits.total
+                  : userGroupPersons.hits.total?.value ?? 0
+              }))
+            )
+          ),
+          Effect.catchTag("ParseError", Effect.die),
+          Effect.catchTag("UnknownException", Effect.die),
+          Effect.withSpan("VWDriven", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserTodo", urlParams }
+          })
+        )
+    })
   })
 )
