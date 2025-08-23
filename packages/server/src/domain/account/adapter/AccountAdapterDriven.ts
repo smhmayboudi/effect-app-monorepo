@@ -92,15 +92,11 @@ export const AccountDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new AccountErrorNotFound({ id }))
                 }
-                return Account.decodeUnknown(row).pipe(
-                  Effect.catchTag(
-                    "ParseError",
-                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                  )
-                )
+                return Account.decodeUnknown(row)
               })
             )
           ),
+          Effect.catchTag("ParseError", Effect.die),
           Effect.withSpan("AccountDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
         ),
       update

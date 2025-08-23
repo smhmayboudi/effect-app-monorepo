@@ -97,15 +97,11 @@ export const TodoDriven = Layer.effect(
                   if (!row) {
                     return Effect.fail(new TodoErrorNotFound({ id }))
                   }
-                  return Todo.decodeUnknown(row).pipe(
-                    Effect.catchTag(
-                      "ParseError",
-                      (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                    )
-                  )
+                  return Todo.decodeUnknown(row)
                 })
               )
             ),
+            Effect.catchTag("ParseError", Effect.die),
             Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
           ),
       update

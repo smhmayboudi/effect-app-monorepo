@@ -106,15 +106,11 @@ export const PersonDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new PersonErrorNotFound({ id }))
                 }
-                return Person.decodeUnknown(row).pipe(
-                  Effect.catchTag(
-                    "ParseError",
-                    (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                  )
-                )
+                return Person.decodeUnknown(row)
               })
             )
           ),
+          Effect.catchTag("ParseError", Effect.die),
           Effect.withSpan("PersonDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
         ),
       update

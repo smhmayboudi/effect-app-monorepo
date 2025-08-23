@@ -93,15 +93,11 @@ export const GroupDriven = Layer.effect(
                   if (!row) {
                     return Effect.fail(new GroupErrorNotFound({ id }))
                   }
-                  return Group.decodeUnknown(row).pipe(
-                    Effect.catchTag(
-                      "ParseError",
-                      (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                    )
-                  )
+                  return Group.decodeUnknown(row)
                 })
               )
             ),
+            Effect.catchTag("ParseError", Effect.die),
             Effect.withSpan("GroupDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
           ),
       update

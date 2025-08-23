@@ -121,15 +121,11 @@ export const UserDriven = Layer.effect(
                 if (!row) {
                   return Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken }))
                 }
-                return User.decodeUnknown(row).pipe(
-                  Effect.catchTag(
-                    "ParseError",
-                    (err) => Effect.die(`Failed to decode user with token ${accessToken}: ${err.message}`)
-                  )
-                )
+                return User.decodeUnknown(row)
               })
             )
           ),
+          Effect.catchTag("ParseError", Effect.die),
           Effect.withSpan("UserDriven", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByAccessTokens", accessTokens }
           })
@@ -146,15 +142,11 @@ export const UserDriven = Layer.effect(
                   if (!row) {
                     return Effect.fail(new UserErrorNotFound({ id }))
                   }
-                  return User.decodeUnknown(row).pipe(
-                    Effect.catchTag(
-                      "ParseError",
-                      (err) => Effect.die(`Failed to decode user with id ${id}: ${err.message}`)
-                    )
-                  )
+                  return User.decodeUnknown(row)
                 })
               )
             ),
+            Effect.catchTag("ParseError", Effect.die),
             Effect.withSpan("UserDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIds", ids } })
           ),
       readByIdWithSensitive: (id) =>
