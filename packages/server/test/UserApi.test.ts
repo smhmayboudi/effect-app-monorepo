@@ -40,7 +40,7 @@ const HttpClientTest = HttpClient.make((req) => {
     return Effect.succeed(
       HttpClientResponse.fromWeb(
         req,
-        new Response(JSON.stringify({ data: "00000000-0000-0000-0000-000000000000" }))
+        new Response(JSON.stringify({ data: UserId.make("00000000-0000-0000-0000-000000000000") }))
       )
     )
   }
