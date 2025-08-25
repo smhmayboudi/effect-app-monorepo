@@ -9,7 +9,7 @@ datasources:
           matcherType: label
           name: trace_id
           url: $${__value.raw}
-          urlDisplayLabel: 'Trace: $${__value.raw}'
+          urlDisplayLabel: "Trace: $${__value.raw}"
     name: Loki
     type: loki
     uid: loki
@@ -21,7 +21,7 @@ datasources:
       exemplarTraceIdDestinations:
         - datasourceUid: tempo
           name: trace_id
-          urlDisplayLabel: 'Trace: $${__value.raw}'
+          urlDisplayLabel: "Trace: $${__value.raw}"
       timeInterval: 60s
     name: Prometheus
     type: prometheus

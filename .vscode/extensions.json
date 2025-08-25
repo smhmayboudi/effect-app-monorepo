@@ -1,8 +1,8 @@
 {
   "recommendations": [
-      "dbaeumer.vscode-eslint",
-      "effectful-tech.effect-vscode",
-      "esbenp.prettier-vscode",
-      "vitest.explorer"
-    ]
+    "dbaeumer.vscode-eslint",
+    "effectful-tech.effect-vscode",
+    "esbenp.prettier-vscode",
+    "vitest.explorer"
+  ]
 }

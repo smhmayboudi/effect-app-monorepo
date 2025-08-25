@@ -46,13 +46,13 @@ jobs:
       - run: pnpm lint
 
   test:
-    name: Test 
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
         uses: ./.github/actions/setup
-      - run: pnpm vitest 
+      - run: pnpm vitest
         env:
           NODE_OPTIONS: --max_old_space_size=8192

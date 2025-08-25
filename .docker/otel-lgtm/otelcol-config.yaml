@@ -95,12 +95,12 @@ processors:
       - {
           name: sample-erroring-traces,
           type: status_code,
-          status_code: { status_codes: [ERROR] },
+          status_code: { status_codes: [ERROR] }
         }
       - {
           name: sample-long-traces,
           type: latency,
-          latency: { threshold_ms: 200 },
+          latency: { threshold_ms: 200 }
         }
 
 exporters:
