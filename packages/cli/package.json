@@ -28,7 +28,8 @@
     "@effect/platform": "latest",
     "@effect/platform-node": "latest",
     "@template/domain": "workspace:^",
-    "effect": "latest"
+    "effect": "latest",
+    "uuid": "^11.1.0"
   },
   "effect": {
     "generateExports": {

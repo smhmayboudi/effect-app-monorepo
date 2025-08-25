@@ -3,6 +3,11 @@ import { Schema } from "effect"
 import { PortMiddlewareAuthentication } from "../../PortMiddlewareAuthentication.js"
 import { ResponseSuccess, ResponseSuccessArray } from "../../shared/adapter/Response.js"
 import { URLParams } from "../../shared/adapter/URLParams.js"
+import { IdempotencyError } from "../../shared/application/IdempotencyError.js"
+import { IdempotencyErrorKeyMismatch } from "../../shared/application/IdempotencyErrorKeyMismatch.js"
+import { IdempotencyErrorKeyRequired } from "../../shared/application/IdempotencyErrorKeyRequired.js"
+import { IdempotencyErrorRequestInProgress } from "../../shared/application/IdempotencyErrorRequestInProgress.js"
+import { IdempotencyKeyClient } from "../../shared/application/IdempotencyKeyClient.js"
 import { TodoId, TodoSchema } from "../application/TodoApplicationDomain.js"
 import { TodoErrorAlreadyExists } from "../application/TodoApplicationErrorAlreadyExists.js"
 import { TodoErrorNotFound } from "../application/TodoApplicationErrorNotFound.js"
@@ -10,15 +15,20 @@ import { TodoErrorNotFound } from "../application/TodoApplicationErrorNotFound.j
 export class TodoDriving extends HttpApiGroup.make("todo")
   .add(
     HttpApiEndpoint.post("create", "/")
-      .addError(TodoErrorAlreadyExists, { status: 404 })
+      .addError(IdempotencyError)
+      .addError(IdempotencyErrorKeyMismatch)
+      .addError(IdempotencyErrorKeyRequired)
+      .addError(IdempotencyErrorRequestInProgress)
+      .addError(TodoErrorAlreadyExists)
       .addSuccess(ResponseSuccess(TodoId))
+      .setHeaders(Schema.Struct({ "idempotency-key": IdempotencyKeyClient }))
       .setPayload(TodoSchema.pipe(Schema.pick("text")))
       .annotate(OpenApi.Description, "Todo create")
       .annotate(OpenApi.Summary, "Todo create")
   )
   .add(
     HttpApiEndpoint.del("delete", "/:id")
-      .addError(TodoErrorNotFound, { status: 404 })
+      .addError(TodoErrorNotFound)
       .addSuccess(ResponseSuccess(TodoId))
       .setPath(Schema.Struct({ id: TodoId }))
       .annotate(OpenApi.Description, "Todo delete")
@@ -33,7 +43,7 @@ export class TodoDriving extends HttpApiGroup.make("todo")
   )
   .add(
     HttpApiEndpoint.get("readById", "/:id")
-      .addError(TodoErrorNotFound, { status: 404 })
+      .addError(TodoErrorNotFound)
       .addSuccess(ResponseSuccess(TodoSchema))
       .setPath(Schema.Struct({ id: TodoId }))
       .annotate(OpenApi.Description, "Todo readById")
@@ -41,8 +51,13 @@ export class TodoDriving extends HttpApiGroup.make("todo")
   )
   .add(
     HttpApiEndpoint.patch("update", "/:id")
-      .addError(TodoErrorNotFound, { status: 404 })
+      .addError(IdempotencyError)
+      .addError(IdempotencyErrorKeyMismatch)
+      .addError(IdempotencyErrorKeyRequired)
+      .addError(IdempotencyErrorRequestInProgress)
+      .addError(TodoErrorNotFound)
       .addSuccess(ResponseSuccess(TodoId))
+      .setHeaders(Schema.Struct({ "idempotency-key": IdempotencyKeyClient }))
       .setPath(Schema.Struct({ id: TodoId }))
       .annotate(OpenApi.Description, "Todo update")
       .annotate(OpenApi.Summary, "Todo update")

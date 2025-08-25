@@ -2,6 +2,7 @@ import { HttpApiClient, HttpClient, HttpClientRequest, HttpClientResponse } from
 import { describe, expect, it } from "@effect/vitest"
 import { AccountId } from "@template/domain/account/application/AccountApplicationDomain"
 import { Api } from "@template/domain/Api"
+import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
 import { AccessToken, Email, UserId, UserWithSensitive } from "@template/domain/user/application/UserApplicationDomain"
 import { Effect, Layer, Redacted } from "effect"
 
@@ -58,6 +59,7 @@ describe("TodoApi", () => {
     Effect.gen(function*() {
       const client = yield* HttpApiClient.make(Api, { baseUrl })
       const user = yield* client.user.create({
+        headers: { "idempotency-key": IdempotencyKeyClient.make("00000000-0000-0000-0000-000000000000") },
         payload: { email: Email.make("smhmayboudi@gmail.com") }
       })
       const clientWithAuth = yield* HttpClient.HttpClient.pipe(
