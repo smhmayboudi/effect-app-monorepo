@@ -44,6 +44,21 @@ export * as Response from "./shared/adapter/Response.js"
 export * as URLParams from "./shared/adapter/URLParams.js"
 
 
+export * as IdempotencyError from "./shared/application/IdempotencyError.js"
+
+
+export * as IdempotencyErrorKeyMismatch from "./shared/application/IdempotencyErrorKeyMismatch.js"
+
+
+export * as IdempotencyErrorKeyRequired from "./shared/application/IdempotencyErrorKeyRequired.js"
+
+
+export * as IdempotencyErrorRequestInProgress from "./shared/application/IdempotencyErrorRequestInProgress.js"
+
+
+export * as IdempotencyKeyClient from "./shared/application/IdempotencyKeyClient.js"
+
+
 export * as SSEAdapterDriving from "./sse/adapter/SSEAdapterDriving.js"
 
 

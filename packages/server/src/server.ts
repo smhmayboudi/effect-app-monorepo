@@ -8,8 +8,11 @@ import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
 import { flow, Layer, Logger, LogLevel } from "effect"
+import { Redis } from "ioredis"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
+import { IdempotencyRedis } from "./infrastructure/adapter/IdempotencyRedis.js"
+import { MiddlewareIdempotency } from "./middleware/MiddlewareIdempotency.js"
 import { MiddlewareMetric } from "./middleware/MiddlewareMetric.js"
 
 const NodeSdkLive = NodeSdk.layer(() => ({
@@ -23,9 +26,10 @@ const HttpApiLive = HttpApiBuilder.serve(flow(
   HttpMiddleware.cors({
     allowedOrigins: ["*"],
     allowedMethods: ["DELETE", "GET", "OPTION", "PATCH", "POST", "PUT"],
-    allowedHeaders: ["Authorization", "B3", "Content-Type", "traceparent"],
+    allowedHeaders: ["authorization", "b3", "content-type", "traceparent", "idempotency-key"],
     credentials: true
   }),
+  MiddlewareIdempotency,
   HttpMiddleware.logger,
   MiddlewareMetric
 )).pipe(
@@ -35,6 +39,7 @@ const HttpApiLive = HttpApiBuilder.serve(flow(
   Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
   Layer.provide(ApiLive),
   Layer.provide(NodeContext.layer),
+  Layer.provide(IdempotencyRedis({ redis: new Redis({ host: "127.0.0.1" }) })),
   Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),
   HttpServer.withLogAddress,
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 }))
