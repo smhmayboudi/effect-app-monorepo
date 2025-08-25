@@ -12,7 +12,7 @@ import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
-import { Effect } from "effect"
+import { Effect, Layer } from "effect"
 
 describe("PersonUseCase", () => {
   it.scoped("should be created", () => {
@@ -30,30 +30,30 @@ describe("PersonUseCase", () => {
       )
       assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({
-          create: (_person) => Effect.succeed(PersonId.make("00000000-0000-0000-0000-000000000000"))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriving)({
-          readById: (id) =>
-            Effect.succeed(
-              new Group({
-                id,
-                ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
-                name: "test",
-                createdAt: now,
-                updatedAt: now,
-                deletedAt: null
-              })
-            )
-        })
-      )
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({
+            create: (_person) => Effect.succeed(PersonId.make("00000000-0000-0000-0000-000000000000"))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({
+            readById: (id) =>
+              Effect.succeed(
+                new Group({
+                  id,
+                  ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+                  name: "test",
+                  createdAt: now,
+                  updatedAt: now,
+                  deletedAt: null
+                })
+              )
+          })
+        )
+      ))
     )
   })
 
@@ -65,12 +65,16 @@ describe("PersonUseCase", () => {
       )
       assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(makeTestLayer(PersonPortDriven)({ delete: (id) => Effect.succeed(id) })),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({ delete: (id) => Effect.succeed(id) }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped.fails("should be deleted with PersonErrorNotFound", () =>
@@ -80,14 +84,16 @@ describe("PersonUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({ delete: (id) => Effect.fail(new PersonErrorNotFound({ id })) })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({ delete: (id) => Effect.fail(new PersonErrorNotFound({ id })) }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped("should be readAll", () => {
@@ -113,20 +119,22 @@ describe("PersonUseCase", () => {
         total: 1
       })
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({
-          readAll: (_urlParams) =>
-            Effect.succeed({
-              data: [personTest],
-              total: 1
-            })
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({
+            readAll: (_urlParams) =>
+              Effect.succeed({
+                data: [personTest],
+                total: 1
+              })
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -150,17 +158,19 @@ describe("PersonUseCase", () => {
       )
       assert.strictEqual(person, personTest)
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({
-          readById: (_id) => Effect.succeed(personTest),
-          readByIds: (_ids) => Effect.succeed([personTest])
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({
+            readById: (_id) => Effect.succeed(personTest),
+            readByIds: (_ids) => Effect.succeed([personTest])
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -171,17 +181,19 @@ describe("PersonUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({
-          readById: (id) => Effect.fail(new PersonErrorNotFound({ id })),
-          readByIds: (ids) => Effect.fail(new PersonErrorNotFound({ id: ids[0] }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({
+            readById: (id) => Effect.fail(new PersonErrorNotFound({ id })),
+            readByIds: (ids) => Effect.fail(new PersonErrorNotFound({ id: ids[0] }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped("should be update", () =>
@@ -192,16 +204,18 @@ describe("PersonUseCase", () => {
       )
       assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({
-          update: (id, _person) => Effect.succeed(PersonId.make(id))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({
+            update: (id, _person) => Effect.succeed(PersonId.make(id))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped.fails("should be update with PersonErrorNotFound", () =>
@@ -211,15 +225,17 @@ describe("PersonUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(PersonUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(PersonPortDriven)({
-          update: (id, _person) => Effect.fail(new PersonErrorNotFound({ id }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(GroupPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        PersonUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(PersonPortDriven)({
+            update: (id, _person) => Effect.fail(new PersonErrorNotFound({ id }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(GroupPortDriving)({})
+        )
+      ))
     ))
 })

@@ -10,7 +10,7 @@ import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
-import { Effect } from "effect"
+import { Effect, Layer } from "effect"
 
 describe("TodoUseCase", () => {
   it.scoped("should be created", () =>
@@ -25,15 +25,17 @@ describe("TodoUseCase", () => {
       )
       assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({
-          create: (_todo) => Effect.succeed(TodoId.make("00000000-0000-0000-0000-000000000000"))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({
+            create: (_todo) => Effect.succeed(TodoId.make("00000000-0000-0000-0000-000000000000"))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be deleted", () =>
@@ -44,11 +46,15 @@ describe("TodoUseCase", () => {
       )
       assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(makeTestLayer(TodoPortDriven)({ delete: (id) => Effect.succeed(id) })),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({ delete: (id) => Effect.succeed(id) }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped.fails("should be deleted with TodoErrorNotFound", () =>
@@ -58,13 +64,15 @@ describe("TodoUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({ delete: (id) => Effect.fail(new TodoErrorNotFound({ id })) })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({ delete: (id) => Effect.fail(new TodoErrorNotFound({ id })) }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be readAll", () => {
@@ -89,19 +97,21 @@ describe("TodoUseCase", () => {
         total: 1
       })
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({
-          readAll: (_urlParams) =>
-            Effect.succeed({
-              data: [todoTest],
-              total: 1
-            })
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({
+            readAll: (_urlParams) =>
+              Effect.succeed({
+                data: [todoTest],
+                total: 1
+              })
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     )
   })
 
@@ -124,16 +134,18 @@ describe("TodoUseCase", () => {
       )
       assert.strictEqual(todo, todoTest)
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({
-          readById: (_id) => Effect.succeed(todoTest),
-          readByIds: (_ids) => Effect.succeed([todoTest])
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({
+            readById: (_id) => Effect.succeed(todoTest),
+            readByIds: (_ids) => Effect.succeed([todoTest])
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     )
   })
 
@@ -144,16 +156,18 @@ describe("TodoUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({
-          readById: (id) => Effect.fail(new TodoErrorNotFound({ id })),
-          readByIds: (ids) => Effect.fail(new TodoErrorNotFound({ id: ids[0] }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({
+            readById: (id) => Effect.fail(new TodoErrorNotFound({ id })),
+            readByIds: (ids) => Effect.fail(new TodoErrorNotFound({ id: ids[0] }))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be update", () =>
@@ -164,15 +178,17 @@ describe("TodoUseCase", () => {
       )
       assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({
-          update: (id, _todo) => Effect.succeed(TodoId.make(id))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({
+            update: (id, _todo) => Effect.succeed(TodoId.make(id))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped.fails("should be update with TodoErrorNotFound", () =>
@@ -182,14 +198,16 @@ describe("TodoUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(TodoUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(TodoPortDriven)({
-          update: (id, _todo) => Effect.fail(new TodoErrorNotFound({ id }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        TodoUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(TodoPortDriven)({
+            update: (id, _todo) => Effect.fail(new TodoErrorNotFound({ id }))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 })

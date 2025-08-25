@@ -9,7 +9,7 @@ import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
-import { Effect } from "effect"
+import { Effect, Layer } from "effect"
 
 describe("AccountUseCase", () => {
   it.scoped("should be created", () =>
@@ -20,15 +20,17 @@ describe("AccountUseCase", () => {
       )
       assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({
-          create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({
+            create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be deleted", () =>
@@ -39,11 +41,15 @@ describe("AccountUseCase", () => {
       )
       assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.succeed(id) })),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.succeed(id) }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped.fails("should be deleted with AccountErrorNotFound", () =>
@@ -53,13 +59,15 @@ describe("AccountUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.fail(new AccountErrorNotFound({ id })) })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.fail(new AccountErrorNotFound({ id })) }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be readAll", () => {
@@ -81,19 +89,21 @@ describe("AccountUseCase", () => {
         total: 1
       })
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({
-          readAll: (_urlParams) =>
-            Effect.succeed({
-              data: [AccountTest],
-              total: 1
-            })
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({
+            readAll: (_urlParams) =>
+              Effect.succeed({
+                data: [AccountTest],
+                total: 1
+              })
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     )
   })
 
@@ -113,16 +123,18 @@ describe("AccountUseCase", () => {
       )
       assert.strictEqual(account, AccountTest)
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({
-          readById: (_id) => Effect.succeed(AccountTest),
-          readByIds: (_ids) => Effect.succeed([AccountTest])
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({
+            readById: (_id) => Effect.succeed(AccountTest),
+            readByIds: (_ids) => Effect.succeed([AccountTest])
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     )
   })
 
@@ -133,16 +145,18 @@ describe("AccountUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({
-          readById: (id) => Effect.fail(new AccountErrorNotFound({ id })),
-          readByIds: (ids) => Effect.fail(new AccountErrorNotFound({ id: ids[0] }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({
+            readById: (id) => Effect.fail(new AccountErrorNotFound({ id })),
+            readByIds: (ids) => Effect.fail(new AccountErrorNotFound({ id: ids[0] }))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be update", () =>
@@ -153,15 +167,17 @@ describe("AccountUseCase", () => {
       )
       assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({
-          update: (id, _account) => Effect.succeed(AccountId.make(id))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({
+            update: (id, _account) => Effect.succeed(AccountId.make(id))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped.fails("should be update with AccountErrorNotFound", () =>
@@ -171,14 +187,16 @@ describe("AccountUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(AccountUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriven)({
-          update: (id, _account) => Effect.fail(new AccountErrorNotFound({ id }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        AccountUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(AccountPortDriven)({
+            update: (id, _account) => Effect.fail(new AccountErrorNotFound({ id }))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 })

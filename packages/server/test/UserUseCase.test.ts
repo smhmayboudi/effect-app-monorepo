@@ -19,7 +19,7 @@ import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
-import { Effect, Redacted } from "effect"
+import { Effect, Layer, Redacted } from "effect"
 
 describe("UserUseCase", () => {
   it.scoped("should be created", () => {
@@ -43,21 +43,21 @@ describe("UserUseCase", () => {
       )
       assert.strictEqual(userWithSensitive, userWithSensitiveTest)
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          create: (_user) => Effect.succeed(UserId.make("00000000-0000-0000-0000-000000000000")),
-          readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(
-        makeTestLayer(AccountPortDriving)({
-          create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
-        })
-      )
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            create: (_user) => Effect.succeed(UserId.make("00000000-0000-0000-0000-000000000000")),
+            readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({
+            create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
+          })
+        )
+      ))
     )
   })
 
@@ -84,16 +84,18 @@ describe("UserUseCase", () => {
         })
       )
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          create: (user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            create: (user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -105,12 +107,16 @@ describe("UserUseCase", () => {
       )
       assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(makeTestLayer(UserPortDriven)({ delete: (id) => Effect.succeed(id) })),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({ delete: (id) => Effect.succeed(id) }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped.fails("should be deleted with UserErrorNotFound", () =>
@@ -120,14 +126,16 @@ describe("UserUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({ delete: (id) => Effect.fail(new UserErrorNotFound({ id })) })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({ delete: (id) => Effect.fail(new UserErrorNotFound({ id })) }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped("should be readAll", () => {
@@ -151,20 +159,22 @@ describe("UserUseCase", () => {
         total: 1
       })
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          readAll: (_urlParams) =>
-            Effect.succeed({
-              data: [userTest],
-              total: 1
-            })
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            readAll: (_urlParams) =>
+              Effect.succeed({
+                data: [userTest],
+                total: 1
+              })
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -186,17 +196,19 @@ describe("UserUseCase", () => {
       )
       assert.strictEqual(user, userTest)
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          readByAccessToken: (_accessToken) => Effect.succeed(userTest),
-          readByAccessTokens: (_accessTokens) => Effect.succeed([userTest])
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            readByAccessToken: (_accessToken) => Effect.succeed(userTest),
+            readByAccessTokens: (_accessTokens) => Effect.succeed([userTest])
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -207,18 +219,20 @@ describe("UserUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          readByAccessToken: (accessToken) => Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken })),
-          readByAccessTokens: (accessTokens) =>
-            Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken: accessTokens[0] }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            readByAccessToken: (accessToken) => Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken })),
+            readByAccessTokens: (accessTokens) =>
+              Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken: accessTokens[0] }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped("should be readById", () => {
@@ -239,17 +253,19 @@ describe("UserUseCase", () => {
       )
       assert.strictEqual(user, userTest)
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          readById: (_id) => Effect.succeed(userTest),
-          readByIds: (_ids) => Effect.succeed([userTest])
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            readById: (_id) => Effect.succeed(userTest),
+            readByIds: (_ids) => Effect.succeed([userTest])
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -260,17 +276,19 @@ describe("UserUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          readById: (id) => Effect.fail(new UserErrorNotFound({ id })),
-          readByIds: (ids) => Effect.fail(new UserErrorNotFound({ id: ids[0] }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            readById: (id) => Effect.fail(new UserErrorNotFound({ id })),
+            readByIds: (ids) => Effect.fail(new UserErrorNotFound({ id: ids[0] }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped("should be readByIdWithSensitive", () => {
@@ -292,16 +310,18 @@ describe("UserUseCase", () => {
         )
       assert.strictEqual(userWithSensitive, userWithSensitiveTest)
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     )
   })
 
@@ -313,16 +333,18 @@ describe("UserUseCase", () => {
       )
       assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          update: (id, _user) => Effect.succeed(UserId.make(id))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            update: (id, _user) => Effect.succeed(UserId.make(id))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped.fails("should be update with UserErrorEmailAlreadyTaken", () =>
@@ -332,16 +354,18 @@ describe("UserUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          update: (_id, user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email! }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            update: (_id, user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email! }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 
   it.scoped.fails("should be update with UserErrorNotFound", () =>
@@ -351,15 +375,17 @@ describe("UserUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(UserUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(UserPortDriven)({
-          update: (id, _user) => Effect.fail(new UserErrorNotFound({ id }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest),
-      Effect.provide(makeTestLayer(AccountPortDriving)({}))
+      Effect.provide(Layer.provideMerge(
+        UserUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(UserPortDriven)({
+            update: (id, _user) => Effect.fail(new UserErrorNotFound({ id }))
+          }),
+          EventEmitterTest(),
+          RedisTest,
+          makeTestLayer(AccountPortDriving)({})
+        )
+      ))
     ))
 })

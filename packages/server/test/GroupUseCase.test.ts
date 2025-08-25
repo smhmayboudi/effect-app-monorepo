@@ -10,7 +10,7 @@ import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
-import { Effect } from "effect"
+import { Effect, Layer } from "effect"
 
 describe("GroupUseCase", () => {
   it.scoped("should be created", () =>
@@ -24,15 +24,17 @@ describe("GroupUseCase", () => {
       )
       assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({
-          create: (_group) => Effect.succeed(GroupId.make("00000000-0000-0000-0000-000000000000"))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({
+            create: (_group) => Effect.succeed(GroupId.make("00000000-0000-0000-0000-000000000000"))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be deleted", () =>
@@ -43,11 +45,15 @@ describe("GroupUseCase", () => {
       )
       assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(makeTestLayer(GroupPortDriven)({ delete: (id) => Effect.succeed(id) })),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({ delete: (id) => Effect.succeed(id) }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped.fails("should be deleted with GroupErrorNotFound", () =>
@@ -57,13 +63,15 @@ describe("GroupUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({ delete: (id) => Effect.fail(new GroupErrorNotFound({ id })) })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({ delete: (id) => Effect.fail(new GroupErrorNotFound({ id })) }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be readAll", () => {
@@ -87,19 +95,21 @@ describe("GroupUseCase", () => {
         total: 1
       })
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({
-          readAll: (_urlParams) =>
-            Effect.succeed({
-              data: [groupTest],
-              total: 1
-            })
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({
+            readAll: (_urlParams) =>
+              Effect.succeed({
+                data: [groupTest],
+                total: 1
+              })
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     )
   })
 
@@ -121,16 +131,18 @@ describe("GroupUseCase", () => {
       )
       assert.strictEqual(group, groupTest)
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({
-          readById: (_id) => Effect.succeed(groupTest),
-          readByIds: (_ids) => Effect.succeed([groupTest])
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({
+            readById: (_id) => Effect.succeed(groupTest),
+            readByIds: (_ids) => Effect.succeed([groupTest])
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     )
   })
 
@@ -141,16 +153,18 @@ describe("GroupUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({
-          readById: (id) => Effect.fail(new GroupErrorNotFound({ id })),
-          readByIds: (ids) => Effect.fail(new GroupErrorNotFound({ id: ids[0] }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({
+            readById: (id) => Effect.fail(new GroupErrorNotFound({ id })),
+            readByIds: (ids) => Effect.fail(new GroupErrorNotFound({ id: ids[0] }))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped("should be update", () =>
@@ -161,15 +175,17 @@ describe("GroupUseCase", () => {
       )
       assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({
-          update: (id, _group) => Effect.succeed(GroupId.make(id))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({
+            update: (id, _group) => Effect.succeed(GroupId.make(id))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 
   it.scoped.fails("should be update with GroupErrorNotFound", () =>
@@ -179,14 +195,16 @@ describe("GroupUseCase", () => {
         withSystemActor
       )
     }).pipe(
-      Effect.provide(GroupUseCase),
-      Effect.provide(UUIDTest),
-      Effect.provide(
-        makeTestLayer(GroupPortDriven)({
-          update: (id, _group) => Effect.fail(new GroupErrorNotFound({ id }))
-        })
-      ),
-      Effect.provide(EventEmitterTest()),
-      Effect.provide(RedisTest)
+      Effect.provide(Layer.provideMerge(
+        GroupUseCase,
+        Layer.mergeAll(
+          UUIDTest,
+          makeTestLayer(GroupPortDriven)({
+            update: (id, _group) => Effect.fail(new GroupErrorNotFound({ id }))
+          }),
+          EventEmitterTest(),
+          RedisTest
+        )
+      ))
     ))
 })
