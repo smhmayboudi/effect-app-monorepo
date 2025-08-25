@@ -7,7 +7,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
-import { flow, Layer, Logger, LogLevel } from "effect"
+import { Effect, flow, Layer, Logger, LogLevel } from "effect"
 import { Redis } from "ioredis"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
@@ -21,6 +21,13 @@ const NodeSdkLive = NodeSdk.layer(() => ({
   resource: { serviceName: "effect-app-monorepo", serviceVersion: "0.0.0" },
   spanProcessor: new BatchSpanProcessor(new OTLPTraceExporter())
 }))
+
+const gracefulShutdown = <A, E, R>(layer: Layer.Layer<A, E, R>) =>
+  Layer.scopedDiscard(
+    Effect.addFinalizer(() => Effect.logInfo("Graceful Shutdown"))
+  ).pipe(
+    Layer.provideMerge(layer)
+  )
 
 const HttpApiLive = HttpApiBuilder.serve(flow(
   HttpMiddleware.cors({
@@ -42,7 +49,8 @@ const HttpApiLive = HttpApiBuilder.serve(flow(
   Layer.provide(IdempotencyRedis({ redis: new Redis({ host: "127.0.0.1" }) })),
   Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),
   HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 }))
+  Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 })),
+  gracefulShutdown
 )
 
 Layer.launch(HttpApiLive).pipe(NodeRuntime.runMain)
