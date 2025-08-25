@@ -24,7 +24,7 @@ const RedisLive = Config.nested(
 const SqliteLive = Config.nested(
   Config.all({
     filename: Config.string("FILENAME").pipe(
-      Config.withDefault("./db.sqlite")
+      Config.withDefault("./db-server.sqlite")
     )
   }),
   "SQLITE"

@@ -113,7 +113,7 @@ const WorkflowEngineLayer = ClusterWorkflowEngine.layer.pipe(
   Layer.provideMerge(NodeClusterRunnerSocket.layer({ storage: "sql" })),
   Layer.provideMerge(
     SqliteClient.layer({
-      filename: "./db.sqlite",
+      filename: "./db-workflow.sqlite",
       transformQueryNames: String.camelToSnake,
       transformResultNames: String.snakeToCamel
     })
