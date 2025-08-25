@@ -45,7 +45,10 @@
       "@template/domain/test/*": ["./packages/domain/test/*.js"],
       "@template/server": ["./packages/server/src/index.js"],
       "@template/server/*": ["./packages/server/src/*.js"],
-      "@template/server/test/*": ["./packages/server/test/*.js"]
+      "@template/server/test/*": ["./packages/server/test/*.js"],
+      "@template/workflow": ["./packages/workflow/src/index.js"],
+      "@template/workflow/*": ["./packages/workflow/src/*.js"],
+      "@template/workflow/test/*": ["./packages/workflow/test/*.js"]
     }
   }
 }

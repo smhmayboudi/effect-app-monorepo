@@ -4,6 +4,7 @@
   "references": [
     { "path": "packages/cli" },
     { "path": "packages/domain" },
-    { "path": "packages/server" }
+    { "path": "packages/server" },
+    { "path": "packages/workflow" }
   ]
 }
