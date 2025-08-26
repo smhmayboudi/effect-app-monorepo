@@ -2,130 +2,88 @@ import { ClusterWorkflowEngine } from "@effect/cluster"
 import { NodeClusterRunnerSocket, NodeRuntime } from "@effect/platform-node"
 import { SqliteClient } from "@effect/sql-sqlite-node"
 import { Activity, DurableClock, DurableDeferred, Workflow } from "@effect/workflow"
-import { Effect, Layer, Schema, String } from "effect"
+import { Effect, Layer, Logger, LogLevel, Schema, String } from "effect"
 
-// Define a custom error for the SendEmail activity
-class SendEmailError extends Schema.TaggedError<SendEmailError>(
-  "SendEmailError"
-)("SendEmailError", {
-  message: Schema.String
-}) {}
+class SendEmailError extends Schema.TaggedError<SendEmailError>("SendEmailError")(
+  "SendEmailError",
+  { message: Schema.String }
+) {}
 
-// Define a workflow using the `Workflow.make` api.
 const EmailWorkflow = Workflow.make({
-  // Every workflow needs a unique name
-  name: "EmailWorkflow",
-  // Add a success schema. You can omit this to use the default value `Schema.Void`
-  success: Schema.Void,
-  // Add an error schema. You can omit this to use the default value `Schema.Never`
   error: SendEmailError,
-  // Define the payload for the workflow
+  idempotencyKey: ({ id }) => id,
+  name: "EmailWorkflow",
   payload: {
     id: Schema.String,
     to: Schema.String
   },
-  // Define the idempotency key for the workflow. This is used to ensure that
-  // the workflow is not duplicated if it is retried.
-  idempotencyKey: ({ id }) => id
+  success: Schema.Void
 })
 
-// Once you have defined the workflow, you can create a layer for by providing
-// the implementation.
+const SqlLayer = SqliteClient.layer({
+  filename: "./db-workflow.sqlite",
+  transformQueryNames: String.camelToSnake,
+  transformResultNames: String.snakeToCamel
+})
+
+const RunnerLive = NodeClusterRunnerSocket.layer({
+  clientOnly: false,
+  storage: "sql"
+})
+
 const EmailWorkflowLayer = EmailWorkflow.toLayer(
-  Effect.fn(function*(payload, executionId) {
-    // An `Activity` represents an unit of work in the workflow.
-    // They will only ever be executed once, unless you use `Activity.retry`.
-    yield* Activity.make({
-      name: "SendEmail",
-      error: SendEmailError,
-      execute: Effect.gen(function*() {
-        // You can access the current attempt number of the activity.
-        const attempt = yield* Activity.CurrentAttempt
-
-        yield* Effect.annotateLogs(Effect.log(`Sending email`), {
-          id: payload.id,
-          executionId,
-          attempt
-        })
-
-        if (attempt !== 5) {
-          return yield* new SendEmailError({
-            message: `Failed to send email for ${payload.id} on attempt ${attempt}`
+  (payload, executionId) =>
+    Effect.gen(function*() {
+      yield* Activity.make({
+        error: SendEmailError,
+        execute: Effect.gen(function*() {
+          const attempt = yield* Activity.CurrentAttempt
+          yield* Effect.annotateLogs(Effect.log(`Sending email`), {
+            attempt,
+            executionId,
+            id: payload.id
           })
-        }
-      })
-    }).pipe(
-      Activity.retry({ times: 5 }),
-      EmailWorkflow.withCompensation(
-        Effect.fn(function*(_value, _cause) {
-          // This is a compensation finalizer that will be executed if the workflow
-          // fails.
-          //
-          // You can use the success `value` of the wrapped effect, as well as the
-          // Cause of the workflow failure.
-          yield* Effect.log(`Compensating activity SendEmail`)
-        })
+          if (attempt !== 5) {
+            return yield* new SendEmailError({
+              message: `Failed to send email for ${payload.id} on attempt ${attempt}`
+            })
+          }
+        }),
+        name: "SendEmail"
+      }).pipe(
+        Activity.retry({ times: 5 }),
+        EmailWorkflow.withCompensation(
+          (_value, _cause) =>
+            Effect.gen(function*() {
+              yield* Effect.log(`Compensating activity SendEmail`)
+            })
+        )
       )
-    )
-
-    // Use the `DurableClock` to sleep for a specified duration.
-    // The workflow will pause execution for the specified duration.
-    //
-    // You can sleep for as long as you want - when the workflow pauses it
-    // consumes no resources.
-    yield* Effect.log("Sleeping for 10 seconds")
-    yield* DurableClock.sleep({
-      name: "Some sleep",
-      duration: "10 seconds"
+      yield* Effect.log("Sleeping for 10 seconds")
+      yield* DurableClock.sleep({ duration: "10 seconds", name: "Some sleep" })
+      yield* Effect.log("Woke up")
+      const EmailTrigger = DurableDeferred.make("EmailTrigger")
+      const token = yield* DurableDeferred.token(EmailTrigger)
+      yield* DurableDeferred.succeed(EmailTrigger, { token, value: void 0 }).pipe(
+        Effect.delay("1 second"),
+        Effect.forkDaemon
+      )
+      yield* DurableDeferred.await(EmailTrigger)
     })
-    yield* Effect.log("Woke up")
-
-    // You can use `DurableDeferred` to create a signal that can be awaited later.
-    const EmailTrigger = DurableDeferred.make("EmailTrigger")
-
-    // You can use the `DurableDeferred.token` api to acquire the token that can
-    // later be used with `DurableDeferred.done / succeed / fail`
-    const token = yield* DurableDeferred.token(EmailTrigger)
-
-    // You then use the token to send a result to the deferred.
-    //
-    // This doesn't need to be done inside the workflow, it just needs access to
-    // the `WorkflowEngine` service.
-    yield* DurableDeferred.succeed(EmailTrigger, {
-      token,
-      value: void 0
-    }).pipe(
-      Effect.delay("1 second"), // Simulate some delay before completing the deferred
-      Effect.forkDaemon
-    )
-
-    // Finally, you can await the deferred to get the result.
-    //
-    // It will pause the workflow until the deferred is completed.
-    yield* DurableDeferred.await(EmailTrigger)
-  })
 )
 
-// To integrate with @effect/cluster, you can use the
-// `ClusterWorkflowEngine.layer` Layer, and provide it with your cluster Runner
-// layer.
 const WorkflowEngineLayer = ClusterWorkflowEngine.layer.pipe(
-  Layer.provideMerge(NodeClusterRunnerSocket.layer({ storage: "sql" })),
-  Layer.provideMerge(
-    SqliteClient.layer({
-      filename: "./db-workflow.sqlite",
-      transformQueryNames: String.camelToSnake,
-      transformResultNames: String.snakeToCamel
-    })
-  )
+  Layer.provideMerge(RunnerLive),
+  Layer.provideMerge(SqlLayer)
 )
 
 const EnvLayer = Layer.mergeAll(
-  EmailWorkflowLayer
-  // You can add any other cluster entities or workflow layers here
-).pipe(Layer.provide(WorkflowEngineLayer))
+  EmailWorkflowLayer,
+  Logger.minimumLogLevel(LogLevel.Debug)
+).pipe(
+  Layer.provide(WorkflowEngineLayer)
+)
 
-// Finally, you can execute a workflow using the `.execute` method.
 EmailWorkflow.execute({ id: "123", to: "hello@timsmart.co" }).pipe(
   Effect.provide(EnvLayer),
   NodeRuntime.runMain
