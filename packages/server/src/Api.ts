@@ -50,15 +50,15 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(PersonDriving),
     Layer.provide(PersonUseCase),
     Layer.provide(PersonDriven),
-    Layer.provide(PersonPolicy),
-    Layer.provide(PersonEventEmitter)
+    Layer.provide(PersonEventEmitter),
+    Layer.provide(PersonPolicy)
   )
   .pipe(
     Layer.provide(GroupDriving),
     Layer.provide(GroupUseCase),
     Layer.provide(GroupDriven),
-    Layer.provide(GroupPolicy),
-    Layer.provide(GroupEventEmitter)
+    Layer.provide(GroupEventEmitter),
+    Layer.provide(GroupPolicy)
   )
   .pipe(
     Layer.provide(HealthzDriving),
@@ -73,31 +73,31 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(TodoDriving),
     Layer.provide(TodoUseCase),
     Layer.provide(TodoDriven),
-    Layer.provide(TodoPolicy),
-    Layer.provide(TodoEventEmitter)
+    Layer.provide(TodoEventEmitter),
+    Layer.provide(TodoPolicy)
   )
   .pipe(
     Layer.provide(VWElasticsearch),
     Layer.provide(VWDriving),
     Layer.provide(VWUseCase),
     Layer.provide(VWDriven),
-    Layer.provide(VWPolicy),
-    Layer.provide(VWEventEmitter)
+    Layer.provide(VWEventEmitter),
+    Layer.provide(VWPolicy)
   )
   .pipe(
     Layer.provide(UserDriving),
     Layer.provide(MiddlewareAuthentication),
     Layer.provide(UserUseCase),
     Layer.provide(UserDriven),
-    Layer.provide(UserPolicy),
-    Layer.provide(UserEventEmitter)
+    Layer.provide(UserEventEmitter),
+    Layer.provide(UserPolicy)
   )
   .pipe(
     Layer.provide(AccountDriving),
     Layer.provide(AccountUseCase),
     Layer.provide(AccountDriven),
-    Layer.provide(AccountPolicy),
-    Layer.provide(AccountEventEmitter)
+    Layer.provide(AccountEventEmitter),
+    Layer.provide(AccountPolicy)
   )
   .pipe(
     Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((opts) => opts.ElasticsearchLive)))),
