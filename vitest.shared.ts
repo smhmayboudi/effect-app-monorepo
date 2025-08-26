@@ -31,7 +31,8 @@ const config: ViteUserConfig = {
     alias: {
       ...alias("cli"),
       ...alias("domain"),
-      ...alias("server")
+      ...alias("server"),
+      ...alias("workflow")
     }
   }
 }

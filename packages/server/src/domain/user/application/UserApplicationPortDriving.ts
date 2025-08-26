@@ -1,3 +1,4 @@
+import type { WorkflowEngine } from "@effect/workflow"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
@@ -22,6 +23,7 @@ export class UserPortDriving extends Context.Tag("UserPortDriving")<UserPortDriv
     | ActorAuthorized<"Account", "delete">
     | ActorAuthorized<"User", "create">
     | ActorAuthorized<"User", "readByIdWithSensitive">
+    | WorkflowEngine.WorkflowEngine
   >
   delete: (id: UserId) => Effect.Effect<UserId, UserErrorNotFound, ActorAuthorized<"User", "delete">>
   readAll: (

@@ -1,5 +1,6 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { Api } from "@template/domain/Api"
+import { WorkflowEngineLayer } from "@template/workflow/RunnerClient"
 import { Config, Layer } from "effect"
 import { ConfigLive } from "./Config.js"
 import { AccountDriven } from "./domain/account/adapter/AccountAdapterDriven.js"
@@ -104,5 +105,6 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(EventEmitter()),
     Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
     Layer.provide(Sql(ConfigLive.pipe(Config.map((opts) => opts.SqliteLive)))),
-    Layer.provide(UUID)
+    Layer.provide(UUID),
+    Layer.provide(WorkflowEngineLayer)
   )

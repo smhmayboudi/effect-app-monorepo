@@ -3,7 +3,8 @@
   "include": ["test"],
   "references": [
     { "path": "tsconfig.src.json" },
-    { "path": "../domain" }
+    { "path": "../domain" },
+    { "path": "../workflow" }
   ],
   "compilerOptions": {
     "types": ["node"],

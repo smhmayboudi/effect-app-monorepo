@@ -1,18 +1,15 @@
-import { ClusterWorkflowEngine } from "@effect/cluster"
-import { NodeClusterRunnerSocket, NodeRuntime } from "@effect/platform-node"
-import { SqliteClient } from "@effect/sql-sqlite-node"
 import { Activity, DurableClock, DurableDeferred, Workflow } from "@effect/workflow"
-import { Effect, Layer, Logger, LogLevel, Schema, String } from "effect"
+import { Effect, Schema } from "effect"
 
 class SendEmailError extends Schema.TaggedError<SendEmailError>("SendEmailError")(
   "SendEmailError",
   { message: Schema.String }
 ) {}
 
-const EmailWorkflow = Workflow.make({
+export const WorkflowSendEmail = Workflow.make({
   error: SendEmailError,
   idempotencyKey: ({ id }) => id,
-  name: "EmailWorkflow",
+  name: "WorkflowSendEmail",
   payload: {
     id: Schema.String,
     to: Schema.String
@@ -20,18 +17,7 @@ const EmailWorkflow = Workflow.make({
   success: Schema.Void
 })
 
-const SqlLayer = SqliteClient.layer({
-  filename: "./db-workflow.sqlite",
-  transformQueryNames: String.camelToSnake,
-  transformResultNames: String.snakeToCamel
-})
-
-const RunnerLive = NodeClusterRunnerSocket.layer({
-  clientOnly: false,
-  storage: "sql"
-})
-
-const EmailWorkflowLayer = EmailWorkflow.toLayer(
+export const WorkflowSendEmailLayer = WorkflowSendEmail.toLayer(
   (payload, executionId) =>
     Effect.gen(function*() {
       yield* Activity.make({
@@ -52,7 +38,7 @@ const EmailWorkflowLayer = EmailWorkflow.toLayer(
         name: "SendEmail"
       }).pipe(
         Activity.retry({ times: 5 }),
-        EmailWorkflow.withCompensation(
+        WorkflowSendEmail.withCompensation(
           (_value, _cause) =>
             Effect.gen(function*() {
               yield* Effect.log(`Compensating activity SendEmail`)
@@ -70,21 +56,4 @@ const EmailWorkflowLayer = EmailWorkflow.toLayer(
       )
       yield* DurableDeferred.await(EmailTrigger)
     })
-)
-
-const WorkflowEngineLayer = ClusterWorkflowEngine.layer.pipe(
-  Layer.provide(RunnerLive),
-  Layer.provide(SqlLayer)
-)
-
-const EnvLayer = Layer.mergeAll(
-  EmailWorkflowLayer,
-  Logger.minimumLogLevel(LogLevel.Debug)
-).pipe(
-  Layer.provide(WorkflowEngineLayer)
-)
-
-EmailWorkflow.execute({ id: "123", to: "hello@timsmart.co" }).pipe(
-  Effect.provide(EnvLayer),
-  NodeRuntime.runMain
 )

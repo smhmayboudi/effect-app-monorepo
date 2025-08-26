@@ -29,7 +29,7 @@ const gracefulShutdown = <A, E, R>(layer: Layer.Layer<A, E, R>) =>
     Layer.provideMerge(layer)
   )
 
-const HttpApiLive = HttpApiBuilder.serve(flow(
+HttpApiBuilder.serve(flow(
   HttpMiddleware.cors({
     allowedOrigins: ["*"],
     allowedMethods: ["DELETE", "GET", "OPTION", "PATCH", "POST", "PUT"],
@@ -50,7 +50,7 @@ const HttpApiLive = HttpApiBuilder.serve(flow(
   Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),
   HttpServer.withLogAddress,
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 })),
-  gracefulShutdown
+  gracefulShutdown,
+  Layer.launch,
+  NodeRuntime.runMain
 )
-
-Layer.launch(HttpApiLive).pipe(NodeRuntime.runMain)

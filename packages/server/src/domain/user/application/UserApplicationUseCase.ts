@@ -1,5 +1,6 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
+import { WorkflowSendEmail } from "@template/workflow/WorkflowSendEmail"
 import { Effect, Exit, Layer, Redacted } from "effect"
 import { PortUUID } from "../../../infrastructure/application/PortUUID.js"
 import { policyRequire } from "../../../util/Policy.js"
@@ -62,6 +63,7 @@ export const UserUseCase = Layer.scoped(
                         out: Exit.succeed(out)
                       })
                   }),
+                  Effect.tap((out) => WorkflowSendEmail.execute({ id: out.id, to: out.email }, { discard: true })),
                   Effect.withSpan("UserUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", user } }),
                   policyRequire("User", "create")
                 )
