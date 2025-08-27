@@ -8,6 +8,6 @@ export const Redis = (options: Config.Config.Wrap<RedisOptions>) =>
     PortRedis,
     Effect.acquireRelease(
       Config.unwrap(options).pipe(Effect.map((opts) => new RedisOriginal(opts))),
-      (client) => Effect.promise(() => client.shutdown())
+      (client) => Effect.sync(() => client.disconnect())
     )
   )
