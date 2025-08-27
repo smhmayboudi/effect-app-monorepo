@@ -41,6 +41,7 @@ import { VWUseCase } from "./domain/vw/application/VWApplicationUseCase.js"
 import { Elasticsearch } from "./infrastructure/adapter/Elasticsearch.js"
 import { EventEmitter } from "./infrastructure/adapter/EventEmitter.js"
 import { Redis } from "./infrastructure/adapter/Redis.js"
+import { ResultPersistenceRedis } from "./infrastructure/adapter/ResultPersistenceRedis.js"
 import { Sql } from "./infrastructure/adapter/Sql.js"
 import { SSEManager } from "./infrastructure/adapter/SSEManager.js"
 import { UUID } from "./infrastructure/adapter/UUID.js"
@@ -104,6 +105,7 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((opts) => opts.ElasticsearchLive)))),
     Layer.provide(EventEmitter()),
     Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
+    Layer.provide(ResultPersistenceRedis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
     Layer.provide(Sql(ConfigLive.pipe(Config.map((opts) => opts.SqliteLive)))),
     Layer.provide(UUID),
     Layer.provide(WorkflowEngineLayer)

@@ -6,7 +6,7 @@ import { TodoPortDriven } from "@template/server/domain/todo/application/TodoApp
 import { TodoPortDriving } from "@template/server/domain/todo/application/TodoApplicationPortDriving"
 import { TodoUseCase } from "@template/server/domain/todo/application/TodoApplicationUseCase"
 import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
-import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
+import { ResultPersistenceRedisTest } from "@template/server/infrastructure/adapter/ResultPersistenceRedis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
@@ -33,7 +33,7 @@ describe("TodoUseCase", () => {
             create: (_todo) => Effect.succeed(TodoId.make("00000000-0000-0000-0000-000000000000"))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -52,7 +52,7 @@ describe("TodoUseCase", () => {
           UUIDTest,
           makeTestLayer(TodoPortDriven)({ delete: (id) => Effect.succeed(id) }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -70,7 +70,7 @@ describe("TodoUseCase", () => {
           UUIDTest,
           makeTestLayer(TodoPortDriven)({ delete: (id) => Effect.fail(new TodoErrorNotFound({ id })) }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -109,7 +109,7 @@ describe("TodoUseCase", () => {
               })
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     )
@@ -143,7 +143,7 @@ describe("TodoUseCase", () => {
             readByIds: (_ids) => Effect.succeed([todoTest])
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     )
@@ -165,7 +165,7 @@ describe("TodoUseCase", () => {
             readByIds: (ids) => Effect.fail(new TodoErrorNotFound({ id: ids[0] }))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -186,7 +186,7 @@ describe("TodoUseCase", () => {
             update: (id, _todo) => Effect.succeed(TodoId.make(id))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -206,7 +206,7 @@ describe("TodoUseCase", () => {
             update: (id, _todo) => Effect.fail(new TodoErrorNotFound({ id }))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))

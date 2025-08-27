@@ -8,7 +8,7 @@ import { PersonPortDriven } from "@template/server/domain/person/application/Per
 import { PersonPortDriving } from "@template/server/domain/person/application/PersonApplicationPortDriving"
 import { PersonUseCase } from "@template/server/domain/person/application/PersonApplicationUseCase"
 import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
-import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
+import { ResultPersistenceRedisTest } from "@template/server/infrastructure/adapter/ResultPersistenceRedis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
@@ -38,7 +38,7 @@ describe("PersonUseCase", () => {
             create: (_person) => Effect.succeed(PersonId.make("00000000-0000-0000-0000-000000000000"))
           }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({
             readById: (id) =>
               Effect.succeed(
@@ -71,7 +71,7 @@ describe("PersonUseCase", () => {
           UUIDTest,
           makeTestLayer(PersonPortDriven)({ delete: (id) => Effect.succeed(id) }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))
@@ -90,7 +90,7 @@ describe("PersonUseCase", () => {
           UUIDTest,
           makeTestLayer(PersonPortDriven)({ delete: (id) => Effect.fail(new PersonErrorNotFound({ id })) }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))
@@ -131,7 +131,7 @@ describe("PersonUseCase", () => {
               })
           }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))
@@ -167,7 +167,7 @@ describe("PersonUseCase", () => {
             readByIds: (_ids) => Effect.succeed([personTest])
           }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))
@@ -190,7 +190,7 @@ describe("PersonUseCase", () => {
             readByIds: (ids) => Effect.fail(new PersonErrorNotFound({ id: ids[0] }))
           }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))
@@ -212,7 +212,7 @@ describe("PersonUseCase", () => {
             update: (id, _person) => Effect.succeed(PersonId.make(id))
           }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))
@@ -233,7 +233,7 @@ describe("PersonUseCase", () => {
             update: (id, _person) => Effect.fail(new PersonErrorNotFound({ id }))
           }),
           EventEmitterTest(),
-          RedisTest,
+          ResultPersistenceRedisTest,
           makeTestLayer(GroupPortDriving)({})
         )
       ))

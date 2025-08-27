@@ -7,11 +7,12 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
-import { Effect, flow, Layer, Logger, LogLevel } from "effect"
-import { Redis } from "ioredis"
+import { Config, Effect, flow, Layer, Logger, LogLevel } from "effect"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
+import { ConfigLive } from "./Config.js"
 import { IdempotencyRedis } from "./infrastructure/adapter/IdempotencyRedis.js"
+import { Redis } from "./infrastructure/adapter/Redis.js"
 import { MiddlewareIdempotency } from "./middleware/MiddlewareIdempotency.js"
 import { MiddlewareMetric } from "./middleware/MiddlewareMetric.js"
 
@@ -46,7 +47,11 @@ HttpApiBuilder.serve(flow(
   Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
   Layer.provide(ApiLive),
   Layer.provide(NodeContext.layer),
-  Layer.provide(IdempotencyRedis({ redis: new Redis({ host: "127.0.0.1" }) })),
+  Layer.provide(
+    IdempotencyRedis().pipe(
+      Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive))))
+    )
+  ),
   Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),
   HttpServer.withLogAddress,
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 })),

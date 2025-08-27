@@ -6,7 +6,7 @@ import { GroupPortDriven } from "@template/server/domain/group/application/Group
 import { GroupPortDriving } from "@template/server/domain/group/application/GroupApplicationPortDriving"
 import { GroupUseCase } from "@template/server/domain/group/application/GroupApplicationUseCase"
 import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
-import { RedisTest } from "@template/server/infrastructure/adapter/Redis"
+import { ResultPersistenceRedisTest } from "@template/server/infrastructure/adapter/ResultPersistenceRedis"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
@@ -32,7 +32,7 @@ describe("GroupUseCase", () => {
             create: (_group) => Effect.succeed(GroupId.make("00000000-0000-0000-0000-000000000000"))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -51,7 +51,7 @@ describe("GroupUseCase", () => {
           UUIDTest,
           makeTestLayer(GroupPortDriven)({ delete: (id) => Effect.succeed(id) }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -69,7 +69,7 @@ describe("GroupUseCase", () => {
           UUIDTest,
           makeTestLayer(GroupPortDriven)({ delete: (id) => Effect.fail(new GroupErrorNotFound({ id })) }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -107,7 +107,7 @@ describe("GroupUseCase", () => {
               })
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     )
@@ -140,7 +140,7 @@ describe("GroupUseCase", () => {
             readByIds: (_ids) => Effect.succeed([groupTest])
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     )
@@ -162,7 +162,7 @@ describe("GroupUseCase", () => {
             readByIds: (ids) => Effect.fail(new GroupErrorNotFound({ id: ids[0] }))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -183,7 +183,7 @@ describe("GroupUseCase", () => {
             update: (id, _group) => Effect.succeed(GroupId.make(id))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))
@@ -203,7 +203,7 @@ describe("GroupUseCase", () => {
             update: (id, _group) => Effect.fail(new GroupErrorNotFound({ id }))
           }),
           EventEmitterTest(),
-          RedisTest
+          ResultPersistenceRedisTest
         )
       ))
     ))

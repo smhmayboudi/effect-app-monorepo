@@ -246,6 +246,9 @@ export * as IdempotencyRedis from "./infrastructure/adapter/IdempotencyRedis.js"
 export * as Redis from "./infrastructure/adapter/Redis.js"
 
 
+export * as ResultPersistenceRedis from "./infrastructure/adapter/ResultPersistenceRedis.js"
+
+
 export * as SSEManager from "./infrastructure/adapter/SSEManager.js"
 
 
@@ -283,6 +286,9 @@ export * as PortIdempotency from "./infrastructure/application/PortIdempotency.j
 
 
 export * as PortRedis from "./infrastructure/application/PortRedis.js"
+
+
+export * as PortResultPersistence from "./infrastructure/application/PortResultPersistence.js"
 
 
 export * as PortSSEManager from "./infrastructure/application/PortSSEManager.js"
