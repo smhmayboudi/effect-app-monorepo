@@ -40,7 +40,7 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
         return yield* HttpServerResponse.json(new IdempotencyErrorKeyMismatch({ key: clientKey }))
       }
       if (existing.value.status === "completed") {
-        const responseBody = yield* Effect.try<Record<string, any>>(() =>
+        const responseBody = yield* Effect.try<Record<string, unknown>>(() =>
           typeof existing.value.response === "string" ? JSON.parse(existing.value.response) : existing.value.response
         )
 
@@ -54,10 +54,10 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
     try {
       const response = yield* app
       if (response.status >= 200 && response.status < 300) {
-        const responseBody = yield* Effect.try<Record<string, any>>(() =>
+        const responseBody = yield* Effect.try<Record<string, unknown>>(() =>
           typeof response.body === "string" ? JSON.parse(response.body) : response.body
         )
-        const responseBodyBody = new TextDecoder("utf-8").decode(responseBody["body"])
+        const responseBodyBody = new TextDecoder("utf-8").decode(responseBody["body"] as AllowSharedBufferSource)
         yield* service.complete(serverKey, responseBodyBody)
       } else {
         yield* service.fail(serverKey)

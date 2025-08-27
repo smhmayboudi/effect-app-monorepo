@@ -1,7 +1,7 @@
 import { Chunk, Effect, HashMap, Layer, Queue, Ref } from "effect"
 import { PortEventEmitter } from "../application/PortEventEmitter.js"
 
-export const EventEmitter = <Events extends Record<string, any>>() =>
+export const EventEmitter = <Events extends Record<string, unknown>>() =>
   Layer.scoped(
     PortEventEmitter<Events>(),
     Effect.gen(function*() {
@@ -58,7 +58,7 @@ export const EventEmitter = <Events extends Record<string, any>>() =>
     })
   )
 
-export const EventEmitterTest = <Events extends Record<string, any>>() =>
+export const EventEmitterTest = <Events extends Record<string, unknown>>() =>
   Layer.scoped(
     PortEventEmitter<Events>(),
     Effect.sync(() => {

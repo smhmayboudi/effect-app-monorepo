@@ -1,6 +1,6 @@
 import { Context, type Effect } from "effect"
 
-export interface EventEmitter<Events extends Record<string, any>> {
+export interface EventEmitter<Events extends Record<string, unknown>> {
   emit<K extends keyof Events>(event: K, data: Events[K]): Effect.Effect<void>
   off<K extends keyof Events>(event: K): Effect.Effect<void>
   on<K extends keyof Events>(
@@ -13,5 +13,5 @@ export interface EventEmitter<Events extends Record<string, any>> {
   ): Effect.Effect<void>
 }
 
-export const PortEventEmitter = <Events extends Record<string, any>>() =>
+export const PortEventEmitter = <Events extends Record<string, unknown>>() =>
   Context.GenericTag<EventEmitter<Events>>("PortEventEmitter")

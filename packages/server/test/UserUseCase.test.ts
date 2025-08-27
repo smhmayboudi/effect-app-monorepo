@@ -59,16 +59,16 @@ describe("UserUseCase", () => {
           }),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({
             execute: <const Discard extends boolean>(options: {
-              readonly workflow: any
+              readonly workflow: Workflow.Any
               readonly executionId: string
               readonly payload: object
               readonly discard: Discard
-              readonly parent?: any | undefined
+              readonly parent?: WorkflowEngine.WorkflowInstance["Type"] | undefined
             }) =>
               Effect.succeed(
                 options.discard
                   ? (undefined as Discard extends true ? void : Workflow.Result<unknown, unknown>)
-                  : ({} as Discard extends true ? void : Workflow.Result<unknown, unknown>)
+                  : ({} as Discard extends true ? never : Workflow.Result<unknown, unknown>)
               )
           })
         )

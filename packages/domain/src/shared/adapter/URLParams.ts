@@ -3,7 +3,7 @@ import { Schema } from "effect"
 export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
   const KeysUnion = Schema.keyof(schema)
   type KeysUnion = typeof KeysUnion.Type
-  const isKeysUnion = (key: any): key is KeysUnion => Schema.is(KeysUnion)(key)
+  const isKeysUnion = (key: unknown): key is KeysUnion => Schema.is(KeysUnion)(key)
   const keys = Object.keys((schema as any).fields).join(", ")
 
   const inputSchema = Schema.Struct({

@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 
-export const logTraceWithTrace = (...message: ReadonlyArray<any>) =>
+export const logTraceWithTrace = (...message: ReadonlyArray<unknown>) =>
   Effect.currentSpan.pipe(
     Effect.catchTag("NoSuchElementException", Effect.die),
     Effect.flatMap((span) =>
@@ -10,7 +10,7 @@ export const logTraceWithTrace = (...message: ReadonlyArray<any>) =>
     )
   )
 
-export const logDebugWithTrace = (...message: ReadonlyArray<any>) =>
+export const logDebugWithTrace = (...message: ReadonlyArray<unknown>) =>
   Effect.currentSpan.pipe(
     Effect.catchTag("NoSuchElementException", Effect.die),
     Effect.flatMap((span) =>
@@ -20,7 +20,7 @@ export const logDebugWithTrace = (...message: ReadonlyArray<any>) =>
     )
   )
 
-export const logInfoWithTrace = (...message: ReadonlyArray<any>) =>
+export const logInfoWithTrace = (...message: ReadonlyArray<unknown>) =>
   Effect.currentSpan.pipe(
     Effect.catchTag("NoSuchElementException", Effect.die),
     Effect.flatMap((span) =>
@@ -30,7 +30,7 @@ export const logInfoWithTrace = (...message: ReadonlyArray<any>) =>
     )
   )
 
-export const logWarningWithTrace = (...message: ReadonlyArray<any>) =>
+export const logWarningWithTrace = (...message: ReadonlyArray<unknown>) =>
   Effect.currentSpan.pipe(
     Effect.catchTag("NoSuchElementException", Effect.die),
     Effect.flatMap((span) =>
@@ -40,7 +40,7 @@ export const logWarningWithTrace = (...message: ReadonlyArray<any>) =>
     )
   )
 
-export const logErrorWithTrace = (...message: ReadonlyArray<any>) =>
+export const logErrorWithTrace = (...message: ReadonlyArray<unknown>) =>
   Effect.currentSpan.pipe(
     Effect.catchTag("NoSuchElementException", Effect.die),
     Effect.flatMap((span) =>
@@ -50,7 +50,7 @@ export const logErrorWithTrace = (...message: ReadonlyArray<any>) =>
     )
   )
 
-export const logFatalWithTrace = (...message: ReadonlyArray<any>) =>
+export const logFatalWithTrace = (...message: ReadonlyArray<unknown>) =>
   Effect.currentSpan.pipe(
     Effect.catchTag("NoSuchElementException", Effect.die),
     Effect.flatMap((span) =>
