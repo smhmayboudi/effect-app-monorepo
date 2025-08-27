@@ -108,7 +108,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     )
@@ -129,7 +130,8 @@ describe("UserUseCase", () => {
           makeTestLayer(UserPortDriven)({ delete: (id) => Effect.succeed(id) }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
@@ -148,7 +150,8 @@ describe("UserUseCase", () => {
           makeTestLayer(UserPortDriven)({ delete: (id) => Effect.fail(new UserErrorNotFound({ id })) }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
@@ -187,7 +190,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     )
@@ -221,7 +225,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     )
@@ -245,7 +250,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
@@ -278,7 +284,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     )
@@ -301,7 +308,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
@@ -334,7 +342,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     )
@@ -357,7 +366,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
@@ -378,7 +388,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
@@ -399,7 +410,8 @@ describe("UserUseCase", () => {
           }),
           EventEmitterTest(),
           ResultPersistenceRedisTest,
-          makeTestLayer(AccountPortDriving)({})
+          makeTestLayer(AccountPortDriving)({}),
+          makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
     ))
