@@ -28,48 +28,50 @@ export class PortTodoClient extends Context.Tag("PortTodoClient")<PortTodoClient
 
 export const TodoClient = Layer.scoped(
   PortTodoClient,
-  Effect.gen(function*() {
-    const uuid = yield* PortUUID
-    const client = yield* HttpApiClient.make(Api, { baseUrl: "http://127.0.0.1:3001" })
-
-    return PortTodoClient.of({
-      create: (text) =>
-        uuid.v7().pipe(
-          Effect.flatMap((v7) =>
-            client.todo.create({ headers: { "idempotency-key": IdempotencyKeyClient.make(v7) }, payload: { text } })
-              .pipe(
-                Effect.flatMap((todo) => Effect.logInfo("Created todo: ", todo)),
-                Effect.catchAll(Effect.die)
+  Effect.all([HttpApiClient.make(Api, { baseUrl: "http://127.0.0.1:3001" }), PortUUID]).pipe(
+    Effect.flatMap(([client, uuid]) =>
+      Effect.sync(() =>
+        PortTodoClient.of({
+          create: (text) =>
+            uuid.v7().pipe(
+              Effect.flatMap((v7) =>
+                client.todo.create({ headers: { "idempotency-key": IdempotencyKeyClient.make(v7) }, payload: { text } })
+                  .pipe(
+                    Effect.flatMap((todo) => Effect.logInfo("Created todo: ", todo)),
+                    Effect.catchAll(Effect.die)
+                  )
               )
-          )
-        ),
-      delete: (id) =>
-        client.todo.delete({ path: { id } }).pipe(
-          Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`)),
-          Effect.flatMap(() => Effect.logInfo(`Deleted todo with id: ${id}`)),
-          Effect.catchAll(Effect.die)
-        ),
-      readAll: () =>
-        client.todo.readAll({ urlParams: {} }).pipe(
-          Effect.flatMap((todo) => Effect.logInfo(todo)),
-          Effect.catchAll(Effect.die)
-        ),
-      readById: (id) =>
-        client.todo.readById({ path: { id } }).pipe(
-          Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`)),
-          Effect.flatMap((todo) => Effect.logInfo(todo)),
-          Effect.catchAll(Effect.die)
-        ),
-      update: (id) =>
-        uuid.v7().pipe(
-          Effect.flatMap((v7) =>
-            client.todo.update({ headers: { "idempotency-key": IdempotencyKeyClient.make(v7) }, path: { id } }).pipe(
+            ),
+          delete: (id) =>
+            client.todo.delete({ path: { id } }).pipe(
               Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`)),
-              Effect.flatMap((todo) => Effect.logInfo("Marked todo done: ", todo)),
+              Effect.flatMap(() => Effect.logInfo(`Deleted todo with id: ${id}`)),
               Effect.catchAll(Effect.die)
+            ),
+          readAll: () =>
+            client.todo.readAll({ urlParams: {} }).pipe(
+              Effect.flatMap((todo) => Effect.logInfo(todo)),
+              Effect.catchAll(Effect.die)
+            ),
+          readById: (id) =>
+            client.todo.readById({ path: { id } }).pipe(
+              Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`)),
+              Effect.flatMap((todo) => Effect.logInfo(todo)),
+              Effect.catchAll(Effect.die)
+            ),
+          update: (id) =>
+            uuid.v7().pipe(
+              Effect.flatMap((v7) =>
+                client.todo.update({ headers: { "idempotency-key": IdempotencyKeyClient.make(v7) }, path: { id } })
+                  .pipe(
+                    Effect.catchTag("TodoErrorNotFound", () => Effect.logError(`Failed to find todo with id: ${id}`)),
+                    Effect.flatMap((todo) => Effect.logInfo("Marked todo done: ", todo)),
+                    Effect.catchAll(Effect.die)
+                  )
+              )
             )
-          )
-        )
-    })
-  })
+        })
+      )
+    )
+  )
 )

@@ -8,26 +8,28 @@ import { withSystemActor } from "../util/Policy.js"
 
 export const MiddlewareAuthentication = Layer.effect(
   PortMiddlewareAuthentication,
-  Effect.gen(function*() {
-    const user = yield* UserPortDriving
-
-    return PortMiddlewareAuthentication.of({
-      cookie: (token) =>
-        user.readByAccessToken(AccessToken.make(token)).pipe(
-          Effect.catchTag("UserErrorNotFoundWithAccessToken", () =>
-            Effect.fail(
-              new ActorErrorUnauthorized({
-                actorId: UserId.make("00000000-0000-0000-0000-000000000000"),
-                entity: "",
-                action: ""
-              })
-            )),
-          Effect.flatMap(Effect.succeed),
-          Effect.withSpan("PortMiddlewareAuthentication", {
-            attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
-          }),
-          withSystemActor
-        )
-    })
-  })
+  UserPortDriving.pipe(
+    Effect.flatMap((user) =>
+      Effect.sync(() =>
+        PortMiddlewareAuthentication.of({
+          cookie: (token) =>
+            user.readByAccessToken(AccessToken.make(token)).pipe(
+              Effect.catchTag("UserErrorNotFoundWithAccessToken", () =>
+                Effect.fail(
+                  new ActorErrorUnauthorized({
+                    actorId: UserId.make("00000000-0000-0000-0000-000000000000"),
+                    entity: "",
+                    action: ""
+                  })
+                )),
+              Effect.flatMap(Effect.succeed),
+              Effect.withSpan("PortMiddlewareAuthentication", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
+              }),
+              withSystemActor
+            )
+        })
+      )
+    )
+  )
 )

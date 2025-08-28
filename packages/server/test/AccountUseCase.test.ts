@@ -13,13 +13,15 @@ import { Effect, Layer } from "effect"
 
 describe("AccountUseCase", () => {
   it.scoped("should be created", () =>
-    Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      const accountId = yield* accounts.create({}).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.create({}).pipe(
+          withSystemActor,
+          Effect.map((accountId) => {
+            assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -34,13 +36,15 @@ describe("AccountUseCase", () => {
     ))
 
   it.scoped("should be deleted", () =>
-    Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      const accountId = yield* accounts.delete(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.delete(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((accountId) => {
+            assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -53,12 +57,12 @@ describe("AccountUseCase", () => {
     ))
 
   it.scoped.fails("should be deleted with AccountErrorNotFound", () =>
-    Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      yield* accounts.delete(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.delete(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -79,16 +83,18 @@ describe("AccountUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      const accountList = yield* accounts.readAll({}).pipe(
-        withSystemActor
-      )
-      assert.deepStrictEqual(accountList, {
-        data: [AccountTest],
-        total: 1
-      })
-    }).pipe(
+    return AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.readAll({}).pipe(
+          withSystemActor,
+          Effect.map((accountList) => {
+            assert.deepStrictEqual(accountList, {
+              data: [AccountTest],
+              total: 1
+            })
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -116,13 +122,15 @@ describe("AccountUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      const account = yield* accounts.readById(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(account, AccountTest)
-    }).pipe(
+    return AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.readById(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((account) => {
+            assert.strictEqual(account, AccountTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -139,12 +147,12 @@ describe("AccountUseCase", () => {
   })
 
   it.scoped.fails("should be readById with AccountErrorNotFound", () =>
-    Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      yield* accounts.readById(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.readById(AccountId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -160,13 +168,15 @@ describe("AccountUseCase", () => {
     ))
 
   it.scoped("should be update", () =>
-    Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      const accountId = yield* accounts.update(AccountId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.update(AccountId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor,
+          Effect.map((accountId) => {
+            assert.strictEqual(accountId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(
@@ -181,12 +191,12 @@ describe("AccountUseCase", () => {
     ))
 
   it.scoped.fails("should be update with AccountErrorNotFound", () =>
-    Effect.gen(function*() {
-      const accounts = yield* AccountPortDriving
-      yield* accounts.update(AccountId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    AccountPortDriving.pipe(
+      Effect.flatMap((accounts) =>
+        accounts.update(AccountId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         AccountUseCase,
         Layer.mergeAll(

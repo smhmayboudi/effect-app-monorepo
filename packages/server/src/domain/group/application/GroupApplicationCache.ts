@@ -17,23 +17,21 @@ export class GroupReadById extends Schema.TaggedRequest<GroupReadById>("GroupRea
   }
 }
 
-export const makeGroupReadResolver = Effect.gen(function*() {
-  const { cacheTTLMs } = yield* GroupConfig
-  const driven = yield* GroupPortDriven
-  const resolver = yield* RequestResolver.fromEffectTagged<GroupReadById>()({
-    GroupReadById: (requests) =>
-      driven.readByIds(requests.map((req) => req.id)).pipe(
-        Effect.withSpan("GroupUseCase", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "GroupReadById", requests }
-        }),
-        Effect.tap(() => logDebugWithTrace(`DB hit: GroupReadById ${requests.length}`))
-      )
-  }).pipe(
-    persisted({
-      storeId: "Group",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
-    })
+export const makeGroupReadResolver = Effect.all([GroupConfig, GroupPortDriven]).pipe(
+  Effect.flatMap(([{ cacheTTLMs }, driven]) =>
+    RequestResolver.fromEffectTagged<GroupReadById>()({
+      GroupReadById: (requests) =>
+        driven.readByIds(requests.map((req) => req.id)).pipe(
+          Effect.withSpan("GroupUseCase", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "GroupReadById", requests }
+          }),
+          Effect.tap(() => logDebugWithTrace(`DB hit: GroupReadById ${requests.length}`))
+        )
+    }).pipe(
+      persisted({
+        storeId: "Group",
+        timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
+      })
+    )
   )
-
-  return resolver
-})
+)

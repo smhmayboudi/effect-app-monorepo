@@ -14,16 +14,18 @@ import { Effect, Layer } from "effect"
 
 describe("GroupUseCase", () => {
   it.scoped("should be created", () =>
-    Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      const groupId = yield* groups.create({
-        ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
-        name: "test"
-      }).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.create({
+          ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+          name: "test"
+        }).pipe(
+          withSystemActor,
+          Effect.map((groupId) => {
+            assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -38,13 +40,15 @@ describe("GroupUseCase", () => {
     ))
 
   it.scoped("should be deleted", () =>
-    Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      const groupId = yield* groups.delete(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.delete(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((groupId) => {
+            assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -57,12 +61,12 @@ describe("GroupUseCase", () => {
     ))
 
   it.scoped.fails("should be deleted with GroupErrorNotFound", () =>
-    Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      yield* groups.delete(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.delete(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -85,16 +89,18 @@ describe("GroupUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      const groupList = yield* groups.readAll({}).pipe(
-        withSystemActor
-      )
-      assert.deepStrictEqual(groupList, {
-        data: [groupTest],
-        total: 1
-      })
-    }).pipe(
+    return GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.readAll({}).pipe(
+          withSystemActor,
+          Effect.map((groupList) => {
+            assert.deepStrictEqual(groupList, {
+              data: [groupTest],
+              total: 1
+            })
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -124,13 +130,15 @@ describe("GroupUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      const group = yield* groups.readById(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(group, groupTest)
-    }).pipe(
+    return GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.readById(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((group) => {
+            assert.strictEqual(group, groupTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -147,12 +155,12 @@ describe("GroupUseCase", () => {
   })
 
   it.scoped.fails("should be readById with GroupErrorNotFound", () =>
-    Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      yield* groups.readById(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.readById(GroupId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -168,13 +176,15 @@ describe("GroupUseCase", () => {
     ))
 
   it.scoped("should be update", () =>
-    Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      const groupId = yield* groups.update(GroupId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.update(GroupId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor,
+          Effect.map((groupId) => {
+            assert.strictEqual(groupId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(
@@ -189,12 +199,12 @@ describe("GroupUseCase", () => {
     ))
 
   it.scoped.fails("should be update with GroupErrorNotFound", () =>
-    Effect.gen(function*() {
-      const groups = yield* GroupPortDriving
-      yield* groups.update(GroupId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    GroupPortDriving.pipe(
+      Effect.flatMap((groups) =>
+        groups.update(GroupId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         GroupUseCase,
         Layer.mergeAll(

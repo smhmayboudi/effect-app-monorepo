@@ -42,100 +42,98 @@ export type Config = {
 export const drizzleSqlite = (config: Config) =>
   Layer.scoped(
     PortDrizzleSqlite,
-    Effect.gen(function*() {
-      const client = yield* Effect.acquireRelease(
-        Effect.sync(() =>
-          createClient({
-            ...config.authToken && { authToken: Redacted.value(config.authToken) },
-            url: Redacted.value(config.url)
-          })
-        ),
-        (client) => Effect.sync(() => client.close())
-      )
-
-      yield* Effect.tryPromise(() => client.execute("SELECT 1")).pipe(
-        Effect.timeoutFail({
-          duration: "10 seconds",
-          onTimeout: () =>
-            new DatabaseErrorConnectionLost({
-              cause: new Error("[Database] Failed to connect: timeout"),
-              message: "[Database] Failed to connect: timeout"
-            })
-        }),
-        Effect.catchTag(
-          "UnknownException",
-          (error) =>
-            new DatabaseErrorConnectionLost({
-              cause: error.cause,
-              message: "[Database] Failed to connect"
-            })
-        ),
-        Effect.tap(() => Effect.logInfo("[Database client]: Connection to the database established."))
-      )
-
-      const db = drizzle(client, { schema: config.dbSchema })
-
-      const execute = <A>(fn: (client: Client) => Promise<A>) =>
-        Effect.tryPromise({
-          try: () => fn(db),
-          catch: (cause) => {
-            const error = matchLibSQLError(cause)
-            if (error !== null) {
-              return error
-            }
-            throw cause
-          }
+    Effect.acquireRelease(
+      Effect.sync(() =>
+        createClient({
+          ...(config.authToken && { authToken: Redacted.value(config.authToken) }),
+          url: Redacted.value(config.url)
         })
-
-      const makeQuery = <A, E, R, Input = never>(
-        queryFn: (execute: ExecuteFn, input: Input) => Effect.Effect<A, E, R>
-      ) =>
-      (...args: [Input] extends [never] ? [] : [input: Input]): Effect.Effect<A, E, R> =>
-        Effect.serviceOption(TransactionContext).pipe(
-          Effect.map(Option.getOrNull),
-          Effect.flatMap((txOrNull) => queryFn(txOrNull ?? execute, args[0] as Input))
-        )
-
-      const transaction = <A, E, R>(txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>) =>
-        Effect.runtime<R>().pipe(
-          Effect.map((runtime) => Runtime.runPromiseExit(runtime)),
-          Effect.flatMap((runPromiseExit) =>
-            Effect.async<A, DatabaseError | E, R>((resume) => {
-              db.transaction(async (tx: TransactionClient) => {
-                const txWrapper = (fn: (client: TransactionClient) => Promise<any>) =>
-                  Effect.tryPromise({
-                    try: () => fn(tx),
-                    catch: (cause) => {
-                      const error = matchLibSQLError(cause)
-                      if (error !== null) {
-                        return error
-                      }
-                      throw cause
-                    }
-                  })
-                const result = await runPromiseExit(txExecute(txWrapper))
-                Exit.match(result, {
-                  onSuccess: (value) => resume(Effect.succeed(value)),
-                  onFailure: (cause) =>
-                    Cause.isFailure(cause)
-                      ? resume(Effect.fail(Cause.originalError(cause) as E))
-                      : resume(Effect.die(cause))
-                })
-              }).catch((cause) => {
-                const error = matchLibSQLError(cause)
-                resume(error ? Effect.fail(error) : Effect.die(cause))
+      ),
+      (client) => Effect.sync(() => client.close())
+    ).pipe(
+      Effect.flatMap((client) =>
+        Effect.tryPromise(() => client.execute("SELECT 1")).pipe(
+          Effect.timeoutFail({
+            duration: "10 seconds",
+            onTimeout: () =>
+              new DatabaseErrorConnectionLost({
+                cause: new Error("[Database] Failed to connect: timeout"),
+                message: "[Database] Failed to connect: timeout"
               })
-            })
-          )
+          }),
+          Effect.catchTag(
+            "UnknownException",
+            (error) =>
+              new DatabaseErrorConnectionLost({
+                cause: error.cause,
+                message: "[Database] Failed to connect"
+              })
+          ),
+          Effect.tap(() => Effect.logInfo("[Database client]: Connection to the database established.")),
+          Effect.map(() => client)
         )
+      ),
+      Effect.map((client) => {
+        const db = drizzle(client, { schema: config.dbSchema })
 
-      return PortDrizzleSqlite.of({
-        execute,
-        makeQuery,
-        setupConnectionListeners: Effect.logInfo(
-          "[Database client]: libsql has no persistent connection; listeners skipped."
-        ),
-        transaction
+        const execute = <A>(fn: (client: Client) => Promise<A>) =>
+          Effect.tryPromise({
+            try: () => fn(db),
+            catch: (cause) => {
+              const error = matchLibSQLError(cause)
+              if (error !== null) {
+                return error
+              }
+              throw cause
+            }
+          })
+
+        return PortDrizzleSqlite.of({
+          execute,
+          makeQuery: <A, E, R, Input = never>(
+            queryFn: (execute: ExecuteFn, input: Input) => Effect.Effect<A, E, R>
+          ) =>
+          (...args: [Input] extends [never] ? [] : [input: Input]): Effect.Effect<A, E, R> =>
+            Effect.serviceOption(TransactionContext).pipe(
+              Effect.map(Option.getOrNull),
+              Effect.flatMap((txOrNull) => queryFn(txOrNull ?? execute, args[0] as Input))
+            ),
+          setupConnectionListeners: Effect.logInfo(
+            "[Database client]: libsql has no persistent connection; listeners skipped."
+          ),
+          transaction: <A, E, R>(txExecute: (tx: TransactionContextShape) => Effect.Effect<A, E, R>) =>
+            Effect.runtime<R>().pipe(
+              Effect.map((runtime) => Runtime.runPromiseExit(runtime)),
+              Effect.flatMap((runPromiseExit) =>
+                Effect.async<A, DatabaseError | E, R>((resume) => {
+                  db.transaction(async (tx: TransactionClient) => {
+                    const txWrapper = (fn: (client: TransactionClient) => Promise<any>) =>
+                      Effect.tryPromise({
+                        try: () => fn(tx),
+                        catch: (cause) => {
+                          const error = matchLibSQLError(cause)
+                          if (error !== null) {
+                            return error
+                          }
+                          throw cause
+                        }
+                      })
+                    const result = await runPromiseExit(txExecute(txWrapper))
+                    Exit.match(result, {
+                      onSuccess: (value) => resume(Effect.succeed(value)),
+                      onFailure: (cause) =>
+                        Cause.isFailure(cause)
+                          ? resume(Effect.fail(Cause.originalError(cause) as E))
+                          : resume(Effect.die(cause))
+                    })
+                  }).catch((cause) => {
+                    const error = matchLibSQLError(cause)
+                    resume(error ? Effect.fail(error) : Effect.die(cause))
+                  })
+                })
+              )
+            )
+        })
       })
-    })
+    )
   )

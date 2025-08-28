@@ -19,5 +19,5 @@ export class SSEDriving extends HttpApiGroup.make("sse")
   .annotate(OpenApi.Description, "Manage SSE")
   .annotate(OpenApi.Summary, "Manage SSE")
   .annotate(OpenApi.Title, "SSE")
-  .prefix("/todo")
+  .prefix("/sse")
 {}

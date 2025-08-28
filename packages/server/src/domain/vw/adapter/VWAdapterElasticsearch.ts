@@ -13,25 +13,18 @@ const UserGroupPersonSchema = () => {
     userId: UserSchema.fields.id,
     userOwnerId: UserSchema.fields.ownerId,
     userEmail: UserSchema.fields.email,
-    // userCreatedAt: UserSchema.fields.createdAt,
-    // userUpdatedAt: UserSchema.fields.updatedAt,
     userCreatedAt: Schema.String,
     userUpdatedAt: Schema.String,
     groupId: GroupSchema.fields.id,
     groupOwnerId: GroupSchema.fields.ownerId,
     groupName: GroupSchema.fields.name,
-    // groupCreatedAt: GroupSchema.fields.createdAt,
-    // groupUpdatedAt: GroupSchema.fields.updatedAt,
     groupCreatedAt: Schema.String,
     groupUpdatedAt: Schema.String,
     personId: PersonSchema.fields.id,
     personGroupId: PersonSchema.fields.groupId,
-    // personBirthday: PersonSchema.fields.birthday,
     personBirthday: Schema.String,
     personFirstName: PersonSchema.fields.firstName,
     personLastName: PersonSchema.fields.lastName,
-    // personCreatedAt: PersonSchema.fields.createdAt,
-    // personUpdatedAt: PersonSchema.fields.updatedAt
     personCreatedAt: Schema.String,
     personUpdatedAt: Schema.String
   })
@@ -104,16 +97,12 @@ const UserTodoSchema = () => {
     userId: UserSchema.fields.id,
     userOwnerId: UserSchema.fields.ownerId,
     userEmail: UserSchema.fields.email,
-    // userCreatedAt: UserSchema.fields.createdAt,
-    // userUpdatedAt: UserSchema.fields.updatedAt,
     userCreatedAt: Schema.String,
     userUpdatedAt: Schema.String,
     todoId: TodoSchema.fields.id,
     todoOwnerId: TodoSchema.fields.ownerId,
     todoDone: TodoSchema.fields.done,
     todoText: TodoSchema.fields.text,
-    // todoCreatedAt: TodoSchema.fields.createdAt,
-    // todoUpdatedAt: TodoSchema.fields.updatedAt
     todoCreatedAt: Schema.String,
     todoUpdatedAt: Schema.String
   })
@@ -167,102 +156,105 @@ type UserTodoSchema = Schema.Schema.Type<ReturnType<typeof UserTodoSchema>>
 
 export const VWElasticsearch = Layer.scoped(
   VWPortElasticsearch,
-  Effect.gen(function*() {
-    const elasticsearch = yield* PortElasticsearch
-    const sql = yield* SqlClient.SqlClient
-
-    const vwUserGroupPerson = () =>
-      Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_user_group_person" })).pipe(
-        Effect.flatMap((indexExists) =>
-          indexExists ?
-            Effect.tryPromise(() => elasticsearch.indices.delete({ index: "vw_user_group_person" })).pipe(
-              Effect.flatMap(() => Effect.succeed(true))
-            ) :
-            Effect.succeed(false)
-        ),
-        Effect.flatMap(() =>
-          Effect.tryPromise(() =>
-            elasticsearch.indices.create({
-              index: "vw_user_group_person",
-              mappings: {
-                properties: {
-                  user: { type: "object" },
-                  group: { type: "object" },
-                  person: { type: "object" }
+  Effect.all([PortElasticsearch, SqlClient.SqlClient]).pipe(
+    Effect.flatMap(([elasticsearch, sql]) => {
+      const vwUserGroupPerson = () =>
+        Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_user_group_person" })).pipe(
+          Effect.flatMap((indexExists) =>
+            indexExists ?
+              Effect.tryPromise(() => elasticsearch.indices.delete({ index: "vw_user_group_person" })).pipe(
+                Effect.map(() => true)
+              ) :
+              Effect.succeed(false)
+          ),
+          Effect.flatMap(() =>
+            Effect.tryPromise(() =>
+              elasticsearch.indices.create({
+                index: "vw_user_group_person",
+                mappings: {
+                  properties: {
+                    user: { type: "object" },
+                    group: { type: "object" },
+                    person: { type: "object" }
+                  }
                 }
-              }
-            })
-          )
-        ),
-        Effect.flatMap(() =>
-          sql`SELECT * FROM vw_user_group_person`.pipe(
-            Effect.catchTag("SqlError", Effect.die),
-            Effect.flatMap((rows) => Effect.all(rows.map((row) => Schema.decodeUnknown(UserGroupPersonSchema())(row)))),
-            Effect.catchTag("ParseError", Effect.die),
-            Effect.flatMap((vwUPPs) =>
-              Effect.all(vwUPPs.map((vwUPP) =>
-                Effect.tryPromise(() =>
-                  elasticsearch.create({
-                    body: { user: vwUPP.user, group: vwUPP.group, person: vwUPP.person },
-                    id: String(vwUPP.person.id),
-                    index: "vw_user_group_person"
-                  })
-                )
-              ))
+              })
             )
-          )
-        ),
-        Effect.catchTag("UnknownException", Effect.die),
-        Effect.asVoid
-      )
+          ),
+          Effect.flatMap(() =>
+            sql`SELECT * FROM vw_user_group_person`.pipe(
+              Effect.catchTag("SqlError", Effect.die),
+              Effect.flatMap((rows) =>
+                Effect.all(rows.map((row) => Schema.decodeUnknown(UserGroupPersonSchema())(row)))
+              ),
+              Effect.catchTag("ParseError", Effect.die),
+              Effect.flatMap((vwUPPs) =>
+                Effect.all(vwUPPs.map((vwUPP) =>
+                  Effect.tryPromise(() =>
+                    elasticsearch.create({
+                      body: { user: vwUPP.user, group: vwUPP.group, person: vwUPP.person },
+                      id: String(vwUPP.person.id),
+                      index: "vw_user_group_person"
+                    })
+                  )
+                ))
+              )
+            )
+          ),
+          Effect.catchTag("UnknownException", Effect.die),
+          Effect.asVoid
+        )
 
-    const vwUserTodo = () =>
-      Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_user_todo" })).pipe(
-        Effect.flatMap((indexExists) =>
-          indexExists ?
-            Effect.tryPromise(() => elasticsearch.indices.delete({ index: "vw_user_todo" })).pipe(
-              Effect.flatMap(() => Effect.succeed(true))
-            ) :
-            Effect.succeed(false)
-        ),
-        Effect.flatMap(() =>
-          Effect.tryPromise(() =>
-            elasticsearch.indices.create({
-              index: "vw_user_todo",
-              mappings: {
-                properties: {
-                  user: { type: "object" },
-                  todo: { type: "object" }
+      const vwUserTodo = () =>
+        Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_user_todo" })).pipe(
+          Effect.flatMap((indexExists) =>
+            indexExists ?
+              Effect.tryPromise(() => elasticsearch.indices.delete({ index: "vw_user_todo" })).pipe(
+                Effect.map(() => true)
+              ) :
+              Effect.succeed(false)
+          ),
+          Effect.flatMap(() =>
+            Effect.tryPromise(() =>
+              elasticsearch.indices.create({
+                index: "vw_user_todo",
+                mappings: {
+                  properties: {
+                    user: { type: "object" },
+                    todo: { type: "object" }
+                  }
                 }
-              }
-            })
-          )
-        ),
-        Effect.flatMap(() =>
-          sql`SELECT * FROM vw_user_todo`.pipe(
-            Effect.catchTag("SqlError", Effect.die),
-            Effect.flatMap((rows) => Effect.all(rows.map((row) => Schema.decodeUnknown(UserTodoSchema())(row)))),
-            Effect.catchTag("ParseError", Effect.die),
-            Effect.flatMap((vwUPPs) =>
-              Effect.all(vwUPPs.map((vwUPP) =>
-                Effect.tryPromise(() =>
-                  elasticsearch.create({
-                    body: { user: vwUPP.user, todo: vwUPP.todo },
-                    id: String(vwUPP.todo.id),
-                    index: "vw_user_todo"
-                  })
-                )
-              ))
+              })
             )
-          )
-        ),
-        Effect.catchTag("UnknownException", Effect.die),
-        Effect.asVoid
+          ),
+          Effect.flatMap(() =>
+            sql`SELECT * FROM vw_user_todo`.pipe(
+              Effect.catchTag("SqlError", Effect.die),
+              Effect.flatMap((rows) => Effect.all(rows.map((row) => Schema.decodeUnknown(UserTodoSchema())(row)))),
+              Effect.catchTag("ParseError", Effect.die),
+              Effect.flatMap((vwUPPs) =>
+                Effect.all(vwUPPs.map((vwUPP) =>
+                  Effect.tryPromise(() =>
+                    elasticsearch.create({
+                      body: { user: vwUPP.user, todo: vwUPP.todo },
+                      id: String(vwUPP.todo.id),
+                      index: "vw_user_todo"
+                    })
+                  )
+                ))
+              )
+            )
+          ),
+          Effect.catchTag("UnknownException", Effect.die),
+          Effect.asVoid
+        )
+
+      return Effect.all([
+        vwUserGroupPerson().pipe(Effect.tap(() => Effect.logInfo("Elasticsearch updated by vwUserGroupPerson"))),
+        vwUserTodo().pipe(Effect.tap(() => Effect.logInfo("Elasticsearch updated by vwUserTodo")))
+      ]).pipe(
+        Effect.map(() => VWPortElasticsearch.of({ vwUserGroupPerson, vwUserTodo }))
       )
-
-    yield* vwUserGroupPerson().pipe(Effect.tap(Effect.logInfo("Elasticsearch updated by vwUserGroupPerson")))
-    yield* vwUserTodo().pipe(Effect.tap(Effect.logInfo("Elasticsearch updated by vwUserTodo")))
-
-    return VWPortElasticsearch.of({ vwUserGroupPerson, vwUserTodo })
-  })
+    })
+  )
 )

@@ -1,9 +1,10 @@
 import { SqlClient } from "@effect/sql"
 import { Effect } from "effect"
 
-export default Effect.gen(function*() {
-  const sql = yield* SqlClient.SqlClient
-  yield* sql`CREATE VIEW vw_user_group_person AS
+export default SqlClient.SqlClient.pipe(
+  Effect.flatMap((sql) =>
+    Effect.sync(() =>
+      sql`CREATE VIEW vw_user_group_person AS
     SELECT 
       u.id as user_id,
       u.owner_id as user_owner_id,
@@ -26,4 +27,6 @@ export default Effect.gen(function*() {
     JOIN tbl_group g ON u.owner_id = u.owner_id
     JOIN tbl_person p ON g.id = p.group_id
     WHERE u.deleted_at IS NULL AND g.deleted_at IS NULL AND p.deleted_at IS NULL`
-})
+    )
+  )
+)

@@ -17,23 +17,21 @@ export class PersonReadById extends Schema.TaggedRequest<PersonReadById>("Person
   }
 }
 
-export const makePersonReadResolver = Effect.gen(function*() {
-  const { cacheTTLMs } = yield* PersonConfig
-  const driven = yield* PersonPortDriven
-  const resolver = yield* RequestResolver.fromEffectTagged<PersonReadById>()({
-    PersonReadById: (requests) =>
-      driven.readByIds(requests.map((req) => req.id)).pipe(
-        Effect.withSpan("PersonUseCase", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "PersonReadById", requests }
-        }),
-        Effect.tap(() => logDebugWithTrace(`DB hit: PersonReadById ${requests.length}`))
-      )
-  }).pipe(
-    persisted({
-      storeId: "Person",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
-    })
+export const makePersonReadResolver = Effect.all([PersonConfig, PersonPortDriven]).pipe(
+  Effect.flatMap(([{ cacheTTLMs }, driven]) =>
+    RequestResolver.fromEffectTagged<PersonReadById>()({
+      PersonReadById: (requests) =>
+        driven.readByIds(requests.map((req) => req.id)).pipe(
+          Effect.withSpan("PersonUseCase", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "PersonReadById", requests }
+          }),
+          Effect.tap(() => logDebugWithTrace(`DB hit: PersonReadById ${requests.length}`))
+        )
+    }).pipe(
+      persisted({
+        storeId: "Person",
+        timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
+      })
+    )
   )
-
-  return resolver
-})
+)

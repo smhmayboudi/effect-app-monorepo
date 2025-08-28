@@ -35,15 +35,17 @@ describe("UserUseCase", () => {
       accessToken: AccessToken.make(Redacted.make("v7"))
     })
 
-    return Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const userWithSensitive = yield* users.create({
-        email: Email.make("smhmayboudi@gmail.com")
-      }).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(userWithSensitive, userWithSensitiveTest)
-    }).pipe(
+    return UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.create({
+          email: Email.make("smhmayboudi@gmail.com")
+        }).pipe(
+          withSystemActor,
+          Effect.map((userWithSensitive) => {
+            assert.strictEqual(userWithSensitive, userWithSensitiveTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -76,29 +78,15 @@ describe("UserUseCase", () => {
     )
   })
 
-  it.scoped.fails("should be created with UserErrorEmailAlreadyTaken", () => {
-    const now = new Date()
-
-    return Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const userWithSensitive = yield* users.create({
-        email: Email.make("smhmayboudi@gmail.com")
-      }).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(
-        userWithSensitive,
-        new UserWithSensitive({
-          id: UserId.make("00000000-0000-0000-0000-000000000000"),
-          ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
-          email: Email.make("smhmayboudi@gmail.com"),
-          createdAt: now,
-          updatedAt: now,
-          deletedAt: null,
-          accessToken: AccessToken.make(Redacted.make("v7"))
-        })
-      )
-    }).pipe(
+  it.scoped.fails("should be created with UserErrorEmailAlreadyTaken", () =>
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.create({
+          email: Email.make("smhmayboudi@gmail.com")
+        }).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -112,17 +100,18 @@ describe("UserUseCase", () => {
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
       ))
-    )
-  })
+    ))
 
   it.scoped("should be deleted", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const userId = yield* users.delete(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.delete(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((userId) => {
+            assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -137,12 +126,12 @@ describe("UserUseCase", () => {
     ))
 
   it.scoped.fails("should be deleted with UserErrorNotFound", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      yield* users.delete(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.delete(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -167,16 +156,18 @@ describe("UserUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const userList = yield* users.readAll({}).pipe(
-        withSystemActor
-      )
-      assert.deepStrictEqual(userList, {
-        data: [userTest],
-        total: 1
-      })
-    }).pipe(
+    return UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.readAll({}).pipe(
+          withSystemActor,
+          Effect.map((userList) => {
+            assert.deepStrictEqual(userList, {
+              data: [userTest],
+              total: 1
+            })
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -208,13 +199,15 @@ describe("UserUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const user = yield* users.readByAccessToken(AccessToken.make(Redacted.make("v7"))).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(user, userTest)
-    }).pipe(
+    return UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.readByAccessToken(AccessToken.make(Redacted.make("v7"))).pipe(
+          withSystemActor,
+          Effect.map((user) => {
+            assert.strictEqual(user, userTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -233,12 +226,12 @@ describe("UserUseCase", () => {
   })
 
   it.scoped.fails("should be readByAccessToken with UserErrorNotFoundWithAccessToken", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      yield* users.readByAccessToken(AccessToken.make(Redacted.make("v7"))).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.readByAccessToken(AccessToken.make(Redacted.make("v7"))).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -267,13 +260,15 @@ describe("UserUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const user = yield* users.readById(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(user, userTest)
-    }).pipe(
+    return UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.readById(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((user) => {
+            assert.strictEqual(user, userTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -292,12 +287,12 @@ describe("UserUseCase", () => {
   })
 
   it.scoped.fails("should be readById with UserErrorNotFound", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      yield* users.readById(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.readById(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -325,14 +320,15 @@ describe("UserUseCase", () => {
       deletedAt: null,
       accessToken: AccessToken.make(Redacted.make("v7"))
     })
-    return Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const userWithSensitive = yield* users.readByIdWithSensitive(UserId.make("00000000-0000-0000-0000-000000000000"))
-        .pipe(
-          withSystemActor
+    return UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.readByIdWithSensitive(UserId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((userWithSensitive) => {
+            assert.strictEqual(userWithSensitive, userWithSensitiveTest)
+          })
         )
-      assert.strictEqual(userWithSensitive, userWithSensitiveTest)
-    }).pipe(
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -350,13 +346,15 @@ describe("UserUseCase", () => {
   })
 
   it.scoped("should be update", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      const userId = yield* users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor,
+          Effect.map((userId) => {
+            assert.strictEqual(userId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -373,12 +371,12 @@ describe("UserUseCase", () => {
     ))
 
   it.scoped.fails("should be update with UserErrorEmailAlreadyTaken", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      yield* users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(
@@ -395,12 +393,12 @@ describe("UserUseCase", () => {
     ))
 
   it.scoped.fails("should be update with UserErrorNotFound", () =>
-    Effect.gen(function*() {
-      const users = yield* UserPortDriving
-      yield* users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    UserPortDriving.pipe(
+      Effect.flatMap((users) =>
+        users.update(UserId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         UserUseCase,
         Layer.mergeAll(

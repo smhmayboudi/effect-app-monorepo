@@ -6,7 +6,7 @@ export const response = <A, E, R>(
   effect: Effect.Effect<A, E, R>
 ): Effect.Effect<ResponseSuccess<A, E, R>, E, R> => effect.pipe(Effect.map((data) => ({ data })))
 
-export const responseArray = <A extends Record<string, unknown>, E, R>(
+export const responseArray = <A extends object, E, R>(
   urlParams: URLParams<A>
 ) =>
 (effect: Effect.Effect<SuccessArray<A, E, R>, E, R>): Effect.Effect<ResponseSuccessArray<A, E, R>, E, R> =>

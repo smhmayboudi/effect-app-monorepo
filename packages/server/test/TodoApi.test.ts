@@ -56,26 +56,33 @@ const HttpClientTest = HttpClient.make((req) => {
 
 describe("TodoApi", () => {
   it.effect("should get the list of todos", () =>
-    Effect.gen(function*() {
-      const client = yield* HttpApiClient.make(Api, { baseUrl })
-      const user = yield* client.user.create({
-        headers: { "idempotency-key": IdempotencyKeyClient.make("00000000-0000-0000-0000-000000000000") },
-        payload: { email: Email.make("smhmayboudi@gmail.com") }
-      })
-      const clientWithAuth = yield* HttpClient.HttpClient.pipe(
-        Effect.flatMap((baseHttpClient) => {
-          const httpClient = baseHttpClient.pipe(HttpClient.mapRequest(
-            HttpClientRequest.setHeader("token", Redacted.value(user.data.accessToken))
-          ))
+    HttpApiClient.make(Api, { baseUrl }).pipe(
+      Effect.flatMap((client) =>
+        client.user.create({
+          headers: { "idempotency-key": IdempotencyKeyClient.make("00000000-0000-0000-0000-000000000000") },
+          payload: { email: Email.make("smhmayboudi@gmail.com") }
+        }).pipe(
+          Effect.flatMap((user) =>
+            HttpClient.HttpClient.pipe(
+              Effect.flatMap((baseHttpClient) => {
+                const httpClient = baseHttpClient.pipe(HttpClient.mapRequest(
+                  HttpClientRequest.setHeader("token", Redacted.value(user.data.accessToken))
+                ))
 
-          return HttpApiClient.makeWith(Api, { baseUrl, httpClient })
-        })
-      )
-      const todos = yield* clientWithAuth.todo.readAll({ urlParams: {} })
-      expect(todos.data.length).toEqual(0)
-      yield* clientWithAuth.user.delete({ path: { id: user.data.id } })
-    }).pipe(
-      // Effect.provide(NodeHttpClient.layer)
+                return HttpApiClient.makeWith(Api, { baseUrl, httpClient })
+              }),
+              Effect.flatMap((clientWithAuth) =>
+                clientWithAuth.todo.readAll({ urlParams: {} }).pipe(
+                  Effect.flatMap((todos) => {
+                    expect(todos.data.length).toEqual(0)
+                    return clientWithAuth.user.delete({ path: { id: user.data.id } })
+                  })
+                )
+              )
+            )
+          )
+        )
+      ),
       Effect.provide(Layer.succeed(HttpClient.HttpClient, HttpClientTest))
     ))
 })

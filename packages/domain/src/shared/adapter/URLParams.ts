@@ -1,6 +1,6 @@
 import { Schema } from "effect"
 
-export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
+export const URLParams = <A extends object>(schema: Schema.Schema<A, any>) => {
   const KeysUnion = Schema.keyof(schema)
   type KeysUnion = typeof KeysUnion.Type
   const isKeysUnion = (key: unknown): key is KeysUnion => Schema.is(KeysUnion)(key)
@@ -128,4 +128,4 @@ export const URLParams = <A>(schema: Schema.Schema<A, any>) => {
     }
   )
 }
-export type URLParams<A> = Schema.Schema.Type<ReturnType<typeof URLParams<A>>>
+export type URLParams<A extends object> = Schema.Schema.Type<ReturnType<typeof URLParams<A>>>

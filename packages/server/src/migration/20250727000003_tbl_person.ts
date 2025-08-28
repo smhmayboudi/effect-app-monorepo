@@ -1,11 +1,12 @@
 import { SqlClient } from "@effect/sql"
 import { Effect } from "effect"
 
-export default Effect.gen(function*() {
-  const sql = yield* SqlClient.SqlClient
-  yield* sql.onDialectOrElse({
-    pg: () =>
-      sql`CREATE TABLE tbl_person (
+export default SqlClient.SqlClient.pipe(
+  Effect.flatMap((sql) =>
+    Effect.sync(() =>
+      sql.onDialectOrElse({
+        pg: () =>
+          sql`CREATE TABLE tbl_person (
             id UUID PRIMARY KEY,
             group_id UUID NOT NULL,
             birthday DATE NOT NULL,
@@ -16,8 +17,8 @@ export default Effect.gen(function*() {
             deleted_at TIMESTAMP NULL,
             FOREIGN KEY (group_id) REFERENCES tbl_group(id) ON DELETE RESTRICT
           )`,
-    orElse: () =>
-      sql`CREATE TABLE tbl_person (
+        orElse: () =>
+          sql`CREATE TABLE tbl_person (
             id UUID PRIMARY KEY,
             group_id TEXT NOT NULL,
             birthday DATE NOT NULL,
@@ -28,5 +29,7 @@ export default Effect.gen(function*() {
             deleted_at DATETIME NULL,
             FOREIGN KEY (group_id) REFERENCES tbl_group(id)
           )`
-  })
-})
+      })
+    )
+  )
+)

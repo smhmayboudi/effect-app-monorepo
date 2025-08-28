@@ -17,23 +17,21 @@ export class AccountReadById extends Schema.TaggedRequest<AccountReadById>("Acco
   }
 }
 
-export const makeAccountReadResolver = Effect.gen(function*() {
-  const { cacheTTLMs } = yield* AccountConfig
-  const driven = yield* AccountPortDriven
-  const resolver = yield* RequestResolver.fromEffectTagged<AccountReadById>()({
-    AccountReadById: (requests) =>
-      driven.readByIds(requests.map((req) => req.id)).pipe(
-        Effect.withSpan("AccountUseCase", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "AccountReadById", requests }
-        }),
-        Effect.tap(() => logDebugWithTrace(`DB hit: AccountReadById ${requests.length}`))
-      )
-  }).pipe(
-    persisted({
-      storeId: "Account",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
-    })
+export const makeAccountReadResolver = Effect.all([AccountConfig, AccountPortDriven]).pipe(
+  Effect.flatMap(([{ cacheTTLMs }, driven]) =>
+    RequestResolver.fromEffectTagged<AccountReadById>()({
+      AccountReadById: (requests) =>
+        driven.readByIds(requests.map((req) => req.id)).pipe(
+          Effect.withSpan("AccountUseCase", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "AccountReadById", requests }
+          }),
+          Effect.tap(() => logDebugWithTrace(`DB hit: AccountReadById ${requests.length}`))
+        )
+    }).pipe(
+      persisted({
+        storeId: "Account",
+        timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
+      })
+    )
   )
-
-  return resolver
-})
+)

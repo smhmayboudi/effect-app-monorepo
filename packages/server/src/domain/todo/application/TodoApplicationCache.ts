@@ -17,23 +17,21 @@ export class TodoReadById extends Schema.TaggedRequest<TodoReadById>("TodoReadBy
   }
 }
 
-export const makeTodoReadResolver = Effect.gen(function*() {
-  const { cacheTTLMs } = yield* TodoConfig
-  const driven = yield* TodoPortDriven
-  const resolver = yield* RequestResolver.fromEffectTagged<TodoReadById>()({
-    TodoReadById: (requests) =>
-      driven.readByIds(requests.map((req) => req.id)).pipe(
-        Effect.withSpan("TodoUseCase", {
-          attributes: { [ATTR_CODE_FUNCTION_NAME]: "TodoReadById", requests }
-        }),
-        Effect.tap(() => logDebugWithTrace(`DB hit: TodoReadById ${requests.length}`))
-      )
-  }).pipe(
-    persisted({
-      storeId: "Todo",
-      timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
-    })
+export const makeTodoReadResolver = Effect.all([TodoConfig, TodoPortDriven]).pipe(
+  Effect.flatMap(([{ cacheTTLMs }, driven]) =>
+    RequestResolver.fromEffectTagged<TodoReadById>()({
+      TodoReadById: (requests) =>
+        driven.readByIds(requests.map((req) => req.id)).pipe(
+          Effect.withSpan("TodoUseCase", {
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "TodoReadById", requests }
+          }),
+          Effect.tap(() => logDebugWithTrace(`DB hit: TodoReadById ${requests.length}`))
+        )
+    }).pipe(
+      persisted({
+        storeId: "Todo",
+        timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
+      })
+    )
   )
-
-  return resolver
-})
+)

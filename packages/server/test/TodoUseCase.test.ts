@@ -14,17 +14,19 @@ import { Effect, Layer } from "effect"
 
 describe("TodoUseCase", () => {
   it.scoped("should be created", () =>
-    Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      const todoId = yield* todos.create({
-        ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
-        done: 0,
-        text: "test"
-      }).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.create({
+          ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+          done: 0,
+          text: "test"
+        }).pipe(
+          withSystemActor,
+          Effect.map((todoId) => {
+            assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -39,13 +41,15 @@ describe("TodoUseCase", () => {
     ))
 
   it.scoped("should be deleted", () =>
-    Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      const todoId = yield* todos.delete(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.delete(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((todoId) => {
+            assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -58,12 +62,12 @@ describe("TodoUseCase", () => {
     ))
 
   it.scoped.fails("should be deleted with TodoErrorNotFound", () =>
-    Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      yield* todos.delete(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.delete(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -87,16 +91,18 @@ describe("TodoUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      const todoList = yield* todos.readAll({}).pipe(
-        withSystemActor
-      )
-      assert.deepStrictEqual(todoList, {
-        data: [todoTest],
-        total: 1
-      })
-    }).pipe(
+    return TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.readAll({}).pipe(
+          withSystemActor,
+          Effect.map((todoList) => {
+            assert.deepStrictEqual(todoList, {
+              data: [todoTest],
+              total: 1
+            })
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -127,13 +133,15 @@ describe("TodoUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      const todo = yield* todos.readById(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(todo, todoTest)
-    }).pipe(
+    return TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.readById(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((todo) => {
+            assert.strictEqual(todo, todoTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -150,12 +158,12 @@ describe("TodoUseCase", () => {
   })
 
   it.scoped.fails("should be readById with TodoErrorNotFound", () =>
-    Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      yield* todos.readById(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.readById(TodoId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -171,13 +179,15 @@ describe("TodoUseCase", () => {
     ))
 
   it.scoped("should be update", () =>
-    Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      const todoId = yield* todos.update(TodoId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.update(TodoId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor,
+          Effect.map((todoId) => {
+            assert.strictEqual(todoId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(
@@ -192,12 +202,12 @@ describe("TodoUseCase", () => {
     ))
 
   it.scoped.fails("should be update with TodoErrorNotFound", () =>
-    Effect.gen(function*() {
-      const todos = yield* TodoPortDriving
-      yield* todos.update(TodoId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    TodoPortDriving.pipe(
+      Effect.flatMap((todos) =>
+        todos.update(TodoId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         TodoUseCase,
         Layer.mergeAll(

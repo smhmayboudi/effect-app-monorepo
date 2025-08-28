@@ -14,14 +14,22 @@ const histogramHTTPRequestDurationSeconds = Metric.histogram(
 )
 
 export const MiddlewareMetric = HttpMiddleware.make((app) =>
-  Effect.gen(function*() {
-    yield* counterHTTPRequestsTotal(Effect.succeed(1))
-    const start = yield* Effect.clockWith((clock) => clock.currentTimeMillis)
-    const response = yield* app
-    const end = yield* Effect.clockWith((clock) => clock.currentTimeMillis)
-    const duration = (end - start) / 1000
-    yield* histogramHTTPRequestDurationSeconds(Effect.succeed(duration))
+  counterHTTPRequestsTotal(Effect.succeed(1)).pipe(
+    Effect.flatMap(() => Effect.clockWith((clock) => clock.currentTimeMillis)),
+    Effect.flatMap((start) =>
+      app.pipe(
+        Effect.flatMap((response) =>
+          Effect.clockWith((clock) => clock.currentTimeMillis).pipe(
+            Effect.flatMap((end) => {
+              const duration = (end - start) / 1000
 
-    return response
-  })
+              return histogramHTTPRequestDurationSeconds(Effect.succeed(duration)).pipe(
+                Effect.map(() => response)
+              )
+            })
+          )
+        )
+      )
+    )
+  )
 )

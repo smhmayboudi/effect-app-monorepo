@@ -9,7 +9,7 @@ import { generateDataHash, validateDataHash } from "../util/Hash.js"
 
 export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
   Effect.gen(function*() {
-    const service = yield* PortIdempotency
+    const idempotency = yield* PortIdempotency
     const request = yield* HttpServerRequest.HttpServerRequest
     if (request.method !== "PATCH" && request.method !== "POST") {
       return yield* app
@@ -31,7 +31,7 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
       dataHash,
       value: `${clientKey}:${dataHash}`
     })
-    const existing = yield* service.retrieve(serverKey)
+    const existing = yield* idempotency.retrieve(serverKey)
     if (Option.isSome(existing)) {
       const validation = yield* Effect.either(
         validateDataHash(requestData, existing.value.key.dataHash)
@@ -50,7 +50,7 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
         return yield* HttpServerResponse.json(new IdempotencyErrorRequestInProgress())
       }
     }
-    yield* service.store(serverKey)
+    yield* idempotency.store(serverKey)
     try {
       const response = yield* app
       if (response.status >= 200 && response.status < 300) {
@@ -58,14 +58,14 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
           typeof response.body === "string" ? JSON.parse(response.body) : response.body
         )
         const responseBodyBody = new TextDecoder("utf-8").decode(responseBody["body"] as AllowSharedBufferSource)
-        yield* service.complete(serverKey, responseBodyBody)
+        yield* idempotency.complete(serverKey, responseBodyBody)
       } else {
-        yield* service.fail(serverKey)
+        yield* idempotency.fail(serverKey)
       }
 
       return response
     } catch (error) {
-      yield* service.fail(serverKey)
+      yield* idempotency.fail(serverKey)
       throw error
     }
   }).pipe(

@@ -18,18 +18,20 @@ describe("PersonUseCase", () => {
   it.scoped("should be created", () => {
     const now = new Date()
 
-    return Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      const personId = yield* persons.create({
-        groupId: GroupId.make("00000000-0000-0000-0000-000000000000"),
-        birthday: new Date(),
-        firstName: "test",
-        lastName: "test"
-      }).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    return PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.create({
+          groupId: GroupId.make("00000000-0000-0000-0000-000000000000"),
+          birthday: new Date(),
+          firstName: "test",
+          lastName: "test"
+        }).pipe(
+          withSystemActor,
+          Effect.map((personId) => {
+            assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -58,13 +60,15 @@ describe("PersonUseCase", () => {
   })
 
   it.scoped("should be deleted", () =>
-    Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      const personId = yield* persons.delete(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.delete(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((personId) => {
+            assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -78,12 +82,12 @@ describe("PersonUseCase", () => {
     ))
 
   it.scoped.fails("should be deleted with PersonErrorNotFound", () =>
-    Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      yield* persons.delete(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.delete(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -109,16 +113,18 @@ describe("PersonUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      const personList = yield* persons.readAll({}).pipe(
-        withSystemActor
-      )
-      assert.deepStrictEqual(personList, {
-        data: [personTest],
-        total: 1
-      })
-    }).pipe(
+    return PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.readAll({}).pipe(
+          withSystemActor,
+          Effect.map((personList) => {
+            assert.deepStrictEqual(personList, {
+              data: [personTest],
+              total: 1
+            })
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -151,13 +157,15 @@ describe("PersonUseCase", () => {
       deletedAt: null
     })
 
-    return Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      const person = yield* persons.readById(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(person, personTest)
-    }).pipe(
+    return PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.readById(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor,
+          Effect.map((person) => {
+            assert.strictEqual(person, personTest)
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -175,12 +183,12 @@ describe("PersonUseCase", () => {
   })
 
   it.scoped.fails("should be readById with PersonErrorNotFound", () =>
-    Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      yield* persons.readById(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.readById(PersonId.make("00000000-0000-0000-0000-000000000000")).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -197,13 +205,15 @@ describe("PersonUseCase", () => {
     ))
 
   it.scoped("should be update", () =>
-    Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      const personId = yield* persons.update(PersonId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-      assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
-    }).pipe(
+    PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.update(PersonId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor,
+          Effect.map((personId) => {
+            assert.strictEqual(personId, "00000000-0000-0000-0000-000000000000")
+          })
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(
@@ -219,12 +229,12 @@ describe("PersonUseCase", () => {
     ))
 
   it.scoped.fails("should be update with PersonErrorNotFound", () =>
-    Effect.gen(function*() {
-      const persons = yield* PersonPortDriving
-      yield* persons.update(PersonId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
-        withSystemActor
-      )
-    }).pipe(
+    PersonPortDriving.pipe(
+      Effect.flatMap((persons) =>
+        persons.update(PersonId.make("00000000-0000-0000-0000-000000000000"), {}).pipe(
+          withSystemActor
+        )
+      ),
       Effect.provide(Layer.provideMerge(
         PersonUseCase,
         Layer.mergeAll(

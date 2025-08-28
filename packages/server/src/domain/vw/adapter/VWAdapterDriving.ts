@@ -8,25 +8,26 @@ import { VWPortDriving } from "../application/VWApplicationPortDriving.js"
 import { VWPortPolicy } from "../application/VWApplicationPortPolicy.js"
 
 export const VWDriving = HttpApiBuilder.group(Api, "vw", (handlers) =>
-  Effect.gen(function*() {
-    const driving = yield* VWPortDriving
-    const policy = yield* VWPortPolicy
-
-    return handlers
-      .handle("readAllUserGroupPerson", ({ urlParams }) =>
-        driving.readAllUserGroupPerson(urlParams).pipe(
-          Effect.withSpan("VWDriving", {
-            attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserGroupPerson", urlParams }
-          }),
-          policyUse(policy.canReadAllUserGroupPerson()),
-          responseArray(urlParams)
-        ))
-      .handle("readAllUserTodo", ({ urlParams }) =>
-        driving.readAllUserTodo(urlParams).pipe(
-          Effect.withSpan("VWDriving", {
-            attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserTodo", urlParams }
-          }),
-          policyUse(policy.canReadAllUserTodo()),
-          responseArray(urlParams)
-        ))
-  }))
+  Effect.all([VWPortDriving, VWPortPolicy]).pipe(
+    Effect.flatMap(([driving, policy]) =>
+      Effect.sync(() =>
+        handlers
+          .handle("readAllUserGroupPerson", ({ urlParams }) =>
+            driving.readAllUserGroupPerson(urlParams).pipe(
+              Effect.withSpan("VWDriving", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserGroupPerson", urlParams }
+              }),
+              policyUse(policy.canReadAllUserGroupPerson()),
+              responseArray(urlParams)
+            ))
+          .handle("readAllUserTodo", ({ urlParams }) =>
+            driving.readAllUserTodo(urlParams).pipe(
+              Effect.withSpan("VWDriving", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserTodo", urlParams }
+              }),
+              policyUse(policy.canReadAllUserTodo()),
+              responseArray(urlParams)
+            ))
+      )
+    )
+  ))

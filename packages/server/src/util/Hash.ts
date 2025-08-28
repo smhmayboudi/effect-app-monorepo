@@ -17,9 +17,10 @@ export const validateDataHash = (
   data: unknown,
   existingHash: string
 ): Effect.Effect<void, UnknownException> =>
-  Effect.gen(function*() {
-    const currentHash = yield* generateDataHash(data)
-    if (currentHash !== existingHash) {
-      return yield* Effect.fail(new UnknownException("validateDataHash"))
-    }
-  })
+  generateDataHash(data).pipe(
+    Effect.flatMap((currentHash) =>
+      currentHash !== existingHash
+        ? Effect.fail(new UnknownException("validateDataHash"))
+        : Effect.void
+    )
+  )

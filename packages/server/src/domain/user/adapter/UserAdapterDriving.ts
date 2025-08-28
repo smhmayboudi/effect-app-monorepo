@@ -10,58 +10,65 @@ import { policyUse, withSystemActor } from "../../../util/Policy.js"
 import { UserPortDriving } from "../application/UserApplicationPortDriving.js"
 import { UserPortPolicy } from "../application/UserApplicationPortPolicy.js"
 
-export const UserDriving = HttpApiBuilder.group(Api, "user", (handlers) =>
-  Effect.gen(function*() {
-    const driving = yield* UserPortDriving
-    const policy = yield* UserPortPolicy
-
-    return handlers
-      .handle("create", ({ payload }) =>
-        driving.create(payload).pipe(
-          Effect.tap((user) =>
-            HttpApiBuilder.securitySetCookie(
-              PortMiddlewareAuthentication.security.cookie,
-              user.accessToken
-            )
-          ),
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user: payload } }),
-          withSystemActor,
-          response
-        ))
-      .handle("delete", ({ path: { id } }) =>
-        driving.delete(id).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-          policyUse(policy.canDelete(UserId.make("00000000-0000-0000-0000-000000000000"))),
-          response
-        ))
-      .handle("readAll", ({ urlParams }) =>
-        driving.readAll(urlParams).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-          policyUse(policy.canReadAll(UserId.make("00000000-0000-0000-0000-000000000000"))),
-          responseArray(urlParams)
-        ))
-      .handle("readById", ({ path: { id } }) =>
-        driving.readById(id).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-          policyUse(policy.canReadById(UserId.make("00000000-0000-0000-0000-000000000000"))),
-          response
-        ))
-      .handle("readByIdWithSensitive", () =>
-        Actor.pipe(
-          Effect.flatMap((user) =>
-            driving.readByIdWithSensitive(user.id).pipe(
-              Effect.withSpan("UserDriving", {
-                attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id: user.id }
-              })
-            )
-          ),
-          withSystemActor,
-          response
-        ))
-      .handle("update", ({ path: { id }, payload }) =>
-        driving.update(id, payload).pipe(
-          Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user: payload } }),
-          policyUse(policy.canUpdate(UserId.make("00000000-0000-0000-0000-000000000000"))),
-          response
-        ))
-  }))
+export const UserDriving = HttpApiBuilder.group(
+  Api,
+  "user",
+  (handlers) =>
+    Effect.all([UserPortDriving, UserPortPolicy]).pipe(
+      Effect.flatMap(([driving, policy]) =>
+        Effect.sync(() =>
+          handlers
+            .handle("create", ({ payload }) =>
+              driving.create(payload).pipe(
+                Effect.tap((user) =>
+                  HttpApiBuilder.securitySetCookie(
+                    PortMiddlewareAuthentication.security.cookie,
+                    user.accessToken
+                  )
+                ),
+                Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", user: payload } }),
+                withSystemActor,
+                response
+              ))
+            .handle("delete", ({ path: { id } }) =>
+              driving.delete(id).pipe(
+                Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+                policyUse(policy.canDelete(UserId.make("00000000-0000-0000-0000-000000000000"))),
+                response
+              ))
+            .handle("readAll", ({ urlParams }) =>
+              driving.readAll(urlParams).pipe(
+                Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+                policyUse(policy.canReadAll(UserId.make("00000000-0000-0000-0000-000000000000"))),
+                responseArray(urlParams)
+              ))
+            .handle("readById", ({ path: { id } }) =>
+              driving.readById(id).pipe(
+                Effect.withSpan("UserDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+                policyUse(policy.canReadById(UserId.make("00000000-0000-0000-0000-000000000000"))),
+                response
+              ))
+            .handle("readByIdWithSensitive", () =>
+              Actor.pipe(
+                Effect.flatMap((user) =>
+                  driving.readByIdWithSensitive(user.id).pipe(
+                    Effect.withSpan("UserDriving", {
+                      attributes: { [ATTR_CODE_FUNCTION_NAME]: "readByIdWithSensitive", id: user.id }
+                    })
+                  )
+                ),
+                withSystemActor,
+                response
+              ))
+            .handle("update", ({ path: { id }, payload }) =>
+              driving.update(id, payload).pipe(
+                Effect.withSpan("UserDriving", {
+                  attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, user: payload }
+                }),
+                policyUse(policy.canUpdate(UserId.make("00000000-0000-0000-0000-000000000000"))),
+                response
+              ))
+        )
+      )
+    )
+)
