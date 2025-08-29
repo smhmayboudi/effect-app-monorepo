@@ -26,11 +26,7 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
       path: request.url
     }
     const dataHash = yield* generateDataHash(requestData)
-    const serverKey = IdempotencyKeyServer.make({
-      clientKey,
-      dataHash,
-      value: `${clientKey}:${dataHash}`
-    })
+    const serverKey = IdempotencyKeyServer.make({ clientKey, dataHash })
     const existing = yield* idempotency.retrieve(serverKey)
     if (Option.isSome(existing)) {
       const validation = yield* Effect.either(
@@ -41,13 +37,15 @@ export const MiddlewareIdempotency = HttpMiddleware.make((app) =>
       }
       if (existing.value.status === "completed") {
         const responseBody = yield* Effect.try<Record<string, unknown>>(() =>
-          typeof existing.value.response === "string" ? JSON.parse(existing.value.response) : existing.value.response
+          typeof existing.value.response === "string" && existing.value.response
+            ? JSON.parse(existing.value.response)
+            : existing.value.response
         )
 
         return yield* HttpServerResponse.json(responseBody)
       }
       if (existing.value.status === "in_progress") {
-        return yield* HttpServerResponse.json(new IdempotencyErrorRequestInProgress())
+        return yield* HttpServerResponse.json(new IdempotencyErrorRequestInProgress({ key: clientKey }))
       }
     }
     yield* idempotency.store(serverKey)

@@ -1,6 +1,6 @@
 import { IdempotencyError } from "@template/domain/shared/application/IdempotencyError"
 import { Effect, Layer, Option } from "effect"
-import type { IdempotencyRecord } from "../application/PortIdempotency.js"
+import type { IdempotencyKeyServer, IdempotencyRecord } from "../application/PortIdempotency.js"
 import { PortIdempotency } from "../application/PortIdempotency.js"
 import { PortRedis } from "../application/PortRedis.js"
 
@@ -14,6 +14,8 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
     PortRedis.pipe(
       Effect.flatMap((redis) =>
         Effect.sync(() => {
+          const makeKey = (key: IdempotencyKeyServer) =>
+            `${config?.prefix ?? "idempotency"}:${key.clientKey}:${key.dataHash}`
           const deserialize = (data: string): IdempotencyRecord => {
             const parsed = JSON.parse(data)
             return {
@@ -22,7 +24,6 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
               updatedAt: new Date(parsed.updatedAt)
             }
           }
-          const prefix = (config?: RedisConfig) => config?.prefix ?? "idempotency:"
           const serialize = (record: IdempotencyRecord): string => JSON.stringify(record)
 
           return PortIdempotency.of({
@@ -30,7 +31,7 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
               Effect.tryPromise({
                 try: async () => {
                   const now = new Date()
-                  const data = await redis.get(`${prefix(config)}${key.value}`)
+                  const data = await redis.get(makeKey(key))
                   if (data) {
                     const existing = deserialize(data)
                     const record: IdempotencyRecord = {
@@ -39,7 +40,7 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
                       status: "completed",
                       updatedAt: now
                     }
-                    await redis.set(`${prefix(config)}${key.value}`, serialize(record), "EX", 86400)
+                    await redis.set(makeKey(key), serialize(record), "EX", 86400)
                   }
                 },
                 catch: (error) => new IdempotencyError({ error, key: key.clientKey, text: "Failed to complete" })
@@ -48,7 +49,7 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
               Effect.tryPromise({
                 try: async () => {
                   const now = new Date()
-                  const data = await redis.get(`${prefix(config)}${key.value}`)
+                  const data = await redis.get(makeKey(key))
                   if (data) {
                     const existing = deserialize(data)
                     const updated: IdempotencyRecord = {
@@ -57,7 +58,7 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
                       updatedAt: now
                     }
 
-                    await redis.set(`${prefix(config)}${key.value}`, serialize(updated), "EX", 86400)
+                    await redis.set(makeKey(key), serialize(updated), "EX", 86400)
                   }
                 },
                 catch: (error) => new IdempotencyError({ error, key: key.clientKey, text: "Failed to fail" })
@@ -65,7 +66,7 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
             retrieve: (key) =>
               Effect.tryPromise({
                 try: async () => {
-                  const data = await redis.get(`${prefix(config)}${key.value}`)
+                  const data = await redis.get(makeKey(key))
 
                   return (data === null) ? Option.none() : Option.some(deserialize(data))
                 },
@@ -81,7 +82,7 @@ export const IdempotencyRedis = (config?: RedisConfig) =>
                     createdAt: now,
                     updatedAt: now
                   }
-                  await redis.set(`${prefix(config)}${key.value}`, serialize(record), "EX", 86400)
+                  await redis.set(makeKey(key), serialize(record), "EX", 86400)
                 },
                 catch: (error) => new IdempotencyError({ error, key: key.clientKey, text: "Failed to store" })
               })

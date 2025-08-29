@@ -5,8 +5,7 @@ import { Context, Schema } from "effect"
 
 export const IdempotencyKeyServer = Schema.Struct({
   clientKey: IdempotencyKeyClient,
-  dataHash: Schema.String,
-  value: Schema.String
+  dataHash: Schema.String
 })
   .pipe(
     Schema.brand("IdempotencyKeyServer"),
