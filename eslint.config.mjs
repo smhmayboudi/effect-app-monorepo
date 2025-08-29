@@ -1,4 +1,4 @@
-import effectPlugin from "@effect/eslint-plugin"
+import * as effectEslint from "@effect/eslint-plugin"
 import { fixupPluginRules } from "@eslint/compat"
 import { FlatCompat } from "@eslint/eslintrc"
 import js from "@eslint/js"
@@ -35,15 +35,14 @@ export default [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
-    // "plugin:@effect/recommended"
   ),
+  ...effectEslint.configs.dprint,
   {
     plugins: {
       import: fixupPluginRules(_import),
       "sort-destructure-keys": sortDestructureKeys,
       "simple-import-sort": simpleImportSort,
-      codegen,
-      "@effect": effectPlugin
+      codegen
     },
 
     languageOptions: {
@@ -65,7 +64,6 @@ export default [
     },
 
     rules: {
-      ...effectPlugin.configs?.recommended?.rules,
       "codegen/codegen": "error",
       "no-fallthrough": "off",
       "no-irregular-whitespace": "off",
