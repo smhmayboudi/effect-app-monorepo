@@ -1,0 +1,109 @@
+{
+  "compounds": [
+    {
+      "configurations": ["ShardManager", "Runner", "Server"],
+      "name": "Full Application (All Services)",
+      "preLaunchTask": "npm: build",
+      "stopAll": true
+    }
+  ],
+  "configurations": [
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "ShardManager",
+      "outFiles": [
+        "${workspaceFolder}/packages/workflow/dist/dist/esm/**/*.js"
+      ],
+      "program": "${workspaceFolder}/packages/workflow/dist/dist/esm/ShardManager.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "type": "node"
+    },
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "Runner",
+      "outFiles": [
+        "${workspaceFolder}/packages/workflow/dist/dist/esm/**/*.js"
+      ],
+      "program": "${workspaceFolder}/packages/workflow/dist/dist/esm/Runner.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "type": "node"
+    },
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "Server",
+      "outFiles": ["${workspaceFolder}/packages/server/dist/dist/esm/**/*.js"],
+      "program": "${workspaceFolder}/packages/server/dist/dist/esm/server.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "type": "node"
+    },
+    {
+      "args": [
+        "run",
+        "--inspect-brk",
+        "--no-file-parallelism",
+        "--test-timeout=60000"
+      ],
+      "console": "integratedTerminal",
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/server/tsconfig.test.json"
+      },
+      "internalConsoleOptions": "neverOpen",
+      "name": "Debug Vitest Tests",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+    {
+      "args": [
+        "run",
+        "${file}",
+        "--inspect-brk",
+        "--no-file-parallelism",
+        "--test-timeout=60000"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "Debug Vitest (Specific File)",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+    {
+      "args": [
+        "watch",
+        "--inspect-brk",
+        "--no-file-parallelism",
+        "--test-timeout=60000"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "Debug Vitest (Watch Mode)",
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+    {
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Process",
+      "port": 9229,
+      "remoteRoot": "${workspaceFolder}",
+      "request": "attach",
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    }
+  ],
+  "version": "0.2.0"
+}
