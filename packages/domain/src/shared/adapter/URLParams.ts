@@ -4,7 +4,11 @@ export const URLParams = <A extends object>(schema: Schema.Schema<A, any>) => {
   const KeysUnion = Schema.keyof(schema)
   type KeysUnion = typeof KeysUnion.Type
   const isKeysUnion = (key: unknown): key is KeysUnion => Schema.is(KeysUnion)(key)
-  const keys = Object.keys((schema as any).fields).join(", ")
+  const typeAst = Schema.typeSchema(schema).ast
+  let keys = ""
+  if (typeAst._tag === "TypeLiteral") {
+    keys = typeAst.propertySignatures.map((ps) => ps.name).join(", ")
+  }
 
   const inputSchema = Schema.Struct({
     expands: Schema.optionalWith(
