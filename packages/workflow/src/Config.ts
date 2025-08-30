@@ -1,6 +1,6 @@
 import { Config } from "effect"
 
-const ShardManagerAddress = Config.nested(
+const ClientShardManagerAddress = Config.nested(
   Config.all({
     host: Config.string("HOST").pipe(
       Config.withDefault("localhost")
@@ -12,9 +12,28 @@ const ShardManagerAddress = Config.nested(
   "SHARD_MANAGER_ADDRESS"
 )
 
-export const ConfigLive = Config.nested(
+export const ClientConfig = Config.nested(
   Config.all({
-    ShardManagerAddress
+    ShardManagerAddress: ClientShardManagerAddress
   }),
   "CLIENT"
+)
+
+const ServerShardManagerAddress = Config.nested(
+  Config.all({
+    host: Config.string("HOST").pipe(
+      Config.withDefault("localhost")
+    ),
+    port: Config.integer("PORT").pipe(
+      Config.withDefault(8080)
+    )
+  }),
+  "SHARD_MANAGER_ADDRESS"
+)
+
+export const ServerConfig = Config.nested(
+  Config.all({
+    ShardManagerAddress: ServerShardManagerAddress
+  }),
+  "SERVER"
 )

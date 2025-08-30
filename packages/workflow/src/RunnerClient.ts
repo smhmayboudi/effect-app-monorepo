@@ -1,10 +1,10 @@
 import { ClusterWorkflowEngine, RunnerAddress } from "@effect/cluster"
 import { NodeClusterRunnerSocket } from "@effect/platform-node"
 import { Effect, Layer } from "effect"
-import { ConfigLive } from "./Config.js"
+import { ClientConfig } from "./Config.js"
 import { SqlLayer } from "./Sql.js"
 
-const ShardingLayer = Layer.unwrapEffect(ConfigLive.pipe(Effect.map((config) =>
+const ShardingLayer = Layer.unwrapEffect(ClientConfig.pipe(Effect.map((config) =>
   NodeClusterRunnerSocket.layer({
     clientOnly: true,
     shardingConfig: {
