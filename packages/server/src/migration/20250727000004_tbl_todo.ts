@@ -3,10 +3,9 @@ import { Effect } from "effect"
 
 export default SqlClient.SqlClient.pipe(
   Effect.flatMap((sql) =>
-    Effect.sync(() =>
-      sql.onDialectOrElse({
-        pg: () =>
-          sql`CREATE TABLE tbl_todo (
+    sql.onDialectOrElse({
+      pg: () =>
+        sql`CREATE TABLE tbl_todo (
             id UUID PRIMARY KEY,
             owner_id UUID NOT NULL,
             done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1)),
@@ -16,8 +15,8 @@ export default SqlClient.SqlClient.pipe(
             deleted_at TIMESTAMP NULL,
             FOREIGN KEY (owner_id) REFERENCES tbl_account(id) ON DELETE RESTRICT
           )`,
-        orElse: () =>
-          sql`CREATE TABLE tbl_todo (
+      orElse: () =>
+        sql`CREATE TABLE tbl_todo (
             id UUID PRIMARY KEY,
             owner_id UUID NOT NULL,
             done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1)),
@@ -27,7 +26,6 @@ export default SqlClient.SqlClient.pipe(
             deleted_at DATETIME NULL,
             FOREIGN KEY (owner_id) REFERENCES tbl_account(id)
           )`
-      })
-    )
+    })
   )
 )

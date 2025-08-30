@@ -3,8 +3,7 @@ import { Effect } from "effect"
 
 export default SqlClient.SqlClient.pipe(
   Effect.flatMap((sql) =>
-    Effect.sync(() =>
-      sql`CREATE VIEW vw_user_todo AS
+    sql`CREATE VIEW vw_user_todo AS
     SELECT 
       u.id as user_id,
       u.owner_id as user_owner_id,
@@ -20,6 +19,5 @@ export default SqlClient.SqlClient.pipe(
     FROM tbl_user u
     JOIN tbl_todo t ON u.owner_id = t.owner_id
     WHERE u.deleted_at IS NULL AND t.deleted_at IS NULL`
-    )
   )
 )
