@@ -15,6 +15,7 @@ import { IdempotencyRedis } from "./infrastructure/adapter/IdempotencyRedis.js"
 import { Redis } from "./infrastructure/adapter/Redis.js"
 import { MiddlewareIdempotency } from "./middleware/MiddlewareIdempotency.js"
 import { MiddlewareMetric } from "./middleware/MiddlewareMetric.js"
+import { TextDecoder } from "./util/TextDecoder.js"
 
 const NodeSdkLive = NodeSdk.layer(() => ({
   logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),
@@ -48,8 +49,11 @@ HttpApiBuilder.serve(flow(
   Layer.provide(ApiLive),
   Layer.provide(NodeContext.layer),
   Layer.provide(
-    IdempotencyRedis().pipe(
-      Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive))))
+    Layer.mergeAll(
+      IdempotencyRedis({}).pipe(
+        Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive))))
+      ),
+      TextDecoder({ encoding: "utf-8" })
     )
   ),
   Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),

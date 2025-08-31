@@ -346,3 +346,6 @@ export * as Policy from "./util/Policy.js"
  * @category schema
  */
 export * as SchemaUtils from "./util/SchemaUtils.js"
+
+
+export * as TextDecoder from "./util/TextDecoder.js"

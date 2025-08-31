@@ -4,18 +4,16 @@ import type { IdempotencyKeyServer, IdempotencyRecord } from "../application/Por
 import { PortIdempotency } from "../application/PortIdempotency.js"
 import { PortRedis } from "../application/PortRedis.js"
 
-export interface RedisConfig {
-  readonly prefix?: string
-}
-
-export const IdempotencyRedis = (config?: RedisConfig) =>
+export const IdempotencyRedis = (config: {
+  readonly keyPrefix?: string
+}) =>
   Layer.effect(
     PortIdempotency,
     PortRedis.pipe(
       Effect.flatMap((redis) =>
         Effect.sync(() => {
           const makeKey = (key: IdempotencyKeyServer) =>
-            `${config?.prefix ?? "idempotency"}:${key.clientKey}:${key.dataHash}`
+            `${config.keyPrefix ?? "idempotency"}:${key.clientKey}:${key.dataHash}`
           const deserialize = (data: string): IdempotencyRecord => {
             const parsed = JSON.parse(data)
             return {
