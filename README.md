@@ -1,6 +1,6 @@
 # Effect Monorepo Template
 
-This template provides a solid foundation for building scalable and maintainable TypeScript applications with Effect. 
+This template provides a solid foundation for building scalable and maintainable TypeScript applications with Effect.
 
 ## Running Code
 
@@ -29,4 +29,3 @@ To test all packages in the monorepo:
 ```sh
 pnpm test
 ```
-
