@@ -11,7 +11,7 @@ import { Config, Effect, flow, Layer, Logger, LogLevel } from "effect"
 import { createServer } from "node:http"
 import { ApiLive } from "./Api.js"
 import { ConfigLive } from "./Config.js"
-import { IdempotencyRedis } from "./infrastructure/adapter/IdempotencyRedis.js"
+import { IdempotencyRedis } from "./infrastructure/adapter/Idempotency.js"
 import { Redis } from "./infrastructure/adapter/Redis.js"
 import { MiddlewareIdempotency } from "./middleware/MiddlewareIdempotency.js"
 import { MiddlewareMetric } from "./middleware/MiddlewareMetric.js"
@@ -35,7 +35,7 @@ HttpApiBuilder.serve(flow(
   HttpMiddleware.cors({
     allowedOrigins: ["*"],
     allowedMethods: ["DELETE", "GET", "OPTION", "PATCH", "POST", "PUT"],
-    allowedHeaders: ["authorization", "b3", "content-type", "traceparent", "idempotency-key"],
+    allowedHeaders: ["authorization", "b3", "content-type", "idempotency-key", "traceparent"],
     credentials: true
   }),
   MiddlewareIdempotency,

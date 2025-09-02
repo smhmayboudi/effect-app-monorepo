@@ -5,7 +5,7 @@ import { AccountPortDriven } from "@template/server/domain/account/application/A
 import { AccountPortDriving } from "@template/server/domain/account/application/AccountApplicationPortDriving"
 import { AccountUseCase } from "@template/server/domain/account/application/AccountApplicationUseCase"
 import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
-import { ResultPersistenceRedisTest } from "@template/server/infrastructure/adapter/ResultPersistenceRedis"
+import { ResultPersistenceTest } from "@template/server/infrastructure/adapter/ResultPersistence"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
@@ -30,7 +30,7 @@ describe("AccountUseCase", () => {
             create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     ))
@@ -51,7 +51,7 @@ describe("AccountUseCase", () => {
           UUIDTest,
           makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.succeed(id) }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     ))
@@ -69,7 +69,7 @@ describe("AccountUseCase", () => {
           UUIDTest,
           makeTestLayer(AccountPortDriven)({ delete: (id) => Effect.fail(new AccountErrorNotFound({ id })) }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     ))
@@ -107,7 +107,7 @@ describe("AccountUseCase", () => {
               })
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     )
@@ -140,7 +140,7 @@ describe("AccountUseCase", () => {
             readByIds: (_ids) => Effect.succeed([AccountTest])
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     )
@@ -162,7 +162,7 @@ describe("AccountUseCase", () => {
             readByIds: (ids) => Effect.fail(new AccountErrorNotFound({ id: ids[0] }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     ))
@@ -185,7 +185,7 @@ describe("AccountUseCase", () => {
             update: (id, _account) => Effect.succeed(AccountId.make(id))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     ))
@@ -205,7 +205,7 @@ describe("AccountUseCase", () => {
             update: (id, _account) => Effect.fail(new AccountErrorNotFound({ id }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest
+          ResultPersistenceTest
         )
       ))
     ))

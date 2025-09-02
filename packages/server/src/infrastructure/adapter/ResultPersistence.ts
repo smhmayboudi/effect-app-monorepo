@@ -8,7 +8,7 @@ import { makeTestLayer } from "../../util/Layer.js"
 
 export const ResultPersistenceRedis = (options: Config.Config.Wrap<RedisOptions>) => layerResultConfig(options)
 
-export const ResultPersistenceRedisTest = makeTestLayer(ResultPersistence)({
+export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
   make: (options: {
     readonly storeId: string
     readonly timeToLive?: (

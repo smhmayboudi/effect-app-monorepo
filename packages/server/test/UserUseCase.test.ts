@@ -16,7 +16,7 @@ import { UserPortDriven } from "@template/server/domain/user/application/UserApp
 import { UserPortDriving } from "@template/server/domain/user/application/UserApplicationPortDriving"
 import { UserUseCase } from "@template/server/domain/user/application/UserApplicationUseCase"
 import { EventEmitterTest } from "@template/server/infrastructure/adapter/EventEmitter"
-import { ResultPersistenceRedisTest } from "@template/server/infrastructure/adapter/ResultPersistenceRedis"
+import { ResultPersistenceTest } from "@template/server/infrastructure/adapter/ResultPersistence"
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
@@ -55,7 +55,7 @@ describe("UserUseCase", () => {
             readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({
             create: (_account) => Effect.succeed(AccountId.make("00000000-0000-0000-0000-000000000000"))
           }),
@@ -95,7 +95,7 @@ describe("UserUseCase", () => {
             create: (user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -118,7 +118,7 @@ describe("UserUseCase", () => {
           UUIDTest,
           makeTestLayer(UserPortDriven)({ delete: (id) => Effect.succeed(id) }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -138,7 +138,7 @@ describe("UserUseCase", () => {
           UUIDTest,
           makeTestLayer(UserPortDriven)({ delete: (id) => Effect.fail(new UserErrorNotFound({ id })) }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -180,7 +180,7 @@ describe("UserUseCase", () => {
               })
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -217,7 +217,7 @@ describe("UserUseCase", () => {
             readByAccessTokens: (_accessTokens) => Effect.succeed([userTest])
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -242,7 +242,7 @@ describe("UserUseCase", () => {
               Effect.fail(new UserErrorNotFoundWithAccessToken({ accessToken: accessTokens[0] }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -278,7 +278,7 @@ describe("UserUseCase", () => {
             readByIds: (_ids) => Effect.succeed([userTest])
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -302,7 +302,7 @@ describe("UserUseCase", () => {
             readByIds: (ids) => Effect.fail(new UserErrorNotFound({ id: ids[0] }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -337,7 +337,7 @@ describe("UserUseCase", () => {
             readByIdWithSensitive: (_id) => Effect.succeed(userWithSensitiveTest)
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -363,7 +363,7 @@ describe("UserUseCase", () => {
             update: (id, _user) => Effect.succeed(UserId.make(id))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -385,7 +385,7 @@ describe("UserUseCase", () => {
             update: (_id, user) => Effect.fail(new UserErrorEmailAlreadyTaken({ email: user.email! }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )
@@ -407,7 +407,7 @@ describe("UserUseCase", () => {
             update: (id, _user) => Effect.fail(new UserErrorNotFound({ id }))
           }),
           EventEmitterTest(),
-          ResultPersistenceRedisTest,
+          ResultPersistenceTest,
           makeTestLayer(AccountPortDriving)({}),
           makeTestLayer(WorkflowEngine.WorkflowEngine)({})
         )

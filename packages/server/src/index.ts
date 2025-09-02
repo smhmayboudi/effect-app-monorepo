@@ -237,16 +237,13 @@ export * as Elasticsearch from "./infrastructure/adapter/Elasticsearch.js"
 export * as EventEmitter from "./infrastructure/adapter/EventEmitter.js"
 
 
-export * as IdempotencyMemory from "./infrastructure/adapter/IdempotencyMemory.js"
-
-
-export * as IdempotencyRedis from "./infrastructure/adapter/IdempotencyRedis.js"
+export * as IdempotencyRedis from "./infrastructure/adapter/Idempotency.js"
 
 
 export * as Redis from "./infrastructure/adapter/Redis.js"
 
 
-export * as ResultPersistenceRedis from "./infrastructure/adapter/ResultPersistenceRedis.js"
+export * as ResultPersistenceRedis from "./infrastructure/adapter/ResultPersistence.js"
 
 
 export * as SSEManager from "./infrastructure/adapter/SSEManager.js"
