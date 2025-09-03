@@ -5,9 +5,9 @@ datasources:
     jsonData:
       derivedFields:
         - datasourceUid: tempo
-          matcherRegex: trace_id
+          matcherRegex: traceId
           matcherType: label
-          name: trace_id
+          name: traceId
           url: $${__value.raw}
           urlDisplayLabel: "Trace: $${__value.raw}"
     name: Loki
@@ -20,7 +20,7 @@ datasources:
     jsonData:
       exemplarTraceIdDestinations:
         - datasourceUid: tempo
-          name: trace_id
+          name: traceId
           urlDisplayLabel: "Trace: $${__value.raw}"
       timeInterval: 60s
     name: Prometheus
@@ -49,7 +49,7 @@ datasources:
       tracesToLogsV2:
         customQuery: true
         datasourceUid: loki
-        query: '{$${__tags}} | trace_id = "$${__trace.traceId}"'
+        query: '{$${__tags}} | traceId = "$${__trace.traceId}"'
         tags:
           - key: service.name
             value: service_name
