@@ -3,7 +3,6 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
-import { logDebugWithTrace } from "../../../util/Logger.js"
 import { GroupConfig } from "./GroupApplicationConfig.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 
@@ -25,7 +24,7 @@ export const makeGroupReadResolver = Effect.all([GroupConfig, GroupPortDriven]).
           Effect.withSpan("GroupUseCase", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "GroupReadById", requests }
           }),
-          Effect.tap(() => logDebugWithTrace(`DB hit: GroupReadById ${requests.length}`))
+          Effect.tap(() => Effect.logDebug(`DB hit: GroupReadById ${requests.length}`))
         )
     }).pipe(
       persisted({

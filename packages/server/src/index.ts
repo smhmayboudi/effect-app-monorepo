@@ -349,9 +349,6 @@ export * as Hash from "./util/Hash.js"
 export * as Layer from "./util/Layer.js"
 
 
-export * as Logger from "./util/Logger.js"
-
-
 export * as Policy from "./util/Policy.js"
 
 /**

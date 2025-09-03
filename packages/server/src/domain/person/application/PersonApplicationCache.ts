@@ -3,7 +3,6 @@ import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
-import { logDebugWithTrace } from "../../../util/Logger.js"
 import { PersonConfig } from "./PersonApplicationConfig.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 
@@ -25,7 +24,7 @@ export const makePersonReadResolver = Effect.all([PersonConfig, PersonPortDriven
           Effect.withSpan("PersonUseCase", {
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "PersonReadById", requests }
           }),
-          Effect.tap(() => logDebugWithTrace(`DB hit: PersonReadById ${requests.length}`))
+          Effect.tap(() => Effect.logDebug(`DB hit: PersonReadById ${requests.length}`))
         )
     }).pipe(
       persisted({
