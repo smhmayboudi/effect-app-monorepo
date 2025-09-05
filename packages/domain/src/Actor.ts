@@ -4,11 +4,11 @@ import { type User, UserId } from "./user/application/UserApplicationDomain.js"
 
 export class Actor extends Context.Tag("Actor")<Actor, User>() {}
 
-export const ActorAuthorizedId: unique symbol = Symbol.for("ActorAuthorizedId")
-export type ActorAuthorizedId = typeof ActorAuthorizedId
+export const TypeId: unique symbol = Symbol.for("ActorAuthorizedId")
+export type TypeId = typeof TypeId
 
 export interface ActorAuthorized<Entity extends string, Action extends string> extends User {
-  readonly [ActorAuthorizedId]: {
+  readonly [TypeId]: {
     readonly _Entity: Entity
     readonly _Action: Action
   }
