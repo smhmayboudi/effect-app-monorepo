@@ -1,7 +1,7 @@
 # syntax=docker.io/docker/dockerfile:1.7.1
 
 ARG NODE_IMAGE_URL=${NODE_IMAGE_URL:-docker.io/node}
-ARG NODE_IMAGE_VERSION=${NODE_IMAGE_VERSION:-22.18.0-bookworm-slim}
+ARG NODE_IMAGE_VERSION=${NODE_IMAGE_VERSION:-22.19.0-bookworm-slim}
 
 ARG ORG_OPENCONTAINERS_IMAGE_AUTHORS=${ORG_OPENCONTAINERS_IMAGE_AUTHORS:-}
 ARG ORG_OPENCONTAINERS_IMAGE_BASE_DIGEST=${ORG_OPENCONTAINERS_IMAGE_BASE_DIGEST:-}
@@ -32,7 +32,7 @@ ARG SERVER_SHARD_MANAGER_ADDRESS_PORT=${SERVER_SHARD_MANAGER_ADDRESS_PORT:-8080}
 ARG SERVER_TODO_CACHE_TTL_MS=${SERVER_TODO_CACHE_TTL_MS:-30000}
 ARG SERVER_USER_CACHE_TTL_MS=${SERVER_USER_CACHE_TTL_MS:-30000}
 
-FROM node:22.18.0-bookworm-slim AS deps
+FROM node:22.19.0-bookworm-slim AS deps
 RUN mkdir -p /app && corepack enable
 WORKDIR /app
 COPY package.json .
@@ -45,7 +45,7 @@ COPY packages/workflow/package.json ./packages/workflow/
 COPY patches/ ./patches
 RUN pnpm i --frozen-lockfile
 
-FROM node:22.18.0-bookworm-slim AS deps-prod
+FROM node:22.19.0-bookworm-slim AS deps-prod
 RUN mkdir -p /app && corepack enable
 WORKDIR /app
 COPY package.json .
@@ -62,7 +62,7 @@ COPY --from=deps /app/packages/server/node_modules ./packages/server/node_module
 COPY --from=deps /app/packages/workflow/node_modules ./packages/workflow/node_modules
 RUN pnpm prune --prod
 
-FROM node:22.18.0-bookworm-slim AS build
+FROM node:22.19.0-bookworm-slim AS build
 RUN mkdir -p /app && corepack enable
 WORKDIR /app
 COPY . .
@@ -73,7 +73,7 @@ COPY --from=deps /app/packages/server/node_modules ./packages/server/node_module
 COPY --from=deps /app/packages/workflow/node_modules ./packages/workflow/node_modules
 RUN pnpm run build
 
-FROM node:22.18.0-bookworm-slim AS cli
+FROM node:22.19.0-bookworm-slim AS cli
 
 ARG ORG_OPENCONTAINERS_IMAGE_AUTHORS
 ARG ORG_OPENCONTAINERS_IMAGE_BASE_DIGEST
@@ -116,7 +116,7 @@ COPY --chown=node:node --from=build /app/packages/cli/dist ./packages/cli/dist
 USER node
 ENTRYPOINT [ "node", "packages/cli/dist/dist/esm/bin.js" ]
 
-FROM node:22.18.0-bookworm-slim AS server
+FROM node:22.19.0-bookworm-slim AS server
 
 ARG ORG_OPENCONTAINERS_IMAGE_AUTHORS
 ARG ORG_OPENCONTAINERS_IMAGE_BASE_DIGEST
@@ -203,7 +203,7 @@ USER node
 EXPOSE 3001
 CMD [ "node", "packages/server/dist/dist/esm/server.js" ]
 
-FROM node:22.18.0-bookworm-slim AS workflow
+FROM node:22.19.0-bookworm-slim AS workflow
 
 ARG ORG_OPENCONTAINERS_IMAGE_AUTHORS
 ARG ORG_OPENCONTAINERS_IMAGE_BASE_DIGEST
