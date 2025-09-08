@@ -44,8 +44,8 @@ HttpApiBuilder.serve(flow(
 )).pipe(
   Layer.provide(NodeSdkLive),
   Layer.provide(HttpApiBuilder.middlewareOpenApi({ path: "/openapi.json" })),
-  Layer.provide(HttpApiScalar.layer({ path: "/references" })),
-  Layer.provide(HttpApiSwagger.layer({ path: "/docs" })),
+  Layer.provide(HttpApiScalar.layer({ path: "/reference" })),
+  Layer.provide(HttpApiSwagger.layer({ path: "/doc" })),
   Layer.provide(ApiLive),
   Layer.provide(NodeContext.layer),
   Layer.provide(
