@@ -1,6 +1,12 @@
 import { HttpApiSchema } from "@effect/platform"
+import type { User } from "better-auth"
 import { Context, Effect, Predicate, Schema } from "effect"
-import { type User, UserId } from "./user/application/UserApplicationDomain.js"
+
+export const ActorId = Schema.String.pipe(
+  Schema.brand("ActorId"),
+  Schema.annotations({ description: "Actor identification" })
+)
+export type ActorId = typeof ActorId.Type
 
 export class Actor extends Context.Tag("Actor")<Actor, User>() {}
 
@@ -17,7 +23,7 @@ export interface ActorAuthorized<Entity extends string, Action extends string> e
 export class ActorErrorUnauthorized extends Schema.TaggedError<ActorErrorUnauthorized>("ActorErrorUnauthorized")(
   "ActorErrorUnauthorized",
   {
-    actorId: UserId,
+    actorId: ActorId,
     entity: Schema.String,
     action: Schema.String
   },
@@ -39,7 +45,7 @@ export class ActorErrorUnauthorized extends Schema.TaggedError<ActorErrorUnautho
         (e) => !ActorErrorUnauthorized.is(e),
         () =>
           Actor.pipe(
-            Effect.flatMap((actor) => new ActorErrorUnauthorized({ actorId: actor.id, entity, action }))
+            Effect.flatMap((actor) => new ActorErrorUnauthorized({ actorId: ActorId.make(actor.id), entity, action }))
           )
       ))
   }

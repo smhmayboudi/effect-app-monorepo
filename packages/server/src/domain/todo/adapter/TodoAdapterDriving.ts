@@ -1,6 +1,6 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { Actor } from "@template/domain/Actor"
+import { Actor, ActorId } from "@template/domain/Actor"
 import { Api } from "@template/domain/Api"
 import { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { Effect } from "effect"
@@ -20,11 +20,11 @@ export const TodoDriving = HttpApiBuilder.group(
             .handle("create", ({ payload }) =>
               Actor.pipe(
                 Effect.flatMap((user) =>
-                  driving.create({ ...payload, ownerId: user.ownerId, done: 0 }).pipe(
+                  driving.create({ ...payload, ownerId: ActorId.make(user.id), done: 0 }).pipe(
                     Effect.withSpan("TodoDriving", {
                       attributes: {
                         [ATTR_CODE_FUNCTION_NAME]: "create",
-                        todo: { ...payload, ownerId: user.ownerId, done: 0 }
+                        todo: { ...payload, ownerId: ActorId.make(user.id), done: 0 }
                       }
                     })
                   )

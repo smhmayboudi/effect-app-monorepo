@@ -1,5 +1,5 @@
+import type { ActorId } from "@template/domain/Actor"
 import { SSE } from "@template/domain/sse/application/SSEApplicationDomain"
-import type { UserId } from "@template/domain/user/application/UserApplicationDomain"
 import { Array, Effect, Layer, MutableHashMap, Option, type Queue, Ref, Schema } from "effect"
 import { PortSSEManager } from "../application/PortSSEManager.js"
 
@@ -10,7 +10,7 @@ interface ActiveConnection {
 
 export const SSEManager = Layer.effect(
   PortSSEManager,
-  Ref.make(MutableHashMap.empty<UserId, Array<ActiveConnection>>()).pipe(
+  Ref.make(MutableHashMap.empty<ActorId, Array<ActiveConnection>>()).pipe(
     Effect.flatMap((connectionsRef) =>
       Effect.sync(() =>
         PortSSEManager.of({

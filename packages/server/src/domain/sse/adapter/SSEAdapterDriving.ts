@@ -1,6 +1,6 @@
 import { HttpApiBuilder, HttpServerResponse } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { Actor } from "@template/domain/Actor"
+import { Actor, ActorId } from "@template/domain/Actor"
 import { Api } from "@template/domain/Api"
 import { SSE } from "@template/domain/sse/application/SSEApplicationDomain"
 import { Effect, Queue, Schedule, Stream } from "effect"
@@ -19,7 +19,7 @@ export const SSEDriving = HttpApiBuilder.group(Api, "sse", (handlers) =>
                   Effect.flatMap((v7) =>
                     Queue.unbounded<string>().pipe(
                       Effect.flatMap((queue) =>
-                        driving.connect(v7, queue, user.id).pipe(
+                        driving.connect(v7, queue, ActorId.make(user.id)).pipe(
                           Effect.map(() => {
                             const kaStream = Stream.repeat(Effect.succeed(":keep-alive"), Schedule.fixed("3 seconds"))
                             const eventsStream = Stream.fromQueue(queue).pipe(
@@ -50,7 +50,9 @@ export const SSEDriving = HttpApiBuilder.group(Api, "sse", (handlers) =>
             ))
           .handle("notify", () =>
             Actor.pipe(
-              Effect.flatMap((user) => driving.notify(new SSE({ message: `Hello ${user.email}!` }), user.id)),
+              Effect.flatMap((user) =>
+                driving.notify(new SSE({ message: `Hello ${user.email}!` }), ActorId.make(user.id))
+              ),
               Effect.withSpan("SSEDriving", {
                 attributes: { [ATTR_CODE_FUNCTION_NAME]: "notify" }
               })

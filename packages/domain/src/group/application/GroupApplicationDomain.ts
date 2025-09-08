@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { AccountId } from "../../account/application/AccountApplicationDomain.js"
+import { ActorId } from "../../Actor.js"
 
 export const GroupId = Schema.UUID.pipe(
   Schema.brand("GroupId"),
@@ -9,7 +9,7 @@ export type GroupId = typeof GroupId.Type
 
 export const GroupSchema = Schema.Struct({
   id: GroupId,
-  ownerId: AccountId,
+  ownerId: ActorId,
   name: Schema.NonEmptyTrimmedString.annotations({ description: "Name" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" }),

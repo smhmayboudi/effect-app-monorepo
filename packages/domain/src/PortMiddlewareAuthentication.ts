@@ -8,7 +8,7 @@ export class PortMiddlewareAuthentication extends HttpApiMiddleware.Tag<PortMidd
     optional: false,
     provides: Actor,
     security: {
-      cookie: HttpApiSecurity.apiKey({ in: "cookie", key: "token" }).pipe(
+      cookie: HttpApiSecurity.apiKey({ in: "cookie", key: "effect-app-monorepo.session_token" }).pipe(
         HttpApiSecurity.annotate(OpenApi.Description, "description")
       )
     }

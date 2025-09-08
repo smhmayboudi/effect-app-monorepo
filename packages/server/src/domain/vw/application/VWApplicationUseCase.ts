@@ -11,39 +11,22 @@ export const VWUseCase = Layer.scoped(
     Effect.flatMap(([driven, eventEmitter]) =>
       Effect.sync(() =>
         VWPortDriving.of({
-          readAllUserGroupPerson: (urlParams) =>
-            driven.readAllUserGroupPerson(urlParams).pipe(
+          readAllGroupPersonTodo: (urlParams) =>
+            driven.readAllGroupPersonTodo(urlParams).pipe(
               Effect.tapBoth({
                 onFailure: (out) =>
-                  eventEmitter.emit("VWUseCaseReadAllUserGroupPerson", {
+                  eventEmitter.emit("VWUseCaseReadAllGroupPersonTodo", {
                     in: { urlParams },
                     out: Exit.fail(out)
                   }),
                 onSuccess: (out) =>
-                  eventEmitter.emit("VWUseCaseReadAllUserGroupPerson", {
+                  eventEmitter.emit("VWUseCaseReadAllGroupPersonTodo", {
                     in: { urlParams },
                     out: Exit.succeed(out)
                   })
               }),
               Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-              policyRequire("VW", "readAllUserGroupPerson")
-            ),
-          readAllUserTodo: (urlParams) =>
-            driven.readAllUserTodo(urlParams).pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("VWUseCaseReadAllUserTodo", {
-                    in: { urlParams },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("VWUseCaseReadAllUserTodo", {
-                    in: { urlParams },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-              policyRequire("VW", "readAllUserTodo")
+              policyRequire("VW", "readAllGroupPersonTodo")
             )
         })
       )

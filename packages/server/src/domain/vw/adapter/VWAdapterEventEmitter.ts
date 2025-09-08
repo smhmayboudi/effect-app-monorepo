@@ -7,10 +7,8 @@ export const VWEventEmitter = Layer.effectDiscard(
     Effect.flatMap(
       (eventEmitter) =>
         Effect.all([
-          eventEmitter.on("VWUseCaseReadAllUserGroupPerson", (data) =>
-            Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "VWUseCaseReadAllUserGroupPerson", ...data })),
-          eventEmitter.on("VWUseCaseReadAllUserTodo", (data) =>
-            Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "VWUseCaseReadAllUserTodo", ...data }))
+          eventEmitter.on("VWUseCaseReadAllGroupPersonTodo", (data) =>
+            Effect.logDebug({ [ATTR_CODE_FUNCTION_NAME]: "VWUseCaseReadAllGroupPersonTodo", ...data }))
         ], { concurrency: "unbounded" })
     )
   )

@@ -2,8 +2,8 @@ import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/d
 import { Context, type Effect } from "effect"
 
 export class VWPortPolicy extends Context.Tag("VWPortPolicy")<VWPortPolicy, {
-  canReadAllUserGroupPerson: () => Effect.Effect<
-    ActorAuthorized<"VW", "readAllUserGroupPerson">,
+  canReadAllGroupPersonTodo: () => Effect.Effect<
+    ActorAuthorized<"VW", "readAllGroupPersonTodo">,
     ActorErrorUnauthorized,
     Actor
   >

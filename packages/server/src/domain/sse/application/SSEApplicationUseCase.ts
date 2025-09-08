@@ -9,9 +9,9 @@ export const SSEUseCase = Layer.effect(
     Effect.flatMap((sseManager) =>
       Effect.sync(() =>
         SSEPortDriving.of({
-          connect: (connectionId, queue, userId) =>
-            sseManager.registerConnection(connectionId, queue, userId).pipe(
-              Effect.flatMap(() => Effect.addFinalizer(() => sseManager.unregisterConnection(connectionId, userId))),
+          connect: (connectionId, queue, actorId) =>
+            sseManager.registerConnection(connectionId, queue, actorId).pipe(
+              Effect.flatMap(() => Effect.addFinalizer(() => sseManager.unregisterConnection(connectionId, actorId))),
               Effect.withSpan("SSEUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "connect" } })
             ),
           notify: (sse, id) =>

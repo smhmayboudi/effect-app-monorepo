@@ -1,6 +1,6 @@
 import { HttpApiBuilder } from "@effect/platform"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { Actor } from "@template/domain/Actor"
+import { Actor, ActorId } from "@template/domain/Actor"
 import { Api } from "@template/domain/Api"
 import { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { Effect } from "effect"
@@ -20,9 +20,12 @@ export const GroupDriving = HttpApiBuilder.group(
             .handle("create", ({ payload }) =>
               Actor.pipe(
                 Effect.flatMap((user) =>
-                  driving.create({ ...payload, ownerId: user.ownerId }).pipe(
+                  driving.create({ ...payload, ownerId: ActorId.make(user.id) }).pipe(
                     Effect.withSpan("GroupDriving", {
-                      attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", group: { ...payload, ownerId: user.ownerId } }
+                      attributes: {
+                        [ATTR_CODE_FUNCTION_NAME]: "create",
+                        group: { ...payload, ownerId: ActorId.make(user.id) }
+                      }
                     })
                   )
                 ),

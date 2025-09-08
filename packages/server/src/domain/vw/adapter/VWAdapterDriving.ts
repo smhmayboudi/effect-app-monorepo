@@ -12,20 +12,12 @@ export const VWDriving = HttpApiBuilder.group(Api, "vw", (handlers) =>
     Effect.flatMap(([driving, policy]) =>
       Effect.sync(() =>
         handlers
-          .handle("readAllUserGroupPerson", ({ urlParams }) =>
-            driving.readAllUserGroupPerson(urlParams).pipe(
+          .handle("readAllGroupPersonTodo", ({ urlParams }) =>
+            driving.readAllGroupPersonTodo(urlParams).pipe(
               Effect.withSpan("VWDriving", {
-                attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserGroupPerson", urlParams }
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllGroupPersonTodo", urlParams }
               }),
-              policyUse(policy.canReadAllUserGroupPerson()),
-              responseArray(urlParams)
-            ))
-          .handle("readAllUserTodo", ({ urlParams }) =>
-            driving.readAllUserTodo(urlParams).pipe(
-              Effect.withSpan("VWDriving", {
-                attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAllUserTodo", urlParams }
-              }),
-              policyUse(policy.canReadAllUserTodo()),
+              policyUse(policy.canReadAllGroupPersonTodo()),
               responseArray(urlParams)
             ))
       )

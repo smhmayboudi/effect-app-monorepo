@@ -6,11 +6,11 @@ import { VWPortPolicy } from "../application/VWApplicationPortPolicy.js"
 export const VWPolicy = Layer.effect(
   VWPortPolicy,
   Effect.sync(() => ({
-    canReadAllUserGroupPerson: () =>
-      policy("VW", "readAllUserGroupPerson", (actor) =>
+    canReadAllGroupPersonTodo: () =>
+      policy("VW", "readAllGroupPersonTodo", (actor) =>
         Effect.succeed(true).pipe(
           Effect.withSpan("VWPolicy", {
-            attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadAllUserGroupPerson", actor }
+            attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadAllGroupPersonTodo", actor }
           })
         )),
     canReadAllUserTodo: () =>

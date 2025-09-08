@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest"
-import { AccountId } from "@template/domain/account/application/AccountApplicationDomain"
+import { ActorId } from "@template/domain/Actor"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
@@ -46,7 +46,7 @@ describe("PersonUseCase", () => {
               Effect.succeed(
                 new Group({
                   id,
-                  ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+                  ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
                   name: "test",
                   createdAt: now,
                   updatedAt: now,

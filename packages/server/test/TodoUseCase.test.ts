@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest"
-import { AccountId } from "@template/domain/account/application/AccountApplicationDomain"
+import { ActorId } from "@template/domain/Actor"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { TodoPortDriven } from "@template/server/domain/todo/application/TodoApplicationPortDriven"
@@ -17,7 +17,7 @@ describe("TodoUseCase", () => {
     TodoPortDriving.pipe(
       Effect.flatMap((todos) =>
         todos.create({
-          ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+          ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
           done: 0,
           text: "test"
         }).pipe(
@@ -83,7 +83,7 @@ describe("TodoUseCase", () => {
     const now = new Date()
     const todoTest = new Todo({
       id: TodoId.make("00000000-0000-0000-0000-000000000000"),
-      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
       done: 0,
       text: "test",
       createdAt: now,
@@ -125,7 +125,7 @@ describe("TodoUseCase", () => {
     const now = new Date()
     const todoTest = new Todo({
       id: TodoId.make("00000000-0000-0000-0000-000000000000"),
-      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
       done: 0,
       text: "test",
       createdAt: now,

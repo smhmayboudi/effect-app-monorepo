@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest"
-import { AccountId } from "@template/domain/account/application/AccountApplicationDomain"
+import { ActorId } from "@template/domain/Actor"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import { GroupPortDriven } from "@template/server/domain/group/application/GroupApplicationPortDriven"
@@ -17,7 +17,7 @@ describe("GroupUseCase", () => {
     GroupPortDriving.pipe(
       Effect.flatMap((groups) =>
         groups.create({
-          ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+          ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
           name: "test"
         }).pipe(
           withSystemActor,
@@ -82,7 +82,7 @@ describe("GroupUseCase", () => {
     const now = new Date()
     const groupTest = new Group({
       id: GroupId.make("00000000-0000-0000-0000-000000000000"),
-      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
       name: "test",
       createdAt: now,
       updatedAt: now,
@@ -123,7 +123,7 @@ describe("GroupUseCase", () => {
     const now = new Date()
     const groupTest = new Group({
       id: GroupId.make("00000000-0000-0000-0000-000000000000"),
-      ownerId: AccountId.make("00000000-0000-0000-0000-000000000000"),
+      ownerId: ActorId.make("00000000-0000-0000-0000-000000000000"),
       name: "test",
       createdAt: now,
       updatedAt: now,

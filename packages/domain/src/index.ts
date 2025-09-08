@@ -8,15 +8,6 @@ export * as Api from "./Api.js"
 export * as PortMiddlewareAuthentication from "./PortMiddlewareAuthentication.js"
 
 
-export * as AccountAdapterDriving from "./account/adapter/AccountAdapterDriving.js"
-
-
-export * as AccountApplicationDomain from "./account/application/AccountApplicationDomain.js"
-
-
-export * as AccountApplicationErrorNotFound from "./account/application/AccountApplicationErrorNotFound.js"
-
-
 export * as AuthenticationApplicationError from "./authentication/application/AuthenticationApplicationError.js"
 
 
@@ -80,25 +71,7 @@ export * as TodoApplicationErrorAlreadyExists from "./todo/application/TodoAppli
 export * as TodoApplicationErrorNotFound from "./todo/application/TodoApplicationErrorNotFound.js"
 
 
-export * as UserAdapterDriving from "./user/adapter/UserAdapterDriving.js"
-
-
-export * as UserApplicationDomain from "./user/application/UserApplicationDomain.js"
-
-
-export * as UserApplicationErrorEmailAlreadyTaken from "./user/application/UserApplicationErrorEmailAlreadyTaken.js"
-
-
-export * as UserApplicationErrorNotFound from "./user/application/UserApplicationErrorNotFound.js"
-
-
-export * as UserApplicationErrorNotFoundWithAccessToken from "./user/application/UserApplicationErrorNotFoundWithAccessToken.js"
-
-
 export * as VWAdapterDriving from "./vw/adapter/VWAdapterDriving.js"
 
 
-export * as UserGroupPersonApplicationDomain from "./vw/application/UserGroupPersonApplicationDomain.js"
-
-
-export * as UserTodoApplicationDomain from "./vw/application/UserTodoApplicationDomain.js"
+export * as GroupPersonTodoApplicationDomain from "./vw/application/GroupPersonTodoApplicationDomain.js"

@@ -3,11 +3,6 @@ import { Api } from "@template/domain/Api"
 import { WorkflowEngineLayer } from "@template/workflow/RunnerClient"
 import { Config, Layer } from "effect"
 import { ConfigLive } from "./Config.js"
-import { AccountDriven } from "./domain/account/adapter/AccountAdapterDriven.js"
-import { AccountDriving } from "./domain/account/adapter/AccountAdapterDriving.js"
-import { AccountEventEmitter } from "./domain/account/adapter/AccountAdapterEventEmitter.js"
-import { AccountPolicy } from "./domain/account/adapter/AccountAdapterPolicy.js"
-import { AccountUseCase } from "./domain/account/application/AccountApplicationUseCase.js"
 import { AuthenticationUseCase } from "./domain/authentication/application/AuthenticationApplicationUseCase.js"
 import { GroupDriven } from "./domain/group/adapter/GroupAdapterDriven.js"
 import { GroupDriving } from "./domain/group/adapter/GroupAdapterDriving.js"
@@ -28,11 +23,6 @@ import { TodoDriving } from "./domain/todo/adapter/TodoAdapterDriving.js"
 import { TodoEventEmitter } from "./domain/todo/adapter/TodoAdapterEventEmitter.js"
 import { TodoPolicy } from "./domain/todo/adapter/TodoAdapterPolicy.js"
 import { TodoUseCase } from "./domain/todo/application/TodoApplicationUseCase.js"
-import { UserDriven } from "./domain/user/adapter/UserAdapterDriven.js"
-import { UserDriving } from "./domain/user/adapter/UserAdapterDriving.js"
-import { UserEventEmitter } from "./domain/user/adapter/UserAdapterEventEmitter.js"
-import { UserPolicy } from "./domain/user/adapter/UserAdapterPolicy.js"
-import { UserUseCase } from "./domain/user/application/UserApplicationUseCase.js"
 import { VWDriven } from "./domain/vw/adapter/VWAdapterDriven.js"
 import { VWDriving } from "./domain/vw/adapter/VWAdapterDriving.js"
 import { VWElasticsearch } from "./domain/vw/adapter/VWAdapterElasticsearch.js"
@@ -88,22 +78,8 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(VWPolicy)
   )
   .pipe(
-    Layer.provide(UserDriving),
-    Layer.provide(UserUseCase),
-    Layer.provide(UserDriven),
-    Layer.provide(UserEventEmitter),
-    Layer.provide(UserPolicy)
-  )
-  .pipe(
     Layer.provide(MiddlewareAuthentication),
     Layer.provide(AuthenticationUseCase)
-  )
-  .pipe(
-    Layer.provide(AccountDriving),
-    Layer.provide(AccountUseCase),
-    Layer.provide(AccountDriven),
-    Layer.provide(AccountEventEmitter),
-    Layer.provide(AccountPolicy)
   )
   .pipe(
     Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((options) => options.Elasticsearch)))),

@@ -3,7 +3,7 @@ import { NodeHttpServerRequest } from "@effect/platform-node"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { ActorErrorUnauthorized, ActorId } from "@template/domain/Actor"
 import { PortMiddlewareAuthentication } from "@template/domain/PortMiddlewareAuthentication"
-import { Effect, Layer, Option } from "effect"
+import { Effect, Layer, Option, Redacted } from "effect"
 import { AuthenticationPortDriving } from "../domain/authentication/application/AuthenticationApplicationPortDriving.js"
 import { withSystemActor } from "../util/Policy.js"
 
@@ -47,8 +47,8 @@ export const MiddlewareAuthentication = Layer.effect(
                     action: ""
                   })
                 )),
-              Effect.withSpan("PortMiddlewareAuthentication", {
-                attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
+              Effect.withSpan("MiddlewareAuthentication", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token: Redacted.value(token) }
               }),
               withSystemActor
             )

@@ -1,5 +1,5 @@
-import { Actor, type ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
-import type { User } from "@template/domain/user/application/UserApplicationDomain"
+import { Actor, type ActorAuthorized, ActorErrorUnauthorized, ActorId } from "@template/domain/Actor"
+import type { User } from "better-auth"
 import { Effect } from "effect"
 
 const actorAuthorized = <Entity extends string, Action extends string>(
@@ -19,7 +19,7 @@ export const policy = <Entity extends string, Action extends string, E, R>(
     f(actor).pipe(Effect.flatMap((can) =>
       can
         ? Effect.succeed(actorAuthorized<Entity, Action>(actor))
-        : Effect.fail(new ActorErrorUnauthorized({ actorId: actor.id, entity, action }))
+        : Effect.fail(new ActorErrorUnauthorized({ actorId: ActorId.make(actor.id), entity, action }))
     ))
   ))
 
