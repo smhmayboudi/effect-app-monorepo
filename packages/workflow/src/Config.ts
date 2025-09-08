@@ -1,6 +1,6 @@
 import { Config } from "effect"
 
-const ClientShardManagerAddress = Config.nested(
+const ClientShardManagerAddressLive = Config.nested(
   Config.all({
     host: Config.string("HOST").pipe(
       Config.withDefault("localhost")
@@ -12,14 +12,53 @@ const ClientShardManagerAddress = Config.nested(
   "SHARD_MANAGER_ADDRESS"
 )
 
-export const ClientConfig = Config.nested(
+const ClientSqliteLive = Config.nested(
   Config.all({
-    ShardManagerAddress: ClientShardManagerAddress
+    filename: Config.string("FILENAME").pipe(
+      Config.withDefault("./db-workflow.sqlite")
+    )
+  }),
+  "SQLITE"
+)
+
+const WorkflowShardManagerAddressLive = Config.nested(
+  Config.all({
+    host: Config.string("HOST").pipe(
+      Config.withDefault("localhost")
+    ),
+    port: Config.integer("PORT").pipe(
+      Config.withDefault(8080)
+    )
+  }),
+  "SHARD_MANAGER_ADDRESS"
+)
+
+const WorkflowSqliteLive = Config.nested(
+  Config.all({
+    filename: Config.string("FILENAME").pipe(
+      Config.withDefault("./db-workflow.sqlite")
+    )
+  }),
+  "SQLITE"
+)
+const WorkflowLive = Config.nested(
+  Config.all({
+    ShardManagerAddress: WorkflowShardManagerAddressLive,
+    Sqlite: WorkflowSqliteLive
+  }),
+  "WORKFLOW"
+)
+
+export const ClientConfigLive = Config.nested(
+  Config.all({
+    ShardManagerAddress: ClientShardManagerAddressLive,
+    Sqlite: ClientSqliteLive,
+    Workflow: WorkflowLive
   }),
   "CLIENT"
 )
 
-const ServerShardManagerAddress = Config.nested(
+const ServerShardManagerAddressLive = Config.nested(
   Config.all({
     host: Config.string("HOST").pipe(
       Config.withDefault("localhost")
@@ -31,9 +70,19 @@ const ServerShardManagerAddress = Config.nested(
   "SHARD_MANAGER_ADDRESS"
 )
 
-export const ServerConfig = Config.nested(
+const ServerSqliteLive = Config.nested(
   Config.all({
-    ShardManagerAddress: ServerShardManagerAddress
+    filename: Config.string("FILENAME").pipe(
+      Config.withDefault("./db-workflow.sqlite")
+    )
+  }),
+  "SQLITE"
+)
+
+export const ServerConfigLive = Config.nested(
+  Config.all({
+    ShardManagerAddress: ServerShardManagerAddressLive,
+    Sqlite: ServerSqliteLive
   }),
   "SERVER"
 )

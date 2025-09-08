@@ -1,11 +1,11 @@
 import { RunnerAddress } from "@effect/cluster"
 import { NodeClusterShardManagerSocket, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer, Logger, LogLevel } from "effect"
-import { ServerConfig } from "./Config.js"
-import { SqlLayer } from "./Sql.js"
+import { Config, Effect, Layer, Logger, LogLevel } from "effect"
+import { ServerConfigLive } from "./Config.js"
+import { Sql } from "./Sql.js"
 
 Layer.mergeAll(
-  Layer.unwrapEffect(ServerConfig.pipe(Effect.map((config) =>
+  Layer.unwrapEffect(ServerConfigLive.pipe(Effect.map((config) =>
     NodeClusterShardManagerSocket.layer({
       shardingConfig: {
         shardManagerAddress: RunnerAddress.make(
@@ -18,7 +18,7 @@ Layer.mergeAll(
   ))),
   Logger.minimumLogLevel(LogLevel.Debug)
 ).pipe(
-  Layer.provide(SqlLayer),
+  Layer.provide(Sql(ServerConfigLive.pipe(Config.map((options) => options.Sqlite)))),
   Layer.orDie,
   Layer.launch,
   NodeRuntime.runMain

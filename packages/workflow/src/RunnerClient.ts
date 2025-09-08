@@ -1,22 +1,22 @@
 import { ClusterWorkflowEngine, RunnerAddress } from "@effect/cluster"
 import { NodeClusterRunnerSocket } from "@effect/platform-node"
-import { Effect, Layer } from "effect"
-import { ClientConfig } from "./Config.js"
-import { SqlLayer } from "./Sql.js"
+import { Config, Effect, Layer } from "effect"
+import { ClientConfigLive } from "./Config.js"
+import { Sql } from "./Sql.js"
 
-const ShardingLayer = Layer.unwrapEffect(ClientConfig.pipe(Effect.map((config) =>
+const ShardingLayer = Layer.unwrapEffect(ClientConfigLive.pipe(Effect.map((config) =>
   NodeClusterRunnerSocket.layer({
     clientOnly: true,
     shardingConfig: {
       shardManagerAddress: RunnerAddress.make(
-        config.ShardManagerAddress.host,
-        config.ShardManagerAddress.port
+        config.Workflow.ShardManagerAddress.host,
+        config.Workflow.ShardManagerAddress.port
       )
     },
     storage: "sql"
   })
 ))).pipe(
-  Layer.provide(SqlLayer),
+  Layer.provide(Sql(ClientConfigLive.pipe(Config.map((options) => options.Workflow.Sqlite)))),
   Layer.orDie
 )
 

@@ -1,8 +1,16 @@
 import { SqliteClient } from "@effect/sql-sqlite-node"
-import { String } from "effect"
+import type { SqliteClientConfig } from "@effect/sql-sqlite-node/SqliteClient"
+import { Config, Effect, Layer, String } from "effect"
 
-export const SqlLayer = SqliteClient.layer({
-  filename: "./db-workflow.sqlite",
-  transformQueryNames: String.camelToSnake,
-  transformResultNames: String.snakeToCamel
-})
+const Client = (options: Config.Config.Wrap<SqliteClientConfig>) =>
+  Layer.unwrapEffect(
+    Config.unwrap(options).pipe(Effect.map((config) =>
+      SqliteClient.layer({
+        ...config,
+        transformQueryNames: String.camelToSnake,
+        transformResultNames: String.snakeToCamel
+      })
+    ))
+  )
+
+export const Sql = (options: Config.Config.Wrap<SqliteClientConfig>) => Client(options)
