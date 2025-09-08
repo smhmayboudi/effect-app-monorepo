@@ -38,6 +38,12 @@ export * as AccountApplicationPortPolicy from "./domain/account/application/Acco
 export * as AccountApplicationUseCase from "./domain/account/application/AccountApplicationUseCase.js"
 
 
+export * as AuthenticationApplicationPortDriving from "./domain/authentication/application/AuthenticationApplicationPortDriving.js"
+
+
+export * as AuthenticationApplicationUseCase from "./domain/authentication/application/AuthenticationApplicationUseCase.js"
+
+
 export * as GroupAdapterDriven from "./domain/group/adapter/GroupAdapterDriven.js"
 
 
@@ -220,6 +226,21 @@ export * as VWApplicationPortPolicy from "./domain/vw/application/VWApplicationP
 
 export * as VWApplicationUseCase from "./domain/vw/application/VWApplicationUseCase.js"
 
+
+export * as Authentication from "./infrastructure/adapter/Authentication/Authentication.js"
+
+
+export * as AuthenticationAdmin from "./infrastructure/adapter/Authentication/AuthenticationAdmin.js"
+
+
+export * as AuthenticationLogger from "./infrastructure/adapter/Authentication/AuthenticationLogger.js"
+
+
+export * as AuthenticationSchema from "./infrastructure/adapter/Authentication/AuthenticationSchema.js"
+
+
+export * as AuthenticationSecondaryStorage from "./infrastructure/adapter/Authentication/AuthenticationSecondaryStorage.js"
+
 /**
  * Type ID for the ManualCache interface.
  * @since 1.0.0
@@ -316,6 +337,9 @@ export * as PortUUID from "./infrastructure/application/PortUUID.js"
 
 
 export * as MiddlewareAuthentication from "./middleware/MiddlewareAuthentication.js"
+
+
+export * as MiddlewareAuthenticationRoute from "./middleware/MiddlewareAuthenticationRoute.js"
 
 
 export * as MiddlewareIdempotency from "./middleware/MiddlewareIdempotency.js"

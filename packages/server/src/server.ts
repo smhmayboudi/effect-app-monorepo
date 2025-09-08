@@ -13,6 +13,7 @@ import { ApiLive } from "./Api.js"
 import { ConfigLive } from "./Config.js"
 import { IdempotencyRedis } from "./infrastructure/adapter/Idempotency.js"
 import { Redis } from "./infrastructure/adapter/Redis.js"
+import { MiddlewareAuthenticationRoute } from "./middleware/MiddlewareAuthenticationRoute.js"
 import { MiddlewareIdempotency } from "./middleware/MiddlewareIdempotency.js"
 import { MiddlewareMetric } from "./middleware/MiddlewareMetric.js"
 import { TextDecoder } from "./util/TextDecoder.js"
@@ -40,7 +41,8 @@ HttpApiBuilder.serve(flow(
   }),
   MiddlewareIdempotency,
   HttpMiddleware.logger,
-  MiddlewareMetric
+  MiddlewareMetric,
+  MiddlewareAuthenticationRoute
 )).pipe(
   Layer.provide(NodeSdkLive),
   Layer.provide(HttpApiBuilder.middlewareOpenApi({ path: "/openapi.json" })),

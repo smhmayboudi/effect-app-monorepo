@@ -8,6 +8,7 @@ import { AccountDriving } from "./domain/account/adapter/AccountAdapterDriving.j
 import { AccountEventEmitter } from "./domain/account/adapter/AccountAdapterEventEmitter.js"
 import { AccountPolicy } from "./domain/account/adapter/AccountAdapterPolicy.js"
 import { AccountUseCase } from "./domain/account/application/AccountApplicationUseCase.js"
+import { AuthenticationUseCase } from "./domain/authentication/application/AuthenticationApplicationUseCase.js"
 import { GroupDriven } from "./domain/group/adapter/GroupAdapterDriven.js"
 import { GroupDriving } from "./domain/group/adapter/GroupAdapterDriving.js"
 import { GroupEventEmitter } from "./domain/group/adapter/GroupAdapterEventEmitter.js"
@@ -88,11 +89,14 @@ export const ApiLive = HttpApiBuilder.api(Api)
   )
   .pipe(
     Layer.provide(UserDriving),
-    Layer.provide(MiddlewareAuthentication),
     Layer.provide(UserUseCase),
     Layer.provide(UserDriven),
     Layer.provide(UserEventEmitter),
     Layer.provide(UserPolicy)
+  )
+  .pipe(
+    Layer.provide(MiddlewareAuthentication),
+    Layer.provide(AuthenticationUseCase)
   )
   .pipe(
     Layer.provide(AccountDriving),

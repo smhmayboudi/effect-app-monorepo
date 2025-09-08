@@ -17,6 +17,9 @@ export * as AccountApplicationDomain from "./account/application/AccountApplicat
 export * as AccountApplicationErrorNotFound from "./account/application/AccountApplicationErrorNotFound.js"
 
 
+export * as AuthenticationApplicationError from "./authentication/application/AuthenticationApplicationError.js"
+
+
 export * as GroupAdapterDriving from "./group/adapter/GroupAdapterDriving.js"
 
 

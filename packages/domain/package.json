@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@effect/platform": "latest",
+    "better-auth": "^1.3.8",
     "effect": "latest"
   },
   "effect": {

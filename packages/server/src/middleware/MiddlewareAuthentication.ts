@@ -1,28 +1,52 @@
+import { HttpServerRequest } from "@effect/platform"
+import { NodeHttpServerRequest } from "@effect/platform-node"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { ActorErrorUnauthorized } from "@template/domain/Actor"
+import { ActorErrorUnauthorized, ActorId } from "@template/domain/Actor"
 import { PortMiddlewareAuthentication } from "@template/domain/PortMiddlewareAuthentication"
-import { AccessToken, UserId } from "@template/domain/user/application/UserApplicationDomain"
-import { Effect, Layer } from "effect"
-import { UserPortDriving } from "../domain/user/application/UserApplicationPortDriving.js"
+import { Effect, Layer, Option } from "effect"
+import { AuthenticationPortDriving } from "../domain/authentication/application/AuthenticationApplicationPortDriving.js"
 import { withSystemActor } from "../util/Policy.js"
 
 export const MiddlewareAuthentication = Layer.effect(
   PortMiddlewareAuthentication,
-  UserPortDriving.pipe(
-    Effect.flatMap((user) =>
+  AuthenticationPortDriving.pipe(
+    Effect.flatMap((auth) =>
       Effect.sync(() =>
         PortMiddlewareAuthentication.of({
           cookie: (token) =>
-            user.readByAccessToken(AccessToken.make(token)).pipe(
-              Effect.catchTag("UserErrorNotFoundWithAccessToken", () =>
+            HttpServerRequest.HttpServerRequest.pipe(
+              Effect.flatMap((request) =>
+                auth.call((client) =>
+                  client.api.getSession({
+                    headers: new Headers(
+                      NodeHttpServerRequest.toIncomingMessage(request).headers as Record<string, string>
+                    )
+                  })
+                )
+              ),
+              Effect.flatMap((session) =>
+                Option.fromNullable(session).pipe(
+                  Option.match({
+                    onNone: () =>
+                      Effect.fail(
+                        new ActorErrorUnauthorized({
+                          actorId: ActorId.make("00000000-0000-0000-0000-000000000000"),
+                          entity: "",
+                          action: ""
+                        })
+                      ),
+                    onSome: (a) => Effect.succeed(a.user)
+                  })
+                )
+              ),
+              Effect.catchTag("AuthenticationError", () =>
                 Effect.fail(
                   new ActorErrorUnauthorized({
-                    actorId: UserId.make("00000000-0000-0000-0000-000000000000"),
+                    actorId: ActorId.make("00000000-0000-0000-0000-000000000000"),
                     entity: "",
                     action: ""
                   })
                 )),
-              Effect.flatMap(Effect.succeed),
               Effect.withSpan("PortMiddlewareAuthentication", {
                 attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token }
               }),
