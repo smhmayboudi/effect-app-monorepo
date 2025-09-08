@@ -32,9 +32,9 @@ const SqliteLive = Config.nested(
 
 export const ConfigLive = Config.nested(
   Config.all({
-    ElasticsearchLive,
-    RedisLive,
-    SqliteLive
+    Elasticsearch: ElasticsearchLive,
+    Redis: RedisLive,
+    Sqlite: SqliteLive
   }),
   "CLIENT"
 )

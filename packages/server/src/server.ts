@@ -51,7 +51,7 @@ HttpApiBuilder.serve(flow(
   Layer.provide(
     Layer.mergeAll(
       IdempotencyRedis({}).pipe(
-        Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive))))
+        Layer.provide(Redis(ConfigLive.pipe(Config.map((options) => options.Redis))))
       ),
       TextDecoder({ encoding: "utf-8" })
     )

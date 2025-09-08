@@ -102,11 +102,11 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(AccountPolicy)
   )
   .pipe(
-    Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((opts) => opts.ElasticsearchLive)))),
+    Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((options) => options.Elasticsearch)))),
     Layer.provide(EventEmitter()),
-    Layer.provide(Redis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
-    Layer.provide(ResultPersistenceRedis(ConfigLive.pipe(Config.map((opts) => opts.RedisLive)))),
-    Layer.provide(Sql(ConfigLive.pipe(Config.map((opts) => opts.SqliteLive)))),
+    Layer.provide(Redis(ConfigLive.pipe(Config.map((options) => options.Redis)))),
+    Layer.provide(ResultPersistenceRedis(ConfigLive.pipe(Config.map((options) => options.Redis)))),
+    Layer.provide(Sql(ConfigLive.pipe(Config.map((options) => options.Sqlite)))),
     Layer.provide(UUID),
     Layer.provide(WorkflowEngineLayer)
   )
