@@ -2,6 +2,9 @@
 **/build/**
 **/coverage/**
 **/dist/**
+**/docs/**
 **/node_modules/**
-db-*.sqlite
-db-*.sqlite-*
+**/scratchpad/**
+!**/scratchpad/tsconfig.json
+**/tmp/**
+db-*.sqlite*
