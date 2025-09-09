@@ -167,13 +167,7 @@ export * as Authentication from "./infrastructure/adapter/Authentication/Authent
 export * as AuthenticationAdmin from "./infrastructure/adapter/Authentication/AuthenticationAdmin.js"
 
 
-export * as AuthenticationLogger from "./infrastructure/adapter/Authentication/AuthenticationLogger.js"
-
-
 export * as AuthenticationSchema from "./infrastructure/adapter/Authentication/AuthenticationSchema.js"
-
-
-export * as AuthenticationSecondaryStorage from "./infrastructure/adapter/Authentication/AuthenticationSecondaryStorage.js"
 
 /**
  * Type ID for the ManualCache interface.
