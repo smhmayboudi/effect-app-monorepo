@@ -1,7 +1,7 @@
 {
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@10.16.1",
   "workspaces": [
     "packages/*"
   ],
@@ -55,6 +55,14 @@
     "patchedDependencies": {
       "@changesets/get-github-info@0.6.0": "patches/@changesets__get-github-info@0.6.0.patch",
       "@changesets/assemble-release-plan@6.0.9": "patches/@changesets__assemble-release-plan@6.0.9.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "better-sqlite3",
+      "esbuild",
+      "msgpackr-extract",
+      "protobufjs",
+      "unrs-resolver"
+    ]
   }
 }
