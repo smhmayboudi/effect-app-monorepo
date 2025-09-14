@@ -3,7 +3,7 @@ import { ActorId } from "../../Actor.js"
 
 export const TodoId = Schema.UUID.pipe(
   Schema.brand("TodoId"),
-  Schema.annotations({ description: "Todo identification" })
+  Schema.annotations({ description: "Todo Identification" })
 )
 export type TodoId = typeof TodoId.Type
 

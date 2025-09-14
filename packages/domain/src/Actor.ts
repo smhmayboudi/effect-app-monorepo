@@ -2,9 +2,9 @@ import { HttpApiSchema } from "@effect/platform"
 import type { User } from "better-auth"
 import { Context, Effect, Predicate, Schema } from "effect"
 
-export const ActorId = Schema.String.pipe(
+export const ActorId = Schema.UUID.pipe(
   Schema.brand("ActorId"),
-  Schema.annotations({ description: "Actor identification" })
+  Schema.annotations({ description: "Actor Identification" })
 )
 export type ActorId = typeof ActorId.Type
 

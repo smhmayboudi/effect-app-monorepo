@@ -3,7 +3,7 @@ import { ActorId } from "../../Actor.js"
 
 export const GroupId = Schema.UUID.pipe(
   Schema.brand("GroupId"),
-  Schema.annotations({ description: "Group identification" })
+  Schema.annotations({ description: "Group Identification" })
 )
 export type GroupId = typeof GroupId.Type
 

@@ -3,7 +3,7 @@ import { GroupId } from "../../group/application/GroupApplicationDomain.js"
 
 export const PersonId = Schema.UUID.pipe(
   Schema.brand("PersonId"),
-  Schema.annotations({ description: "Person identification" })
+  Schema.annotations({ description: "Person Identification" })
 )
 export type PersonId = typeof PersonId.Type
 
