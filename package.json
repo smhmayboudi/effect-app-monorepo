@@ -1,23 +1,4 @@
 {
-  "private": true,
-  "type": "module",
-  "packageManager": "pnpm@10.16.1",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "clean": "node scripts/clean.mjs",
-    "codegen": "pnpm --recursive --parallel run codegen",
-    "build": "tsc -b tsconfig.build.json && pnpm --recursive --parallel run build",
-    "check": "tsc -b tsconfig.json",
-    "check-recursive": "pnpm --recursive exec tsc -b tsconfig.json",
-    "lint": "eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
-    "lint-fix": "pnpm lint --fix",
-    "test": "vitest",
-    "coverage": "vitest --coverage",
-    "changeset-version": "changeset version && node scripts/version.mjs",
-    "changeset-publish": "pnpm build && TEST_DIST= pnpm vitest && changeset publish"
-  },
   "devDependencies": {
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.3",
@@ -51,11 +32,8 @@
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
+  "packageManager": "pnpm@10.16.1",
   "pnpm": {
-    "patchedDependencies": {
-      "@changesets/get-github-info@0.6.0": "patches/@changesets__get-github-info@0.6.0.patch",
-      "@changesets/assemble-release-plan@6.0.9": "patches/@changesets__assemble-release-plan@6.0.9.patch"
-    },
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "better-sqlite3",
@@ -63,6 +41,28 @@
       "msgpackr-extract",
       "protobufjs",
       "unrs-resolver"
-    ]
-  }
+    ],
+    "patchedDependencies": {
+      "@changesets/assemble-release-plan@6.0.9": "patches/@changesets__assemble-release-plan@6.0.9.patch",
+      "@changesets/get-github-info@0.6.0": "patches/@changesets__get-github-info@0.6.0.patch"
+    }
+  },
+  "private": true,
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json && pnpm --recursive --parallel run build",
+    "changeset-publish": "pnpm build && TEST_DIST= pnpm vitest && changeset publish",
+    "changeset-version": "changeset version && node scripts/version.mjs",
+    "check": "tsc -b tsconfig.json",
+    "check-recursive": "pnpm --recursive exec tsc -b tsconfig.json",
+    "clean": "node scripts/clean.mjs",
+    "codegen": "pnpm --recursive --parallel run codegen",
+    "coverage": "vitest --coverage",
+    "lint": "eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
+    "lint-fix": "pnpm lint --fix",
+    "test": "vitest"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ]
 }

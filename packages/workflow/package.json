@@ -1,28 +1,4 @@
 {
-  "name": "@template/workflow",
-  "version": "0.0.0",
-  "type": "module",
-  "license": "MIT",
-  "description": "The workflow template",
-  "repository": {
-    "type": "git",
-    "url": "<PLACEHOLDER>",
-    "directory": "packages/workflow"
-  },
-  "publishConfig": {
-    "access": "public",
-    "directory": "dist"
-  },
-  "scripts": {
-    "codegen": "build-utils prepare-v2",
-    "build": "pnpm build-esm && pnpm build-annotate && pnpm build-cjs && build-utils pack-v2",
-    "build-esm": "tsc -b tsconfig.build.json",
-    "build-cjs": "babel build/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir build/cjs --source-maps",
-    "build-annotate": "babel build/esm --plugins annotate-pure-calls --out-dir build/esm --source-maps",
-    "check": "tsc -b tsconfig.json",
-    "test": "vitest",
-    "coverage": "vitest --coverage"
-  },
   "dependencies": {
     "@effect/cluster": "latest",
     "@effect/experimental": "latest",
@@ -35,6 +11,7 @@
     "@template/domain": "workspace:^",
     "effect": "latest"
   },
+  "description": "The workflow template",
   "effect": {
     "generateExports": {
       "include": [
@@ -46,5 +23,28 @@
         "**/*.ts"
       ]
     }
-  }
+  },
+  "license": "MIT",
+  "name": "@template/workflow",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "directory": "packages/workflow",
+    "type": "git",
+    "url": "<PLACEHOLDER>"
+  },
+  "scripts": {
+    "build": "pnpm build-esm && pnpm build-annotate && pnpm build-cjs && build-utils pack-v2",
+    "build-annotate": "babel build/esm --plugins annotate-pure-calls --out-dir build/esm --source-maps",
+    "build-cjs": "babel build/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir build/cjs --source-maps",
+    "build-esm": "tsc -b tsconfig.build.json",
+    "check": "tsc -b tsconfig.json",
+    "codegen": "build-utils prepare-v2",
+    "coverage": "vitest --coverage",
+    "test": "vitest"
+  },
+  "type": "module",
+  "version": "0.0.0"
 }
