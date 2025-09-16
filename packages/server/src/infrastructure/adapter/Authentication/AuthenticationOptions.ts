@@ -1,3 +1,4 @@
+import type { BetterAuthOptions } from "better-auth"
 import { bearer, openAPI } from "better-auth/plugins"
 import { v7 } from "uuid"
 
@@ -60,7 +61,7 @@ export const options = {
     max: 100,
     window: 10,
     enabled: true,
-    storage: "database" as const
+    storage: "database"
   },
   session: {
     cookieCache: {
@@ -81,4 +82,4 @@ export const options = {
   verification: {
     disableCleanup: false
   }
-}
+} satisfies BetterAuthOptions

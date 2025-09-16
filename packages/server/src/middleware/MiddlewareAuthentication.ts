@@ -11,13 +11,13 @@ import { withSystemActor } from "../util/Policy.js"
 export const MiddlewareAuthentication = Layer.effect(
   PortMiddlewareAuthentication,
   AuthenticationPortDriving.pipe(
-    Effect.flatMap((auth) =>
+    Effect.flatMap((authF) =>
       Effect.sync(() =>
         PortMiddlewareAuthentication.of({
           cookie: (token) =>
             HttpServerRequest.HttpServerRequest.pipe(
               Effect.flatMap((request) =>
-                auth(ServiceId.make(request.url.split("/").filter(Boolean)[0])).call((client) =>
+                authF(ServiceId.make("00000000-0000-0000-0000-000000000000")).call((client) =>
                   client.api.getSession({
                     headers: new Headers(
                       NodeHttpServerRequest.toIncomingMessage(request).headers as Record<string, string>
