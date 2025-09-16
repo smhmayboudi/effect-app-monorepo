@@ -19,7 +19,7 @@ type TodoEvents = {
   TodoUseCaseReadById: { in: { id: TodoId }; out: Exit.Exit<Todo, TodoErrorNotFound> }
   TodoUseCaseUpdate: {
     in: { id: TodoId; todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">> }
-    out: Exit.Exit<TodoId, TodoErrorNotFound>
+    out: Exit.Exit<TodoId, TodoErrorAlreadyExists | TodoErrorNotFound>
   }
 }
 

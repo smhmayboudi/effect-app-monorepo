@@ -1,6 +1,7 @@
 import { SqlClient } from "@effect/sql"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
+import { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
 import { Effect, Layer } from "effect"
 import { buildSelectCountQuery, buildSelectQuery } from "../../../shared/adapter/URLParams.js"
@@ -50,7 +51,10 @@ export const TodoDriven = Layer.effect(
         ) =>
           readById(id).pipe(
             Effect.flatMap((oldTodo) => buildUpdateQuery(id, { ...oldTodo, ...todo })),
-            Effect.catchTag("SqlError", Effect.die),
+            Effect.catchTag("SqlError", (sqlError) =>
+              (sqlError.message.includes("UNIQUE")) ?
+                Effect.fail(new TodoErrorAlreadyExists({ text: todo.text ?? "" }))
+                : Effect.die(sqlError)),
             Effect.flatMap((rows) => Effect.succeed(rows[0])),
             Effect.map((row) => TodoId.make(row.id)),
             Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo } })
@@ -61,12 +65,16 @@ export const TodoDriven = Layer.effect(
             sql<
               { id: string }
             >`INSERT INTO tbl_todo ${sql.insert(todo)} RETURNING id`.pipe(
-              Effect.catchTag("SqlError", Effect.die),
+              Effect.catchTag("SqlError", (sqlError) =>
+                (sqlError.message.includes("UNIQUE")) ?
+                  Effect.fail(new TodoErrorAlreadyExists({ text: todo.text }))
+                  : Effect.die(sqlError)),
               Effect.flatMap((rows) => Effect.succeed(rows[0])),
               Effect.map((row) => TodoId.make(row.id)),
               Effect.withSpan("TodoDriven", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", todo } })
             ),
-          delete: (id) => update(id, { deletedAt: new Date() }),
+          delete: (id) =>
+            update(id, { deletedAt: new Date() }).pipe(Effect.catchTag("TodoErrorAlreadyExists", Effect.die)),
           readAll: (urlParams) =>
             Effect.all({
               data: buildSelectQuery<Todo>(sql, "tbl_todo", urlParams).pipe(

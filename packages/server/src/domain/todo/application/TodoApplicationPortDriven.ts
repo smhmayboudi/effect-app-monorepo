@@ -16,5 +16,5 @@ export class TodoPortDriven extends Context.Tag("TodoPortDriven")<TodoPortDriven
   update: (
     id: TodoId,
     todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">>
-  ) => Effect.Effect<TodoId, TodoErrorNotFound, never>
+  ) => Effect.Effect<TodoId, TodoErrorAlreadyExists | TodoErrorNotFound, never>
 }>() {}

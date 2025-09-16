@@ -18,5 +18,5 @@ export class TodoPortDriving extends Context.Tag("TodoPortDriving")<TodoPortDriv
   update: (
     id: TodoId,
     todo: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" | "deletedAt">>
-  ) => Effect.Effect<TodoId, TodoErrorNotFound, ActorAuthorized<"Todo", "update">>
+  ) => Effect.Effect<TodoId, TodoErrorAlreadyExists | TodoErrorNotFound, ActorAuthorized<"Todo", "update">>
 }>() {}
