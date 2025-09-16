@@ -10,7 +10,7 @@ export type GroupId = typeof GroupId.Type
 export const GroupSchema = Schema.Struct({
   id: GroupId,
   ownerId: ActorId,
-  name: Schema.NonEmptyTrimmedString.annotations({ description: "Name" }),
+  name: Schema.NonEmptyTrimmedString.pipe(Schema.maxLength(255)).annotations({ description: "Name" }),
   createdAt: Schema.Date.annotations({ description: "Created at" }),
   updatedAt: Schema.Date.annotations({ description: "Updated at" }),
   deletedAt: Schema.NullOr(Schema.Date).annotations({ description: "Delete at" })
