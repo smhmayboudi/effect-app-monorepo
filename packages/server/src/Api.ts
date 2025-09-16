@@ -16,6 +16,11 @@ import { PersonDriving } from "./domain/person/adapter/PersonAdapterDriving.js"
 import { PersonEventEmitter } from "./domain/person/adapter/PersonAdapterEventEmitter.js"
 import { PersonPolicy } from "./domain/person/adapter/PersonAdapterPolicy.js"
 import { PersonUseCase } from "./domain/person/application/PersonApplicationUseCase.js"
+import { ServiceDriven } from "./domain/service/adapter/ServiceAdapterDriven.js"
+import { ServiceDriving } from "./domain/service/adapter/ServiceAdapterDriving.js"
+import { ServiceEventEmitter } from "./domain/service/adapter/ServiceAdapterEventEmitter.js"
+import { ServicePolicy } from "./domain/service/adapter/ServiceAdapterPolicy.js"
+import { ServiceUseCase } from "./domain/service/application/ServiceApplicationUseCase.js"
 import { SSEDriving } from "./domain/sse/adapter/SSEAdapterDriving.js"
 import { SSEUseCase } from "./domain/sse/application/SSEApplicationUseCase.js"
 import { TodoDriven } from "./domain/todo/adapter/TodoAdapterDriven.js"
@@ -61,6 +66,13 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(SSEDriving),
     Layer.provide(SSEUseCase),
     Layer.provide(SSEManager)
+  )
+  .pipe(
+    Layer.provide(ServiceDriving),
+    Layer.provide(ServiceUseCase),
+    Layer.provide(ServiceDriven),
+    Layer.provide(ServiceEventEmitter),
+    Layer.provide(ServicePolicy)
   )
   .pipe(
     Layer.provide(TodoDriving),

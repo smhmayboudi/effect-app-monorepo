@@ -32,7 +32,16 @@ export * as PersonApplicationDomain from "./person/application/PersonApplication
 export * as PersonApplicationErrorNotFound from "./person/application/PersonApplicationErrorNotFound.js"
 
 
+export * as ServiceAdapterDriving from "./service/adapter/ServiceAdapterDriving.js"
+
+
 export * as ServiceApplicationDomain from "./service/application/ServiceApplicationDomain.js"
+
+
+export * as ServiceApplicationErrorAlreadyExists from "./service/application/ServiceApplicationErrorAlreadyExists.js"
+
+
+export * as ServiceApplicationErrorNotFound from "./service/application/ServiceApplicationErrorNotFound.js"
 
 
 export * as Response from "./shared/adapter/Response.js"

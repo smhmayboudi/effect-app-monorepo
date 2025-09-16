@@ -9,7 +9,7 @@ export default SqlClient.SqlClient.pipe(
             id UUID PRIMARY KEY,
             owner_id UUID NOT NULL,
             done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1)),
-            text VARCHAR(255) NOT NULL,
+            text VARCHAR(255) NOT NULL UNIQUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
             deleted_at TIMESTAMP NULL
@@ -19,7 +19,7 @@ export default SqlClient.SqlClient.pipe(
             id UUID PRIMARY KEY,
             owner_id UUID NOT NULL,
             done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1)),
-            text TEXT NOT NULL,
+            text TEXT NOT NULL UNIQUE,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
             deleted_at DATETIME NULL
