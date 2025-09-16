@@ -46,7 +46,7 @@ export const auth = betterAuth({
 
 export const authF = (serviceId: ServiceId) => {
   const db = drizzle({
-    connection: { url: `file:db/${serviceId}-auth.sqlite` },
+    connection: { url: `file:db-auth-${serviceId}.sqlite` },
     logger: true
   })
   const redis = new Redis()

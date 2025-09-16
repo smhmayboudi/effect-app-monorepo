@@ -250,7 +250,6 @@ $RECYCLE.BIN/
 .tsbuildinfo/
 build/
 coverage/
-db/
 dist/
 docs/
 scratchpad/
