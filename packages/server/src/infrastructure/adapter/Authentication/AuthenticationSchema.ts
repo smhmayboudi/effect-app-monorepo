@@ -13,7 +13,7 @@ export const user = sqliteTable("user", {
     .notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .defaultNow()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
   role: text("role"),
   banned: integer("banned", { mode: "boolean" }).default(false),
@@ -29,7 +29,7 @@ export const session = sqliteTable("session", {
     .defaultNow()
     .notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" })
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
@@ -49,15 +49,19 @@ export const account = sqliteTable("account", {
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
-  accessTokenExpiresAt: integer("access_token_expires_at", { mode: "timestamp" }),
-  refreshTokenExpiresAt: integer("refresh_token_expires_at", { mode: "timestamp" }),
+  accessTokenExpiresAt: integer("access_token_expires_at", {
+    mode: "timestamp"
+  }),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
+    mode: "timestamp"
+  }),
   scope: text("scope"),
   password: text("password"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .defaultNow()
     .notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" })
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull()
 })
 
@@ -71,7 +75,7 @@ export const verification = sqliteTable("verification", {
     .notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .defaultNow()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull()
 })
 

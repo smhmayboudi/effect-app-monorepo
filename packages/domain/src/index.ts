@@ -32,6 +32,9 @@ export * as PersonApplicationDomain from "./person/application/PersonApplication
 export * as PersonApplicationErrorNotFound from "./person/application/PersonApplicationErrorNotFound.js"
 
 
+export * as ServiceApplicationDomain from "./service/application/ServiceApplicationDomain.js"
+
+
 export * as Response from "./shared/adapter/Response.js"
 
 

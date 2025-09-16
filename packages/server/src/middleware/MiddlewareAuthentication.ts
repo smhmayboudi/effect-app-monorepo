@@ -3,6 +3,7 @@ import { NodeHttpServerRequest } from "@effect/platform-node"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { ActorErrorUnauthorized, ActorId } from "@template/domain/Actor"
 import { PortMiddlewareAuthentication } from "@template/domain/PortMiddlewareAuthentication"
+import { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
 import { Effect, Layer, Option, Redacted } from "effect"
 import { AuthenticationPortDriving } from "../domain/authentication/application/AuthenticationApplicationPortDriving.js"
 import { withSystemActor } from "../util/Policy.js"
@@ -16,7 +17,7 @@ export const MiddlewareAuthentication = Layer.effect(
           cookie: (token) =>
             HttpServerRequest.HttpServerRequest.pipe(
               Effect.flatMap((request) =>
-                auth.call((client) =>
+                auth(ServiceId.make(request.url.split("/").filter(Boolean)[0])).call((client) =>
                   client.api.getSession({
                     headers: new Headers(
                       NodeHttpServerRequest.toIncomingMessage(request).headers as Record<string, string>

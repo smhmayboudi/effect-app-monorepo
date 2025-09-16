@@ -167,6 +167,9 @@ export * as Authentication from "./infrastructure/adapter/Authentication/Authent
 export * as AuthenticationAdmin from "./infrastructure/adapter/Authentication/AuthenticationAdmin.js"
 
 
+export * as AuthenticationOptions from "./infrastructure/adapter/Authentication/AuthenticationOptions.js"
+
+
 export * as AuthenticationSchema from "./infrastructure/adapter/Authentication/AuthenticationSchema.js"
 
 /**

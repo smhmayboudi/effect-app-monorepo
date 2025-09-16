@@ -250,9 +250,11 @@ $RECYCLE.BIN/
 .tsbuildinfo/
 build/
 coverage/
+db/
 dist/
 docs/
 scratchpad/
 !scratchpad/tsconfig.json
 tmp/
 db-*.sqlite*
+packages/server/drizzle/
