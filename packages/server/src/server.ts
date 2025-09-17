@@ -34,10 +34,17 @@ const gracefulShutdown = <A, E, R>(layer: Layer.Layer<A, E, R>) =>
 
 HttpApiBuilder.serve(flow(
   HttpMiddleware.cors({
-    allowedOrigins: ["*"],
-    allowedMethods: ["DELETE", "GET", "OPTION", "PATCH", "POST", "PUT"],
+    allowedOrigins: [
+      "http://127.0.0.1:3001",
+      "http://127.0.0.1:5173",
+      "http://localhost:3001",
+      "http://localhost:5173"
+    ],
+    allowedMethods: ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"],
     allowedHeaders: ["authorization", "b3", "content-type", "idempotency-key", "traceparent"],
-    credentials: true
+    exposedHeaders: ["authorization", "content-type"],
+    credentials: true,
+    maxAge: 86400
   }),
   MiddlewareIdempotency,
   HttpMiddleware.logger,
