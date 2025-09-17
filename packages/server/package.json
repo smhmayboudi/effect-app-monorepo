@@ -1,4 +1,25 @@
 {
+  "$schema": "https://json.schemastore.org/package",
+  "author": {
+    "email": "smhmayboudi@gmail.com",
+    "name": "Hossein Mayboudi",
+    "url": "https://www.linkedin.com/in/smhmayboudi/"
+  },
+  "bugs": {
+    "email": "smhmayboudi@gmail.com",
+    "url": "https://github.com/smhmayboudi/effect-app-monorepo/issues"
+  },
+  "contributors": [
+    {
+      "email": "smhmayboudi@gmail.com",
+      "name": "Hossein Mayboudi",
+      "url": "https://www.linkedin.com/in/smhmayboudi/"
+    }
+  ],
+  "cpu": [
+    "arm64",
+    "x64"
+  ],
   "dependencies": {
     "@effect/experimental": "latest",
     "@effect/opentelemetry": "latest",
@@ -49,8 +70,19 @@
       ]
     }
   },
+  "engines": {
+    "node": "^22.19.0",
+    "pnpm": "^10.16.1"
+  },
+  "homepage": "https://github.com/smhmayboudi/effect-app-monorepo",
   "license": "MIT",
   "name": "@template/server",
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "private": true,
   "publishConfig": {
     "access": "public",
     "directory": "dist"

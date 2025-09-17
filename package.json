@@ -1,4 +1,26 @@
 {
+  "$schema": "https://json.schemastore.org/package",
+  "author": {
+    "email": "smhmayboudi@gmail.com",
+    "name": "Hossein Mayboudi",
+    "url": "https://www.linkedin.com/in/smhmayboudi/"
+  },
+  "bugs": {
+    "email": "smhmayboudi@gmail.com",
+    "url": "https://github.com/smhmayboudi/effect-app-monorepo/issues"
+  },
+  "contributors": [
+    {
+      "email": "smhmayboudi@gmail.com",
+      "name": "Hossein Mayboudi",
+      "url": "https://www.linkedin.com/in/smhmayboudi/"
+    }
+  ],
+  "cpu": [
+    "arm64",
+    "x64"
+  ],
+  "description": "The monorepo template",
   "devDependencies": {
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.3",
@@ -32,6 +54,18 @@
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
+  "engines": {
+    "node": "^22.19.0",
+    "pnpm": "^10.16.1"
+  },
+  "homepage": "https://github.com/smhmayboudi/effect-app-monorepo",
+  "license": "MIT",
+  "name": "template",
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
   "packageManager": "pnpm@10.16.1",
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -48,6 +82,10 @@
     }
   },
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smhmayboudi/effect-app-monorepo"
+  },
   "scripts": {
     "build": "tsc -b tsconfig.build.json && pnpm --recursive --parallel run build",
     "changeset-publish": "pnpm build && TEST_DIST= pnpm vitest && changeset publish",

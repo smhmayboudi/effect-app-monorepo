@@ -1,4 +1,25 @@
 {
+  "$schema": "https://json.schemastore.org/package",
+  "author": {
+    "email": "smhmayboudi@gmail.com",
+    "name": "Hossein Mayboudi",
+    "url": "https://www.linkedin.com/in/smhmayboudi/"
+  },
+  "bugs": {
+    "email": "smhmayboudi@gmail.com",
+    "url": "https://github.com/smhmayboudi/effect-app-monorepo/issues"
+  },
+  "contributors": [
+    {
+      "email": "smhmayboudi@gmail.com",
+      "name": "Hossein Mayboudi",
+      "url": "https://www.linkedin.com/in/smhmayboudi/"
+    }
+  ],
+  "cpu": [
+    "arm64",
+    "x64"
+  ],
   "dependencies": {
     "@effect/cluster": "latest",
     "@effect/experimental": "latest",
@@ -12,6 +33,7 @@
     "effect": "latest"
   },
   "description": "The workflow template",
+  "devDependencies": {},
   "effect": {
     "generateExports": {
       "include": [
@@ -24,8 +46,19 @@
       ]
     }
   },
+  "engines": {
+    "node": "^22.19.0",
+    "pnpm": "^10.16.1"
+  },
+  "homepage": "https://github.com/smhmayboudi/effect-app-monorepo",
   "license": "MIT",
   "name": "@template/workflow",
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "private": true,
   "publishConfig": {
     "access": "public",
     "directory": "dist"
@@ -33,7 +66,7 @@
   "repository": {
     "directory": "packages/workflow",
     "type": "git",
-    "url": "<PLACEHOLDER>"
+    "url": "https://github.com/smhmayboudi/effect-app-monorepo"
   },
   "scripts": {
     "build": "pnpm build-esm && pnpm build-annotate && pnpm build-cjs && build-utils pack-v2",
