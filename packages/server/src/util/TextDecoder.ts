@@ -1,6 +1,6 @@
 import { HttpApiSchema } from "@effect/platform"
 import { Context, Effect, Layer, Schema } from "effect"
-import { TextDecoder as TextDecoderOrg } from "node:util"
+import * as util from "node:util"
 
 export class TextDecoderError extends Schema.TaggedError<TextDecoderError>("TextDecoderError")(
   "TextDecoderError",
@@ -25,7 +25,7 @@ export const TextDecoder = (option: {
     PortTextDecoder,
     Effect.try({
       try: () => {
-        const textDecoder = new TextDecoderOrg(option.encoding, option)
+        const textDecoder = new util.TextDecoder(option.encoding, option)
 
         return PortTextDecoder.of({
           decode: (input, options) =>

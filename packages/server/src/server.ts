@@ -8,7 +8,7 @@ import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
 import { Config, Effect, flow, Layer, Logger, LogLevel } from "effect"
-import { createServer } from "node:http"
+import * as http from "node:http"
 import { ApiLive } from "./Api.js"
 import { ConfigLive } from "./Config.js"
 import { IdempotencyRedis } from "./infrastructure/adapter/Idempotency.js"
@@ -60,7 +60,7 @@ HttpApiBuilder.serve(flow(
   ),
   Layer.provide(Logger.minimumLogLevel(LogLevel.Debug)),
   HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3001 })),
+  Layer.provide(NodeHttpServer.layer(http.createServer, { port: 3001 })),
   gracefulShutdown,
   Layer.launch,
   NodeRuntime.runMain
