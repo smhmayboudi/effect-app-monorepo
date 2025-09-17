@@ -54,16 +54,16 @@ export const authF = (serviceId: ServiceId) => {
     logger: true
   })
   const redis = new Redis()
-  const storageKey = (key: string) => `${serviceId}:authentication:${key}`
+  const storageKey = (key: string) => `authentication:${serviceId}:${key}`
 
   return betterAuth(deepmerge(
     options,
     {
       advanced: {
-        cookiePrefix: `${serviceId}.effect-app-monorepo`
+        cookiePrefix: `effect-app-monorepo-${serviceId}`
       },
-      appName: `${serviceId}-@template/server`,
-      basePath: `/${serviceId}/auth`,
+      appName: `@template/server/${serviceId}`,
+      basePath: `/auth/${serviceId}`,
       database: drizzleAdapter(
         db,
         { debugLogs: true, provider: "sqlite", schema }
@@ -86,7 +86,7 @@ export const authF = (serviceId: ServiceId) => {
           }
         }
       },
-      secret: `${serviceId}-better-auth-secret-123456789`
+      secret: `better-auth-secret-123456789-${serviceId}`
     } satisfies BetterAuthOptions
   ))
 }

@@ -11,8 +11,8 @@ export const MiddlewareAuthenticationRoute = HttpMiddleware.make((app) =>
     const nodeRequest = NodeHttpServerRequest.toIncomingMessage(request)
     const nodeResponse = NodeHttpServerRequest.toServerResponse(request)
 
-    return (segments.length >= 2 && segments[1] === "auth" && (request.method === "GET" || request.method === "POST")) ?
-      Effect.tryPromise(() => toNodeHandler(authF(ServiceId.make(segments[0])))(nodeRequest, nodeResponse)).pipe(
+    return (segments.length >= 2 && segments[0] === "auth" && (request.method === "GET" || request.method === "POST")) ?
+      Effect.tryPromise(() => toNodeHandler(authF(ServiceId.make(segments[1])))(nodeRequest, nodeResponse)).pipe(
         Effect.catchTag("UnknownException", Effect.die),
         Effect.flatMap(() => HttpServerResponse.empty())
       )
