@@ -2,7 +2,7 @@ import type { BetterAuthOptions } from "better-auth"
 import { bearer, openAPI } from "better-auth/plugins"
 import { v7 } from "uuid"
 
-export const options = {
+export const options: BetterAuthOptions = {
   account: {
     accountLinking: {
       allowDifferentEmails: true,
@@ -22,6 +22,7 @@ export const options = {
     },
     defaultCookieAttributes: {
       httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
       secure: true
     },
     disableCSRFCheck: false,
@@ -87,4 +88,4 @@ export const options = {
   verification: {
     disableCleanup: false
   }
-} satisfies BetterAuthOptions
+}

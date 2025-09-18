@@ -14,56 +14,15 @@ const db = drizzle({ connection: { url: "file:db-auth.sqlite" }, logger: true })
 const redis = new Redis()
 const storageKey = (key: string) => `authentication:${key}`
 
-export const auth = betterAuth(deepmerge(
-  options,
-  {
-    advanced: {
-      cookiePrefix: "effect-app-monorepo"
-    },
-    appName: "@template/server",
-    basePath: "/auth",
-    database: drizzleAdapter(
-      db,
-      { debugLogs: true, provider: "sqlite", schema }
-    ),
-    plugins: [
-      admin({ ac, roles })
-    ],
-    secondaryStorage: {
-      delete: async (key) => {
-        await redis.del(storageKey(key))
-      },
-      get: async (key) => {
-        return await redis.get(storageKey(key))
-      },
-      set: async (key, value, ttl) => {
-        if (ttl) {
-          await redis.set(storageKey(key), value, "EX", ttl)
-        } else {
-          await redis.set(storageKey(key), value)
-        }
-      }
-    },
-    secret: "better-auth-secret-123456789"
-  } satisfies BetterAuthOptions
-))
-
-export const authF = (serviceId: ServiceId) => {
-  const db = drizzle({
-    connection: { url: `file:db-auth-${serviceId}.sqlite` },
-    logger: true
-  })
-  const redis = new Redis()
-  const storageKey = (key: string) => `authentication:${serviceId}:${key}`
-
-  return betterAuth(deepmerge(
+export const auth = betterAuth(
+  deepmerge(
     options,
     {
       advanced: {
-        cookiePrefix: `effect-app-monorepo-${serviceId}`
+        cookiePrefix: "effect-app-monorepo"
       },
-      appName: `@template/server/${serviceId}`,
-      basePath: `/auth/${serviceId}`,
+      appName: "@template/server",
+      basePath: "/auth",
       database: drizzleAdapter(
         db,
         { debugLogs: true, provider: "sqlite", schema }
@@ -86,7 +45,52 @@ export const authF = (serviceId: ServiceId) => {
           }
         }
       },
-      secret: `better-auth-secret-123456789-${serviceId}`
+      secret: "better-auth-secret-123456789"
     } satisfies BetterAuthOptions
-  ))
+  ) as BetterAuthOptions
+)
+
+export const authF = (serviceId: ServiceId) => {
+  const db = drizzle({
+    connection: { url: `file:db-auth-${serviceId}.sqlite` },
+    logger: true
+  })
+  const redis = new Redis()
+  const storageKey = (key: string) => `authentication:${serviceId}:${key}`
+
+  return betterAuth(
+    deepmerge(
+      options,
+      {
+        advanced: {
+          cookiePrefix: `effect-app-monorepo-${serviceId}`
+        },
+        appName: `@template/server/${serviceId}`,
+        basePath: `/auth/${serviceId}`,
+        database: drizzleAdapter(
+          db,
+          { debugLogs: true, provider: "sqlite", schema }
+        ),
+        plugins: [
+          admin({ ac, roles })
+        ],
+        secondaryStorage: {
+          delete: async (key) => {
+            await redis.del(storageKey(key))
+          },
+          get: async (key) => {
+            return await redis.get(storageKey(key))
+          },
+          set: async (key, value, ttl) => {
+            if (ttl) {
+              await redis.set(storageKey(key), value, "EX", ttl)
+            } else {
+              await redis.set(storageKey(key), value)
+            }
+          }
+        },
+        secret: `better-auth-secret-123456789-${serviceId}`
+      } satisfies BetterAuthOptions
+    ) as BetterAuthOptions
+  )
 }
