@@ -30,7 +30,7 @@ export class ActorErrorUnauthorized extends Schema.TaggedError<ActorErrorUnautho
   HttpApiSchema.annotations({ status: 401 })
 ) {
   get message() {
-    return `Actor (${this.actorId}) is not authorized to perform action "${this.action}" on entity "${this.entity}."`
+    return `Actor ${this.actorId} is not authorized to perform action "${this.action}" on entity "${this.entity}".`
   }
 
   static is(u: unknown): u is ActorErrorUnauthorized {
