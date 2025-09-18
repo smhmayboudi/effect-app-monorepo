@@ -68,5 +68,5 @@ export class ServiceDriving extends HttpApiGroup.make("service")
   .annotate(OpenApi.Description, "Manage Service")
   .annotate(OpenApi.Summary, "Manage Service")
   .annotate(OpenApi.Title, "Service")
-  .prefix("/Service")
+  .prefix("/service")
 {}
