@@ -31,7 +31,7 @@ export const options = {
     }
     // useSecureCookies: true
   },
-  baseURL: "http://localhost:3001",
+  baseURL: "http://127.0.0.1:3001",
   emailAndPassword: {
     autoSignIn: true,
     disableSignUp: false,
@@ -78,7 +78,12 @@ export const options = {
     debug: true,
     enabled: true
   },
-  trustedOrigins: ["http://localhost:3001"],
+  trustedOrigins: [
+    "http://127.0.0.1:3001",
+    "http://127.0.0.1:5173",
+    "http://localhost:3001",
+    "http://localhost:5173"
+  ],
   verification: {
     disableCleanup: false
   }
