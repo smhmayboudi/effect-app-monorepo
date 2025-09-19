@@ -1,14 +1,15 @@
 import { Result, useAtomValue } from "@effect-atom/atom-react";
+import { href, Link } from "react-router";
 import { HttpClient } from "~/libs/http-client";
 
 export function AdminServiceList() {
-  const list = HttpClient.query("service", "readAll", {
+  const readAll = HttpClient.query("service", "readAll", {
     reactivityKeys: ["services"],
-    urlParams: {},
+    urlParams: { sort: [{ column: "ownerId", sort: "ASC" }] },
   });
-  const result = useAtomValue(list);
+  const readAllResult = useAtomValue(readAll);
 
-  return Result.builder(result)
+  return Result.builder(readAllResult)
     .onErrorTag("ActorErrorUnauthorized", (error) => (
       <div>ActorErrorUnauthorized: {error.toString()}</div>
     ))
@@ -30,6 +31,7 @@ export function AdminServiceList() {
               <th>ownerId</th>
               <th>id</th>
               <th>name</th>
+              <th>help</th>
             </tr>
           </thead>
           <tbody>
@@ -38,6 +40,16 @@ export function AdminServiceList() {
                 <td>{value.ownerId}</td>
                 <td>{value.id}</td>
                 <td>{value.name}</td>
+                <td>
+                  {" "}
+                  <Link
+                    to={href("/user/service-help/:serviceId", {
+                      serviceId: String(value.id),
+                    })}
+                  >
+                    help
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -46,6 +58,7 @@ export function AdminServiceList() {
               <td>F1</td>
               <td>F2</td>
               <td>F3</td>
+              <td>F4</td>
             </tr>
           </tfoot>
         </table>

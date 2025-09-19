@@ -64,8 +64,6 @@ export default function App() {
       <br />
       <Link to={href("/user/service-create")}>user service create</Link>
       <br />
-      <Link to={href("/user/service-help")}>user service help</Link>
-      <br />
       <Link to={href("/user/update")}>user update</Link>
       <br />
       <Outlet />

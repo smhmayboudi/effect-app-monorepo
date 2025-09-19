@@ -2,6 +2,7 @@ import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { HttpClient } from "~/libs/http-client";
 import { authClient } from "~/libs/auth-client";
 import { useEffect, useState, useMemo } from "react";
+import { href, Link } from "react-router";
 
 export function UserServiceList() {
   const [session, setSession] = useState<
@@ -26,24 +27,26 @@ export function UserServiceList() {
     refreshSession();
   }, []);
 
-  const list = useMemo(() => {
-    return HttpClient.query("service", "readAll", {
-      reactivityKeys: ["services", session?.user.id],
-      urlParams: session?.user.id
-        ? {
-            filters: [
-              {
-                column: "ownerId",
-                operator: "=",
-                value: session.user.id,
-              },
-            ],
-          }
-        : {},
-    });
-  }, [session?.user.id]);
+  const readAll = useMemo(
+    () =>
+      HttpClient.query("service", "readAll", {
+        reactivityKeys: ["services", session?.user.id],
+        urlParams: session?.user.id
+          ? {
+              filters: [
+                {
+                  column: "ownerId",
+                  operator: "=",
+                  value: session.user.id,
+                },
+              ],
+            }
+          : {},
+      }),
+    [session?.user.id]
+  );
 
-  const result = useAtomValue(list);
+  const readAllResult = useAtomValue(readAll);
 
   if (loading) {
     return <div>Loading session...</div>;
@@ -53,7 +56,7 @@ export function UserServiceList() {
     return <div>No user session found. Please log in.</div>;
   }
 
-  return Result.builder(result)
+  return Result.builder(readAllResult)
     .onErrorTag("ActorErrorUnauthorized", (error) => (
       <div>ActorErrorUnauthorized: {error.toString()}</div>
     ))
@@ -75,6 +78,7 @@ export function UserServiceList() {
               <th>ownerId</th>
               <th>id</th>
               <th>name</th>
+              <th>help</th>
             </tr>
           </thead>
           <tbody>
@@ -83,6 +87,16 @@ export function UserServiceList() {
                 <td>{value.ownerId}</td>
                 <td>{value.id}</td>
                 <td>{value.name}</td>
+                <td>
+                  {" "}
+                  <Link
+                    to={href("/user/service-help/:serviceId", {
+                      serviceId: String(value.id),
+                    })}
+                  >
+                    help
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -91,6 +105,7 @@ export function UserServiceList() {
               <td>F1</td>
               <td>F2</td>
               <td>F3</td>
+              <td>F4</td>
             </tr>
           </tfoot>
         </table>
