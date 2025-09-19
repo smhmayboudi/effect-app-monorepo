@@ -70,6 +70,7 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
+      "@tailwindcss/oxide",
       "better-sqlite3",
       "esbuild",
       "msgpackr-extract",
@@ -97,6 +98,7 @@
     "coverage": "vitest --coverage",
     "lint": "eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
     "lint-fix": "pnpm lint --fix",
+    "start": "node scripts/start.mjs",
     "test": "vitest"
   },
   "type": "module",
