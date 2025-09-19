@@ -46,17 +46,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <>
-      <Link to={href("/debug-auth")}>admin dashboard</Link>&nbsp;
+      <Link to={href("/debug-auth")}>debug auth</Link>&nbsp;
+      <br />
       <Link to={href("/")}>index</Link>&nbsp;
-      <Link to={href("/admin/dashboard")}>admin dashboard</Link>&nbsp;
+      <br />
       <Link to={href("/forgot-password")}>forgot password</Link>&nbsp;
+      <br />
       <Link to={href("/sign-in")}>sign in</Link>&nbsp;
+      <br />
       <Link to={href("/sign-up")}>sign up</Link>
+      <br />
+      <Link to={href("/admin/dashboard")}>admin dashboard</Link>&nbsp;
+      <br />
       <Link to={href("/user/change-password")}>user change password</Link>
+      <br />
       <Link to={href("/user/dashboard")}>user dashboard</Link>
+      <br />
       <Link to={href("/user/service-create")}>user service create</Link>
+      <br />
       <Link to={href("/user/service-help")}>user service help</Link>
+      <br />
       <Link to={href("/user/update")}>user update</Link>
+      <br />
       <Outlet />
     </>
   );

@@ -10,27 +10,27 @@ export function AdminServiceList() {
 
   return Result.builder(result)
     .onErrorTag("ActorErrorUnauthorized", (error) => (
-      <div>ActorErrorUnauthorized: ${error.toString()}</div>
+      <div>ActorErrorUnauthorized: {error.toString()}</div>
     ))
     .onErrorTag("ParseError", (error) => (
-      <div>ParseError: ${error.toString()}</div>
+      <div>ParseError: {error.toString()}</div>
     ))
     .onErrorTag("RequestError", (error) => (
-      <div>RequestError: ${error.toString()}</div>
+      <div>RequestError: {error.toString()}</div>
     ))
     .onErrorTag("ResponseError", (error) => (
-      <div>ResponseError: ${error.toString()}</div>
+      <div>ResponseError: {error.toString()}</div>
     ))
     .onInitialOrWaiting(() => <div>LOADING....</div>)
     .onSuccess((data) => (
       <div>
         <table>
           <thead>
-            <th>
-              <td>ownerId</td>
-              <td>id</td>
-              <td>name</td>
-            </th>
+            <tr>
+              <th>ownerId</th>
+              <th>id</th>
+              <th>name</th>
+            </tr>
           </thead>
           <tbody>
             {data.data.map((value) => (
