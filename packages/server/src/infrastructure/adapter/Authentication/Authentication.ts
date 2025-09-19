@@ -39,7 +39,7 @@ export const auth = betterAuth(
         },
         set: async (key, value, ttl) => {
           if (ttl) {
-            await redis.set(storageKey(key), value, "EX", ttl)
+            await redis.set(storageKey(key), value, "EX", Math.round(ttl))
           } else {
             await redis.set(storageKey(key), value)
           }
@@ -83,7 +83,7 @@ export const authF = (serviceId: ServiceId) => {
           },
           set: async (key, value, ttl) => {
             if (ttl) {
-              await redis.set(storageKey(key), value, "EX", ttl)
+              await redis.set(storageKey(key), value, "EX", Math.round(ttl))
             } else {
               await redis.set(storageKey(key), value)
             }
