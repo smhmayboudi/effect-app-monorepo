@@ -72,7 +72,7 @@ export const GroupDriven = Layer.effect(
                 Effect.flatMap((groups) => Effect.all(groups.map((group) => Group.decodeUnknown(group)))),
                 Effect.catchTag("ParseError", Effect.die)
               ),
-              total: buildSelectCountQuery(sql, "tbl_group").pipe(
+              total: buildSelectCountQuery(sql, "tbl_group", urlParams).pipe(
                 Effect.catchTag("SqlError", Effect.die),
                 Effect.map((rows) => rows[0]?.countId ?? 0)
               )

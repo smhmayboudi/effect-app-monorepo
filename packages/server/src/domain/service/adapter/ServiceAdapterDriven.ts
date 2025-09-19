@@ -83,7 +83,7 @@ export const ServiceDriven = Layer.effect(
                 Effect.flatMap((services) => Effect.all(services.map((service) => Service.decodeUnknown(service)))),
                 Effect.catchTag("ParseError", Effect.die)
               ),
-              total: buildSelectCountQuery(sql, "tbl_service").pipe(
+              total: buildSelectCountQuery(sql, "tbl_service", urlParams).pipe(
                 Effect.catchTag("SqlError", Effect.die),
                 Effect.map((rows) => rows[0]?.countId ?? 0)
               )

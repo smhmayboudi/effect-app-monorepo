@@ -82,7 +82,7 @@ export const TodoDriven = Layer.effect(
                 Effect.flatMap((todos) => Effect.all(todos.map((todo) => Todo.decodeUnknown(todo)))),
                 Effect.catchTag("ParseError", Effect.die)
               ),
-              total: buildSelectCountQuery(sql, "tbl_todo").pipe(
+              total: buildSelectCountQuery(sql, "tbl_todo", urlParams).pipe(
                 Effect.catchTag("SqlError", Effect.die),
                 Effect.map((rows) => rows[0]?.countId ?? 0)
               )

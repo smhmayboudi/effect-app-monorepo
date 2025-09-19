@@ -84,7 +84,7 @@ export const PersonDriven = Layer.effect(
                 Effect.flatMap((persons) => Effect.all(persons.map((person) => Person.decodeUnknown(person)))),
                 Effect.catchTag("ParseError", Effect.die)
               ),
-              total: buildSelectCountQuery(sql, "tbl_person").pipe(
+              total: buildSelectCountQuery(sql, "tbl_person", urlParams).pipe(
                 Effect.catchTag("SqlError", Effect.die),
                 Effect.map((rows) => rows[0]?.countId ?? 0)
               )
