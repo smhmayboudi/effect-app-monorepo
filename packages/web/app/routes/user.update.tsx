@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function UserUpdate() {
+export default function UserUpdate({}: Route.ComponentProps) {
   const [session, setSession] = useState<
     typeof authClient.$Infer.Session | null
   >(null);

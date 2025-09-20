@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function UserChangePassword() {
+export default function UserChangePassword({}: Route.ComponentProps) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 

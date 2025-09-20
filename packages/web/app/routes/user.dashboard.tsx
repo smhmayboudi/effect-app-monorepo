@@ -8,7 +8,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function UserDashboard() {
+export default function UserDashboard({}: Route.ComponentProps) {
   return (
     <div>
       <h2>User Dashbaord</h2>

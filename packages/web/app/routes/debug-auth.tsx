@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function DebugAuth() {
+export default function DebugAuth({}: Route.ComponentProps) {
   const [session, setSession] = useState<
     typeof authClient.$Infer.Session | null
   >(null);

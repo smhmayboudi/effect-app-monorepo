@@ -4,7 +4,7 @@ export function meta({}: Route.MetaArgs) {
   return [{ title: "index" }, { name: "description", content: "index" }];
 }
 
-export default function Home() {
+export default function Home({}: Route.ComponentProps) {
   return (
     <div>
       <h2>Home</h2>

@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function ForgotPassword() {
+export default function ForgotPassword({}: Route.ComponentProps) {
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
