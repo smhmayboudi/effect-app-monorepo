@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Form } from "react-router";
 import { authClient } from "~/libs/auth-client";
+import type { Route } from "./+types/forgot-password";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "forgot password" },
+    { name: "description", content: "forgot password" },
+  ];
+}
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

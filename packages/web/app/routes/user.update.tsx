@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { Form } from "react-router";
 import { authClient } from "~/libs/auth-client";
+import type { Route } from "./+types/user.update";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "user update" },
+    { name: "description", content: "user update" },
+  ];
+}
 
 export default function UserUpdate() {
   const [session, setSession] = useState<

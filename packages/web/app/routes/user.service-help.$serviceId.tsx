@@ -1,6 +1,13 @@
 import { Link } from "react-router";
 import type { Route } from "./+types/user.service-help.$serviceId";
 
+export function meta({ params }: Route.MetaArgs) {
+  return [
+    { title: `user service help ${params.serviceId}` },
+    { name: "description", content: `user service help ${params.serviceId}` },
+  ];
+}
+
 export default function UserServiceHelp({ params }: Route.ComponentProps) {
   return (
     <div>

@@ -1,4 +1,12 @@
 import { UserServiceList } from "~/components/user-service-list";
+import type { Route } from "./+types/user.dashboard";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "user dashboard" },
+    { name: "description", content: "user dashboard" },
+  ];
+}
 
 export default function UserDashboard() {
   return (

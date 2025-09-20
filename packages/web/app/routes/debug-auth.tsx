@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { authClient } from "~/libs/auth-client";
+import type { Route } from "./+types/debug-auth";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "debug auth" },
+    { name: "description", content: "debug auth" },
+  ];
+}
 
 export default function DebugAuth() {
   const [session, setSession] = useState<

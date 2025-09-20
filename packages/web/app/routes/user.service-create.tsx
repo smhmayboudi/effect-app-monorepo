@@ -13,6 +13,14 @@ import { useState } from "react";
 import { Form } from "react-router";
 import { v7 } from "uuid";
 import { HttpClient } from "~/libs/http-client";
+import type { Route } from "./+types/user.service-create";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "user create service" },
+    { name: "description", content: "user create service" },
+  ];
+}
 
 export default function UserServiceCreate() {
   const [name, setName] = useState("");

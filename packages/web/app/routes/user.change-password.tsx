@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Form } from "react-router";
 import { authClient } from "~/libs/auth-client";
+import type { Route } from "./+types/user.change-password";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "user change password" },
+    { name: "description", content: "user change password" },
+  ];
+}
 
 export default function UserChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");

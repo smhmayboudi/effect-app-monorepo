@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Form } from "react-router";
 import { authClient } from "~/libs/auth-client";
+import type { Route } from "./+types/sign-in";
+
+export function meta({}: Route.MetaArgs) {
+  return [{ title: "sign in" }, { name: "description", content: "sign in" }];
+}
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
