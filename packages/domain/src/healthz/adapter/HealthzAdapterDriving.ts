@@ -4,7 +4,7 @@ import { Schema } from "effect"
 export class HealthzDriving extends HttpApiGroup.make("healthz")
   .add(
     HttpApiEndpoint.get("check", "/")
-      .addSuccess(Schema.String)
+      .addSuccess(Schema.Void, { status: 204 })
       .annotate(OpenApi.Description, "Healthz check")
       .annotate(OpenApi.Summary, "Healthz check")
   )
