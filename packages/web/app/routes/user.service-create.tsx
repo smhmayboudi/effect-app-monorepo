@@ -17,12 +17,12 @@ import type { Route } from "./+types/user.service-create";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "user create service" },
-    { name: "description", content: "user create service" },
+    { title: "user service create" },
+    { name: "description", content: "user service create" },
   ];
 }
 
-export default function UserServiceCreate() {
+export default function UserServiceCreate({}: Route.ComponentProps) {
   const [name, setName] = useState("");
   const [shouldFetch, setShouldFetch] = useState(false);
   const [result, setResult] = useState<Result.Result<

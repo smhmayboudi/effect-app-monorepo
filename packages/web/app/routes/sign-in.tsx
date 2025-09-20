@@ -7,7 +7,7 @@ export function meta({}: Route.MetaArgs) {
   return [{ title: "sign in" }, { name: "description", content: "sign in" }];
 }
 
-export default function SignIn() {
+export default function SignIn({}: Route.ComponentProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

@@ -70,7 +70,7 @@
     "url": "https://github.com/smhmayboudi/effect-app-monorepo"
   },
   "scripts": {
-    "build": "react-router build",
+    "build1": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
