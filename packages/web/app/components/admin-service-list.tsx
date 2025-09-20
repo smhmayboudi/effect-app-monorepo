@@ -1,12 +1,17 @@
 import { Result, useAtomValue } from "@effect-atom/atom-react";
+import { useMemo } from "react";
 import { href, Link } from "react-router";
 import { HttpClient } from "~/libs/http-client";
 
 export function AdminServiceList() {
-  const readAll = HttpClient.query("service", "readAll", {
-    reactivityKeys: ["services"],
-    urlParams: { sort: [{ column: "ownerId", sort: "ASC" }] },
-  });
+  const readAll = useMemo(
+    () =>
+      HttpClient.query("service", "readAll", {
+        reactivityKeys: ["services"],
+        urlParams: { sort: [{ column: "ownerId", sort: "ASC" }] },
+      }),
+    []
+  );
   const readAllResult = useAtomValue(readAll);
 
   return Result.builder(readAllResult)

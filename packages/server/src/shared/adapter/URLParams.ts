@@ -34,7 +34,8 @@ export const buildSelectQuery = <A extends object>(
   if (urlParams.sort && urlParams.sort.length > 0) {
     query = sql`${query} ORDER BY `
     urlParams.sort.forEach((sort, index) => {
-      const clause = sql.unsafe(`${sort.column.toString()} ${sort.sort}`)
+      const column = sql(sort.column.toString())
+      const clause = sql`${column} ${sql.unsafe(sort.sort)}`
       query = index === 0
         ? sql`${query}${clause}`
         : sql`${query}, ${clause}`
