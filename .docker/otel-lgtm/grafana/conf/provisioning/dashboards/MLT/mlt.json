@@ -31,7 +31,9 @@
       "icon": "external link",
       "includeVars": false,
       "keepTime": false,
-      "tags": ["hono-poc"],
+      "tags": [
+        "effect-app-monorepo"
+      ],
       "targetBlank": false,
       "title": "Intro to MLT Dashboards",
       "tooltip": "",
@@ -181,7 +183,9 @@
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -252,7 +256,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -331,7 +337,9 @@
         "footer": {
           "countRows": false,
           "fields": "",
-          "reducer": ["sum"],
+          "reducer": [
+            "sum"
+          ],
           "show": false
         },
         "showHeader": true
@@ -359,7 +367,11 @@
           "id": "filterFieldsByName",
           "options": {
             "include": {
-              "names": ["http_status_code", "http_target", "Value"]
+              "names": [
+                "http_status_code",
+                "http_target",
+                "Value"
+              ]
             }
           }
         },
@@ -449,7 +461,9 @@
         "footer": {
           "countRows": false,
           "fields": "",
-          "reducer": ["sum"],
+          "reducer": [
+            "sum"
+          ],
           "show": false
         },
         "frameIndex": 0,
@@ -750,14 +764,21 @@
   "refresh": "5s",
   "revision": 1,
   "schemaVersion": 38,
-  "tags": ["hono-poc", "app"],
+  "tags": [
+    "effect-app-monorepo",
+    "app"
+  ],
   "templating": {
     "list": [
       {
         "current": {
           "selected": true,
-          "text": ["All"],
-          "value": ["$__all"]
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "tempo",
@@ -785,8 +806,12 @@
       {
         "current": {
           "selected": true,
-          "text": ["All"],
-          "value": ["$__all"]
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "tempo",
@@ -814,8 +839,12 @@
       {
         "current": {
           "selected": true,
-          "text": ["All"],
-          "value": ["$__all"]
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "tempo",

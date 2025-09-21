@@ -31,7 +31,9 @@
       "icon": "external link",
       "includeVars": false,
       "keepTime": false,
-      "tags": ["hono-poc"],
+      "tags": [
+        "effect-app-monorepo"
+      ],
       "targetBlank": false,
       "title": "Intro to MLT Dashboards",
       "tooltip": "",
@@ -270,7 +272,9 @@
         "footer": {
           "countRows": false,
           "fields": "",
-          "reducer": ["sum"],
+          "reducer": [
+            "sum"
+          ],
           "show": false
         },
         "showHeader": true
@@ -297,7 +301,10 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": ["hono-poc", "app"],
+  "tags": [
+    "effect-app-monorepo",
+    "app"
+  ],
   "templating": {
     "list": [
       {
