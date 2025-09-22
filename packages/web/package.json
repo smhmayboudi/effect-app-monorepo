@@ -1,80 +1,33 @@
 {
-  "$schema": "https://json.schemastore.org/package",
-  "author": {
-    "email": "smhmayboudi@gmail.com",
-    "name": "Hossein Mayboudi",
-    "url": "https://www.linkedin.com/in/smhmayboudi/"
-  },
-  "bugs": {
-    "email": "smhmayboudi@gmail.com",
-    "url": "https://github.com/smhmayboudi/effect-app-monorepo/issues"
-  },
-  "contributors": [
-    {
-      "email": "smhmayboudi@gmail.com",
-      "name": "Hossein Mayboudi",
-      "url": "https://www.linkedin.com/in/smhmayboudi/"
-    }
-  ],
-  "cpu": [
-    "arm64",
-    "x64"
-  ],
   "dependencies": {
-    "@effect-atom/atom-react": "^0.1.17",
+    "@effect-atom/atom-react": "latest",
     "@effect/platform": "latest",
-    "@react-router/fs-routes": "^7.9.1",
-    "@react-router/node": "^7.7.1",
-    "@react-router/serve": "^7.7.1",
+    "@next/bundle-analyzer": "^15.5.3",
     "@template/domain": "workspace:^",
     "better-auth": "^1.3.8",
-    "effect": "latest",
-    "isbot": "^5.1.27",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "uuid": "^11.1.0",
-    "react-router": "^7.7.1"
+    "next": "15.5.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "uuid": "^11.1.0"
   },
-  "description": "The web template",
   "devDependencies": {
-    "@react-router/dev": "^7.7.1",
-    "@tailwindcss/vite": "^4.1.4",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "tailwindcss": "^4.1.4",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.3",
-    "vite-tsconfig-paths": "^5.1.4"
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   },
-  "engines": {
-    "node": "^22.19.0",
-    "pnpm": "^10.16.1"
-  },
-  "homepage": "https://github.com/smhmayboudi/effect-app-monorepo",
-  "license": "MIT",
-  "name": "@template/web",
-  "os": [
-    "darwin",
-    "linux",
-    "win32"
-  ],
+  "name": "web",
   "private": true,
-  "publishConfig": {
-    "access": "public",
-    "directory": "build"
-  },
-  "repository": {
-    "directory": "packages/web",
-    "type": "git",
-    "url": "https://github.com/smhmayboudi/effect-app-monorepo"
-  },
   "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "build": "PORT=3002 next build --turbopack",
+    "dev": "PORT=3002 next dev --turbopack",
+    "lint": "PORT=3002 eslint",
+    "start": "PORT=3002 next start"
   },
-  "type": "module",
-  "version": "0.0.0"
+  "version": "0.1.0"
 }
