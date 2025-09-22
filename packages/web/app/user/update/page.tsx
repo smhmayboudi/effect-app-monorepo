@@ -75,7 +75,7 @@ export default function Page() {
   if (!session) {
     return (
       <div>
-        <h2>User Dashboard</h2>
+        <h2>User Update</h2>
         <p>No user session found. Please log in.</p>
       </div>
     );

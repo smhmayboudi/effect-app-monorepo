@@ -48,7 +48,7 @@ export default function Page() {
         payload: { name },
         reactivityKeys: ["services"],
       }),
-    [shouldFetch]
+    [name]
   );
 
   const createResult = useAtomValue(create);
