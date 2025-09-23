@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   const cspHeader =
     "base-uri 'self' http://127.0.0.1:3002 http://localhost:3002; " +
     "child-src 'none'; " +
-    "connect-src 'self' http://127.0.0.1:3002 http://localhost:3002 https://www.google-analytics.com; " +
+    "connect-src 'self' http://127.0.0.1:3001 http://127.0.0.1:3002 http://localhost:3001 http://localhost:3002 https://www.google-analytics.com; " +
     "default-src 'self'; " +
     "font-src 'self'; " +
     "form-action 'self'; " +
