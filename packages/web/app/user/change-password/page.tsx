@@ -1,47 +1,93 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { authClient } from "@/util/auth-client";
+import { Effect, ParseResult, Schema } from "effect";
 
 // export const metadata: Metadata = {
 //   title: "user change-password",
 //   description: "user change-password",
 // };
 
+export type FormState = {
+  errors?: {
+    currentPassword?: string[];
+    newPassword?: string[];
+  };
+  message?: string;
+} | null;
+
+class UserChangePasswordError extends Schema.TaggedError<UserChangePasswordError>(
+  "UserChangePasswordError"
+)("UserChangePasswordError", { message: Schema.String }) {}
+
 export default function Page() {
+  async function changePassword(
+    state: FormState,
+    formData: FormData
+  ): Promise<FormState> {
+    const UserSchemaUpdate = Schema.Struct({
+      currentPassword: Schema.NonEmptyString,
+      newPassword: Schema.NonEmptyString,
+    });
+    const program = Schema.decodeUnknown(UserSchemaUpdate)({
+      currentPassword: formData.get("currentPassword"),
+      newPassword: formData.get("newPassword"),
+    }).pipe(
+      Effect.flatMap(({ currentPassword, newPassword }) =>
+        Effect.tryPromise({
+          try: () =>
+            authClient.changePassword({
+              currentPassword,
+              newPassword,
+              revokeOtherSessions: true,
+            }),
+          catch: (error) =>
+            new UserChangePasswordError({
+              message: `Failed to change password user: ${error}`,
+            }),
+        }).pipe(
+          Effect.flatMap((response) => {
+            if (response.error) {
+              return Effect.fail(
+                new UserChangePasswordError({
+                  message: response.error.message ?? "",
+                })
+              );
+            }
+            return Effect.void;
+          }),
+          Effect.map(
+            () =>
+              ({
+                message: "User change password successfully!",
+              } as FormState)
+          )
+        )
+      ),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          errors: {
+            currentPassword: [error.message],
+            newPassword: [error.message],
+          },
+          message: "Validation failed.",
+        } as FormState)
+      )
+    );
+
+    return Effect.runPromise(program);
+  }
+
+  const [state, action, pending] = useActionState(changePassword, null);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await authClient.changePassword(
-        {
-          currentPassword,
-          newPassword,
-          revokeOtherSessions: true,
-        },
-        {
-          onError: (ctx) => {
-            console.error("onError", ctx);
-          },
-          onRequest: (ctx) => {
-            console.log("onRequest", ctx);
-          },
-          onSuccess: (ctx) => {
-            console.log("onSuccess", ctx);
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Change password error:", error);
-    }
-  };
 
   return (
     <div>
       <h2>User Change Password</h2>
-      <form onSubmit={handleSubmit}>
+      <form action={action}>
         <div>
           <label htmlFor="currentPassword">Current Password</label>
           <input
@@ -54,6 +100,13 @@ export default function Page() {
             value={currentPassword}
           />
         </div>
+        {state?.errors?.currentPassword && (
+          <div style={{ color: "red" }}>
+            {state.errors.currentPassword.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
         <div>
           <label htmlFor="newPassword">New Password</label>
           <input
@@ -66,7 +119,25 @@ export default function Page() {
             value={newPassword}
           />
         </div>
-        <button type="submit">Submit</button>
+        {state?.errors?.newPassword && (
+          <div style={{ color: "red" }}>
+            {state.errors.newPassword.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
+        <button disabled={pending} type="submit">
+          {pending ? "Submitting..." : "Submit"}
+        </button>
+        {state?.message && (
+          <p
+            style={{
+              color: state.message.includes("successfully") ? "green" : "red",
+            }}
+          >
+            {state.message}
+          </p>
+        )}
       </form>
     </div>
   );
