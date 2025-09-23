@@ -40,7 +40,8 @@ export default function Page() {
     }).pipe(
       Effect.flatMap(({ email, name, password }) =>
         Effect.tryPromise({
-          try: () => authClient.signUp.email({ email, name, password }),
+          try: (signal) =>
+            authClient.signUp.email({ email, name, password }, { signal }),
           catch: (error) => new Error(`Failed to sign up user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {

@@ -34,7 +34,7 @@ export default function Page() {
     }).pipe(
       Effect.flatMap(({ email }) =>
         Effect.tryPromise({
-          try: () => authClient.forgetPassword({ email }),
+          try: (signal) => authClient.forgetPassword({ email }, { signal }),
           catch: (error) =>
             new Error(`Failed to forgot password user: ${error}`),
         }).pipe(

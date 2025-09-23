@@ -33,7 +33,7 @@ export default function Page() {
     }).pipe(
       Effect.flatMap(({ name }) =>
         Effect.tryPromise({
-          try: () => authClient.updateUser({ name }),
+          try: (signal) => authClient.updateUser({ name }, { signal }),
           catch: (error) => new Error(`Failed to update user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {

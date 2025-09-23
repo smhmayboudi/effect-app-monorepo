@@ -36,12 +36,11 @@ export default function Page() {
     }).pipe(
       Effect.flatMap(({ currentPassword, newPassword }) =>
         Effect.tryPromise({
-          try: () =>
-            authClient.changePassword({
-              currentPassword,
-              newPassword,
-              revokeOtherSessions: true,
-            }),
+          try: (signal) =>
+            authClient.changePassword(
+              { currentPassword, newPassword, revokeOtherSessions: true },
+              { signal }
+            ),
           catch: (error) =>
             new UserChangePasswordError({
               message: `Failed to change password user: ${error}`,

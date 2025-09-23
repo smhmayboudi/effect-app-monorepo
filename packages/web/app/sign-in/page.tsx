@@ -37,8 +37,11 @@ export default function Page() {
     }).pipe(
       Effect.flatMap(({ email, password }) =>
         Effect.tryPromise({
-          try: () =>
-            authClient.signIn.email({ email, password, rememberMe: true }),
+          try: (signal) =>
+            authClient.signIn.email(
+              { email, password, rememberMe: true },
+              { signal }
+            ),
           catch: (error) => new Error(`Failed to sign up user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {
