@@ -27,7 +27,7 @@
   "private": true,
   "scripts": {
     "build": "PORT=3002 next build --turbopack",
-    "dev": "PORT=3002 next dev --turbopack",
+    "dev": "NODE_OPTIONS='--inspect' PORT=3002 next dev --turbopack",
     "lint": "PORT=3002 eslint",
     "start": "PORT=3002 next start"
   },

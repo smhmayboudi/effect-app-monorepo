@@ -1,7 +1,11 @@
 {
   "compounds": [
     {
-      "configurations": ["ShardManager", "Runner", "Server"],
+      "configurations": [
+        "ShardManager",
+        "Runner",
+        "Server"
+      ],
       "name": "Full Application (All Services)",
       "preLaunchTask": "npm: build",
       "stopAll": true
@@ -17,7 +21,9 @@
       ],
       "program": "${workspaceFolder}/packages/workflow/dist/dist/esm/ShardManager.js",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "sourceMaps": true,
       "type": "node"
     },
@@ -30,7 +36,9 @@
       ],
       "program": "${workspaceFolder}/packages/workflow/dist/dist/esm/Runner.js",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "sourceMaps": true,
       "type": "node"
     },
@@ -38,10 +46,14 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "name": "Server",
-      "outFiles": ["${workspaceFolder}/packages/server/dist/dist/esm/**/*.js"],
+      "outFiles": [
+        "${workspaceFolder}/packages/server/dist/dist/esm/**/*.js"
+      ],
       "program": "${workspaceFolder}/packages/server/dist/dist/esm/server.js",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "sourceMaps": true,
       "type": "node"
     },
@@ -60,7 +72,9 @@
       "name": "Debug Vitest Tests",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "type": "node"
     },
     {
@@ -76,7 +90,9 @@
       "name": "Debug Vitest (Specific File)",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "type": "node"
     },
     {
@@ -91,7 +107,9 @@
       "name": "Debug Vitest (Watch Mode)",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "type": "node"
     },
     {
@@ -101,7 +119,46 @@
       "remoteRoot": "${workspaceFolder}",
       "request": "attach",
       "restart": true,
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/packages/web",
+      "name": "Next.js: debug server-side",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:3002",
+      "webRoot": "${workspaceFolder}/packages/web"
+    },
+    {
+      "args": [
+        "dev"
+      ],
+      "cwd": "${workspaceFolder}/packages/web",
+      "name": "Next.js: debug full stack",
+      "program": "${workspaceFolder}/packages/web/node_modules/next/dist/bin/next",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect"
+      ],
+      "serverReadyAction": {
+        "action": "debugWithEdge",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/packages/web"
+      },
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "type": "node"
     }
   ],
