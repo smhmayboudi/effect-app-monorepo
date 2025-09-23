@@ -1,14 +1,81 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { authClient } from "@/util/auth-client";
+import { Effect, ParseResult, Schema } from "effect";
 
 // export const metadata: Metadata = {
 //   title: "user update",
 //   description: "user update",
 // };
 
+export type FormState = {
+  errors?: {
+    name?: string[];
+  };
+  message?: string;
+} | null;
+
+class UserUpdateError extends Schema.TaggedError<UserUpdateError>(
+  "UserUpdateError"
+)("UserUpdateError", { message: Schema.String }) {}
+
 export default function Page() {
+  async function update(
+    state: FormState,
+    formData: FormData
+  ): Promise<FormState> {
+    const UserSchemaUpdate = Schema.Struct({
+      name: Schema.NonEmptyString,
+    });
+    const program = Schema.decodeUnknown(UserSchemaUpdate)({
+      name: formData.get("name"),
+    }).pipe(
+      Effect.flatMap(({ name }) =>
+        Effect.tryPromise({
+          try: () => authClient.updateUser({ name }),
+          catch: (error) => new Error(`Failed to update user: ${error}`),
+        }).pipe(
+          Effect.flatMap((response) => {
+            if (response.error) {
+              return Effect.fail(
+                new UserUpdateError({ message: response.error.message ?? "" })
+              );
+            }
+            return Effect.void;
+          }),
+          Effect.flatMap(() =>
+            Effect.tryPromise({
+              try: () => refreshSession(),
+              catch: (error) =>
+                new UserUpdateError({
+                  message: `Failed to refresh session: ${error}`,
+                }),
+            })
+          ),
+          Effect.map(
+            () =>
+              ({
+                message: "User updated successfully!",
+              } as FormState)
+          )
+        )
+      ),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          errors: {
+            name: [error.message],
+          },
+          message: "Validation failed.",
+        } as FormState)
+      )
+    );
+
+    return Effect.runPromise(program);
+  }
+
+  const [state, action, pending] = useActionState(update, null);
+
   const [session, setSession] = useState<
     typeof authClient.$Infer.Session | null
   >(null);
@@ -38,31 +105,6 @@ export default function Page() {
     }
   }, [session]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await authClient.updateUser(
-        {
-          name,
-        },
-        {
-          onError: (ctx) => {
-            console.error("onError", ctx.error);
-          },
-          onRequest: (ctx) => {
-            console.log("onRequest", ctx);
-          },
-          onSuccess: (ctx) => {
-            console.log("onSuccess", ctx);
-            refreshSession();
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Update user error:", error);
-    }
-  };
-
   if (loading) {
     return (
       <div>
@@ -84,15 +126,38 @@ export default function Page() {
   return (
     <div>
       <h2>User Update</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          required
-          type="text"
-          value={name}
-        />
-        <button type="submit">Submit</button>
+      <form action={action}>
+        <div>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+            type="text"
+            value={name}
+          />
+        </div>
+        {state?.errors?.name && (
+          <div style={{ color: "red" }}>
+            {state.errors.name.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
+        <button disabled={pending} type="submit">
+          {pending ? "Submitting..." : "Submit"}
+        </button>
+        {state?.message && (
+          <p
+            style={{
+              color: state.message.includes("successfully") ? "green" : "red",
+            }}
+          >
+            {state.message}
+          </p>
+        )}
       </form>
     </div>
   );
