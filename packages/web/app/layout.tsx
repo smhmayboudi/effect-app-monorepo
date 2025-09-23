@@ -1,8 +1,10 @@
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/component/ui/theme-provider";
 import { WebVitals } from "@/component/ui/web-vitals";
 import Nav from "@/component/nav";
+import { headers } from "next/headers";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -14,7 +16,10 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
-export default function Layout(props: LayoutProps<"/">) {
+export default async function Layout(props: LayoutProps<"/">) {
+  const headerStore = await headers();
+  const nonce = headerStore.get("x-nonce") ?? "";
+
   return (
     <html lang="en">
       <body
@@ -22,6 +27,7 @@ export default function Layout(props: LayoutProps<"/">) {
       >
         <Nav />
         <ThemeProvider>{props.children}</ThemeProvider>
+        <GoogleTagManager gtmId="GTM-KNBQCMJV" nonce={nonce} />
         <WebVitals />
       </body>
     </html>
