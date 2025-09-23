@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { authClient } from "@/util/auth-client";
-import { Effect, ParseResult, Schema } from "effect";
+import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
 //   title: "user change-password",

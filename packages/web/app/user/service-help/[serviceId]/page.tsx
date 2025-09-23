@@ -12,6 +12,12 @@ export async function generateMetadata(
   } as Metadata);
 }
 
+// export async function generateStaticParams() {
+//   // SELECT serviceId from tbl_service
+//   const results = [{}]
+//   return results.map(value => ({ serviceId: value.service_id }));
+// }
+
 export default async function Page(
   props: PageProps<"/user/service-help/[serviceId]">
 ) {

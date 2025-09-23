@@ -6,19 +6,19 @@ export function middleware(request: NextRequest) {
   const cspHeader =
     "base-uri 'self' http://127.0.0.1:3002 http://localhost:3002; " +
     "child-src 'none'; " +
-    "connect-src 'self' http://127.0.0.1:3002 http://localhost:3002; " +
+    "connect-src 'self' http://127.0.0.1:3002 http://localhost:3002 https://www.google-analytics.com; " +
     "default-src 'self'; " +
     "font-src 'self'; " +
     "form-action 'self'; " +
     "frame-ancestors 'none'; " +
     "frame-src 'none'; " +
-    "img-src 'self' blob: data:; " +
+    "img-src 'self' blob: data: https://www.google-analytics.com; " +
     "media-src 'none'; " +
     "object-src 'none'; " +
     "report-uri /api/csp; " +
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${
       process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
-    }; ` +
+    } https://www.googletagmanager.com; ` +
     `style-src 'self' 'nonce-${nonce}' ${
       process.env.NODE_ENV === "production" ? "" : `'unsafe-inline'`
     }; ` +
