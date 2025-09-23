@@ -27,7 +27,11 @@ export default async function Layout(props: LayoutProps<"/">) {
       >
         <Nav />
         <ThemeProvider>{props.children}</ThemeProvider>
-        <GoogleTagManager gtmId="GTM-KNBQCMJV" nonce={nonce} />
+        <GoogleTagManager
+          gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
+          nonce={nonce}
+        />
+
         <WebVitals />
       </body>
     </html>
