@@ -61,14 +61,21 @@ export default function Page() {
           )
         )
       ),
-      Effect.catchAll((error) =>
-        Effect.succeed({
-          errors: {
-            name: [error.message],
-          },
-          message: "Validation failed.",
-        } as FormState)
-      )
+      Effect.catchAll((error) => {
+        const errorMessage = error.message.toLowerCase();
+        if (errorMessage.includes("name")) {
+          return Effect.succeed({
+            errors: {
+              name: ["Please enter your name"],
+            },
+            message: "Please check your input and try again.",
+          } as FormState);
+        }
+
+        return Effect.succeed({
+          message: `Failed to change password. Please try again. ${error.message}`,
+        } as FormState);
+      })
     );
 
     return Effect.runPromise(program);
