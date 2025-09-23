@@ -2,15 +2,16 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/component/ui/theme-provider";
 import { WebVitals } from "@/component/ui/web-vitals";
+import Nav from "@/component/nav";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-geist-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export default function Layout(props: LayoutProps<"/">) {
@@ -19,6 +20,7 @@ export default function Layout(props: LayoutProps<"/">) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Nav />
         <ThemeProvider>{props.children}</ThemeProvider>
         <WebVitals />
       </body>

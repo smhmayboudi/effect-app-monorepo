@@ -1,10 +1,66 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-
-export const config = {
-  matcher: "/",
-};
+import { NextRequest, NextResponse } from "next/server";
+import { v7 } from "uuid";
 
 export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL("/home", request.url));
+  const nonce = Buffer.from(v7()).toString("base64");
+  const cspHeader =
+    "base-uri 'self' http://127.0.0.1:3002 http://localhost:3002; " +
+    "child-src 'none'; " +
+    "connect-src 'self' http://127.0.0.1:3002 http://localhost:3002; " +
+    "default-src 'self'; " +
+    "font-src 'self'; " +
+    "form-action 'self'; " +
+    "frame-ancestors 'none'; " +
+    "frame-src 'none'; " +
+    "img-src 'self' blob: data:; " +
+    "media-src 'none'; " +
+    "object-src 'none'; " +
+    "report-uri /api/csp; " +
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${
+      process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
+    }; ` +
+    `style-src 'self' 'nonce-${nonce}' ${
+      process.env.NODE_ENV === "production" ? "" : `'unsafe-inline'`
+    }; ` +
+    "upgrade-insecure-requests; " +
+    "worker-src 'none';";
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("Content-Security-Policy", cspHeader);
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  response.headers.set("Content-Security-Policy", cspHeader);
+
+  // response.headers.set("Cache-Control", "max-age=3600, s-maxage=86400");
+  // response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  // response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  // response.headers.set("X-Content-Type-Options", "nosniff");
+  // response.headers.set("X-Frame-Options", "DENY");
+
+  return response;
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    {
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+      source:
+        "/((?!api|_next/static|_next/image|favicon.ico|opengraph-image|twitter-image|icon|apple-icon).*)",
+    },
+  ],
+};

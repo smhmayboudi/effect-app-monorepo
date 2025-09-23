@@ -5,10 +5,10 @@ export const metadata: Metadata = {
   description: "index",
 };
 
-export default function Page() {
+export default async function Page() {
   return (
     <div>
-      <h2>index</h2>
+      <h2>Home</h2>
     </div>
   );
 }

@@ -1,15 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "home",
-  description: "home",
-};
-
-export default function Page() {
+export default function Nav() {
   return (
     <div>
-      <h2>Home</h2>
       <Link href={"/debug-auth"}>debug-auth</Link>&nbsp;
       <br />
       <Link href={"/forgot-password"}>forgot-password</Link>&nbsp;
