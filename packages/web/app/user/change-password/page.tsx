@@ -23,7 +23,7 @@ export default function Page() {
         },
         {
           onError: (ctx) => {
-            console.error("onError", ctx.error);
+            console.error("onError", ctx);
           },
           onRequest: (ctx) => {
             console.log("onRequest", ctx);
@@ -42,20 +42,30 @@ export default function Page() {
     <div>
       <h2>User Change Password</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          placeholder="Current Password"
-          required
-          type="password"
-          value={currentPassword}
-        />
-        <input
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder="New Password"
-          required
-          type="password"
-          value={newPassword}
-        />
+        <div>
+          <label htmlFor="currentPassword">Current Password</label>
+          <input
+            id="currentPassword"
+            name="currentPassword"
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            placeholder="Current Password"
+            required
+            type="password"
+            value={currentPassword}
+          />
+        </div>
+        <div>
+          <label htmlFor="newPassword">New Password</label>
+          <input
+            id="newPassword"
+            name="newPassword"
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="New Password"
+            required
+            type="password"
+            value={newPassword}
+          />
+        </div>
         <button type="submit">Submit</button>
       </form>
     </div>

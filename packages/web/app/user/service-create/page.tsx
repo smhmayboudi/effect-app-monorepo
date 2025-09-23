@@ -68,13 +68,18 @@ export default function Page() {
     <div>
       <h2>User Service Create</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          required
-          type="text"
-          value={name}
-        />
+        <div>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+            type="text"
+            value={name}
+          />
+        </div>
         <button type="submit">Submit</button>
       </form>
       {result &&

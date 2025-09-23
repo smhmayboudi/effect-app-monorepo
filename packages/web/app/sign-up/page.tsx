@@ -41,27 +41,42 @@ export default function Page() {
     <div>
       <h2>Sign Up</h2>
       <form onSubmit={signUp}>
-        <input
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          required
-          type="text"
-          value={name}
-        />
-        <input
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-          type="email"
-          value={email}
-        />
-        <input
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-          type="password"
-          value={password}
-        />
+        <div>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+            type="text"
+            value={name}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+            type="email"
+            value={email}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+            type="password"
+            value={password}
+          />
+        </div>
         <button type="submit">Submit</button>
       </form>
     </div>
