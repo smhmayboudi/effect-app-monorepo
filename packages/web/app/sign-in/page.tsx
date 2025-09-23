@@ -1,47 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { authClient } from "@/util/auth-client";
+import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
 //   title: "sign-in",
 //   description: "sign-in",
 // };
 
+export type FormState = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+  message?: string;
+} | null;
+
+class SignInError extends Schema.TaggedError<SignInError>("SignInError")(
+  "SignInError",
+  { message: Schema.String }
+) {}
+
 export default function Page() {
+  async function signIn(
+    state: FormState,
+    formData: FormData
+  ): Promise<FormState> {
+    const UserSchemaUpdate = Schema.Struct({
+      email: Schema.NonEmptyString,
+      password: Schema.NonEmptyString,
+    });
+    const program = Schema.decodeUnknown(UserSchemaUpdate)({
+      email: formData.get("email"),
+      password: formData.get("password"),
+    }).pipe(
+      Effect.flatMap(({ email, password }) =>
+        Effect.tryPromise({
+          try: () =>
+            authClient.signIn.email({ email, password, rememberMe: true }),
+          catch: (error) => new Error(`Failed to sign up user: ${error}`),
+        }).pipe(
+          Effect.flatMap((response) => {
+            if (response.error) {
+              return Effect.fail(
+                new SignInError({ message: response.error.message ?? "" })
+              );
+            }
+            return Effect.void;
+          }),
+          Effect.map(
+            () =>
+              ({
+                message: "User sign up successfully!",
+              } as FormState)
+          )
+        )
+      ),
+      Effect.catchAll((error) => {
+        const errorMessage = error.message.toLowerCase();
+        if (errorMessage.includes("email")) {
+          return Effect.succeed({
+            errors: {
+              email: ["Please enter your email"],
+            },
+            message: "Please check your input and try again.",
+          } as FormState);
+        }
+        if (errorMessage.includes("password")) {
+          return Effect.succeed({
+            errors: {
+              password: ["Please enter your password"],
+            },
+            message: "Please check your input and try again.",
+          } as FormState);
+        }
+
+        return Effect.succeed({
+          message: `Failed to sign up. Please try again. ${error.message}`,
+        } as FormState);
+      })
+    );
+
+    return Effect.runPromise(program);
+  }
+
+  const [state, action, pending] = useActionState(signIn, null);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await authClient.signIn.email(
-        {
-          email,
-          password,
-          rememberMe: true,
-        },
-        {
-          onError: (ctx) => {
-            console.error("onError", ctx);
-          },
-          onRequest: (ctx) => {
-            console.log("onRequest", ctx);
-          },
-          onSuccess: (ctx) => {
-            console.log("onSuccess", ctx);
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Sign in error:", error);
-    }
-  };
 
   return (
     <div>
       <h2>Sign In</h2>
-      <form onSubmit={handleSubmit}>
+      <form action={action}>
         <div>
           <label htmlFor="email">Email</label>
           <input
@@ -54,6 +106,13 @@ export default function Page() {
             value={email}
           />
         </div>
+        {state?.errors?.email && (
+          <div style={{ color: "red" }}>
+            {state.errors.email.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
         <div>
           <label htmlFor="password">Password</label>
           <input
@@ -66,7 +125,25 @@ export default function Page() {
             value={password}
           />
         </div>
-        <button type="submit">Submit</button>
+        {state?.errors?.password && (
+          <div style={{ color: "red" }}>
+            {state.errors.password.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
+        <button disabled={pending} type="submit">
+          Submit
+        </button>
+        {state?.message && (
+          <p
+            style={{
+              color: state.message.includes("successfully") ? "green" : "red",
+            }}
+          >
+            {state.message}
+          </p>
+        )}
       </form>
     </div>
   );
