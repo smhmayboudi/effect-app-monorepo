@@ -84,6 +84,7 @@ export default function Page() {
       </form>
       {result &&
         Result.builder(result)
+          .onDefect(() => <div>Defect</div>)
           .onErrorTag("ActorErrorUnauthorized", (error) => (
             <div>ActorErrorUnauthorized: {error.toString()}</div>
           ))
@@ -96,8 +97,9 @@ export default function Page() {
           .onErrorTag("ResponseError", (error) => (
             <div>ResponseError: {error.toString()}</div>
           ))
-          .onInitialOrWaiting(() => <div>LOADING...</div>)
+          .onInitial(() => <div>Initial...</div>)
           .onSuccess((data) => <div>Service {data.data} created.</div>)
+          .onWaiting(() => <div>Waiting...</div>)
           .render()}
     </div>
   );

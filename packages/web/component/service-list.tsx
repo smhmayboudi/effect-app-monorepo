@@ -36,9 +36,10 @@ export function ServiceList({ params }: { params: { userId?: string } }) {
     [userId]
   );
 
-  const readAllResult = useAtomValue(readAll);
+  const result = useAtomValue(readAll);
 
-  return Result.builder(readAllResult)
+  return Result.builder(result)
+    .onDefect(() => <div>Defect</div>)
     .onErrorTag("ActorErrorUnauthorized", (error) => (
       <div>ActorErrorUnauthorized: {error.toString()}</div>
     ))
@@ -51,7 +52,7 @@ export function ServiceList({ params }: { params: { userId?: string } }) {
     .onErrorTag("ResponseError", (error) => (
       <div>ResponseError: {error.toString()}</div>
     ))
-    .onInitialOrWaiting(() => <div>LOADING...</div>)
+    .onInitial(() => <div>Initial...</div>)
     .onSuccess((data) => (
       <div>
         <table>
@@ -88,5 +89,6 @@ export function ServiceList({ params }: { params: { userId?: string } }) {
         </table>
       </div>
     ))
+    .onWaiting(() => <div>Waiting...</div>)
     .render();
 }
