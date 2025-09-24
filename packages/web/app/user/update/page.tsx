@@ -28,9 +28,9 @@ export default function Page() {
     const UserSchemaUpdate = Schema.Struct({
       name: Schema.NonEmptyString,
     });
-    const program = Schema.decodeUnknown(UserSchemaUpdate)({
-      name: formData.get("name"),
-    }).pipe(
+    const program = Schema.decodeUnknown(UserSchemaUpdate)(
+      Object.fromEntries(formData)
+    ).pipe(
       Effect.flatMap(({ name }) =>
         Effect.tryPromise({
           try: (signal) => authClient.updateUser({ name }, { signal }),

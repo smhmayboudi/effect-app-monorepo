@@ -33,11 +33,9 @@ export default function Page() {
       name: Schema.NonEmptyString,
       password: Schema.NonEmptyString,
     });
-    const program = Schema.decodeUnknown(UserSchemaUpdate)({
-      email: formData.get("email"),
-      name: formData.get("name"),
-      password: formData.get("password"),
-    }).pipe(
+    const program = Schema.decodeUnknown(UserSchemaUpdate)(
+      Object.fromEntries(formData)
+    ).pipe(
       Effect.flatMap(({ email, name, password }) =>
         Effect.tryPromise({
           try: (signal) =>

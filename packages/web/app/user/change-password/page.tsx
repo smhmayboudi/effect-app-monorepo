@@ -30,10 +30,9 @@ export default function Page() {
       currentPassword: Schema.NonEmptyString,
       newPassword: Schema.NonEmptyString,
     });
-    const program = Schema.decodeUnknown(UserSchemaUpdate)({
-      currentPassword: formData.get("currentPassword"),
-      newPassword: formData.get("newPassword"),
-    }).pipe(
+    const program = Schema.decodeUnknown(UserSchemaUpdate)(
+      Object.fromEntries(formData)
+    ).pipe(
       Effect.flatMap(({ currentPassword, newPassword }) =>
         Effect.tryPromise({
           try: (signal) =>

@@ -28,10 +28,9 @@ export default function Page() {
     const UserSchemaUpdate = Schema.Struct({
       email: Schema.NonEmptyString,
     });
-    const program = Schema.decodeUnknown(UserSchemaUpdate)({
-      email: formData.get("email"),
-      password: formData.get("password"),
-    }).pipe(
+    const program = Schema.decodeUnknown(UserSchemaUpdate)(
+      Object.fromEntries(formData)
+    ).pipe(
       Effect.flatMap(({ email }) =>
         Effect.tryPromise({
           try: (signal) => authClient.forgetPassword({ email }, { signal }),
