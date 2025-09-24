@@ -56,7 +56,7 @@ export default function Page() {
           Effect.map(
             () =>
               ({
-                message: "User updated successfully!",
+                message: "User update successfully!",
               } as FormState)
           )
         )
@@ -83,11 +83,12 @@ export default function Page() {
 
   const [state, action, pending] = useActionState(update, null);
 
+  const [name, setName] = useState("");
+
   const [session, setSession] = useState<
     typeof authClient.$Infer.Session | null
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [name, setName] = useState("");
 
   const refreshSession = async () => {
     setLoading(true);

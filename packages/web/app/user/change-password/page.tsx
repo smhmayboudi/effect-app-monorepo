@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { authClient } from "@/util/auth-client";
 import { Effect, Schema } from "effect";
 
@@ -94,6 +94,46 @@ export default function Page() {
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
+  const [session, setSession] = useState<
+    typeof authClient.$Infer.Session | null
+  >(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const refreshSession = async () => {
+    setLoading(true);
+    try {
+      const newSession = await authClient.getSession();
+      setSession(newSession.data);
+    } catch (error) {
+      console.error("Failed to refresh session:", error);
+      setSession(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshSession();
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <h2>Change Password</h2>
+        <div>LOADING...</div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div>
+        <h2>Change Password</h2>
+        <p>No user session found. Please log in.</p>
+      </div>
+    );
+  }
 
   return (
     <div>

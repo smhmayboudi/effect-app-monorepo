@@ -13,10 +13,10 @@ export default function Page() {
   const [session, setSession] = useState<
     typeof authClient.$Infer.Session | null
   >(null);
-  // const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const refreshSession = async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const newSession = await authClient.getSession();
       setSession(newSession.data);
@@ -24,13 +24,22 @@ export default function Page() {
       console.error("Failed to refresh session:", error);
       setSession(null);
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     refreshSession();
   }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <h2>User Dashboard</h2>
+        <div>LOADING...</div>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
