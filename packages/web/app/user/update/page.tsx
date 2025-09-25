@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useActionState } from "react";
-import { authClient } from "@/util/auth-client";
+import { getSession, updateUser, type Session } from "@/util/auth-client";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function Page() {
     ).pipe(
       Effect.flatMap(({ name }) =>
         Effect.tryPromise({
-          try: (signal) => authClient.updateUser({ name }, { signal }),
+          try: (signal) => updateUser({ name }, { signal }),
           catch: (error) => new Error(`Failed to update user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {
@@ -85,15 +85,13 @@ export default function Page() {
 
   const [name, setName] = useState("");
 
-  const [session, setSession] = useState<
-    typeof authClient.$Infer.Session | null
-  >(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const refreshSession = async () => {
     setLoading(true);
     try {
-      const newSession = await authClient.getSession();
+      const newSession = await getSession();
       setSession(newSession.data);
     } catch (error) {
       console.error("Failed to refresh session:", error);

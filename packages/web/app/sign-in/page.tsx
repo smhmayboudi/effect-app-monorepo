@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { authClient } from "@/util/auth-client";
+import { signInEmail } from "@/util/auth-client";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -37,10 +37,7 @@ export default function Page() {
       Effect.flatMap(({ email, password }) =>
         Effect.tryPromise({
           try: (signal) =>
-            authClient.signIn.email(
-              { email, password, rememberMe: true },
-              { signal }
-            ),
+            signInEmail({ email, password, rememberMe: true }, { signal }),
           catch: (error) => new Error(`Failed to sign up user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {

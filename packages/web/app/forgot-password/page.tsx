@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { authClient } from "@/util/auth-client";
+import { forgetPassword } from "@/util/auth-client";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function Page() {
     ).pipe(
       Effect.flatMap(({ email }) =>
         Effect.tryPromise({
-          try: (signal) => authClient.forgetPassword({ email }, { signal }),
+          try: (signal) => forgetPassword({ email }, { signal }),
           catch: (error) =>
             new Error(`Failed to forgot password user: ${error}`),
         }).pipe(

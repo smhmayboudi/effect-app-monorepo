@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { authClient } from "@/util/auth-client";
+import { getSession, changePassword, type Session } from "@/util/auth-client";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -22,7 +22,7 @@ class UserChangePasswordError extends Schema.TaggedError<UserChangePasswordError
 )("UserChangePasswordError", { message: Schema.String }) {}
 
 export default function Page() {
-  async function changePassword(
+  async function change(
     state: FormState,
     formData: FormData
   ): Promise<FormState> {
@@ -36,7 +36,7 @@ export default function Page() {
       Effect.flatMap(({ currentPassword, newPassword }) =>
         Effect.tryPromise({
           try: (signal) =>
-            authClient.changePassword(
+            changePassword(
               { currentPassword, newPassword, revokeOtherSessions: true },
               { signal }
             ),
@@ -89,20 +89,18 @@ export default function Page() {
     return Effect.runPromise(program);
   }
 
-  const [state, action, pending] = useActionState(changePassword, null);
+  const [state, action, pending] = useActionState(change, null);
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  const [session, setSession] = useState<
-    typeof authClient.$Infer.Session | null
-  >(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const refreshSession = async () => {
     setLoading(true);
     try {
-      const newSession = await authClient.getSession();
+      const newSession = await getSession();
       setSession(newSession.data);
     } catch (error) {
       console.error("Failed to refresh session:", error);

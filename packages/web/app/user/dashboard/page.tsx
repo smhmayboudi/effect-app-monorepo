@@ -2,7 +2,7 @@
 
 import { ServiceList } from "@/component/service-list";
 import { useEffect, useState } from "react";
-import { authClient } from "@/util/auth-client";
+import { getSession, type Session } from "@/util/auth-client";
 
 // export const metadata: Metadata = {
 //   title: "user dashboard",
@@ -10,15 +10,13 @@ import { authClient } from "@/util/auth-client";
 // };
 
 export default function Page() {
-  const [session, setSession] = useState<
-    typeof authClient.$Infer.Session | null
-  >(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const refreshSession = async () => {
     setLoading(true);
     try {
-      const newSession = await authClient.getSession();
+      const newSession = await getSession();
       setSession(newSession.data);
     } catch (error) {
       console.error("Failed to refresh session:", error);
