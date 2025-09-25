@@ -1,0 +1,6 @@
+{
+  "index": {
+    "title": "Index",
+    "description": "This page uses messages from <code>./message/index/{locale}.json</code> and <code>./message/shared/{locale}.json</code>. Messages from the about page and other locales are not loaded."
+  }
+}

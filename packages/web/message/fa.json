@@ -1,0 +1,6 @@
+{
+  "index": {
+    "title": "صفحه اصلی",
+    "description": "این صفحه از پیام‌های <code>./message/index/{locale}.json</code> و <code>./message/shared/{locale}.json</code> استفاده می‌کند. پیام‌های صفحه درباره و سایر زبان‌ها بارگذاری نشده‌اند."
+  }
+}

@@ -7,6 +7,9 @@ import Nav from "@/component/nav";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import type { Product, WithContext } from "schema-dts";
+import { NextIntlClientProvider } from "next-intl";
+import LocaleSwitcher from "@/component/ui/locale-switcher";
+import { getLocale } from "next-intl/server";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -46,16 +49,22 @@ export default async function RootLayout(props: LayoutProps<"/">) {
     image: "/icon",
     name: "Create Next App",
   };
+  const locale = await getLocale();
   const headerStore = await headers();
   const nonce = headerStore.get("x-nonce") ?? "";
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Nav />
-        <ThemeProvider>{props.children}</ThemeProvider>
+        <NextIntlClientProvider>
+          <ThemeProvider>
+            <LocaleSwitcher />
+            <Nav />
+            {props.children}
+          </ThemeProvider>
+        </NextIntlClientProvider>
         <GoogleTagManager
           gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
           nonce={nonce}

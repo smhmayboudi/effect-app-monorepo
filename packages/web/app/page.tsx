@@ -1,7 +1,11 @@
+import { getTranslations } from "next-intl/server";
+
 export default async function Page() {
+  const t = await getTranslations("index");
+
   return (
     <div>
-      <h2>Home</h2>
+      <h2>{t("title")}</h2>
     </div>
   );
 }
