@@ -88,60 +88,47 @@ export default function Client() {
     }
   }, [session]);
 
-  if (loading) {
-    return (
-      <div>
-        <h2>User Update</h2>
-        <div>LOADING...</div>
-      </div>
-    );
-  }
-
-  if (!session) {
-    return (
-      <div>
-        <h2>User Update</h2>
-        <p>No user session found. Please log in.</p>
-      </div>
-    );
-  }
-
   return (
     <div>
       <h2>User Update</h2>
-      <form action={action}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            name="name"
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name"
-            required
-            type="text"
-            value={name}
-          />
-        </div>
-        {state?.errors?.name && (
-          <div style={{ color: "red" }}>
-            {state.errors.name.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
+      {loading ? <div>LOADING...</div> : <></>}
+      {!session ? (
+        <p>No user session found. Please log in.</p>
+      ) : (
+        <form action={action}>
+          <div>
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Name"
+              required
+              type="text"
+              value={name}
+            />
           </div>
-        )}
-        <button disabled={pending} type="submit">
-          {pending ? "Submitting..." : "Submit"}
-        </button>
-        {state?.message && (
-          <p
-            style={{
-              color: state.message.includes("successfully") ? "green" : "red",
-            }}
-          >
-            {state.message}
-          </p>
-        )}
-      </form>
+          {state?.errors?.name && (
+            <div style={{ color: "red" }}>
+              {state.errors.name.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </div>
+          )}
+          <button disabled={pending} type="submit">
+            {pending ? "Submitting..." : "Submit"}
+          </button>
+          {state?.message && (
+            <p
+              style={{
+                color: state.message.includes("successfully") ? "green" : "red",
+              }}
+            >
+              {state.message}
+            </p>
+          )}
+        </form>
+      )}
     </div>
   );
 }

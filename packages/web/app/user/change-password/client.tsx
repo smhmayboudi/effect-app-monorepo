@@ -90,89 +90,76 @@ export default function Client() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  if (loading) {
-    return (
-      <div>
-        <h2>Change Password</h2>
-        <div>LOADING...</div>
-      </div>
-    );
-  }
-
-  if (!session) {
-    return (
-      <div>
-        <h2>Change Password</h2>
-        <p>No user session found. Please log in.</p>
-      </div>
-    );
-  }
-
   return (
     <div>
       <h2>User Change Password</h2>
-      <form action={action}>
-        <input
-          autoComplete="username"
-          defaultValue={session.user.email}
-          hidden={true}
-          id="username"
-          name="username"
-          type="text"
-        />
-        <div>
-          <label htmlFor="currentPassword">Current Password</label>
+      {loading ? <div>LOADING...</div> : <></>}
+      {!session ? (
+        <p>No user session found. Please log in.</p>
+      ) : (
+        <form action={action}>
           <input
-            autoComplete="current-password"
-            id="currentPassword"
-            name="currentPassword"
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Current Password"
-            required
-            type="password"
-            value={currentPassword}
+            autoComplete="username"
+            defaultValue={session.user.email}
+            hidden={true}
+            id="username"
+            name="username"
+            type="text"
           />
-        </div>
-        {state?.errors?.currentPassword && (
-          <div style={{ color: "red" }}>
-            {state.errors.currentPassword.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
+          <div>
+            <label htmlFor="currentPassword">Current Password</label>
+            <input
+              autoComplete="current-password"
+              id="currentPassword"
+              name="currentPassword"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Current Password"
+              required
+              type="password"
+              value={currentPassword}
+            />
           </div>
-        )}
-        <div>
-          <label htmlFor="newPassword">New Password</label>
-          <input
-            autoComplete="new-password"
-            id="newPassword"
-            name="newPassword"
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="New Password"
-            required
-            type="password"
-            value={newPassword}
-          />
-        </div>
-        {state?.errors?.newPassword && (
-          <div style={{ color: "red" }}>
-            {state.errors.newPassword.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
+          {state?.errors?.currentPassword && (
+            <div style={{ color: "red" }}>
+              {state.errors.currentPassword.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </div>
+          )}
+          <div>
+            <label htmlFor="newPassword">New Password</label>
+            <input
+              autoComplete="new-password"
+              id="newPassword"
+              name="newPassword"
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New Password"
+              required
+              type="password"
+              value={newPassword}
+            />
           </div>
-        )}
-        <button disabled={pending} type="submit">
-          {pending ? "Submitting..." : "Submit"}
-        </button>
-        {state?.message && (
-          <p
-            style={{
-              color: state.message.includes("successfully") ? "green" : "red",
-            }}
-          >
-            {state.message}
-          </p>
-        )}
-      </form>
+          {state?.errors?.newPassword && (
+            <div style={{ color: "red" }}>
+              {state.errors.newPassword.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </div>
+          )}
+          <button disabled={pending} type="submit">
+            {pending ? "Submitting..." : "Submit"}
+          </button>
+          {state?.message && (
+            <p
+              style={{
+                color: state.message.includes("successfully") ? "green" : "red",
+              }}
+            >
+              {state.message}
+            </p>
+          )}
+        </form>
+      )}
     </div>
   );
 }
