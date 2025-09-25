@@ -1,25 +1,47 @@
-import Link from "next/link";
+import ActiveLink from "@/component/active-link";
 
 export default function Nav() {
   return (
     <div>
-      <Link href={"/debug-auth"}>debug-auth</Link>&nbsp;
+      <ActiveLink activeClassName="active" href={"/debug-auth"}>
+        debug-auth
+      </ActiveLink>
+      &nbsp;
       <br />
-      <Link href={"/forgot-password"}>forgot-password</Link>&nbsp;
+      <ActiveLink activeClassName="active" href={"/forgot-password"}>
+        forgot-password
+      </ActiveLink>
+      &nbsp;
       <br />
-      <Link href={"/sign-in"}>sign-in</Link>&nbsp;
+      <ActiveLink activeClassName="active" href={"/sign-in"}>
+        sign-in
+      </ActiveLink>
+      &nbsp;
       <br />
-      <Link href={"/sign-up"}>sign-up</Link>
+      <ActiveLink activeClassName="active" href={"/sign-up"}>
+        sign-up
+      </ActiveLink>
       <br />
-      <Link href={"/admin/dashboard"}>admin dashboard</Link>&nbsp;
+      <ActiveLink activeClassName="active" href={"/admin/dashboard"}>
+        admin dashboard
+      </ActiveLink>
+      &nbsp;
       <br />
-      <Link href={"/user/change-password"}>user change-password</Link>
+      <ActiveLink activeClassName="active" href={"/user/change-password"}>
+        user change-password
+      </ActiveLink>
       <br />
-      <Link href={"/user/dashboard"}>user dashboard</Link>
+      <ActiveLink activeClassName="active" href={"/user/dashboard"}>
+        user dashboard
+      </ActiveLink>
       <br />
-      <Link href={"/user/service-create"}>user service-create</Link>
+      <ActiveLink activeClassName="active" href={"/user/service-create"}>
+        user service-create
+      </ActiveLink>
       <br />
-      <Link href={"/user/update"}>user update</Link>
+      <ActiveLink activeClassName="active" href={"/user/update"}>
+        user update
+      </ActiveLink>
       <br />
     </div>
   );
