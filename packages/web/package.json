@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "dependencies": {
     "@effect-atom/atom-react": "latest",
     "@effect/platform": "latest",
