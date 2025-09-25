@@ -5,7 +5,9 @@ import { HttpClient } from "@/util/http-client";
 import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 
-export function ServiceList({ params }: { params: { userId?: string } }) {
+type ServiceListProps = { params: { userId?: string } };
+
+export function ServiceList({ params }: ServiceListProps) {
   const [userId, setUserId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
