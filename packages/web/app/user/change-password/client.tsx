@@ -2,91 +2,11 @@
 
 import { useActionState, useState } from "react";
 import useAuth from "@/hook/use-auth";
-import { Effect, Schema } from "effect";
-
-export type FormState = {
-  errors?: {
-    currentPassword?: string[];
-    newPassword?: string[];
-  };
-  message?: string;
-} | null;
-
-class UserChangePasswordError extends Schema.TaggedError<UserChangePasswordError>(
-  "UserChangePasswordError"
-)("UserChangePasswordError", { message: Schema.String }) {}
+import { change } from "./action";
 
 export default function Client() {
-  const { changePassword, loading, session } = useAuth();
-
-  async function change(
-    state: FormState,
-    formData: FormData
-  ): Promise<FormState> {
-    const UserSchemaUpdate = Schema.Struct({
-      currentPassword: Schema.NonEmptyString,
-      newPassword: Schema.NonEmptyString,
-    });
-    const program = Schema.decodeUnknown(UserSchemaUpdate)(
-      Object.fromEntries(formData)
-    ).pipe(
-      Effect.flatMap(({ currentPassword, newPassword }) =>
-        Effect.tryPromise({
-          try: (signal) =>
-            changePassword(
-              { currentPassword, newPassword, revokeOtherSessions: true },
-              { signal }
-            ),
-          catch: (error) =>
-            new UserChangePasswordError({
-              message: `Failed to change password user: ${error}`,
-            }),
-        }).pipe(
-          Effect.flatMap((response) => {
-            if (response.error) {
-              return Effect.fail(
-                new UserChangePasswordError({
-                  message: response.error.message ?? "",
-                })
-              );
-            }
-            return Effect.void;
-          }),
-          Effect.map(
-            () =>
-              ({
-                message: "User change password successfully!",
-              } as FormState)
-          )
-        )
-      ),
-      Effect.catchAll((error) => {
-        const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("currentpassword")) {
-          return Effect.succeed({
-            errors: {
-              currentPassword: ["Please enter your current password"],
-            },
-            message: "Please check your input and try again.",
-          } as FormState);
-        }
-        if (errorMessage.includes("newpassword")) {
-          return Effect.succeed({
-            errors: { newPassword: ["Please enter a valid new password"] },
-            message: "Please check your input and try again.",
-          } as FormState);
-        }
-
-        return Effect.succeed({
-          message: `Failed to change password. Please try again. ${error.message}`,
-        } as FormState);
-      })
-    );
-
-    return Effect.runPromise(program);
-  }
+  const { loading, session } = useAuth();
   const [state, action, pending] = useActionState(change, null);
-
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -146,11 +66,13 @@ export default function Client() {
               ))}
             </div>
           )}
-          <button disabled={pending} type="submit">
+          <button aria-disabled={pending} disabled={pending} type="submit">
             {pending ? "Submitting..." : "Submit"}
           </button>
           {state?.message && (
             <p
+              aria-live="polite"
+              role="status"
               style={{
                 color: state.message.includes("successfully") ? "green" : "red",
               }}

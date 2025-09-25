@@ -2,82 +2,10 @@
 
 import { useState, useEffect, useActionState } from "react";
 import useAuth from "@/hook/use-auth";
-import { Effect, Schema } from "effect";
-
-export type FormState = {
-  errors?: {
-    name?: string[];
-  };
-  message?: string;
-} | null;
-
-class UserUpdateError extends Schema.TaggedError<UserUpdateError>(
-  "UserUpdateError"
-)("UserUpdateError", { message: Schema.String }) {}
+import { update } from "./action";
 
 export default function Client() {
-  const { loading, refreshSession, session, updateUser } = useAuth();
-
-  async function update(
-    state: FormState,
-    formData: FormData
-  ): Promise<FormState> {
-    const UserSchemaUpdate = Schema.Struct({
-      name: Schema.NonEmptyString,
-    });
-    const program = Schema.decodeUnknown(UserSchemaUpdate)(
-      Object.fromEntries(formData)
-    ).pipe(
-      Effect.flatMap(({ name }) =>
-        Effect.tryPromise({
-          try: (signal) => updateUser({ name }, { signal }),
-          catch: (error) => new Error(`Failed to update user: ${error}`),
-        }).pipe(
-          Effect.flatMap((response) => {
-            if (response.error) {
-              return Effect.fail(
-                new UserUpdateError({ message: response.error.message ?? "" })
-              );
-            }
-            return Effect.void;
-          }),
-          Effect.flatMap(() =>
-            Effect.tryPromise({
-              try: () => refreshSession(),
-              catch: (error) =>
-                new UserUpdateError({
-                  message: `Failed to refresh session: ${error}`,
-                }),
-            })
-          ),
-          Effect.map(
-            () =>
-              ({
-                message: "User update successfully!",
-              } as FormState)
-          )
-        )
-      ),
-      Effect.catchAll((error) => {
-        const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("name")) {
-          return Effect.succeed({
-            errors: {
-              name: ["Please enter your name"],
-            },
-            message: "Please check your input and try again.",
-          } as FormState);
-        }
-
-        return Effect.succeed({
-          message: `Failed to change password. Please try again. ${error.message}`,
-        } as FormState);
-      })
-    );
-
-    return Effect.runPromise(program);
-  }
-
+  const { loading, refreshSession, session } = useAuth();
   const [state, action, pending] = useActionState(update, null);
 
   const [name, setName] = useState("");
@@ -87,6 +15,12 @@ export default function Client() {
       setName(session.user.name);
     }
   }, [session]);
+
+  useEffect(() => {
+    if (!state?.errors) {
+      refreshSession();
+    }
+  }, [state, refreshSession]);
 
   return (
     <div>
@@ -115,11 +49,13 @@ export default function Client() {
               ))}
             </div>
           )}
-          <button disabled={pending} type="submit">
+          <button aria-disabled={pending} disabled={pending} type="submit">
             {pending ? "Submitting..." : "Submit"}
           </button>
           {state?.message && (
             <p
+              aria-live="polite"
+              role="status"
               style={{
                 color: state.message.includes("successfully") ? "green" : "red",
               }}
