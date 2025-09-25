@@ -20,38 +20,38 @@ export function WebVitals({ onMetricReport, enabled = true }: WebVitalsProps) {
     // Default metric handling
     switch (metric.name) {
       case "TTFB": {
-        console.log("Time to First Byte (TTFB):", metric.value, metric);
+        console.debug("Time to First Byte (TTFB):", metric.value, metric);
         // You can send this to your analytics service
         sendToAnalytics(metric);
         break;
       }
       case "FCP": {
-        console.log("First Contentful Paint (FCP):", metric.value, metric);
+        console.debug("First Contentful Paint (FCP):", metric.value, metric);
         sendToAnalytics(metric);
         break;
       }
       case "LCP": {
-        console.log("Largest Contentful Paint (LCP):", metric.value, metric);
+        console.debug("Largest Contentful Paint (LCP):", metric.value, metric);
         sendToAnalytics(metric);
         break;
       }
       // case "FID": {
-      //   console.log("First Input Delay (FID):", metric.value, metric);
+      //   console.debug("First Input Delay (FID):", metric.value, metric);
       //   sendToAnalytics(metric);
       //   break;
       // }
       case "CLS": {
-        console.log("Cumulative Layout Shift (CLS):", metric.value, metric);
+        console.debug("Cumulative Layout Shift (CLS):", metric.value, metric);
         sendToAnalytics(metric);
         break;
       }
       case "INP": {
-        console.log("Interaction to Next Paint (INP):", metric.value, metric);
+        console.debug("Interaction to Next Paint (INP):", metric.value, metric);
         sendToAnalytics(metric);
         break;
       }
       default: {
-        console.log("First Input Delay (FID):", metric.value, metric);
+        console.debug("First Input Delay (FID):", metric.value, metric);
         sendToAnalytics(metric);
         break;
       }
