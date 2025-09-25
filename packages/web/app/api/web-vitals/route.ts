@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const text = await request.text();
+    if (!text) {
+      return new Response("No data received", { status: 400 });
+    }
 
     // Here you can process the web vitals data
+    const body = JSON.parse(text);
     console.debug("Web Vitals received:", body);
 
     // Send to your analytics service (Google Analytics, etc.)

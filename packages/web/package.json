@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.55.1",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/node": "^24.5.2",
     "@types/react": "^19.1.13",
@@ -36,7 +37,8 @@
     "build": "PORT=3002 next build --turbopack",
     "dev": "NODE_OPTIONS='--inspect' PORT=3002 next dev --turbopack",
     "lint": "PORT=3002 eslint",
-    "start": "PORT=3002 next start"
+    "start": "PORT=3002 next start",
+    "test:e2e": "playwright test"
   },
   "version": "0.0.0"
 }
