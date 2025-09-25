@@ -1,38 +1,11 @@
-"use client";
+import { Metadata } from "next";
+import Client from "./client";
 
-import { useEffect, useState } from "react";
-import useAuth from "@/hook/use-auth";
-
-// export const metadata: Metadata = {
-//   title: "debug-auth",
-//   description: "debug-auth",
-// };
+export const metadata: Metadata = {
+  title: "debug-auth",
+  description: "debug-auth",
+};
 
 export default function Page() {
-  const { loading, refreshSession, session } = useAuth();
-  const [cookies, setCookies] = useState<string>("");
-
-  useEffect(() => {
-    refreshSession();
-    setCookies(document.cookie);
-  }, []);
-
-  return (
-    <div>
-      <h2>Auth Debug Info:</h2>
-      <p>
-        <strong>Cookies in document:</strong> {cookies || "None"}
-      </p>
-      <p>
-        <strong>Session:</strong>{" "}
-        {session ? JSON.stringify(session, null, 2) : "No session"}
-      </p>
-      <p>
-        <strong>Loading:</strong> {loading ? "Yes" : "No"}
-      </p>
-      <button onClick={refreshSession} disabled={loading}>
-        {loading ? "Refreshing..." : "Refresh Session"}
-      </button>
-    </div>
-  );
+  return <Client />;
 }
