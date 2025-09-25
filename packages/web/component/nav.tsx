@@ -1,4 +1,4 @@
-import ActiveLink from "@/component/active-link";
+import ActiveLink from "@/component/ui/active-link";
 
 export default function Nav() {
   return (
