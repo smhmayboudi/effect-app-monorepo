@@ -10,7 +10,7 @@ export default function Client() {
   useEffect(() => {
     refreshSession();
     setCookies(document.cookie);
-  }, []);
+  }, [refreshSession]);
 
   return (
     <div>

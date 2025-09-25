@@ -1,7 +1,7 @@
 "use client";
 
 import { createAuthClient } from "better-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const authClient = createAuthClient({
   fetchOptions: {
@@ -17,7 +17,7 @@ export default function useAuth() {
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     setLoading(true);
     try {
       setSession((await authClient.getSession()).data);
@@ -27,7 +27,7 @@ export default function useAuth() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     refreshSession();
