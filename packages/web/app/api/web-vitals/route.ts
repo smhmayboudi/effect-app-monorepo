@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     // Or store in your database
     // await storeInDatabase(body);
 
-    return NextResponse.json({ success: true });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("Error processing web vitals:", error);
     return NextResponse.json(
