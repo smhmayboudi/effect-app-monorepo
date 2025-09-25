@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1.7.1
 
-FROM node:22.19.0-bookworm-slim AS base
+FROM node:22.20.0-bookworm-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps

@@ -39,8 +39,8 @@
     }
   },
   "engines": {
-    "node": "^22.19.0",
-    "pnpm": "^10.16.1"
+    "node": "^22.20.0",
+    "pnpm": "^10.17.1"
   },
   "homepage": "https://github.com/smhmayboudi/effect-app-monorepo",
   "license": "MIT",
