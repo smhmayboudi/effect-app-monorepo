@@ -1,14 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "outDir": "build/src",
+    "rootDir": "src",
+    "tsBuildInfoFile": ".tsbuildinfo/src.tsbuildinfo",
+    "types": ["node"]
+  },
   "extends": "../../tsconfig.base.json",
   "include": ["src"],
   "references": [
-    { "path": "../domain" },
-    { "path": "../workflow" }
-  ],
-  "compilerOptions": {
-    "types": ["node"],
-    "outDir": "build/src",
-    "tsBuildInfoFile": ".tsbuildinfo/src.tsbuildinfo",
-    "rootDir": "src"
-  }
+    {
+      "path": "../domain"
+    },
+    {
+      "path": "../workflow"
+    }
+  ]
 }

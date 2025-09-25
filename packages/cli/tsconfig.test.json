@@ -1,14 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "test",
+    "tsBuildInfoFile": ".tsbuildinfo/test.tsbuildinfo",
+    "types": ["node"]
+  },
   "extends": "../../tsconfig.base.json",
   "include": ["test"],
   "references": [
-    { "path": "tsconfig.src.json" },
-    { "path": "../domain" } 
-  ],
-  "compilerOptions": {
-    "types": ["node"],
-    "tsBuildInfoFile": ".tsbuildinfo/test.tsbuildinfo",
-    "rootDir": "test",
-    "noEmit": true
-  }
+    {
+      "path": "tsconfig.src.json"
+    },
+    {
+      "path": "../domain"
+    }
+  ]
 }

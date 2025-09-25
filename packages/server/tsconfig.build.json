@@ -1,14 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "declarationDir": "build/dts",
+    "outDir": "build/esm",
+    "stripInternal": true,
+    "tsBuildInfoFile": ".tsbuildinfo/build.tsbuildinfo",
+    "types": ["node"]
+  },
   "extends": "./tsconfig.src.json",
   "references": [
-    { "path": "../domain/tsconfig.build.json" },
-    { "path": "../workflow/tsconfig.build.json" }
-  ],
-  "compilerOptions": {
-    "types": ["node"],
-    "tsBuildInfoFile": ".tsbuildinfo/build.tsbuildinfo",
-    "outDir": "build/esm",
-    "declarationDir": "build/dts",
-    "stripInternal": true
-  }
+    {
+      "path": "../domain/tsconfig.build.json"
+    },
+    {
+      "path": "../workflow/tsconfig.build.json"
+    }
+  ]
 }
