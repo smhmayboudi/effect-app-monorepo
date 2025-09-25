@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useActionState } from "react";
-import { getSession, updateUser, type Session } from "@/util/auth-client";
+import useAuth from "@/hook/use-auth";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -21,6 +21,8 @@ class UserUpdateError extends Schema.TaggedError<UserUpdateError>(
 )("UserUpdateError", { message: Schema.String }) {}
 
 export default function Page() {
+  const { loading, refreshSession, session, updateUser } = useAuth();
+
   async function update(
     state: FormState,
     formData: FormData
@@ -84,26 +86,6 @@ export default function Page() {
   const [state, action, pending] = useActionState(update, null);
 
   const [name, setName] = useState("");
-
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const refreshSession = async () => {
-    setLoading(true);
-    try {
-      const newSession = await getSession();
-      setSession(newSession.data);
-    } catch (error) {
-      console.error("Failed to refresh session:", error);
-      setSession(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshSession();
-  }, []);
 
   useEffect(() => {
     if (session?.user?.name) {

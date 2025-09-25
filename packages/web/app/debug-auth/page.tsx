@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getSession, type Session } from "@/util/auth-client";
+import useAuth from "@/hook/use-auth";
 
 // export const metadata: Metadata = {
 //   title: "debug-auth",
@@ -9,22 +9,8 @@ import { getSession, type Session } from "@/util/auth-client";
 // };
 
 export default function Page() {
-  const [session, setSession] = useState<Session | null>(null);
+  const { loading, refreshSession, session } = useAuth();
   const [cookies, setCookies] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const refreshSession = async () => {
-    setLoading(true);
-    try {
-      const newSession = await getSession();
-      setSession(newSession.data);
-    } catch (error) {
-      console.error("Failed to refresh session:", error);
-      setSession(null);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     refreshSession();

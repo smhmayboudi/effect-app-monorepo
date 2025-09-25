@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import useAuth from "@/hook/use-auth";
 import { useEffect, useState } from "react";
-import { getSession, type Session } from "@/util/auth-client";
 
 // export async function generateMetadata(
 //   props: PageProps<"/user/service-help/[serviceId]">
@@ -21,30 +21,28 @@ import { getSession, type Session } from "@/util/auth-client";
 //   return results.map(value => ({ serviceId: value.service_id }));
 // }
 
-export default async function Page(
+export default function Page(
   props: PageProps<"/user/service-help/[serviceId]">
 ) {
-  const { serviceId } = await props.params;
-
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const refreshSession = async () => {
-    setLoading(true);
-    try {
-      const newSession = await getSession();
-      setSession(newSession.data);
-    } catch (error) {
-      console.error("Failed to refresh session:", error);
-      setSession(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [serviceId, setServiceId] = useState<string | null>(null);
+  const { loading, session } = useAuth();
 
   useEffect(() => {
-    refreshSession();
-  }, []);
+    async function getParams() {
+      const params = await props.params;
+      setServiceId(params.serviceId);
+    }
+    getParams();
+  }, [props.params]);
+
+  if (!serviceId) {
+    return (
+      <div>
+        <h2>Loading service details...</h2>
+        <div>LOADING...</div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { getSession, changePassword, type Session } from "@/util/auth-client";
+import { useActionState, useState } from "react";
+import useAuth from "@/hook/use-auth";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -22,6 +22,8 @@ class UserChangePasswordError extends Schema.TaggedError<UserChangePasswordError
 )("UserChangePasswordError", { message: Schema.String }) {}
 
 export default function Page() {
+  const { changePassword, loading, session } = useAuth();
+
   async function change(
     state: FormState,
     formData: FormData
@@ -88,31 +90,10 @@ export default function Page() {
 
     return Effect.runPromise(program);
   }
-
   const [state, action, pending] = useActionState(change, null);
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const refreshSession = async () => {
-    setLoading(true);
-    try {
-      const newSession = await getSession();
-      setSession(newSession.data);
-    } catch (error) {
-      console.error("Failed to refresh session:", error);
-      setSession(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshSession();
-  }, []);
 
   if (loading) {
     return (
@@ -136,9 +117,18 @@ export default function Page() {
     <div>
       <h2>User Change Password</h2>
       <form action={action}>
+        <input
+          autoComplete="username"
+          defaultValue={session.user.email}
+          hidden={true}
+          id="username"
+          name="username"
+          type="text"
+        />
         <div>
           <label htmlFor="currentPassword">Current Password</label>
           <input
+            autoComplete="current-password"
             id="currentPassword"
             name="currentPassword"
             onChange={(e) => setCurrentPassword(e.target.value)}
@@ -158,6 +148,7 @@ export default function Page() {
         <div>
           <label htmlFor="newPassword">New Password</label>
           <input
+            autoComplete="new-password"
             id="newPassword"
             name="newPassword"
             onChange={(e) => setNewPassword(e.target.value)}

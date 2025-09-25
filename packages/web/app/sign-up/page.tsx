@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { signUpEmail } from "@/util/auth-client";
+import useAuth from "@/hook/use-auth";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -24,6 +24,8 @@ class SignUpError extends Schema.TaggedError<SignUpError>("SignUpError")(
 ) {}
 
 export default function Page() {
+  const { signUpEmail } = useAuth();
+
   async function signUp(
     state: FormState,
     formData: FormData
@@ -125,6 +127,7 @@ export default function Page() {
         <div>
           <label htmlFor="email">Email</label>
           <input
+            autoComplete="username"
             id="email"
             name="email"
             onChange={(e) => setEmail(e.target.value)}
@@ -144,6 +147,7 @@ export default function Page() {
         <div>
           <label htmlFor="password">Password</label>
           <input
+            autoComplete="current-password"
             id="password"
             name="password"
             onChange={(e) => setPassword(e.target.value)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { forgetPassword } from "@/util/auth-client";
+import useAuth from "@/hook/use-auth";
 import { Effect, Schema } from "effect";
 
 // export const metadata: Metadata = {
@@ -21,6 +21,8 @@ class ForgotPasswordError extends Schema.TaggedError<ForgotPasswordError>(
 )("ForgotPasswordError", { message: Schema.String }) {}
 
 export default function Page() {
+  const { forgetPassword } = useAuth();
+
   async function forgotPassword(
     state: FormState,
     formData: FormData

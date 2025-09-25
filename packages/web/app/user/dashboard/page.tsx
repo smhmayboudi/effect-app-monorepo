@@ -1,8 +1,7 @@
 "use client";
 
 import { ServiceList } from "@/component/service-list";
-import { useEffect, useState } from "react";
-import { getSession, type Session } from "@/util/auth-client";
+import useAuth from "@/hook/use-auth";
 
 // export const metadata: Metadata = {
 //   title: "user dashboard",
@@ -10,25 +9,7 @@ import { getSession, type Session } from "@/util/auth-client";
 // };
 
 export default function Page() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const refreshSession = async () => {
-    setLoading(true);
-    try {
-      const newSession = await getSession();
-      setSession(newSession.data);
-    } catch (error) {
-      console.error("Failed to refresh session:", error);
-      setSession(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshSession();
-  }, []);
+  const { loading, session } = useAuth();
 
   if (loading) {
     return (
