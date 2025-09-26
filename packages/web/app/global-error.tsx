@@ -7,10 +7,10 @@ type GlobalErrorProps = {
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
   return (
-    <html>
+    <html lang="en">
       <body>
         <h2>Something went wrong!</h2>
-        <p>{JSON.stringify(error)}</p>
+        <p>{String(error)}</p>
         <button onClick={() => reset()}>Try again</button>
       </body>
     </html>

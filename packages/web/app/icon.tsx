@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "My site";
+export const alt = "web";
 export const size = {
   height: 1024,
   width: 1024,
@@ -22,7 +22,7 @@ export default async function Image() {
           width: "100%",
         }}
       >
-        My site
+        web
       </div>
     ),
     {

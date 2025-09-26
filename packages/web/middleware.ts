@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { v7 } from "uuid";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
 
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(v7()).toString("base64");
@@ -17,10 +19,10 @@ export function middleware(request: NextRequest) {
     "object-src 'none'; " +
     "report-uri /api/csp; " +
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${
-      process.env.NODE_ENV === "production" ? "" : `'unsafe-eval'`
+      process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'"
     } https://www.googletagmanager.com; ` +
     `style-src 'self' 'nonce-${nonce}' ${
-      process.env.NODE_ENV === "production" ? "" : `'unsafe-inline'`
+      process.env.NODE_ENV === "production" ? "" : "'unsafe-inline'"
     }; ` +
     "upgrade-insecure-requests; " +
     "worker-src 'none';";
@@ -29,11 +31,12 @@ export function middleware(request: NextRequest) {
   requestHeaders.set("Content-Security-Policy", cspHeader);
   requestHeaders.set("x-nonce", nonce);
 
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  // const response = NextResponse.next({
+  //   request: {
+  //     headers: requestHeaders,
+  //   },
+  // });
+  const response = createMiddleware(routing)(request);
   response.headers.set("Content-Security-Policy", cspHeader);
 
   // response.headers.set("Cache-Control", "max-age=3600, s-maxage=86400");
@@ -60,7 +63,7 @@ export const config = {
         { type: "header", key: "purpose", value: "prefetch" },
       ],
       source:
-        "/((?!api|_next/static|_next/image|favicon.ico|opengraph-image|twitter-image|icon|apple-icon).*)",
+        "/((?!_next/image|_next/static|api|apple-icon|favicon.ico|icon|opengraph-image|robots|twitter-image).*)",
     },
   ],
 };

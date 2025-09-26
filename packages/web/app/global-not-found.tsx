@@ -2,7 +2,7 @@
 
 export default function GlobalNotFound() {
   return (
-    <html>
+    <html lang="en">
       <body>
         <h2>NOT FOUND</h2>
       </body>
