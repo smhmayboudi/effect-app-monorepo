@@ -23,7 +23,7 @@ export default function useAuth() {
 
   useEffect(() => {
     refreshSession();
-  }, []);
+  }, [refreshSession]);
 
   return {
     loading,

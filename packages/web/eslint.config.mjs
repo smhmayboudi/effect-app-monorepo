@@ -11,6 +11,8 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends("plugin:testing-library/react"),
+  ...compat.extends("plugin:@vitest/legacy-all"),
   {
     ignores: [
       "node_modules/**",

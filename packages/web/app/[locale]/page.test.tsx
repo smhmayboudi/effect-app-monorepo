@@ -1,5 +1,5 @@
 import { expect, it, describe, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Home from "./page";
 
 vi.mock("next-intl/server", () => ({
@@ -13,10 +13,10 @@ vi.mock("next-intl/server", () => ({
 
 describe("Index", () => {
   it("should render index page", async () => {
-    const { findByRole } = render(await Home());
+    render(await Home());
 
     expect(
-      await findByRole("heading", { level: 2, name: "Index" })
+      await screen.findByRole("heading", { level: 2, name: "Index" })
     ).toBeDefined();
   });
 });
