@@ -2,8 +2,10 @@
 
 import { useActionState, useState } from "react";
 import { signUp } from "./action";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
+  const t = useTranslations("sign-up");
   const [state, action, pending] = useActionState(signUp, null);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -11,7 +13,7 @@ export default function Client() {
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>{t("title")}</h2>
       <form action={action}>
         <div>
           <label htmlFor="name">Name</label>

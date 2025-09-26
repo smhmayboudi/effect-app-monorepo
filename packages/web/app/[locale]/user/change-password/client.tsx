@@ -3,8 +3,10 @@
 import { useActionState, useState } from "react";
 import useAuth from "@/hook/use-auth";
 import { change } from "./action";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
+  const t = useTranslations("user.change-password");
   const { loading, session } = useAuth();
   const [state, action, pending] = useActionState(change, null);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -12,7 +14,7 @@ export default function Client() {
 
   return (
     <div>
-      <h2>User Change Password</h2>
+      <h2>{t("title")}</h2>
       {loading ? <div>LOADING...</div> : <></>}
       {!session ? (
         <p>No user session found. Please log in.</p>

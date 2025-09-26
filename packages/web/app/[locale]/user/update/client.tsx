@@ -3,8 +3,10 @@
 import { useState, useEffect, useActionState } from "react";
 import useAuth from "@/hook/use-auth";
 import { update } from "./action";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
+  const t = useTranslations("user.update");
   const { loading, refreshSession, session } = useAuth();
   const [state, action, pending] = useActionState(update, null);
 
@@ -24,7 +26,7 @@ export default function Client() {
 
   return (
     <div>
-      <h2>User Update</h2>
+      <h2>{t("title")}</h2>
       {loading ? <div>LOADING...</div> : <></>}
       {!session ? (
         <p>No user session found. Please log in.</p>

@@ -14,8 +14,10 @@ import type { ParseError } from "effect/ParseResult";
 import { useState, useEffect, useMemo } from "react";
 import { v7 } from "uuid";
 import { HttpClient } from "@/util/http-client";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
+  const t = useTranslations("user.service-create");
   const [name, setName] = useState("");
   const [shouldFetch, setShouldFetch] = useState(false);
   const [result, setResult] = useState<Result.Result<
@@ -61,7 +63,7 @@ export default function Client() {
 
   return (
     <div>
-      <h2>User Service Create</h2>
+      <h2>{t("title")}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name</label>

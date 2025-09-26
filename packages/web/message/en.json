@@ -1,4 +1,44 @@
 {
+  "admin": {
+    "dashboard": {
+      "description": "admin dashboard",
+      "title": "admin dashboard"
+    }
+  },
+  "forgot-password": {
+    "description": "forgot-password",
+    "title": "forgot-password"
+  },
+  "sign-in": {
+    "description": "sign-in",
+    "title": "sign-in"
+  },
+  "sign-up": {
+    "description": "sign-up",
+    "title": "sign-up"
+  },
+  "user": {
+    "change-password": {
+      "description": "user change-password",
+      "title": "user change-password"
+    },
+    "dashboard": {
+      "description": "user dashboard",
+      "title": "user dashboard"
+    },
+    "service-create": {
+      "description": "user service-create",
+      "title": "user service-create"
+    },
+    "service-help": {
+      "description": "user service-help {serviceId}",
+      "title": "user service-help {serviceId}"
+    },
+    "update": {
+      "description": "user update",
+      "title": "user update"
+    }
+  },
   "index": {
     "title": "Index",
     "description": "This page uses messages from <code>./message/index/{locale}.json</code> and <code>./message/shared/{locale}.json</code>. Messages from the about page and other locales are not loaded."

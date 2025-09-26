@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import Client from "./client";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "user service-create",
-  description: "user service-create",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("user.service-create");
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default function Page() {
   return <Client />;

@@ -2,15 +2,17 @@
 
 import { useActionState, useState } from "react";
 import { signInEmail } from "./actoin";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
+  const t = useTranslations("sign-in");
   const [state, action, pending] = useActionState(signInEmail, null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
     <div>
-      <h2>Sign In</h2>
+      <h2>{t("title")}</h2>
       <form action={action}>
         <div>
           <label htmlFor="email">Email</label>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Client from "./client";
+import { getTranslations } from "next-intl/server";
 
 interface PageProps {
   params: Promise<{ serviceId: string }>;
@@ -7,10 +8,11 @@ interface PageProps {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { serviceId } = await props.params;
+  const t = await getTranslations("user.service-help");
 
   return {
-    title: `user service-help ${serviceId}`,
-    description: `user service-help ${serviceId}`,
+    title: t("title", { serviceId }),
+    description: t("description", { serviceId }),
   };
 }
 

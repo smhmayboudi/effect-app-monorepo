@@ -2,14 +2,16 @@
 
 import { useActionState, useState } from "react";
 import { forgotPassword } from "./action";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
+  const t = useTranslations("forgot-password");
   const [state, action, pending] = useActionState(forgotPassword, null);
   const [email, setEmail] = useState("");
 
   return (
     <div>
-      <h2>Forgot Password</h2>
+      <h2>{t("title")}</h2>
       <form action={action}>
         <div>
           <label htmlFor="email">Email</label>
