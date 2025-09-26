@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
     "form-action 'self'; " +
     "frame-ancestors 'none'; " +
     "frame-src 'none'; " +
-    "img-src 'self' blob: data: https://www.google-analytics.com; " +
+    "img-src 'self' blob: data: https://www.googletagmanager.com/; " +
     "media-src 'none'; " +
     "object-src 'none'; " +
     "report-uri /api/csp; " +
@@ -57,7 +57,7 @@ export const config: MiddlewareConfig = {
         { type: "header", key: "purpose", value: "prefetch" },
       ],
       source:
-        "/((?!_next/image|_next/static|api|apple-icon|favicon.ico|icon|opengraph-image|robots|twitter-image).*)",
+        "/((?!_next/image|_next/static|api|apple-icon$|favicon.ico|icon$|manifest.webmanifest|opengraph-image$|robots.txt|sitemap.xml|twitter-image$).*)",
     },
   ],
 };
