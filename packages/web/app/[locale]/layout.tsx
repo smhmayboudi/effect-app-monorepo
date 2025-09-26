@@ -30,7 +30,6 @@ export const metadata: Metadata = {
     siteName: "Create Next App",
     title: "Create Next App",
   },
-  robots: "follow, index",
   title: "Create Next App",
   twitter: {
     card: "summary_large_image",
@@ -63,7 +62,9 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <ThemeProvider>
             <LocaleSwitcher />
+            <br />
             <Nav />
+            <br />
             {children}
           </ThemeProvider>
         </NextIntlClientProvider>

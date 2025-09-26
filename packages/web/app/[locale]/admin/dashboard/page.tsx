@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Client from "./client";
 import { getTranslations } from "next-intl/server";
 
@@ -12,5 +12,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Page() {
-  <Client />;
+  return <Client />;
 }

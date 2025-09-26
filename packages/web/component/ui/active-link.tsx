@@ -1,15 +1,14 @@
 "use client";
 
-import Link, { LinkProps } from "next/link";
+import { LinkProps } from "next/link";
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 
-const getLinkUrl = (href: LinkProps["href"], as?: LinkProps["as"]): string => {
+const getLinkUrl = (href: LinkProps["href"], as?: LinkProps["as"]): string =>
   // Dynamic route will be matched via props.as
   // Static route will be matched via props.href
-  if (as) return as.toString();
-  return href.toString();
-};
+  as ? as.toString() : href.toString();
 
 type ActiveLinkProps = LinkProps & {
   className?: string;
@@ -23,6 +22,7 @@ const ActiveLink = ({
   ...props
 }: PropsWithChildren<ActiveLinkProps>) => {
   const pathname = usePathname();
+  const locale = useLocale();
   const [computedClassName, setComputedClassName] = useState(className);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const ActiveLink = ({
   ]);
 
   return (
-    <Link className={computedClassName} {...props}>
+    <Link className={computedClassName} {...props} locale={locale}>
       {children}
     </Link>
   );
