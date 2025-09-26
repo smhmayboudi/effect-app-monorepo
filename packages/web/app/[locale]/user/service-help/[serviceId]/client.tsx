@@ -19,7 +19,7 @@ export default function Client({ serviceId }: ClientProps) {
       {!session ? (
         <p>No user session found. Please log in.</p>
       ) : (
-        <Link href={`http://localhost:3001/auth/${serviceId}/reference`}>
+        <Link href={`http://127.0.0.1:3001/auth/${serviceId}/reference`}>
           Reference
         </Link>
       )}

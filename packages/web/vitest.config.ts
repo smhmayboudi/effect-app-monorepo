@@ -9,6 +9,7 @@ const config = defineConfig({
     environment: "jsdom",
     exclude: ["**/e2e/**", "**/node_modules/**"],
     include: ["**/*.test.{ts,tsx}"],
+    server: { deps: { inline: ["next-intl"] } },
   },
 });
 
