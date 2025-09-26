@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { type MiddlewareConfig, NextRequest } from "next/server";
 import { v7 } from "uuid";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
@@ -31,14 +31,8 @@ export function middleware(request: NextRequest) {
   requestHeaders.set("Content-Security-Policy", cspHeader);
   requestHeaders.set("x-nonce", nonce);
 
-  // const response = NextResponse.next({
-  //   request: {
-  //     headers: requestHeaders,
-  //   },
-  // });
   const response = createMiddleware(routing)(request);
   response.headers.set("Content-Security-Policy", cspHeader);
-
   // response.headers.set("Cache-Control", "max-age=3600, s-maxage=86400");
   // response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   // response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
@@ -48,7 +42,7 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
-export const config = {
+export const config: MiddlewareConfig = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
