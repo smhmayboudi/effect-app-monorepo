@@ -7,7 +7,7 @@ type GlobalErrorProps = {
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
   return (
-    <html lang="en">
+    <html dir="ltr" lang="en">
       <body>
         <h2>Something went wrong!</h2>
         <p>{String(error)}</p>

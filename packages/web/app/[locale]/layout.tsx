@@ -56,7 +56,7 @@ export default async function RootLayout({
   const nonce = headerStore.get("x-nonce") ?? "";
 
   return (
-    <html lang={locale}>
+    <html dir={locale === "fa" ? "rtl" : "ltr"} lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

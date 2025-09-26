@@ -14,30 +14,35 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const timeZone = (await headers()).get("x-time-zone") ?? "Etc/UCT";
 
   return {
-    // formats
-    getMessageFallback({ error, key, namespace }) {
-      console.error({ error, key, namespace });
-
-      return (
-        "`getMessageFallback` called for " +
-        [namespace, key].filter((part) => part != null).join(".")
-      );
+    formats: {
+      dateTime: {
+        short: {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        },
+      },
+      number: {
+        precise: {
+          maximumFractionDigits: 2,
+        },
+      },
+      list: {
+        locale: {
+          localeMatcher: "lookup",
+          style: "narrow",
+          type: "unit",
+        },
+      },
     },
+    getMessageFallback: ({ error, key, namespace }) =>
+      `'getMessageFallback' called for ${[namespace, key]
+        .filter((part) => part != null)
+        .join(".")}, ${JSON.stringify(error)}`,
     locale,
     messages: { ...messagesDefault, ...messagesLocale },
     now: now ? new Date(now) : new Date(),
-    onError(error) {
-      if (
-        error.message ===
-        (process.env.NODE_ENV === "production"
-          ? IntlErrorCode.MISSING_MESSAGE
-          : "MISSING_MESSAGE: Could not resolve `missing` in `Index`.")
-      ) {
-        // Do nothing, this error is triggered on purpose
-      } else {
-        console.error({ error });
-      }
-    },
+    onError: console.error,
     timeZone,
   };
 });
