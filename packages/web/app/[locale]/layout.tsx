@@ -1,7 +1,7 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import ThemeProvider from "@/component/ui/theme-provider";
+import ThemeProvider, { DarkModeStatus } from "@/component/theme-provider";
 import { WebVitals } from "@/component/web-vitals";
 import Nav from "@/component/nav";
 import { headers } from "next/headers";
@@ -10,6 +10,7 @@ import type { Product, WithContext } from "schema-dts";
 import { NextIntlClientProvider } from "next-intl";
 import LocaleSwitcher from "@/component/locale-switcher";
 import { getLocale } from "next-intl/server";
+import { BroadcastChannelProvider } from "@/component/broadcast-channel-provider";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -60,13 +61,16 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider>
-          <ThemeProvider>
-            <LocaleSwitcher />
-            <br />
-            <Nav />
-            <br />
-            {children}
-          </ThemeProvider>
+          <BroadcastChannelProvider channelName="__next_web">
+            <ThemeProvider>
+              <DarkModeStatus />
+              <LocaleSwitcher />
+              <br />
+              <Nav />
+              <br />
+              {children}
+            </ThemeProvider>
+          </BroadcastChannelProvider>
         </NextIntlClientProvider>
         <GoogleTagManager
           gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
