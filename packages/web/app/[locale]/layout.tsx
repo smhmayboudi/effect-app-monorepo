@@ -2,7 +2,7 @@ import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import ThemeProvider from "@/component/ui/theme-provider";
-import { WebVitals } from "@/component/ui/web-vitals";
+import { WebVitals } from "@/component/web-vitals";
 import Nav from "@/component/nav";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
