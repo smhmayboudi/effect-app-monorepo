@@ -8,7 +8,7 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import type { Product, WithContext } from "schema-dts";
 import { NextIntlClientProvider } from "next-intl";
-import LocaleSwitcher from "@/component/ui/locale-switcher";
+import LocaleSwitcher from "@/component/locale-switcher";
 import { getLocale } from "next-intl/server";
 
 const geistSans = Geist({
