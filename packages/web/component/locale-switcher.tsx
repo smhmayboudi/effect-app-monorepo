@@ -7,20 +7,20 @@ import { useFormatter } from "next-intl";
 
 export default function LocaleSwitcher() {
   const format = useFormatter();
-  const curLocale = useLocale();
+  const locale = useLocale();
   const pathname = usePathname();
 
   return (
     <div>
       {format.list(
-        routing.locales.map((locale) => (
+        routing.locales.map((loc) => (
           <Link
-            className={curLocale === locale ? "underline" : undefined}
+            className={loc === locale ? "underline" : undefined}
             href={pathname}
-            key={locale}
-            locale={locale}
+            key={loc}
+            locale={loc}
           >
-            {locale.toUpperCase()}
+            {loc.toUpperCase()}
           </Link>
         )),
         "locale"
