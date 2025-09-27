@@ -14,8 +14,8 @@ export function ButtonSubmit({ formName, ...props }: ButtonSubmitProps) {
 
   const handleClick = () => {
     sendGTMEvent({
-      buttonText: "Submit",
-      event: "formSubmission",
+      buttonText: "submit",
+      event: "form-submit",
       status: pending ? "pending" : "submitting",
       value: formName,
     });

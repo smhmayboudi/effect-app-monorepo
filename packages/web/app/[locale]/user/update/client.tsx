@@ -4,6 +4,7 @@ import { useState, useEffect, useActionState } from "react";
 import useAuth from "@/hook/use-auth";
 import { update } from "./action";
 import { useTranslations } from "next-intl";
+import { ButtonSubmit } from "@/component/ui/button-submit";
 
 export default function Client() {
   const t = useTranslations("user.update");
@@ -35,6 +36,8 @@ export default function Client() {
           <div>
             <label htmlFor="name">Name</label>
             <input
+              aria-disabled={pending}
+              disabled={pending}
               id="name"
               name="name"
               onChange={(e) => setName(e.target.value)}
@@ -51,9 +54,7 @@ export default function Client() {
               ))}
             </div>
           )}
-          <button aria-disabled={pending} disabled={pending} type="submit">
-            {pending ? "Submitting..." : "Submit"}
-          </button>
+          <ButtonSubmit formName="update" />
           {state?.message && (
             <p
               aria-live="polite"

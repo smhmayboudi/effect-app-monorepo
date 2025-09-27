@@ -2,7 +2,7 @@
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import type { HttpClientError } from "@effect/platform/HttpClientError";
-import { IdempotencyKeyClient } from "@template/domain";
+import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
 import type { ActorErrorUnauthorized } from "@template/domain/Actor";
 import type { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain";
 import type { ServiceErrorAlreadyExists } from "@template/domain/service/application/ServiceApplicationErrorAlreadyExists";
@@ -15,6 +15,7 @@ import { useState, useEffect, useMemo } from "react";
 import { v7 } from "uuid";
 import { HttpClient } from "@/util/http-client";
 import { useTranslations } from "next-intl";
+import { ButtonSubmit } from "@/component/ui/button-submit";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
@@ -37,11 +38,7 @@ export default function Client() {
   const create = useMemo(
     () =>
       HttpClient.query("service", "create", {
-        headers: {
-          "idempotency-key": IdempotencyKeyClient.IdempotencyKeyClient.make(
-            v7()
-          ),
-        },
+        headers: { "idempotency-key": IdempotencyKeyClient.make(v7()) },
         payload: { name },
         reactivityKeys: ["services"],
       }),
@@ -68,6 +65,8 @@ export default function Client() {
         <div>
           <label htmlFor="name">Name</label>
           <input
+            // aria-disabled={pending}
+            // disabled={pending}
             id="name"
             name="name"
             onChange={(e) => setName(e.target.value)}
@@ -76,8 +75,26 @@ export default function Client() {
             type="text"
             value={name}
           />
+          {/* {state?.errors?.name && (
+            <div style={{ color: "red" }}>
+              {state.errors.name.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </div>
+          )} */}
         </div>
-        <button type="submit">Submit</button>
+        <ButtonSubmit formName="service-create" />
+        {/* {state?.message && (
+          <p
+            aria-live="polite"
+            role="status"
+            style={{
+              color: state.message.includes("successfully") ? "green" : "red",
+            }}
+          >
+            {state.message}
+          </p>
+        )} */}
       </form>
       {result &&
         Result.builder(result)

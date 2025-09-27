@@ -2,13 +2,14 @@
 
 import { useActionState, useState } from "react";
 import useAuth from "@/hook/use-auth";
-import { change } from "./action";
+import { changePassword } from "./action";
 import { useTranslations } from "next-intl";
+import { ButtonSubmit } from "@/component/ui/button-submit";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
   const { loading, session } = useAuth();
-  const [state, action, pending] = useActionState(change, null);
+  const [state, action, pending] = useActionState(changePassword, null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -21,8 +22,10 @@ export default function Client() {
       ) : (
         <form action={action}>
           <input
+            aria-disabled={pending}
             autoComplete="username"
             defaultValue={session.user.email}
+            disabled={pending}
             hidden={true}
             id="username"
             name="username"
@@ -31,7 +34,9 @@ export default function Client() {
           <div>
             <label htmlFor="currentPassword">Current Password</label>
             <input
+              aria-disabled={pending}
               autoComplete="current-password"
+              disabled={pending}
               id="currentPassword"
               name="currentPassword"
               onChange={(e) => setCurrentPassword(e.target.value)}
@@ -51,7 +56,9 @@ export default function Client() {
           <div>
             <label htmlFor="newPassword">New Password</label>
             <input
+              aria-disabled={pending}
               autoComplete="new-password"
+              disabled={pending}
               id="newPassword"
               name="newPassword"
               onChange={(e) => setNewPassword(e.target.value)}
@@ -68,9 +75,7 @@ export default function Client() {
               ))}
             </div>
           )}
-          <button aria-disabled={pending} disabled={pending} type="submit">
-            {pending ? "Submitting..." : "Submit"}
-          </button>
+          <ButtonSubmit formName="change-password" />
           {state?.message && (
             <p
               aria-live="polite"

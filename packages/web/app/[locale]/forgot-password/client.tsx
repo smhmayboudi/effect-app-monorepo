@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { forgotPassword } from "./action";
 import { useTranslations } from "next-intl";
+import { ButtonSubmit } from "@/component/ui/button-submit";
 
 export default function Client() {
   const t = useTranslations("forgot-password");
@@ -16,6 +17,8 @@ export default function Client() {
         <div>
           <label htmlFor="email">Email</label>
           <input
+            aria-disabled={pending}
+            disabled={pending}
             id="email"
             name="email"
             onChange={(e) => setEmail(e.target.value)}
@@ -32,9 +35,7 @@ export default function Client() {
             ))}
           </div>
         )}
-        <button aria-disabled={pending} disabled={pending} type="submit">
-          Submit
-        </button>
+        <ButtonSubmit formName="forgot-password" />
         {state?.message && (
           <p
             aria-live="polite"

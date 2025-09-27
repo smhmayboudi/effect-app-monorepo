@@ -15,7 +15,7 @@ class SignUpError extends Schema.TaggedError<SignUpError>("SignUpError")(
   { message: Schema.String }
 ) {}
 
-export async function signUp(
+export async function signUpEmail(
   state: FormState,
   formData: FormData
 ): Promise<FormState> {

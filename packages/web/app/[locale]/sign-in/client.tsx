@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { signInEmail } from "./actoin";
 import { useTranslations } from "next-intl";
+import { ButtonSubmit } from "@/component/ui/button-submit";
 
 export default function Client() {
   const t = useTranslations("sign-in");
@@ -17,7 +18,9 @@ export default function Client() {
         <div>
           <label htmlFor="email">Email</label>
           <input
+            aria-disabled={pending}
             autoComplete="username"
+            disabled={pending}
             id="email"
             name="email"
             onChange={(e) => setEmail(e.target.value)}
@@ -37,7 +40,9 @@ export default function Client() {
         <div>
           <label htmlFor="password">Password</label>
           <input
+            aria-disabled={pending}
             autoComplete="current-password"
+            disabled={pending}
             id="password"
             name="password"
             onChange={(e) => setPassword(e.target.value)}
@@ -54,9 +59,7 @@ export default function Client() {
             ))}
           </div>
         )}
-        <button aria-disabled={pending} disabled={pending} type="submit">
-          Submit
-        </button>
+        <ButtonSubmit formName="sign-in" />
         {state?.message && (
           <p
             aria-live="polite"

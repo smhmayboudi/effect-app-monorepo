@@ -13,7 +13,7 @@ class UserChangePasswordError extends Schema.TaggedError<UserChangePasswordError
   "UserChangePasswordError"
 )("UserChangePasswordError", { message: Schema.String }) {}
 
-export async function change(
+export async function changePassword(
   state: FormState,
   formData: FormData
 ): Promise<FormState> {
