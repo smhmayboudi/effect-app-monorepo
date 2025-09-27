@@ -29,8 +29,8 @@ export const options: BetterAuthOptions = {
     ipAddress: {
       ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
       disableIpTracking: false
-    }
-    // useSecureCookies: true
+    },
+    useSecureCookies: process.env.NODE_ENV === "production"
   },
   baseURL: "http://127.0.0.1:3001",
   emailAndPassword: {
