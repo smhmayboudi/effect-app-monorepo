@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { forgotPassword } from "./action";
 import { useTranslations } from "next-intl";
-import { ButtonSubmit } from "@/component/ui/button-submit";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("forgot-password");
@@ -35,7 +35,7 @@ export default function Client() {
             ))}
           </div>
         )}
-        <ButtonSubmit formName="forgot-password" />
+        <Button formName="forgot-password" />
         {state?.message && (
           <p
             aria-live="polite"

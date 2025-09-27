@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import useAuth from "@/hook/use-auth";
 import { changePassword } from "./action";
 import { useTranslations } from "next-intl";
-import { ButtonSubmit } from "@/component/ui/button-submit";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
@@ -75,7 +75,7 @@ export default function Client() {
               ))}
             </div>
           )}
-          <ButtonSubmit formName="change-password" />
+          <Button formName="change-password" />
           {state?.message && (
             <p
               aria-live="polite"

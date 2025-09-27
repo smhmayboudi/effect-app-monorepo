@@ -15,7 +15,7 @@ import { useState, useEffect, useMemo } from "react";
 import { v7 } from "uuid";
 import { HttpClient } from "@/util/http-client";
 import { useTranslations } from "next-intl";
-import { ButtonSubmit } from "@/component/ui/button-submit";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
@@ -83,7 +83,7 @@ export default function Client() {
             </div>
           )} */}
         </div>
-        <ButtonSubmit formName="service-create" />
+        <Button formName="service-create" />
         {/* {state?.message && (
           <p
             aria-live="polite"

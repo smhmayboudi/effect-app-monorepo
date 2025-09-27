@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { signUpEmail } from "./action";
 import { useTranslations } from "next-intl";
-import { ButtonSubmit } from "@/component/ui/button-submit";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("sign-up");
@@ -81,7 +81,7 @@ export default function Client() {
             ))}
           </div>
         )}
-        <ButtonSubmit formName="sign-up" />
+        <Button formName="sign-up" />
         {state?.message && (
           <p
             aria-live="polite"

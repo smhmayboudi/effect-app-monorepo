@@ -4,7 +4,7 @@ import { useState, useEffect, useActionState } from "react";
 import useAuth from "@/hook/use-auth";
 import { update } from "./action";
 import { useTranslations } from "next-intl";
-import { ButtonSubmit } from "@/component/ui/button-submit";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.update");
@@ -54,7 +54,7 @@ export default function Client() {
               ))}
             </div>
           )}
-          <ButtonSubmit formName="update" />
+          <Button formName="update" />
           {state?.message && (
             <p
               aria-live="polite"

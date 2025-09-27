@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { signInEmail } from "./actoin";
 import { useTranslations } from "next-intl";
-import { ButtonSubmit } from "@/component/ui/button-submit";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("sign-in");
@@ -59,7 +59,7 @@ export default function Client() {
             ))}
           </div>
         )}
-        <ButtonSubmit formName="sign-in" />
+        <Button formName="sign-in" />
         {state?.message && (
           <p
             aria-live="polite"

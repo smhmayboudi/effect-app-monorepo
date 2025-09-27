@@ -4,12 +4,11 @@ import { sendGTMEvent } from "@next/third-parties/google";
 import { ButtonHTMLAttributes } from "react";
 import { useFormStatus } from "react-dom";
 
-export interface ButtonSubmitProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   formName: string;
 }
 
-export function ButtonSubmit({ formName, ...props }: ButtonSubmitProps) {
+export default function Button({ formName, ...props }: ButtonProps) {
   const { pending } = useFormStatus();
 
   const handleClick = () => {
@@ -25,8 +24,8 @@ export function ButtonSubmit({ formName, ...props }: ButtonSubmitProps) {
     <button
       aria-disabled={pending}
       disabled={pending}
-      type="submit"
       onClick={handleClick}
+      type="submit"
       {...props}
     >
       {pending ? "Submitting..." : "Submit"}
