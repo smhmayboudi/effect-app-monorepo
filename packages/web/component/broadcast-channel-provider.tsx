@@ -1,55 +1,55 @@
 "use client";
 
-import {
+import React, {
+  PropsWithChildren,
   createContext,
-  type FC,
-  type PropsWithChildren,
   useContext,
-  useEffect,
   useMemo,
 } from "react";
-
 import { BroadcastChannelService } from "@/service/broadcast-channel";
 
 interface BroadcastChannelContextType {
-  broadcastChannelService: BroadcastChannelService;
+  onMessage<T>(callback: (message: T) => void): void;
+  postMessage: <T>(message: T) => void;
 }
+
+const BroadcastChannelContext =
+  createContext<BroadcastChannelContextType | null>(null);
 
 interface BroadcastChannelProviderProps {
   channelName: string;
 }
 
-const broadcastChannelContext =
-  createContext<BroadcastChannelContextType | null>(null);
-
-export const BroadcastChannelProvider: FC<
-  PropsWithChildren<BroadcastChannelProviderProps>
-> = ({ channelName, children }) => {
+export function BroadcastChannelProvider({
+  channelName,
+  children,
+}: PropsWithChildren<BroadcastChannelProviderProps>) {
   const broadcastChannelService = useMemo(
     () => new BroadcastChannelService(channelName),
     [channelName]
   );
 
-  useEffect(() => {
-    return () => {
-      broadcastChannelService.close();
-    };
-  }, [broadcastChannelService]);
+  const onMessage = <T,>(callback: (message: T) => void): void => {
+    broadcastChannelService.onMessage(callback);
+  };
+
+  const postMessage = <T,>(message: T): void => {
+    broadcastChannelService.postMessage(message);
+  };
 
   return (
-    <broadcastChannelContext.Provider value={{ broadcastChannelService }}>
+    <BroadcastChannelContext.Provider value={{ onMessage, postMessage }}>
       {children}
-    </broadcastChannelContext.Provider>
+    </BroadcastChannelContext.Provider>
   );
-};
+}
 
-export const useBroadcastChannel = (): BroadcastChannelService => {
-  const context = useContext(broadcastChannelContext);
-  if (!context) {
+export function useBroadcastChannel() {
+  const context = useContext(BroadcastChannelContext);
+  if (context === undefined) {
     throw new Error(
       "useBroadcastChannel must be used within a BroadcastChannelProvider"
     );
   }
-
-  return context.broadcastChannelService;
-};
+  return context;
+}

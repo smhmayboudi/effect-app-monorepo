@@ -21,7 +21,7 @@ type LeaderMessage = {
  */
 export class LeaderElectionService {
   private channel: BroadcastChannelService;
-  private electionInterval: number = 5000; // 5 seconds
+  private electionInterval: number = 5000;
   private intervalId?: number;
   private isLeader: boolean = false;
   private leaderCallbacks: Array<(isLeader: boolean) => void> = [];
@@ -33,7 +33,6 @@ export class LeaderElectionService {
     this.channel.onMessage<LeaderMessage>((message) => {
       this.handleLeaderMessage(message);
     });
-    // eslint-disable-next-line sonarjs/pseudo-random
     this.tabId = Math.random().toString(36).substring(2, 10);
     this.startElection();
   }

@@ -62,38 +62,31 @@ export default function ThemeProvider({
     fetchInitialTheme();
   }, []);
 
-  useEffect(() => {
-    const cleanup = broadcastChannel.onMessage<ThemeMessage>((message) => {
+  broadcastChannel &&
+    broadcastChannel.onMessage<ThemeMessage>((message) => {
       if (message.type === "THEME_THEME") {
         setThemePreference(message.theme);
       }
     });
 
-    return () => {
-      cleanup();
-    };
-  }, [broadcastChannel]);
-
   const handleSetThemePreference = useCallback<
     Dispatch<SetStateAction<ThemePreference>>
-  >(
-    (action) => {
-      setThemePreference((prev) => {
-        const newValue = typeof action === "function" ? action(prev) : action;
+  >((action) => {
+    setThemePreference((prev) => {
+      const theme = typeof action === "function" ? action(prev) : action;
+      broadcastChannel &&
         broadcastChannel.postMessage<ThemeMessage>({
           type: "THEME_THEME",
-          theme: newValue,
+          theme,
         });
-        // fetch(href("/api/preferences/*", { "*": "theme" }), {
-        //   body: JSON.stringify({ theme: newValue }),
-        //   headers: { "Content-Type": "application/json" },
-        //   method: "POST",
-        // });
-        return newValue;
-      });
-    },
-    [broadcastChannel]
-  );
+      // fetch(href("/api/preferences/*", { "*": "theme" }), {
+      //   body: JSON.stringify({ theme: theme }),
+      //   headers: { "Content-Type": "application/json" },
+      //   method: "POST",
+      // });
+      return theme;
+    });
+  }, []);
 
   useEffect(() => {
     if (!isHydrated) {
@@ -113,7 +106,7 @@ export default function ThemeProvider({
     mediaQuery.addEventListener("change", handleSystemChange);
 
     return () => mediaQuery.removeEventListener("change", handleSystemChange);
-  }, [themePreference, isHydrated]);
+  }, [isHydrated, themePreference]);
 
   useEffect(() => {
     if (!isHydrated) {
@@ -136,19 +129,19 @@ export default function ThemeProvider({
   );
 }
 
-export const useDarkMode = () => {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error("useDarkMode must be used within a ThemeProvider");
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
 
   return context;
 };
 
-export const DarkModeStatus = () => {
+export const ThemeModeStatus = () => {
   const locale = useLocale();
   const { currentTheme, isHydrated, setThemePreference, themePreference } =
-    useDarkMode();
+    useTheme();
 
   const cycleTheme = useCallback(() => {
     setThemePreference((prev) => {
@@ -173,6 +166,14 @@ export const DarkModeStatus = () => {
 
     return themePreference === "dark" ? "🌙 Dark" : "☀️ Light";
   }, [currentTheme, themePreference, isHydrated]);
+
+  if (!isHydrated) {
+    return (
+      <div className={`fixed flex ${locale === "fa" ? "left-0" : "right-0"}`}>
+        <button>🌓 System</button>
+      </div>
+    );
+  }
 
   return (
     <div className={`fixed flex ${locale === "fa" ? "left-0" : "right-0"}`}>

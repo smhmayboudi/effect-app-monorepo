@@ -1,7 +1,7 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import ThemeProvider, { DarkModeStatus } from "@/component/theme-provider";
+import ThemeProvider, { ThemeModeStatus } from "@/component/theme-provider";
 import { WebVitals } from "@/component/web-vitals";
 import Nav from "@/component/nav";
 import { headers } from "next/headers";
@@ -63,7 +63,7 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <BroadcastChannelProvider channelName="__next_web">
             <ThemeProvider>
-              <DarkModeStatus />
+              <ThemeModeStatus />
               <LocaleSwitcher />
               <br />
               <Nav />
