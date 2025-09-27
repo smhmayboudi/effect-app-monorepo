@@ -1,47 +1,43 @@
-import ActiveLink from "@/component/ui/active-link";
+import Link from "@/component/ui/link";
 
 export default function Nav() {
   return (
     <div>
-      <ActiveLink activeClassName="active" href={"/debug-auth"}>
+      <Link classNameActive="active" href={"/debug-auth"}>
         debug-auth
-      </ActiveLink>
-      &nbsp;
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/forgot-password"}>
+      <Link classNameActive="active" href={"/forgot-password"}>
         forgot-password
-      </ActiveLink>
-      &nbsp;
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/sign-in"}>
+      <Link classNameActive="active" href={"/sign-in"}>
         sign-in
-      </ActiveLink>
-      &nbsp;
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/sign-up"}>
+      <Link classNameActive="active" href={"/sign-up"}>
         sign-up
-      </ActiveLink>
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/admin/dashboard"}>
+      <Link classNameActive="active" href={"/admin/dashboard"}>
         admin dashboard
-      </ActiveLink>
-      &nbsp;
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/user/change-password"}>
+      <Link classNameActive="active" href={"/user/change-password"}>
         user change-password
-      </ActiveLink>
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/user/dashboard"}>
+      <Link classNameActive="active" href={"/user/dashboard"}>
         user dashboard
-      </ActiveLink>
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/user/service-create"}>
+      <Link classNameActive="active" href={"/user/service-create"}>
         user service-create
-      </ActiveLink>
+      </Link>
       <br />
-      <ActiveLink activeClassName="active" href={"/user/update"}>
+      <Link classNameActive="active" href={"/user/update"}>
         user update
-      </ActiveLink>
+      </Link>
       <br />
     </div>
   );
