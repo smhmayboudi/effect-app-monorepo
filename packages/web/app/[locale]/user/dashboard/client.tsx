@@ -1,6 +1,6 @@
 "use client";
 
-import { ServiceList } from "@/component/service-list";
+import ServiceList from "@/component/service-list";
 import useAuth from "@/hook/use-auth";
 import { useTranslations } from "next-intl";
 

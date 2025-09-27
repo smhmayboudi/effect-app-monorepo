@@ -7,7 +7,7 @@ import Link from "next/link";
 
 type ServiceListProps = { params: { userId?: string } };
 
-export function ServiceList({ params }: ServiceListProps) {
+export default function ServiceList({ params }: ServiceListProps) {
   const [userId, setUserId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
