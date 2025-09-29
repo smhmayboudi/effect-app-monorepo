@@ -59,7 +59,9 @@ export default function Client() {
             ))}
           </div>
         )}
-        <Button formName="sign-in" />
+        <Button aria-disabled={pending} disabled={pending} type="submit">
+          {pending ? "Submitting..." : "Submit"}
+        </Button>
         {state?.message && (
           <p
             aria-live="polite"
