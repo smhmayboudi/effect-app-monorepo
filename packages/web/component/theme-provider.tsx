@@ -13,7 +13,7 @@ import {
 } from "react";
 import { useBroadcastChannel } from "./broadcast-channel-provider";
 
-type ThemePreference = "dark" | "light" | "system";
+export type ThemePreference = "dark" | "light" | "system";
 
 type ThemeMessage = {
   theme: ThemePreference;

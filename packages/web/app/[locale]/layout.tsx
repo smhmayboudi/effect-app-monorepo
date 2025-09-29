@@ -11,6 +11,7 @@ import { NextIntlClientProvider } from "next-intl";
 import LocaleSwitcher from "@/component/locale-switcher";
 import { getLocale } from "next-intl/server";
 import { BroadcastChannelProvider } from "@/component/broadcast-channel-provider";
+import { getThemePreferenceFromCookie } from "@/util/theme";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -54,6 +55,7 @@ export default async function RootLayout({
   const locale = await getLocale();
   const headerStore = await headers();
   const nonce = headerStore.get("x-nonce") ?? "";
+  const serverThemePreference = await getThemePreferenceFromCookie();
 
   return (
     <html dir={locale === "fa" ? "rtl" : "ltr"} lang={locale}>
@@ -62,7 +64,7 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider>
           <BroadcastChannelProvider channelName="__next_web">
-            <ThemeProvider>
+            <ThemeProvider serverThemePreference={serverThemePreference}>
               <ThemeModeStatus />
               <LocaleSwitcher />
               <br />
