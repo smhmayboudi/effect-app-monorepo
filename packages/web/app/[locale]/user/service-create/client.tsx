@@ -1,8 +1,8 @@
 "use client";
 
-import { useAtomValue, useAtomSet, Result } from "@effect-atom/atom-react";
+import { useAtomSet } from "@effect-atom/atom-react";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { v7 } from "uuid";
 import { HttpClient } from "@/util/http-client";
 import { useTranslations } from "next-intl";
@@ -10,28 +10,36 @@ import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
-  const [name, setName] = useState("");
-  const [pending, setPending] = useState(false);
+  const httpClientCreate = HttpClient.mutation("service", "create");
+  const createPromise = useAtomSet(httpClientCreate, { mode: "promise" });
 
-  const create = HttpClient.mutation("service", "create");
-  const createPromise = useAtomSet(create, { mode: "promise" });
-  const result = useAtomValue(create);
+  type FormState = {
+    errors?: {
+      name?: string[];
+    };
+    message?: string;
+  } | null;
 
-  const action = async () => {
-    setPending(true);
+  const serviceCreate = async (state: FormState, formData: FormData) => {
+    const name = formData.get("name") as string;
     try {
       const result = await createPromise({
         headers: { "idempotency-key": IdempotencyKeyClient.make(v7()) },
         payload: { name },
         reactivityKeys: ["services"],
       });
-      console.log("Service created:", result);
+      return {
+        message: `Service ${result.data} cerated successfully!`,
+      } as FormState;
     } catch (error) {
-      console.error("Failed to create service:", error);
-    } finally {
-      setPending(false);
+      return {
+        message: `Failed to create service: ${error}`,
+      } as FormState;
     }
   };
+
+  const [state, action, pending] = useActionState(serviceCreate, null);
+  const [name, setName] = useState("");
 
   return (
     <div>
@@ -51,34 +59,28 @@ export default function Client() {
             value={name}
           />
         </div>
+        {state?.errors?.name && (
+          <div style={{ color: "red" }}>
+            {state.errors.name.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
+          </div>
+        )}
         <Button type="submit" disabled={pending}>
           {pending ? "Submitting..." : "Submit"}
         </Button>
+        {state?.message && (
+          <p
+            aria-live="polite"
+            role="status"
+            style={{
+              color: state.message.includes("successfully") ? "green" : "red",
+            }}
+          >
+            {state.message}
+          </p>
+        )}
       </form>
-      {result &&
-        Result.builder(result)
-          .onDefect((defect) => <div>Defect: {String(defect)}</div>)
-          .onErrorTag("ActorErrorUnauthorized", (error) => (
-            <div>ActorErrorUnauthorized: {error.toString()}</div>
-          ))
-          .onErrorTag("ParseError", (error) => (
-            <div>ParseError: {error.toString()}</div>
-          ))
-          .onErrorTag("RequestError", (error) => (
-            <div>RequestError: {error.toString()}</div>
-          ))
-          .onErrorTag("ResponseError", (error) => (
-            <div>ResponseError: {error.toString()}</div>
-          ))
-          .onErrorTag("ServiceErrorAlreadyExists", (error) => (
-            <div>ServiceErrorAlreadyExists: {error.toString()}</div>
-          ))
-          .onInitial(() => null)
-          .onSuccess((data) => (
-            <div>Service {data.data} created successfully!</div>
-          ))
-          .onWaiting(() => <div>Creating service...</div>)
-          .render()}
     </div>
   );
 }
