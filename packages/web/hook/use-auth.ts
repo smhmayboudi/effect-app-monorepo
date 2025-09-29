@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { authClient } from "@/util/auth-client";
+import { getSession } from "./use-auth.actions";
+import type { authClient } from "@/util/auth-client";
 
 export default function useAuth() {
   const [session, setSession] = useState<
@@ -12,7 +13,7 @@ export default function useAuth() {
   const refreshSession = useCallback(async () => {
     setLoading(true);
     try {
-      setSession((await authClient.getSession()).data);
+      setSession((await getSession()).data);
     } catch (error) {
       console.error("Failed to refresh session:", error);
       setSession(null);
