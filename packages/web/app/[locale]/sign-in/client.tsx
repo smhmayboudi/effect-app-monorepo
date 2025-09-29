@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { signInEmail } from "./actoin";
+import { signInEmail } from "./action";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";
 
