@@ -41,7 +41,7 @@ export default function ServiceList({ params }: ServiceListProps) {
   const result = useAtomValue(readAll);
 
   return Result.builder(result)
-    .onDefect(() => <div>Defect</div>)
+    .onDefect((defect) => <div>Defect: {String(defect)}</div>)
     .onErrorTag("ActorErrorUnauthorized", (error) => (
       <div>ActorErrorUnauthorized: {error.toString()}</div>
     ))
