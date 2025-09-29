@@ -11,8 +11,9 @@ export default function Client() {
   return (
     <div>
       <h2>{t("title")}</h2>
-      {loading ? <div>LOADING...</div> : <></>}
-      {!session ? (
+      {loading ? (
+        <div>LOADING...</div>
+      ) : !session ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <ServiceList params={{}} />

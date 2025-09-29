@@ -15,8 +15,9 @@ export default function Client({ serviceId }: ClientProps) {
   return (
     <div>
       <h2>{t("title", { serviceId })}</h2>
-      {loading ? <div>LOADING...</div> : <></>}
-      {!session ? (
+      {loading ? (
+        <div>LOADING...</div>
+      ) : !session ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <Link href={`http://127.0.0.1:3001/auth/${serviceId}/reference`}>
