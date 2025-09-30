@@ -7,10 +7,10 @@ const withNextBundleAnalyzer = NextBundleAnalyzer({
 });
 const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
+  output: "standalone",
   removeConsole: {
     exclude: ["debug", "error"],
   },
-  output: "standalone",
 };
 
 export default withNextBundleAnalyzer(withNextIntl(nextConfig));
