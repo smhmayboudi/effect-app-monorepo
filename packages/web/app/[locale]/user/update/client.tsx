@@ -8,7 +8,7 @@ import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.update");
-  const { loading, refreshSession, session } = useAuth();
+  const { loading, session } = useAuth();
   const [state, action, pending] = useActionState(update, null);
 
   const [name, setName] = useState("");
@@ -18,12 +18,6 @@ export default function Client() {
       setName(session.user.name);
     }
   }, [session]);
-
-  useEffect(() => {
-    if (!state?.errors) {
-      refreshSession();
-    }
-  }, [state, refreshSession]);
 
   return (
     <div>
