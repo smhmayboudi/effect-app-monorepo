@@ -15,7 +15,6 @@ export default function useAuth() {
     try {
       setSession((await getSession()).data);
     } catch (error) {
-      console.error("Failed to refresh session:", error);
       setSession(null);
     } finally {
       setLoading(false);
