@@ -45,7 +45,7 @@ export async function signInEmail(
         Effect.map(
           () =>
             ({
-              message: "User sign up successfully!",
+              message: "User sign in successfully!",
             } as FormState)
         )
       )
