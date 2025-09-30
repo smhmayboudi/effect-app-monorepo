@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import useAuth from "@/hook/use-auth";
+import Button from "@/component/ui/button";
 
 export default function Client() {
   const { loading, refreshSession, session } = useAuth();
@@ -25,13 +26,13 @@ export default function Client() {
       <p>
         <strong>Loading:</strong> {loading ? "Yes" : "No"}
       </p>
-      <button
-        onClick={refreshSession}
+      <Button
         aria-disabled={loading}
         disabled={loading}
+        onClick={refreshSession}
       >
-        {loading ? "Refreshing..." : "Refresh Session"}
-      </button>
+        {loading ? "Refreshing..." : "Refresh"}
+      </Button>
     </div>
   );
 }
