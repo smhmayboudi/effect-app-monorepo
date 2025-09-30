@@ -50,7 +50,7 @@ export async function serviceCreate(state: FormState, formData: FormData) {
         }
 
         return Effect.succeed({
-          message: `Failed to sign up. Please try again. ${error.message}`,
+          message: `Failed to service create. Please try again. ${error.message}`,
         } as FormState);
       })
     )
