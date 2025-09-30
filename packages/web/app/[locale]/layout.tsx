@@ -53,8 +53,7 @@ export default async function RootLayout({
     name: "Create Next App",
   };
   const locale = await getLocale();
-  const headerStore = await headers();
-  const nonce = headerStore.get("x-nonce") ?? "";
+  const nonce = (await headers()).get("x-nonce") ?? "";
   const serverThemePreference = await getThemePreferenceFromCookie();
 
   return (
