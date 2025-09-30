@@ -1,31 +1,53 @@
-import { type MiddlewareConfig, NextRequest } from "next/server";
+import { type MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 import { v7 } from "uuid";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
+import { getCookieCache } from "better-auth/cookies";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const isProtectedRoute = ["/admin", "/user"].some((route) =>
+    request.nextUrl.pathname.includes(route)
+  );
+  const session = await getCookieCache(request, {
+    cookiePrefix: "effect-app-monorepo-00000000-0000-0000-0000-000000000000",
+    secret: "better-auth-secret-123456789-00000000-0000-0000-0000-000000000000",
+  });
+  if (isProtectedRoute && !session) {
+    const pathname = request.nextUrl.pathname;
+    const locale = pathname.split("/")[1];
+    const currentLocale = routing.locales.includes(locale as any)
+      ? locale
+      : routing.defaultLocale;
+
+    return NextResponse.redirect(
+      new URL(`/${currentLocale}/sign-in`, request.nextUrl)
+    );
+  }
+
   const nonce = Buffer.from(v7()).toString("base64");
   const cspHeader =
-    "base-uri 'self' http://127.0.0.1:3002 http://localhost:3002; " +
-    "child-src 'none'; " +
-    "connect-src 'self' http://127.0.0.1:3001 http://127.0.0.1:3002 http://localhost:3001 http://localhost:3002 https://www.google-analytics.com; " +
-    "default-src 'self'; " +
-    "font-src 'self'; " +
-    "form-action 'self'; " +
-    "frame-ancestors 'none'; " +
-    "frame-src 'none'; " +
-    "img-src 'self' blob: data: https://www.googletagmanager.com/; " +
-    "media-src 'none'; " +
-    "object-src 'none'; " +
-    "report-uri /api/csp; " +
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${
-      process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'"
-    } https://www.googletagmanager.com; ` +
-    `style-src 'self' 'nonce-${nonce}' ${
-      process.env.NODE_ENV === "production" ? "" : "'unsafe-inline'"
-    }; ` +
-    "upgrade-insecure-requests; " +
-    "worker-src 'none';";
+    "base-uri 'self' http://127.0.0.1:3002; " +
+      "child-src 'none'; " +
+      "connect-src 'self' http://127.0.0.1:3001 http://127.0.0.1:3002 https://www.google-analytics.com; " +
+      "default-src 'self'; " +
+      "font-src 'self'; " +
+      "form-action 'self'; " +
+      "frame-ancestors 'none'; " +
+      "frame-src 'none'; " +
+      "img-src 'self' blob: data: https://www.googletagmanager.com/; " +
+      "media-src 'none'; " +
+      "object-src 'none'; " +
+      "report-uri /api/csp; " +
+      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${
+        process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'"
+      } https://www.googletagmanager.com; ` +
+      `style-src 'self' 'nonce-${nonce}' ${
+        process.env.NODE_ENV === "production" ? "" : "'unsafe-inline'"
+      }; ` +
+      process.env.NODE_ENV ===
+    "production"
+      ? "upgrade-insecure-requests; "
+      : "" + "worker-src 'none';";
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("Content-Security-Policy", cspHeader);
@@ -44,17 +66,10 @@ export function middleware(request: NextRequest) {
 
 export const config: MiddlewareConfig = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     {
       missing: [
-        { type: "header", key: "next-router-prefetch" },
-        { type: "header", key: "purpose", value: "prefetch" },
+        { key: "next-router-prefetch", type: "header" },
+        { key: "purpose", type: "header", value: "prefetch" },
       ],
       source:
         "/((?!_next/image|_next/static|api|apple-icon$|favicon.ico|icon$|manifest.webmanifest|opengraph-image$|robots.txt|sitemap.xml|twitter-image$).*)",
