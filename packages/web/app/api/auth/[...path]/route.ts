@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const allowedOrigins = ["http://127.0.0.1:3002", "http://localhost:3002"];
+const allowedOrigins = ["http://127.0.0.1:3002"];
 
 async function handler(request: NextRequest) {
   try {
-    const { pathname } = new URL(request.url);
-    const authUrl = `http://127.0.0.1:3001/auth/00000000-0000-0000-0000-000000000000/${pathname.replace(
-      "/api/auth/",
-      ""
-    )}`;
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
     const authHeader = request.headers.get("authorization");
@@ -23,12 +18,19 @@ async function handler(request: NextRequest) {
     if (origin) {
       headers.set("origin", origin);
     }
-    const response = await fetch(authUrl, {
-      body: request.method !== "GET" ? await request.text() : undefined,
-      credentials: "include",
-      headers,
-      method: request.method,
-    });
+    const { pathname } = new URL(request.url);
+    const response = await fetch(
+      `http://127.0.0.1:3001/auth/00000000-0000-0000-0000-000000000000/${pathname.replace(
+        "/api/auth/",
+        ""
+      )}`,
+      {
+        body: request.method !== "GET" ? await request.text() : undefined,
+        credentials: "include",
+        headers,
+        method: request.method,
+      }
+    );
     const data = await response.json();
     const res = NextResponse.json(data, {
       headers: {
