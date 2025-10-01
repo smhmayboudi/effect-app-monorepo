@@ -1,9 +1,21 @@
 import { Config } from "effect"
 
+const ClientRunnerAddressLive = Config.nested(
+  Config.all({
+    host: Config.string("HOST").pipe(
+      Config.withDefault("127.0.0.1")
+    ),
+    port: Config.integer("PORT").pipe(
+      Config.withDefault(8088)
+    )
+  }),
+  "RUNNER_ADDRESS"
+)
+
 const ClientShardManagerAddressLive = Config.nested(
   Config.all({
     host: Config.string("HOST").pipe(
-      Config.withDefault("localhost")
+      Config.withDefault("127.0.0.1")
     ),
     port: Config.integer("PORT").pipe(
       Config.withDefault(8080)
@@ -21,39 +33,11 @@ const ClientSqliteLive = Config.nested(
   "SQLITE"
 )
 
-const WorkflowShardManagerAddressLive = Config.nested(
+const ClientConfigLive = Config.nested(
   Config.all({
-    host: Config.string("HOST").pipe(
-      Config.withDefault("localhost")
-    ),
-    port: Config.integer("PORT").pipe(
-      Config.withDefault(8080)
-    )
-  }),
-  "SHARD_MANAGER_ADDRESS"
-)
-
-const WorkflowSqliteLive = Config.nested(
-  Config.all({
-    filename: Config.string("FILENAME").pipe(
-      Config.withDefault("./db-workflow.sqlite")
-    )
-  }),
-  "SQLITE"
-)
-const WorkflowLive = Config.nested(
-  Config.all({
-    ShardManagerAddress: WorkflowShardManagerAddressLive,
-    Sqlite: WorkflowSqliteLive
-  }),
-  "WORKFLOW"
-)
-
-export const ClientConfigLive = Config.nested(
-  Config.all({
-    ShardManagerAddress: ClientShardManagerAddressLive,
-    Sqlite: ClientSqliteLive,
-    Workflow: WorkflowLive
+    runnerAddress: ClientRunnerAddressLive,
+    shardManagerAddress: ClientShardManagerAddressLive,
+    sqlite: ClientSqliteLive
   }),
   "CLIENT"
 )
@@ -61,7 +45,7 @@ export const ClientConfigLive = Config.nested(
 const ServerShardManagerAddressLive = Config.nested(
   Config.all({
     host: Config.string("HOST").pipe(
-      Config.withDefault("localhost")
+      Config.withDefault("127.0.0.1")
     ),
     port: Config.integer("PORT").pipe(
       Config.withDefault(8080)
@@ -79,10 +63,18 @@ const ServerSqliteLive = Config.nested(
   "SQLITE"
 )
 
-export const ServerConfigLive = Config.nested(
+const ServerConfigLive = Config.nested(
   Config.all({
-    ShardManagerAddress: ServerShardManagerAddressLive,
-    Sqlite: ServerSqliteLive
+    shardManagerAddress: ServerShardManagerAddressLive,
+    sqlite: ServerSqliteLive
   }),
   "SERVER"
+)
+
+export const WorkflowConfigLive = Config.nested(
+  Config.all({
+    client: ClientConfigLive,
+    server: ServerConfigLive
+  }),
+  "WORKFLOW"
 )
