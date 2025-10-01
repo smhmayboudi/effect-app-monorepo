@@ -79,12 +79,7 @@ export const options: BetterAuthOptions = {
     debug: true,
     enabled: true
   },
-  trustedOrigins: [
-    "http://127.0.0.1:3001",
-    "http://127.0.0.1:3002",
-    "http://localhost:3001",
-    "http://localhost:3002"
-  ],
+  trustedOrigins: ["http://127.0.0.1:3001", "http://127.0.0.1:3002"],
   verification: {
     disableCleanup: false
   }
