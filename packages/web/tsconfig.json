@@ -19,6 +19,7 @@
       }
     ],
     "resolveJsonModule": true,
+    "rootDir": ".",
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2017"
