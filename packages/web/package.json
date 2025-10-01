@@ -3,7 +3,6 @@
   "dependencies": {
     "@effect-atom/atom-react": "latest",
     "@effect/platform": "latest",
-    "@next/bundle-analyzer": "^15.5.3",
     "@next/third-parties": "^15.5.3",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/api-logs": "^0.205.0",
