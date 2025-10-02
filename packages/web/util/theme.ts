@@ -20,7 +20,7 @@ export async function setThemePreferenceToCookie(value: ThemePreference) {
     httpOnly: false,
     name,
     path: "/",
-    sameSite: "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
     secure: process.env.NODE_ENV === "production",
     value,
   });
