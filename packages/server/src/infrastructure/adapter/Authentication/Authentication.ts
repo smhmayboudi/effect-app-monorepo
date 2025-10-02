@@ -10,19 +10,19 @@ import { ac, roles } from "./AuthenticationAdmin.js"
 import { options } from "./AuthenticationOptions.js"
 import * as schema from "./AuthenticationSchema.js"
 
-const db = drizzle({ connection: { url: "file:db-auth.sqlite" }, logger: true })
+const db = drizzle({ connection: { url: "file:db-auth-00000000-0000-0000-0000-000000000000.sqlite" }, logger: true })
 const redis = new Redis()
-const storageKey = (key: string) => `authentication:${key}`
+const storageKey = (key: string) => `authentication:00000000-0000-0000-0000-000000000000:${key}`
 
 export const auth = betterAuth(
   deepmerge(
     options,
     {
       advanced: {
-        cookiePrefix: "effect-app-monorepo"
+        cookiePrefix: "effect-app-monorepo-00000000-0000-0000-0000-000000000000"
       },
-      appName: "@template/server",
-      basePath: "/auth",
+      appName: "@template/server/00000000-0000-0000-0000-000000000000",
+      basePath: "/auth/00000000-0000-0000-0000-000000000000",
       database: drizzleAdapter(
         db,
         { debugLogs: true, provider: "sqlite", schema }
@@ -45,7 +45,7 @@ export const auth = betterAuth(
           }
         }
       },
-      secret: "better-auth-secret-123456789"
+      secret: "better-auth-secret-123456789-00000000-0000-0000-0000-000000000000"
     } satisfies BetterAuthOptions
   ) as BetterAuthOptions
 )
