@@ -5,6 +5,9 @@ import { routing } from "@/i18n/routing";
 import { getCookieCache } from "better-auth/cookies";
 
 export async function middleware(request: NextRequest) {
+  const isAuth = ["/forgot-password", "/sign-in", "/sign-up"].some((route) =>
+    request.nextUrl.pathname.includes(route)
+  );
   const isProtectedRoute = ["/admin", "/user"].some((route) =>
     request.nextUrl.pathname.includes(route)
   );
@@ -12,12 +15,17 @@ export async function middleware(request: NextRequest) {
     cookiePrefix: "effect-app-monorepo-00000000-0000-0000-0000-000000000000",
     secret: "better-auth-secret-123456789-00000000-0000-0000-0000-000000000000",
   });
-  if (isProtectedRoute && !session) {
     const pathname = request.nextUrl.pathname;
     const locale = pathname.split("/")[1];
     const currentLocale = routing.locales.includes(locale as any)
       ? locale
       : routing.defaultLocale;
+  if (isAuth && session) {
+    const redirectUrl = new URL(`/${currentLocale}`, request.nextUrl);
+
+    return NextResponse.redirect(redirectUrl);
+  }
+  if (isProtectedRoute && !session) {
     const redirectUrl = new URL(`/${currentLocale}/sign-in`, request.nextUrl);
     redirectUrl.searchParams.set("callbackURL", pathname);
 
