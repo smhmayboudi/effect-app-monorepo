@@ -5,9 +5,17 @@ import { signInEmail } from "./action";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";
 
-export default function Client() {
+interface ClientProps {
+  callbackURL: string;
+}
+
+export default function Client({ callbackURL }: ClientProps) {
   const t = useTranslations("sign-in");
-  const [state, action, pending] = useActionState(signInEmail, null);
+  const signInEmailWithCallbackURL = signInEmail.bind(null, callbackURL);
+  const [state, action, pending] = useActionState(
+    signInEmailWithCallbackURL,
+    null
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

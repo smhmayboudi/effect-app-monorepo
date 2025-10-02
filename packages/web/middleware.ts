@@ -18,10 +18,10 @@ export async function middleware(request: NextRequest) {
     const currentLocale = routing.locales.includes(locale as any)
       ? locale
       : routing.defaultLocale;
+    const redirectUrl = new URL(`/${currentLocale}/sign-in`, request.nextUrl);
+    redirectUrl.searchParams.set("callbackURL", pathname);
 
-    return NextResponse.redirect(
-      new URL(`/${currentLocale}/sign-in`, request.nextUrl)
-    );
+    return NextResponse.redirect(redirectUrl);
   }
 
   const nonce = Buffer.from(v7()).toString("base64");

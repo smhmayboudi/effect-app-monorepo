@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Client from "./client";
 import { getTranslations } from "next-intl/server";
 
+interface PageProps {
+  searchParams: Promise<{ callbackURL?: string }>;
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("sign-up");
 
@@ -11,6 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Page() {
-  return <Client />;
+export default async function Page(props: PageProps) {
+  const { callbackURL } = await props.searchParams;
+
+  return <Client callbackURL={callbackURL ?? "/"} />;
 }

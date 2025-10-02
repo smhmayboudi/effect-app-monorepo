@@ -15,6 +15,7 @@ class SignInError extends Schema.TaggedError<SignInError>("SignInError")(
 ) {}
 
 export async function signInEmail(
+  callbackURL: string,
   state: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -33,7 +34,7 @@ export async function signInEmail(
         Effect.tryPromise({
           try: (signal) =>
             authClient.signIn.email(
-              { email, password, rememberMe: true },
+              { callbackURL, email, password, rememberMe: true },
               { signal }
             ),
           catch: (error) => new Error(`Failed to sign up user: ${error}`),

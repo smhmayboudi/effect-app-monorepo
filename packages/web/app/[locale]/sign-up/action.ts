@@ -16,6 +16,7 @@ class SignUpError extends Schema.TaggedError<SignUpError>("SignUpError")(
 ) {}
 
 export async function signUpEmail(
+  callbackURL: string,
   state: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -33,7 +34,7 @@ export async function signUpEmail(
       Effect.flatMap(({ email, name, password }) =>
         Effect.tryPromise({
           try: (signal) =>
-            authClient.signUp.email({ email, name, password }, { signal }),
+            authClient.signUp.email({ callbackURL, email, name, password }, { signal }),
           catch: (error) => new Error(`Failed to sign up user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {
