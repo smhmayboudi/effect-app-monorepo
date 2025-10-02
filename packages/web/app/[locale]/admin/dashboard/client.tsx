@@ -1,19 +1,19 @@
 "use client";
 
 import ServiceList from "@/component/service-list";
-import useAuth from "@/hook/use-auth";
+import { authClient } from "@/util/auth-client";
 import { useTranslations } from "next-intl";
 
 export default function Client() {
   const t = useTranslations("admin.dashboard");
-  const { loading, session } = useAuth();
+  const { data, isPending } = authClient.useSession();
 
   return (
     <div>
       <h2>{t("title")}</h2>
-      {loading ? (
+      {isPending ? (
         <div>LOADING...</div>
-      ) : !session ? (
+      ) : !data ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <ServiceList params={{}} />

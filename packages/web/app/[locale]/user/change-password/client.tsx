@@ -1,14 +1,14 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import useAuth from "@/hook/use-auth";
+import { authClient } from "@/util/auth-client";
 import { changePassword } from "./action";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
-  const { loading, session } = useAuth();
+  const { data, isPending } = authClient.useSession();
   const [state, action, pending] = useActionState(changePassword, null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -16,16 +16,16 @@ export default function Client() {
   return (
     <div>
       <h2>{t("title")}</h2>
-      {loading ? (
+      {isPending ? (
         <div>LOADING...</div>
-      ) : !session ? (
+      ) : !data ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <form action={action}>
           <input
             aria-disabled={pending}
             autoComplete="username"
-            defaultValue={session.user.email}
+            defaultValue={data.user.email}
             disabled={pending}
             hidden={true}
             id="username"

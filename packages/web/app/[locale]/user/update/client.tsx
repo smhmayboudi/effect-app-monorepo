@@ -1,30 +1,30 @@
 "use client";
 
 import { useState, useEffect, useActionState } from "react";
-import useAuth from "@/hook/use-auth";
+import { authClient } from "@/util/auth-client";
 import { update } from "./action";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.update");
-  const { loading, session } = useAuth();
+  const { data, isPending } = authClient.useSession();
   const [state, action, pending] = useActionState(update, null);
 
   const [name, setName] = useState("");
 
   useEffect(() => {
-    if (session?.user?.name) {
-      setName(session.user.name);
+    if (data?.user?.name) {
+      setName(data.user.name);
     }
-  }, [session]);
+  }, [data]);
 
   return (
     <div>
       <h2>{t("title")}</h2>
-      {loading ? (
+      {isPending ? (
         <div>LOADING...</div>
-      ) : !session ? (
+      ) : !data ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <form action={action}>

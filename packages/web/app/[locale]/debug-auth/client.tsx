@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import useAuth from "@/hook/use-auth";
 import Button from "@/component/ui/button";
+import { authClient } from "@/util/auth-client";
 
 export default function Client() {
-  const { loading, refreshSession, session } = useAuth();
+  const { data, error, isPending, refetch } = authClient.useSession();
+  // const { loading, refreshSession, session } = useAuth();
   const [cookies, setCookies] = useState<string>("");
 
   useEffect(() => {
-    refreshSession();
+    refetch();
     setCookies(document.cookie);
-  }, [refreshSession]);
+  }, [refetch]);
 
   return (
     <div>
@@ -21,17 +22,17 @@ export default function Client() {
       </p>
       <p>
         <strong>Session:</strong>{" "}
-        {session ? JSON.stringify(session, null, 2) : "No session"}
+        {data ? JSON.stringify(data, null, 2) : "No session"}
       </p>
       <p>
-        <strong>Loading:</strong> {loading ? "Yes" : "No"}
+        <strong>Loading:</strong> {isPending ? "Yes" : "No"}
       </p>
       <Button
-        aria-disabled={loading}
-        disabled={loading}
-        onClick={refreshSession}
+        aria-disabled={isPending}
+        disabled={isPending}
+        onClick={() => refetch()}
       >
-        {loading ? "Refreshing..." : "Refresh"}
+        {isPending ? "Refreshing..." : "Refresh"}
       </Button>
     </div>
   );

@@ -4,11 +4,11 @@ import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";
 import { serviceCreate } from "./actions";
-import useAuth from "@/hook/use-auth";
+import { authClient } from "@/util/auth-client";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
-  const { loading, session } = useAuth();
+  const { data, isPending } = authClient.useSession();
 
   const [state, action, pending] = useActionState(serviceCreate, null);
   const [name, setName] = useState("");
@@ -16,9 +16,9 @@ export default function Client() {
   return (
     <div>
       <h2>{t("title")}</h2>
-      {loading ? (
+      {isPending ? (
         <div>LOADING...</div>
-      ) : !session ? (
+      ) : !data ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <form action={action}>

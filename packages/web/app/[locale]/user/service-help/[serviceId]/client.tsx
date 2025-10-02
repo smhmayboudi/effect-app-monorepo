@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import useAuth from "@/hook/use-auth";
+import { authClient } from "@/util/auth-client";
 import { useTranslations } from "next-intl";
 
 interface ClientProps {
@@ -10,14 +10,14 @@ interface ClientProps {
 
 export default function Client({ serviceId }: ClientProps) {
   const t = useTranslations("user.service-help");
-  const { loading, session } = useAuth();
+  const { data, isPending } = authClient.useSession();
 
   return (
     <div>
       <h2>{t("title", { serviceId })}</h2>
-      {loading ? (
+      {isPending ? (
         <div>LOADING...</div>
-      ) : !session ? (
+      ) : !data ? (
         <p>No user session found. Please log in.</p>
       ) : (
         <Link href={`http://127.0.0.1:3001/auth/${serviceId}/reference`}>
