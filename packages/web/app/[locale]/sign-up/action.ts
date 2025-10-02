@@ -22,7 +22,10 @@ export async function signUpEmail(
   return Effect.runPromise(
     Schema.decodeUnknown(
       Schema.Struct({
-        email: Schema.NonEmptyString,
+        email: Schema.NonEmptyString.pipe(
+          Schema.minLength(5),
+          Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)
+        ),
         name: Schema.NonEmptyString,
         password: Schema.NonEmptyString,
       })
