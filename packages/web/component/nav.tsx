@@ -15,6 +15,10 @@ export default function Nav() {
         forgot-password
       </Link>
       <br />
+      <Link classNameActive="active" href={"/reset-password"}>
+        reset-password
+      </Link>
+      <br />
       <Link classNameActive="active" href={"/sign-in"}>
         sign-in
       </Link>

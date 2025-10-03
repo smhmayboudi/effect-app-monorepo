@@ -13,6 +13,10 @@
     "description": "forgot-password",
     "title": "forgot-password"
   },
+  "reset-password": {
+    "description": "reset-password",
+    "title": "reset-password"
+  },
   "sign-in": {
     "description": "sign-in",
     "title": "sign-in"
