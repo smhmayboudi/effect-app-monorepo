@@ -3,7 +3,6 @@
 import { useActionState, useState } from "react";
 import { signInEmail } from "./action";
 import { useTranslations } from "next-intl";
-import Button from "@/component/ui/button";
 
 interface ClientProps {
   callbackURL: string;
@@ -67,9 +66,9 @@ export default function Client({ callbackURL }: ClientProps) {
             ))}
           </div>
         )}
-        <Button aria-disabled={pending} disabled={pending} type="submit">
+        <button aria-disabled={pending} disabled={pending} type="submit">
           {pending ? "Submitting..." : "Submit"}
-        </Button>
+        </button>
         {state?.message && (
           <p
             aria-live="polite"

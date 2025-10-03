@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Button from "@/component/ui/button";
 import { authClient } from "@/lib/auth-client";
 
 export default function Client() {
@@ -26,13 +25,13 @@ export default function Client() {
       <p>
         <strong>Loading:</strong> {isPending ? "Yes" : "No"}
       </p>
-      <Button
+      <button
         aria-disabled={isPending}
         disabled={isPending}
         onClick={() => refetch()}
       >
         {isPending ? "Refreshing..." : "Refresh"}
-      </Button>
+      </button>
     </div>
   );
 }

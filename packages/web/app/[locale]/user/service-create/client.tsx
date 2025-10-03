@@ -2,7 +2,6 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
-import Button from "@/component/ui/button";
 import { serviceCreate } from "./actions";
 import { authClient } from "@/lib/auth-client";
 
@@ -43,9 +42,9 @@ export default function Client() {
               ))}
             </div>
           )}
-          <Button type="submit" disabled={pending}>
+          <button type="submit" disabled={pending}>
             {pending ? "Submitting..." : "Submit"}
-          </Button>
+          </button>
           {state?.message && (
             <p
               aria-live="polite"

@@ -3,7 +3,6 @@
 import { useActionState, useState } from "react";
 import { forgotPassword } from "./action";
 import { useTranslations } from "next-intl";
-import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("forgot-password");
@@ -35,9 +34,9 @@ export default function Client() {
             ))}
           </div>
         )}
-        <Button aria-disabled={pending} disabled={pending} type="submit">
+        <button aria-disabled={pending} disabled={pending} type="submit">
           {pending ? "Submitting..." : "Submit"}
-        </Button>
+        </button>
         {state?.message && (
           <p
             aria-live="polite"

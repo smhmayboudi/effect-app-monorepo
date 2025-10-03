@@ -4,7 +4,6 @@ import { useState, useEffect, useActionState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { update } from "./action";
 import { useTranslations } from "next-intl";
-import Button from "@/component/ui/button";
 
 export default function Client() {
   const t = useTranslations("user.update");
@@ -49,9 +48,9 @@ export default function Client() {
               ))}
             </div>
           )}
-          <Button aria-disabled={pending} disabled={pending} type="submit">
+          <button aria-disabled={pending} disabled={pending} type="submit">
             {pending ? "Submitting..." : "Submit"}
-          </Button>
+          </button>
           {state?.message && (
             <p
               aria-live="polite"
