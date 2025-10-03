@@ -1,7 +1,7 @@
 "use client";
 
 import ServiceList from "@/component/service-list";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 
 export default function Client() {

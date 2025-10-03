@@ -2,7 +2,7 @@
 
 import { ButtonHTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { twc } from "@/util/css";
+import { cn } from "@/lib/css";
 
 const button = cva("btn", {
   variants: {
@@ -59,7 +59,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={twc(
+      className={cn(
         button({ c_behavior, c_color, c_modifier, c_size, c_style }),
         className
       )}

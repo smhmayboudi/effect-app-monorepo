@@ -1,4 +1,4 @@
-import { HttpClient } from "@/util/http-client";
+import { HttpClient } from "@/lib/http-client";
 import { Registry } from "@effect-atom/atom-react";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
 import { Effect, Schema } from "effect";

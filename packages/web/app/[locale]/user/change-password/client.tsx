@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { changePassword } from "./action";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";

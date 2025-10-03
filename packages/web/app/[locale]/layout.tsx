@@ -11,7 +11,7 @@ import { NextIntlClientProvider } from "next-intl";
 import LocaleSwitcher from "@/component/locale-switcher";
 import { getLocale } from "next-intl/server";
 import { BroadcastChannelProvider } from "@/component/broadcast-channel-provider";
-import { getThemePreferenceFromCookie } from "@/util/theme";
+import { getThemePreferenceFromCookie } from "@/lib/theme";
 
 const geistSans = Geist({
   subsets: ["latin"],

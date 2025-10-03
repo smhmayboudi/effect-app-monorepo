@@ -1,5 +1,5 @@
 import { Effect, Schema } from "effect";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 type FormState = {
   errors?: {

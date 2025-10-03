@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "@/component/ui/button";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export default function Client() {
   const { data, error, isPending, refetch } = authClient.useSession();

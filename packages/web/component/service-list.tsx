@@ -1,7 +1,7 @@
 "use client";
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { HttpClient } from "@/util/http-client";
+import { HttpClient } from "@/lib/http-client";
 import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 

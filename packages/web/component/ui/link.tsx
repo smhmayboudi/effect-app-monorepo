@@ -4,7 +4,7 @@ import { LinkProps as NextLinkProps } from "next/link";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { Link as Linki18, usePathname } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
-import { twc } from "@/util/css";
+import { cn } from "@/lib/css";
 
 export interface LinkProps extends NextLinkProps {
   className?: string;
@@ -30,7 +30,7 @@ const Link = ({
       ).pathname;
       const newClassName =
         activePathname === linkPathname
-          ? twc(className, classNameActive)
+          ? cn(className, classNameActive)
           : className;
       if (newClassName !== computedClassName) {
         setComputedClassName(newClassName);

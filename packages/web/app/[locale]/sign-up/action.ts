@@ -1,5 +1,5 @@
 import { Effect, Schema } from "effect";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export type FormState = {
   errors?: {
@@ -34,7 +34,10 @@ export async function signUpEmail(
       Effect.flatMap(({ email, name, password }) =>
         Effect.tryPromise({
           try: (signal) =>
-            authClient.signUp.email({ callbackURL, email, name, password }, { signal }),
+            authClient.signUp.email(
+              { callbackURL, email, name, password },
+              { signal }
+            ),
           catch: (error) => new Error(`Failed to sign up user: ${error}`),
         }).pipe(
           Effect.flatMap((response) => {

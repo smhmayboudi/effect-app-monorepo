@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import Button from "@/component/ui/button";
 import { serviceCreate } from "./actions";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export default function Client() {
   const t = useTranslations("user.service-create");

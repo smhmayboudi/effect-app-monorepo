@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { authClient } from "@/util/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 
 interface ClientProps {
