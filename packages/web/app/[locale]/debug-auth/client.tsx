@@ -6,7 +6,6 @@ import { authClient } from "@/lib/auth-client";
 
 export default function Client() {
   const { data, error, isPending, refetch } = authClient.useSession();
-  // const { loading, refreshSession, session } = useAuth();
   const [cookies, setCookies] = useState<string>("");
 
   useEffect(() => {
