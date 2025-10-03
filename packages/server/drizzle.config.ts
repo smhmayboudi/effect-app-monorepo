@@ -7,6 +7,6 @@ export default defineConfig({
   dbCredentials: { url: `file:../../db-auth-${serviceId}.sqlite` },
   dialect: "turso",
   out: `./drizzle/${serviceId}`,
-  schema: "././src/infrastructure/adapter/Authentication/AuthenticationSchema.ts",
+  schema: "./src/infrastructure/adapter/Authentication/AuthenticationSchema.ts",
   verbose: true
 })
