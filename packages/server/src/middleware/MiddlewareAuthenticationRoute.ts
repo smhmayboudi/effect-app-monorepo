@@ -7,13 +7,10 @@ import { authF } from "../infrastructure/adapter/Authentication/Authentication.j
 
 export const MiddlewareAuthenticationRoute = HttpMiddleware.make((app) =>
   HttpServerRequest.HttpServerRequest.pipe(Effect.flatMap((request) => {
-    const segments = request.url.split("/").filter(Boolean)
     const nodeRequest = NodeHttpServerRequest.toIncomingMessage(request)
     const nodeResponse = NodeHttpServerRequest.toServerResponse(request)
-
     if (
-      segments.length >= 2 &&
-      segments[0] === "auth" &&
+      request.originalUrl.includes("/api/v1/auth") &&
       (request.method === "GET" || request.method === "OPTIONS" || request.method === "POST")
     ) {
       const allowedOrigins = ["http://127.0.0.1:3001", "http://127.0.0.1:3002"]
@@ -45,7 +42,12 @@ export const MiddlewareAuthenticationRoute = HttpMiddleware.make((app) =>
       nodeResponse.setHeader("Access-Control-Expose-Headers", "authorization,content-type")
       nodeResponse.setHeader("Access-Control-Max-Age", "86400")
 
-      return Effect.tryPromise(() => toNodeHandler(authF(ServiceId.make(segments[1])))(nodeRequest, nodeResponse)).pipe(
+      return Effect.tryPromise(() =>
+        toNodeHandler(authF(ServiceId.make(request.originalUrl.split("/").filter(Boolean)[3])))(
+          nodeRequest,
+          nodeResponse
+        )
+      ).pipe(
         Effect.catchTag("UnknownException", Effect.die),
         Effect.flatMap(() => HttpServerResponse.empty())
       )
