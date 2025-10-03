@@ -6,11 +6,9 @@ import { registerOTel } from "@vercel/otel";
 
 export function register() {
   registerOTel({
-    attributes: [
-      {
-        [ATTR_SERVICE_NAME]: "web",
-        [ATTR_SERVICE_VERSION]: "0.0.0",
-      },
-    ],
+    attributes: {
+      [ATTR_SERVICE_NAME]: "web",
+      [ATTR_SERVICE_VERSION]: "0.0.0",
+    },
   });
 }
