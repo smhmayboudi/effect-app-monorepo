@@ -7,6 +7,10 @@ export default function Nav() {
         debug-auth
       </Link>
       <br />
+      <Link classNameActive="active" href={"/email-verification"}>
+        email-verification
+      </Link>
+      <br />
       <Link classNameActive="active" href={"/forgot-password"}>
         forgot-password
       </Link>
