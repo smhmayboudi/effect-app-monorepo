@@ -70,10 +70,13 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
       "@tailwindcss/oxide",
       "better-sqlite3",
       "esbuild",
       "msgpackr-extract",
+      "prisma",
       "protobufjs",
       "sharp",
       "unrs-resolver"
