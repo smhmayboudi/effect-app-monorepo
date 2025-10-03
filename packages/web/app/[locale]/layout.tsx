@@ -12,6 +12,7 @@ import LocaleSwitcher from "@/component/locale-switcher";
 import { getLocale } from "next-intl/server";
 import { BroadcastChannelProvider } from "@/component/broadcast-channel-provider";
 import { getThemePreferenceFromCookie } from "@/lib/theme";
+import { Provider } from "@/component/ui/provider";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -57,22 +58,28 @@ export default async function RootLayout({
   const serverThemePreference = await getThemePreferenceFromCookie();
 
   return (
-    <html dir={locale === "fa" ? "rtl" : "ltr"} lang={locale}>
+    <html
+      dir={locale === "fa" ? "rtl" : "ltr"}
+      lang={locale}
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextIntlClientProvider>
-          <BroadcastChannelProvider channelName="__next_web">
-            <ThemeProvider serverThemePreference={serverThemePreference}>
-              <ThemeModeStatus />
-              <LocaleSwitcher />
-              <br />
-              <Nav />
-              <br />
-              {children}
-            </ThemeProvider>
-          </BroadcastChannelProvider>
-        </NextIntlClientProvider>
+        <Provider>
+          <NextIntlClientProvider>
+            <BroadcastChannelProvider channelName="__next_web">
+              <ThemeProvider serverThemePreference={serverThemePreference}>
+                <ThemeModeStatus />
+                <LocaleSwitcher />
+                <br />
+                <Nav />
+                <br />
+                {children}
+              </ThemeProvider>
+            </BroadcastChannelProvider>
+          </NextIntlClientProvider>
+        </Provider>
         <GoogleTagManager
           gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
           nonce={nonce}
