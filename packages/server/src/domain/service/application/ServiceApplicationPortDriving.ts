@@ -1,3 +1,4 @@
+import type { WorkflowEngine } from "@effect/workflow/WorkflowEngine"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Service, ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
 import type { ServiceErrorAlreadyExists } from "@template/domain/service/application/ServiceApplicationErrorAlreadyExists"
@@ -9,7 +10,7 @@ import { Context, type Effect } from "effect"
 export class ServicePortDriving extends Context.Tag("ServicePortDriving")<ServicePortDriving, {
   create: (
     service: Omit<Service, "id" | "createdAt" | "updatedAt" | "deletedAt">
-  ) => Effect.Effect<ServiceId, ServiceErrorAlreadyExists, ActorAuthorized<"Service", "create">>
+  ) => Effect.Effect<ServiceId, ServiceErrorAlreadyExists, ActorAuthorized<"Service", "create"> | WorkflowEngine>
   delete: (id: ServiceId) => Effect.Effect<ServiceId, ServiceErrorNotFound, ActorAuthorized<"Service", "delete">>
   readAll: (
     urlParams: URLParams<Service>
