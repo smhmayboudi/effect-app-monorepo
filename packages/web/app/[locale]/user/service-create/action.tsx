@@ -38,21 +38,26 @@ export async function serviceCreate(state: FormState, formData: FormData) {
           )
         );
       }),
-      Effect.catchAll((error) => {
+      Effect.catchTag("ParseError", (error) => {
         const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("name")) {
+        if (errorMessage.includes('["name"]')) {
           return Effect.succeed({
             errors: {
-              name: ["Please enter your name"],
+              name: ["Please enter your name."],
             },
             message: "Please check your input and try again.",
           } as FormState);
         }
 
         return Effect.succeed({
-          message: `Failed to service create. Please try again. ${error.message}`,
+          message: "Please check your input and try again.",
         } as FormState);
-      })
+      }),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          message: `Failed to service create. Please try again. ${error.message}`,
+        } as FormState)
+      )
     )
   );
 }

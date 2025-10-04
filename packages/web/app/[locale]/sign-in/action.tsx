@@ -36,7 +36,7 @@ export async function signInEmail(
               { callbackURL, email, password, rememberMe: true },
               { signal }
             ),
-          catch: (error) => new Error(`Failed to sign up user: ${error}`),
+          catch: (error) => new Error(String(error)),
         }).pipe(
           Effect.flatMap((response) => {
             if (response.error) {
@@ -54,9 +54,9 @@ export async function signInEmail(
           )
         )
       ),
-      Effect.catchAll((error) => {
+      Effect.catchTag("ParseError", (error) => {
         const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("email")) {
+        if (errorMessage.includes('["email"]')) {
           return Effect.succeed({
             errors: {
               email: ["Please enter your email."],
@@ -64,7 +64,7 @@ export async function signInEmail(
             message: "Please check your input and try again.",
           } as FormState);
         }
-        if (errorMessage.includes("password")) {
+        if (errorMessage.includes('["password"]')) {
           return Effect.succeed({
             errors: {
               password: ["Please enter your password."],
@@ -74,9 +74,14 @@ export async function signInEmail(
         }
 
         return Effect.succeed({
-          message: `Failed to sign in. Please try again. ${error.message}`,
+          message: "Please check your input and try again.",
         } as FormState);
-      })
+      }),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          message: `Failed to sign in. Please try again. ${error.message}`,
+        } as FormState)
+      )
     )
   );
 }

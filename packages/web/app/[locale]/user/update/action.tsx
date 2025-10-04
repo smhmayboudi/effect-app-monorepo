@@ -25,7 +25,7 @@ export async function update(
       Effect.flatMap(({ name }) =>
         Effect.tryPromise({
           try: (signal) => authClient.updateUser({ name }, { signal }),
-          catch: (error) => new Error(`Failed to update user: ${error}`),
+          catch: (error) => new Error(String(error)),
         }).pipe(
           Effect.flatMap((response) => {
             if (response.error) {
@@ -43,9 +43,9 @@ export async function update(
           )
         )
       ),
-      Effect.catchAll((error) => {
+      Effect.catchTag("ParseError", (error) => {
         const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("name")) {
+        if (errorMessage.includes('["name"]')) {
           return Effect.succeed({
             errors: {
               name: ["Please enter your name."],
@@ -55,9 +55,14 @@ export async function update(
         }
 
         return Effect.succeed({
-          message: `Failed to change password. Please try again. ${error.message}`,
+          message: "Please check your input and try again.",
         } as FormState);
-      })
+      }),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          message: `Failed to change password. Please try again. ${error.message}`,
+        } as FormState)
+      )
     )
   );
 }

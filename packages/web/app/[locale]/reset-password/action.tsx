@@ -27,10 +27,7 @@ export async function signInEmail(
         Effect.tryPromise({
           try: (signal) =>
             authClient.resetPassword({ newPassword, token }, { signal }),
-          catch: (error) =>
-            new ResetPasswordError({
-              message: `Failed to reset password user: ${error}`,
-            }),
+          catch: (error) => new Error(String(error)),
         }).pipe(
           Effect.flatMap((response) => {
             if (response.error) {
@@ -50,9 +47,9 @@ export async function signInEmail(
           )
         )
       ),
-      Effect.catchAll((error) => {
+      Effect.catchTag("ParseError", (error) => {
         const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("newPassword")) {
+        if (errorMessage.includes('["newpassword"]')) {
           return Effect.succeed({
             errors: {
               newPassword: ["Please enter your new password."],
@@ -62,9 +59,14 @@ export async function signInEmail(
         }
 
         return Effect.succeed({
-          message: `Failed to reset password. Please try again. ${error.message}`,
+          message: "Please check your input and try again.",
         } as FormState);
-      })
+      }),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          message: `Failed to reset password. Please try again. ${error.message}`,
+        } as FormState)
+      )
     )
   );
 }

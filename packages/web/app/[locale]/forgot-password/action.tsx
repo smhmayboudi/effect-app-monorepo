@@ -28,8 +28,7 @@ export async function forgotPassword(
       Effect.flatMap(({ email }) =>
         Effect.tryPromise({
           try: (signal) => authClient.forgetPassword({ email }, { signal }),
-          catch: (error) =>
-            new Error(`Failed to forgot password user: ${error}`),
+          catch: (error) => new Error(String(error)),
         }).pipe(
           Effect.flatMap((response) => {
             if (response.error) {
@@ -49,9 +48,9 @@ export async function forgotPassword(
           )
         )
       ),
-      Effect.catchAll((error) => {
+      Effect.catchTag("ParseError", (error) => {
         const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("email")) {
+        if (errorMessage.includes('["email"]')) {
           return Effect.succeed({
             errors: {
               email: ["Please enter your email."],
@@ -61,9 +60,14 @@ export async function forgotPassword(
         }
 
         return Effect.succeed({
-          message: `Failed to forgot password. Please try again. ${error.message}`,
+          message: "Please check your input and try again.",
         } as FormState);
-      })
+      }),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          message: `Failed to forgot password. Please try again. ${error.message}`,
+        } as FormState)
+      )
     )
   );
 }

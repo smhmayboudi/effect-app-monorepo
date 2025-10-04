@@ -27,7 +27,7 @@ export default function Client({ token }: ClientProps) {
           type="hidden"
         />
         <div>
-          <label htmlFor="password">New Password</label>
+          <label htmlFor="newPassword">New Password</label>
           <input
             aria-disabled={pending}
             autoComplete="new-password"
@@ -35,7 +35,7 @@ export default function Client({ token }: ClientProps) {
             id="newPassword"
             name="newPassword"
             onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Password"
+            placeholder="New Password"
             required
             type="password"
             value={newPassword}

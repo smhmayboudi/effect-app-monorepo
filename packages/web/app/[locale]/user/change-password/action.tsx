@@ -31,10 +31,7 @@ export async function changePassword(
               { currentPassword, newPassword, revokeOtherSessions: true },
               { signal }
             ),
-          catch: (error) =>
-            new UserChangePasswordError({
-              message: `Failed to change password user: ${error}`,
-            }),
+          catch: (error) => new Error(String(error)),
         }).pipe(
           Effect.flatMap((response) => {
             if (response.error) {
@@ -54,9 +51,9 @@ export async function changePassword(
           )
         )
       ),
-      Effect.catchAll((error) => {
+      Effect.catchTag("ParseError", (error) => {
         const errorMessage = error.message.toLowerCase();
-        if (errorMessage.includes("currentpassword")) {
+        if (errorMessage.includes('["currentpassword"]')) {
           return Effect.succeed({
             errors: {
               currentPassword: ["Please enter your current password."],
@@ -64,17 +61,24 @@ export async function changePassword(
             message: "Please check your input and try again.",
           } as FormState);
         }
-        if (errorMessage.includes("newpassword")) {
+        if (errorMessage.includes('["newpassword"]')) {
           return Effect.succeed({
-            errors: { newPassword: ["Please enter a valid new password"] },
+            errors: {
+              newPassword: ["Please enter your new password."],
+            },
             message: "Please check your input and try again.",
           } as FormState);
         }
 
         return Effect.succeed({
-          message: `Failed to change password. Please try again. ${error.message}`,
+          message: "Please check your input and try again.",
         } as FormState);
-      })
+      }),
+      Effect.catchAll((error) =>
+        Effect.succeed({
+          message: `Failed to change password. Please try again. ${error.message}`,
+        } as FormState)
+      )
     )
   );
 }

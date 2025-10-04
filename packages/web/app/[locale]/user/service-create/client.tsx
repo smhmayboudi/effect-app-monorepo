@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
-import { serviceCreate } from "./actions";
+import { serviceCreate } from "./action";
 import { authClient } from "@/lib/auth-client";
 
 export default function Client() {
