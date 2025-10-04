@@ -5,6 +5,7 @@ export const statements = {
   ...defaultStatements,
   group: ["create", "delete", "readAll", "readById", "update"],
   person: ["create", "delete", "readAll", "readById", "update"],
+  service: ["create", "delete", "readAll", "readById", "update"],
   todo: ["create", "delete", "readAll", "readById", "update"]
 } as const
 
@@ -14,6 +15,7 @@ export const adminAc = ac.newRole({
   ...defaultRoles.admin.statements,
   group: ["create", "delete", "readAll", "readById", "update"],
   person: ["create", "delete", "readAll", "readById", "update"],
+  service: ["create", "delete", "readAll", "readById", "update"],
   todo: ["create", "delete", "readAll", "readById", "update"]
 })
 
@@ -21,6 +23,7 @@ export const userAc = ac.newRole({
   ...defaultRoles.user.statements,
   group: ["create", "delete", "readAll", "readById", "update"],
   person: ["create", "delete", "readAll", "readById", "update"],
+  service: ["create", "delete", "readAll", "readById", "update"],
   todo: ["create", "delete", "readAll", "readById", "update"]
 })
 
