@@ -55,7 +55,7 @@ export async function signInEmail(
         if (errorMessage.includes("newPassword")) {
           return Effect.succeed({
             errors: {
-              newPassword: ["Please enter your new password"],
+              newPassword: ["Please enter your new password."],
             },
             message: "Please check your input and try again.",
           } as FormState);

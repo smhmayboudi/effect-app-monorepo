@@ -59,7 +59,7 @@ export async function changePassword(
         if (errorMessage.includes("currentpassword")) {
           return Effect.succeed({
             errors: {
-              currentPassword: ["Please enter your current password"],
+              currentPassword: ["Please enter your current password."],
             },
             message: "Please check your input and try again.",
           } as FormState);

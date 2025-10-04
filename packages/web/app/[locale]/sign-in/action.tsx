@@ -26,7 +26,6 @@ export async function signInEmail(
           Schema.minLength(5),
           Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)
         ),
-
         password: Schema.NonEmptyString,
       })
     )(Object.fromEntries(formData)).pipe(
@@ -60,7 +59,7 @@ export async function signInEmail(
         if (errorMessage.includes("email")) {
           return Effect.succeed({
             errors: {
-              email: ["Please enter your email"],
+              email: ["Please enter your email."],
             },
             message: "Please check your input and try again.",
           } as FormState);
@@ -68,14 +67,14 @@ export async function signInEmail(
         if (errorMessage.includes("password")) {
           return Effect.succeed({
             errors: {
-              password: ["Please enter your password"],
+              password: ["Please enter your password."],
             },
             message: "Please check your input and try again.",
           } as FormState);
         }
 
         return Effect.succeed({
-          message: `Failed to sign up. Please try again. ${error.message}`,
+          message: `Failed to sign in. Please try again. ${error.message}`,
         } as FormState);
       })
     )

@@ -48,7 +48,7 @@ export async function update(
         if (errorMessage.includes("name")) {
           return Effect.succeed({
             errors: {
-              name: ["Please enter your name"],
+              name: ["Please enter your name."],
             },
             message: "Please check your input and try again.",
           } as FormState);

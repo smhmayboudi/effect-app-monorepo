@@ -54,7 +54,7 @@ export async function forgotPassword(
         if (errorMessage.includes("email")) {
           return Effect.succeed({
             errors: {
-              email: ["Please enter your email"],
+              email: ["Please enter your email."],
             },
             message: "Please check your input and try again.",
           } as FormState);
