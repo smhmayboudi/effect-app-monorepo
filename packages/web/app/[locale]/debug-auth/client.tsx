@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
 export default function Client() {
-  const { data, error, isPending, refetch } = authClient.useSession();
+  const { data, isPending, refetch } = authClient.useSession();
   const [cookies, setCookies] = useState<string>("");
 
   useEffect(() => {

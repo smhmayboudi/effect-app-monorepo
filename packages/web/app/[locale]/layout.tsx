@@ -1,7 +1,6 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import ThemeProvider, { ThemeModeStatus } from "@/component/theme-provider";
 import { WebVitals } from "@/component/web-vitals";
 import Nav from "@/component/nav";
 import { headers } from "next/headers";
@@ -10,9 +9,8 @@ import type { Product, WithContext } from "schema-dts";
 import { NextIntlClientProvider } from "next-intl";
 import LocaleSwitcher from "@/component/locale-switcher";
 import { getLocale } from "next-intl/server";
-import { BroadcastChannelProvider } from "@/component/broadcast-channel-provider";
-import { getThemePreferenceFromCookie } from "@/lib/theme";
 import { Provider } from "@/component/ui/provider";
+import { ColorModeButton } from "@/component/ui/color-mode";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -55,7 +53,6 @@ export default async function RootLayout({
   };
   const locale = await getLocale();
   const nonce = (await headers()).get("x-nonce") ?? "";
-  const serverThemePreference = await getThemePreferenceFromCookie();
 
   return (
     <html
@@ -68,16 +65,12 @@ export default async function RootLayout({
       >
         <Provider>
           <NextIntlClientProvider>
-            <BroadcastChannelProvider channelName="__next_web">
-              <ThemeProvider serverThemePreference={serverThemePreference}>
-                <ThemeModeStatus />
-                <LocaleSwitcher />
-                <br />
-                <Nav />
-                <br />
-                {children}
-              </ThemeProvider>
-            </BroadcastChannelProvider>
+            <ColorModeButton />
+            <LocaleSwitcher />
+            <br />
+            <Nav />
+            <br />
+            {children}
           </NextIntlClientProvider>
         </Provider>
         <GoogleTagManager
