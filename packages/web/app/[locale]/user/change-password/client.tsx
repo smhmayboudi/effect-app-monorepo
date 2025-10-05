@@ -1,96 +1,127 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { authClient } from "@/lib/auth-client";
-import { changePassword } from "./action";
 import { useTranslations } from "next-intl";
+import {
+  AbsoluteCenter,
+  Button,
+  Field,
+  Fieldset,
+  Input,
+  Stack,
+} from "@chakra-ui/react";
+import { Schema } from "effect";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
+import { PasswordInput } from "@/component/ui/password-input";
+import { Toaster, toaster } from "@/component/ui/toaster";
+import { useEffect } from "react";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
-  const { data, isPending } = authClient.useSession();
-  const [state, action, pending] = useActionState(changePassword, null);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const schema = Schema.Struct({
+    email: Schema.NonEmptyString.pipe(
+      Schema.minLength(5),
+      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)
+    ),
+    currentPassword: Schema.NonEmptyString,
+    newPassword: Schema.NonEmptyString,
+  });
+  const { data } = authClient.useSession();
+  const {
+    formState: { errors, isLoading, isValid },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+
+  useEffect(() => {
+    if (data) {
+      reset({ email: data.user.email });
+    }
+  }, [data, reset]);
 
   return (
-    <div>
-      <h2>{t("title")}</h2>
-      {isPending ? (
-        <div>LOADING...</div>
-      ) : !data ? (
-        <p>No user session found. Please log in.</p>
-      ) : (
-        <form action={action}>
-          <input
-            aria-disabled={pending}
-            autoComplete="username"
-            defaultValue={data.user.email}
-            disabled={pending}
-            hidden={true}
-            id="username"
-            name="username"
-            type="text"
-          />
-          <div>
-            <label htmlFor="currentPassword">Current Password</label>
-            <input
-              aria-disabled={pending}
-              autoComplete="current-password"
-              disabled={pending}
-              id="currentPassword"
-              name="currentPassword"
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Current Password"
-              required
-              type="password"
-              value={currentPassword}
-            />
-          </div>
-          {state?.errors?.currentPassword && (
-            <div style={{ color: "red" }}>
-              {state.errors.currentPassword.map((error, index) => (
-                <p key={index}>{error}</p>
-              ))}
-            </div>
-          )}
-          <div>
-            <label htmlFor="newPassword">New Password</label>
-            <input
-              aria-disabled={pending}
-              autoComplete="new-password"
-              disabled={pending}
-              id="newPassword"
-              name="newPassword"
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="New Password"
-              required
-              type="password"
-              value={newPassword}
-            />
-          </div>
-          {state?.errors?.newPassword && (
-            <div style={{ color: "red" }}>
-              {state.errors.newPassword.map((error, index) => (
-                <p key={index}>{error}</p>
-              ))}
-            </div>
-          )}
-          <button aria-disabled={pending} disabled={pending} type="submit">
-            {pending ? "Submitting..." : "Submit"}
-          </button>
-          {state?.message && (
-            <p
-              aria-live="polite"
-              role="status"
-              style={{
-                color: state.message.includes("successfully") ? "green" : "red",
-              }}
+    <AbsoluteCenter borderWidth="thin" padding="2">
+      <form
+        onSubmit={handleSubmit(async ({ currentPassword, newPassword }) => {
+          const result = await authClient.changePassword({
+            currentPassword,
+            newPassword,
+            revokeOtherSessions: true,
+          });
+          if (result.error) {
+            toaster.create({
+              description: result.error.message || "Failed to change password.",
+              type: "error",
+            });
+          }
+          if (result.data) {
+            toaster.create({
+              description: "User change password successfully!",
+              type: "success",
+            });
+          }
+        })}
+      >
+        <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
+          <Stack>
+            <Fieldset.Legend
+              fontSize="x-large"
+              marginBottom="2"
+              textAlign="center"
             >
-              {state.message}
-            </p>
+              {t("title")}
+            </Fieldset.Legend>
+            <Fieldset.HelperText textAlign="center">
+              Please provide your information below.
+            </Fieldset.HelperText>
+          </Stack>
+          <Fieldset.Content marginBottom="2">
+            <Input
+              autoComplete="username"
+              hidden={true}
+              id="email"
+              {...register("email")}
+            />
+            <Field.Root invalid={!!errors.currentPassword} required>
+              <Field.Label htmlFor="currentPassword">
+                Current Password
+                <Field.RequiredIndicator />
+              </Field.Label>
+              <PasswordInput
+                autoComplete="current-password"
+                id="currentPassword"
+                {...register("currentPassword")}
+              />
+              {errors.currentPassword && (
+                <Field.ErrorText>
+                  {errors.currentPassword.message}
+                </Field.ErrorText>
+              )}
+            </Field.Root>
+            <Field.Root invalid={!!errors.newPassword} required>
+              <Field.Label htmlFor="newPassword">
+                new Password
+                <Field.RequiredIndicator />
+              </Field.Label>
+              <PasswordInput
+                autoComplete="new-password"
+                id="newPassword"
+                {...register("newPassword")}
+              />
+              {errors.newPassword && (
+                <Field.ErrorText>{errors.newPassword.message}</Field.ErrorText>
+              )}
+            </Field.Root>
+          </Fieldset.Content>
+          <Button type="submit">Submit</Button>
+          {errors.root && (
+            <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
           )}
-        </form>
-      )}
-    </div>
+        </Fieldset.Root>
+      </form>
+      <Toaster />
+    </AbsoluteCenter>
   );
 }

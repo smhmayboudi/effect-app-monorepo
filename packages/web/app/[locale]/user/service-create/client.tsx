@@ -1,63 +1,101 @@
 "use client";
 
-import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
-import { serviceCreate } from "./action";
-import { authClient } from "@/lib/auth-client";
+import {
+  AbsoluteCenter,
+  Button,
+  Field,
+  Fieldset,
+  Input,
+  Stack,
+} from "@chakra-ui/react";
+import { Effect, Schema } from "effect";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { useForm } from "react-hook-form";
+import { Toaster, toaster } from "@/component/ui/toaster";
+import { Registry } from "@effect-atom/atom-react";
+import { HttpClient } from "@/lib/http-client";
+import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
+import { v7 } from "uuid";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
-  const { data, isPending } = authClient.useSession();
-
-  const [state, action, pending] = useActionState(serviceCreate, null);
-  const [name, setName] = useState("");
+  const schema = Schema.Struct({
+    name: Schema.NonEmptyString,
+  });
+  const {
+    formState: { errors, isLoading, isValid },
+    handleSubmit,
+    register,
+  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
 
   return (
-    <div>
-      <h2>{t("title")}</h2>
-      {isPending ? (
-        <div>LOADING...</div>
-      ) : !data ? (
-        <p>No user session found. Please log in.</p>
-      ) : (
-        <form action={action}>
-          <div>
-            <label htmlFor="name">Name</label>
-            <input
-              aria-disabled={pending}
-              disabled={pending}
-              id="name"
-              name="name"
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Name"
-              required
-              type="text"
-              value={name}
-            />
-          </div>
-          {state?.errors?.name && (
-            <div style={{ color: "red" }}>
-              {state.errors.name.map((error, index) => (
-                <p key={index}>{error}</p>
-              ))}
-            </div>
-          )}
-          <button type="submit" disabled={pending}>
-            {pending ? "Submitting..." : "Submit"}
-          </button>
-          {state?.message && (
-            <p
-              aria-live="polite"
-              role="status"
-              style={{
-                color: state.message.includes("successfully") ? "green" : "red",
-              }}
+    <AbsoluteCenter borderWidth="thin" padding="2">
+      <form
+        onSubmit={handleSubmit(async ({ name }) => {
+          try {
+            const createMutation = HttpClient.mutation("service", "create");
+            const registry = Registry.make();
+            registry.set(createMutation, {
+              headers: {
+                "idempotency-key": IdempotencyKeyClient.make(v7()),
+              },
+              payload: { name },
+              reactivityKeys: ["services"],
+            });
+            const result = await Effect.runPromise(
+              Registry.getResult(registry, createMutation, {
+                suspendOnWaiting: true,
+              })
+            );
+            if (result.data) {
+              toaster.create({
+                description: `Service ${result.data} create successfully!`,
+                type: "success",
+              });
+            }
+          } catch (error) {
+            toaster.create({
+              description: `Failed to service create. ${
+                (error as any).message || ""
+              }`,
+              type: "error",
+            });
+          }
+        })}
+      >
+        <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
+          <Stack>
+            <Fieldset.Legend
+              fontSize="x-large"
+              marginBottom="2"
+              textAlign="center"
             >
-              {state.message}
-            </p>
+              {t("title")}
+            </Fieldset.Legend>
+            <Fieldset.HelperText textAlign="center">
+              Please provide your information below.
+            </Fieldset.HelperText>
+          </Stack>
+          <Fieldset.Content marginBottom="2">
+            <Field.Root invalid={!!errors.name} required>
+              <Field.Label htmlFor="name">
+                Name
+                <Field.RequiredIndicator />
+              </Field.Label>
+              <Input autoComplete="name" id="name" {...register("name")} />
+              {errors.name && (
+                <Field.ErrorText>{errors.name.message}</Field.ErrorText>
+              )}
+            </Field.Root>
+          </Fieldset.Content>
+          <Button type="submit">Submit</Button>
+          {errors.root && (
+            <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
           )}
-        </form>
-      )}
-    </div>
+        </Fieldset.Root>
+      </form>
+      <Toaster />
+    </AbsoluteCenter>
   );
 }

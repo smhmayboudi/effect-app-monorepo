@@ -1,8 +1,20 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { signInEmail } from "./action";
 import { useTranslations } from "next-intl";
+import {
+  AbsoluteCenter,
+  Button,
+  Field,
+  Fieldset,
+  Stack,
+} from "@chakra-ui/react";
+import { Schema } from "effect";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
+import { PasswordInput } from "@/component/ui/password-input";
+import { Toaster, toaster } from "@/component/ui/toaster";
+import { useRouter } from "next/navigation";
 
 interface ClientProps {
   token: string;
@@ -10,59 +22,69 @@ interface ClientProps {
 
 export default function Client({ token }: ClientProps) {
   const t = useTranslations("reset-password");
-  const [state, action, pending] = useActionState(signInEmail, null);
-  const [newPassword, setNewPassword] = useState("");
+  const schema = Schema.Struct({
+    newPassword: Schema.NonEmptyString,
+    token: Schema.NonEmptyString,
+  });
+  const {
+    formState: { errors, isLoading, isValid },
+    handleSubmit,
+    register,
+  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  const router = useRouter();
 
   return (
-    <div>
-      <h2>{t("title")}</h2>
-      <form action={action}>
-        <input
-          aria-disabled={pending}
-          defaultValue={token}
-          disabled={pending}
-          hidden={true}
-          id="token"
-          name="token"
-          type="hidden"
-        />
-        <div>
-          <label htmlFor="newPassword">New Password</label>
-          <input
-            aria-disabled={pending}
-            autoComplete="new-password"
-            disabled={pending}
-            id="newPassword"
-            name="newPassword"
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="New Password"
-            required
-            type="password"
-            value={newPassword}
-          />
-        </div>
-        {state?.errors?.newPassword && (
-          <div style={{ color: "red" }}>
-            {state.errors.newPassword.map((error, index) => (
-              <p key={index}>{error}</p>
-            ))}
-          </div>
-        )}
-        <button aria-disabled={pending} disabled={pending} type="submit">
-          {pending ? "Submitting..." : "Submit"}
-        </button>
-        {state?.message && (
-          <p
-            aria-live="polite"
-            role="status"
-            style={{
-              color: state.message.includes("successfully") ? "green" : "red",
-            }}
-          >
-            {state.message}
-          </p>
-        )}
+    <AbsoluteCenter borderWidth="thin" padding="2">
+      <form
+        onSubmit={handleSubmit(async ({ newPassword }) => {
+          const result = await authClient.resetPassword({ newPassword, token });
+          if (result.error) {
+            toaster.create({
+              description: result.error.message || "Failed to reset password.",
+              type: "error",
+            });
+          }
+          if (result.data) {
+            router.push("/sign-in");
+          }
+        })}
+      >
+        <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
+          <Stack>
+            <Fieldset.Legend
+              fontSize="x-large"
+              marginBottom="2"
+              textAlign="center"
+            >
+              {t("title")}
+            </Fieldset.Legend>
+            <Fieldset.HelperText textAlign="center">
+              Please provide your information below.
+            </Fieldset.HelperText>
+          </Stack>
+          <Fieldset.Content marginBottom="2">
+            <Field.Root invalid={!!errors.newPassword} required>
+              <Field.Label htmlFor="newPassword">
+                New Password
+                <Field.RequiredIndicator />
+              </Field.Label>
+              <PasswordInput
+                autoComplete="new-password"
+                id="newPassword"
+                {...register("newPassword")}
+              />
+              {errors.newPassword && (
+                <Field.ErrorText>{errors.newPassword.message}</Field.ErrorText>
+              )}
+            </Field.Root>
+          </Fieldset.Content>
+          <Button type="submit">Submit</Button>
+          {errors.root && (
+            <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
+          )}
+        </Fieldset.Root>
       </form>
-    </div>
+      <Toaster />
+    </AbsoluteCenter>
   );
 }
