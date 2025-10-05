@@ -52,7 +52,7 @@ export const TodoDriven = Layer.effect(
           readById(id).pipe(
             Effect.flatMap((oldTodo) => buildUpdateQuery(id, { ...oldTodo, ...todo })),
             Effect.catchTag("SqlError", (sqlError) =>
-              (sqlError.message.includes("UNIQUE")) ?
+              (String(sqlError.cause).toLowerCase().includes("unique")) ?
                 Effect.fail(new TodoErrorAlreadyExists({ text: todo.text ?? "" }))
                 : Effect.die(sqlError)),
             Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -66,7 +66,7 @@ export const TodoDriven = Layer.effect(
               { id: string }
             >`INSERT INTO tbl_todo ${sql.insert(todo)} RETURNING id`.pipe(
               Effect.catchTag("SqlError", (sqlError) =>
-                (sqlError.message.includes("UNIQUE")) ?
+                (String(sqlError.cause).toLowerCase().includes("unique")) ?
                   Effect.fail(new TodoErrorAlreadyExists({ text: todo.text }))
                   : Effect.die(sqlError)),
               Effect.flatMap((rows) => Effect.succeed(rows[0])),

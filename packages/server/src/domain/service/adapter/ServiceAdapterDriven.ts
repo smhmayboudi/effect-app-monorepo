@@ -53,7 +53,7 @@ export const ServiceDriven = Layer.effect(
           readById(id).pipe(
             Effect.flatMap((oldService) => buildUpdateQuery(id, { ...oldService, ...service })),
             Effect.catchTag("SqlError", (sqlError) =>
-              (sqlError.message.includes("UNIQUE")) ?
+              (String(sqlError.cause).toLowerCase().includes("unique")) ?
                 Effect.fail(new ServiceErrorAlreadyExists({ name: service.name ?? "" }))
                 : Effect.die(sqlError)),
             Effect.flatMap((rows) => Effect.succeed(rows[0])),
@@ -67,7 +67,7 @@ export const ServiceDriven = Layer.effect(
               { id: string }
             >`INSERT INTO tbl_service ${sql.insert(service)} RETURNING id`.pipe(
               Effect.catchTag("SqlError", (sqlError) =>
-                (sqlError.message.includes("UNIQUE")) ?
+                (String(sqlError.cause).toLowerCase().includes("unique")) ?
                   Effect.fail(new ServiceErrorAlreadyExists({ name: service.name }))
                   : Effect.die(sqlError)),
               Effect.flatMap((rows) => Effect.succeed(rows[0])),
