@@ -22,7 +22,7 @@ export const auth = betterAuth(
         cookiePrefix: "effect-app-monorepo-00000000-0000-0000-0000-000000000000"
       },
       appName: "@template/server/00000000-0000-0000-0000-000000000000",
-      basePath: "/auth/00000000-0000-0000-0000-000000000000",
+      basePath: "/api/v1/auth/00000000-0000-0000-0000-000000000000",
       database: drizzleAdapter(
         db,
         { debugLogs: true, provider: "sqlite", schema }
@@ -66,7 +66,7 @@ export const authF = (serviceId: ServiceId) => {
           cookiePrefix: `effect-app-monorepo-${serviceId}`
         },
         appName: `@template/server/${serviceId}`,
-        basePath: `/auth/${serviceId}`,
+        basePath: `/api/v1/auth/${serviceId}`,
         database: drizzleAdapter(
           db,
           { debugLogs: true, provider: "sqlite", schema }
