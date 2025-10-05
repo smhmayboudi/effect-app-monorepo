@@ -2,22 +2,12 @@
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { HttpClient } from "@/lib/http-client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, JSX } from "react";
 import Link from "next/link";
 
-type ServiceListProps = { params: { userId?: string } };
+type ServiceListProps = { userId?: string };
 
-export default function ServiceList({ params }: ServiceListProps) {
-  const [userId, setUserId] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const extractUserId = async () => {
-      const resolvedParams = await params;
-      setUserId(resolvedParams.userId);
-    };
-    extractUserId();
-  }, [params]);
-
+export default function ServiceList({ userId }: ServiceListProps): JSX.Element {
   const readAll = useMemo(
     () =>
       HttpClient.query("service", "readAll", {

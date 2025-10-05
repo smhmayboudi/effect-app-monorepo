@@ -16,7 +16,7 @@ export default function Client() {
       ) : !data ? (
         <p>No user session found. Please log in.</p>
       ) : (
-        <ServiceList params={{ userId: data.user.id }} />
+        <ServiceList userId={data.user.id} />
       )}
     </div>
   );
