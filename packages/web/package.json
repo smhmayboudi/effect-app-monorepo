@@ -53,6 +53,7 @@
   "private": true,
   "scripts": {
     "build": "PORT=3002 next build",
+    "chakra:typegen": "chakra typegen component/ui/theme.tsx",
     "dev": "NODE_OPTIONS='--inspect' PORT=3002 next dev",
     "lint": "PORT=3002 eslint",
     "start": "PORT=3002 next start",
