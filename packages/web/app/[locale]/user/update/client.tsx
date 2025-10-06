@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import { Toaster, toaster } from "@/component/ui/toaster";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Client() {
   const t = useTranslations("user.update");
@@ -28,6 +29,7 @@ export default function Client() {
     register,
     reset,
   } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  const router = useRouter();
 
   useEffect(() => {
     if (data) {
@@ -51,6 +53,7 @@ export default function Client() {
               description: "Sign up successfully!",
               type: "success",
             });
+            router.push("/user/dashboard");
           }
         })}
       >
