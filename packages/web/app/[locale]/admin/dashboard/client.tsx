@@ -14,7 +14,7 @@ export default function Client() {
       {isPending ? (
         <div>LOADING...</div>
       ) : !data ? (
-        <p>No user session found. Please log in.</p>
+        <p>No user session found. Please sign in.</p>
       ) : (
         <ServiceList />
       )}

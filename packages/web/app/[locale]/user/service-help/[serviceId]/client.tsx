@@ -19,7 +19,7 @@ export default function Client({ serviceId }: ClientProps) {
       {isPending ? (
         <div>LOADING...</div>
       ) : !data ? (
-        <p>No user session found. Please log in.</p>
+        <p>No user session found. Please sign in.</p>
       ) : (
         <Link href={`http://127.0.0.1:3001/auth/${serviceId}/reference`}>
           Reference <LuExternalLink />
