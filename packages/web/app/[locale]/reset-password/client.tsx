@@ -15,12 +15,14 @@ import { authClient } from "@/lib/auth-client";
 import { PasswordInput } from "@/component/ui/password-input";
 import { Toaster, toaster } from "@/component/ui/toaster";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface ClientProps {
-  token: string;
+  error?: string;
+  token?: string;
 }
 
-export default function Client({ token }: ClientProps) {
+export default function Client({ error, token }: ClientProps) {
   const t = useTranslations("reset-password");
   const schema = Schema.Struct({
     newPassword: Schema.NonEmptyString,
@@ -30,10 +32,24 @@ export default function Client({ token }: ClientProps) {
     formState: { errors, isLoading, isValid },
     handleSubmit,
     register,
+    reset,
   } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
   const router = useRouter();
 
-  return (
+  useEffect(() => {
+    if (token) {
+      reset({ token });
+    }
+  }, [token]);
+
+  return error ? (
+    <AbsoluteCenter borderWidth="thin" padding="2">
+      <Stack>
+        <p>{t("title")}</p>
+        <p>The password reset link is invalid or has expired.</p>
+      </Stack>
+    </AbsoluteCenter>
+  ) : (
     <AbsoluteCenter borderWidth="thin" padding="2">
       <form
         onSubmit={handleSubmit(async ({ newPassword }) => {

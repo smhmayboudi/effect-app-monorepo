@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 interface PageProps {
   searchParams: Promise<{
+    error: string;
     token: string;
   }>;
 }
@@ -18,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
-  const { token } = await props.searchParams;
+  const { error, token } = await props.searchParams;
 
-  return <Client token={token} />;
+  return <Client error={error} token={token} />;
 }
