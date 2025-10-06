@@ -1,6 +1,6 @@
 "use client";
 
-import { AbsoluteCenter } from "@chakra-ui/react";
+import { AbsoluteCenter, Stack } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
 
 interface ClientProps {
@@ -12,11 +12,13 @@ export default function Client({ email }: ClientProps) {
 
   return (
     <AbsoluteCenter>
-      <p>{t("title")}</p>
-      <p>
-        We sent you a verification link to {email}. Please check your email and
-        click the link to verify your account.
-      </p>
+      <Stack>
+        <p>{t("title")}</p>
+        <p>
+          We sent you a verification link to {email}. Please check your email
+          and click the link to verify your account.
+        </p>
+      </Stack>
     </AbsoluteCenter>
   );
 }
