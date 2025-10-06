@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AbsoluteCenter,
   Button,
@@ -30,12 +30,16 @@ export default function Client() {
     register,
   } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
   const router = useRouter();
+  const locale = useLocale();
 
   return (
     <AbsoluteCenter borderWidth="thin" padding="2">
       <form
         onSubmit={handleSubmit(async ({ email }) => {
-          const result = await authClient.forgetPassword({ email });
+          const result = await authClient.forgetPassword({
+            email,
+            redirectTo: `http://127.0.0.1:3002/${locale}/reset-password`,
+          });
           if (result.error) {
             toaster.create({
               description: result.error.message || "Failed to forgot password.",
@@ -43,7 +47,7 @@ export default function Client() {
             });
           }
           if (result.data) {
-            router.push(`/reset-password?email=${email}`);
+            router.push(`/email-forgot-password?email=${email}`);
           }
         })}
       >
