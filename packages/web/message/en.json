@@ -5,6 +5,10 @@
       "title": "admin dashboard"
     }
   },
+  "email-forgot-password": {
+    "description": "email-forgot-password",
+    "title": "email-forgot-password"
+  },
   "email-verification": {
     "description": "email-verification",
     "title": "email-verification"
