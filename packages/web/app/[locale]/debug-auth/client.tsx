@@ -19,7 +19,7 @@ export default function Client() {
         <strong>Cookies in document:</strong> {cookies || "None"}
       </p>
       <p>
-        <strong>Session:</strong>{" "}
+        <strong>Session:</strong>
         {data ? JSON.stringify(data, null, 2) : "No session"}
       </p>
       <p>
