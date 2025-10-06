@@ -2,12 +2,13 @@
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { HttpClient } from "@/lib/http-client";
-import { useMemo, useState, useEffect, JSX } from "react";
-import Link from "next/link";
+import { useMemo } from "react";
+import CLink from "@/component/ui/link";
+import { Link } from "@chakra-ui/react";
 
 type ServiceListProps = { userId?: string };
 
-export default function ServiceList({ userId }: ServiceListProps): JSX.Element {
+export default function ServiceList({ userId }: ServiceListProps) {
   const readAll = useMemo(
     () =>
       HttpClient.query("service", "readAll", {
@@ -63,8 +64,10 @@ export default function ServiceList({ userId }: ServiceListProps): JSX.Element {
                 <td>{value.id}</td>
                 <td>{value.name}</td>
                 <td>
-                  <Link href={`/user/service-help/${String(value.id)}`}>
-                    help
+                  <Link asChild variant="underline">
+                    <CLink href={`/user/service-help/${String(value.id)}`}>
+                      help
+                    </CLink>
                   </Link>
                 </td>
               </tr>
