@@ -39,7 +39,7 @@ export default function Client() {
     if (data) {
       reset({ email: data.user.email });
     }
-  }, [data, reset]);
+  }, [data]);
 
   return (
     <AbsoluteCenter borderWidth="thin" padding="2">
