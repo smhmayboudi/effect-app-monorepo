@@ -17,6 +17,7 @@ import { Registry } from "@effect-atom/atom-react";
 import { HttpClient } from "@/lib/http-client";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
 import { v7 } from "uuid";
+import { useRouter } from "next/navigation";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
@@ -28,6 +29,7 @@ export default function Client() {
     handleSubmit,
     register,
   } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  const router = useRouter();
 
   return (
     <AbsoluteCenter borderWidth="thin" padding="2">
@@ -54,6 +56,7 @@ export default function Client() {
                 type: "success",
               });
             }
+            router.push("/user/dashboard");
           } catch (error) {
             toaster.create({
               description: `Failed to service create. ${
