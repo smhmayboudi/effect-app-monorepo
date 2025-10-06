@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   AbsoluteCenter,
   Button,
@@ -33,12 +33,14 @@ export default function Client() {
     register,
   } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
   const router = useRouter();
+  const locale = useLocale();
 
   return (
     <AbsoluteCenter borderWidth="thin" padding="2">
       <form
         onSubmit={handleSubmit(async ({ email, name, password }) => {
           const result = await authClient.signUp.email({
+            callbackURL: `http://127.0.0.1:3001/${locale}/user/dashboard`,
             email,
             name,
             password,
