@@ -18,5 +18,5 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page(props: PageProps) {
   const { callbackURL } = await props.searchParams;
 
-  return <Client callbackURL={callbackURL ?? "/"} />;
+  return <Client callbackURL={callbackURL ?? "/user/dashboard"} />;
 }
