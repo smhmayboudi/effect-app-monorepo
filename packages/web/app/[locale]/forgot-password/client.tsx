@@ -1,92 +1,131 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import {
-  AbsoluteCenter,
-  Button,
-  Field,
-  Fieldset,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
 import { Schema } from "effect";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
-import { Toaster, toaster } from "@/component/ui/toaster";
 import { useRouter } from "next/navigation";
+import { GalleryVerticalEnd } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import Link from "@/components/ui/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { toast } from "sonner";
 
 export default function Client() {
   const t = useTranslations("forgot-password");
   const schema = Schema.Struct({
-    email: Schema.NonEmptyString.pipe(
-      Schema.minLength(5),
-      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)
+    email: Schema.NonEmptyString.annotations({
+      message: () => t("form.email.nonEmptyString"),
+    }).pipe(
+      Schema.minLength(5, { message: () => t("form.email.minLength") }),
+      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim, {
+        message: () => t("form.email.pattern"),
+      })
     ),
   });
+  const form = useForm<typeof schema.Type>({
+    defaultValues: { email: "" },
+    resolver: effectTsResolver(schema),
+  });
   const {
-    formState: { errors, isLoading, isValid },
+    formState: { isSubmitting },
     handleSubmit,
-    register,
-  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  } = form;
   const router = useRouter();
   const locale = useLocale();
 
   return (
-    <AbsoluteCenter borderWidth="thin" padding="2">
-      <form
-        onSubmit={handleSubmit(async ({ email }) => {
-          const result = await authClient.forgetPassword({
-            email,
-            redirectTo: `http://127.0.0.1:3002/${locale}/reset-password`,
-          });
-          if (result.error) {
-            toaster.create({
-              description: result.error.message || "Failed to forgot password.",
-              type: "error",
-            });
-          }
-          if (result.data) {
-            router.push(`/email-forgot-password?email=${email}`);
-          }
-        })}
-      >
-        <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
-          <Stack>
-            <Fieldset.Legend
-              fontSize="x-large"
-              marginBottom="2"
-              textAlign="center"
-            >
-              {t("title")}
-            </Fieldset.Legend>
-            <Fieldset.HelperText textAlign="center">
-              Please provide your information below.
-            </Fieldset.HelperText>
-          </Stack>
-          <Fieldset.Content marginBottom="2">
-            <Field.Root invalid={!!errors.email} required>
-              <Field.Label htmlFor="email">
-                Email
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <Input
-                autoComplete="username"
-                id="email"
-                {...register("email")}
-              />
-              {errors.email && (
-                <Field.ErrorText>{errors.email.message}</Field.ErrorText>
-              )}
-            </Field.Root>
-          </Fieldset.Content>
-          <Button type="submit">Submit</Button>
-          {errors.root && (
-            <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
-          )}
-        </Fieldset.Root>
-      </form>
-      <Toaster />
-    </AbsoluteCenter>
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Link
+          href="#"
+          className="flex items-center gap-2 self-center font-medium"
+        >
+          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd className="size-4" />
+          </div>
+          Acme Inc.
+        </Link>
+        <div className={cn("flex flex-col gap-6")}>
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">{t("title")}</CardTitle>
+              <CardDescription>{t("content")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  onSubmit={handleSubmit(async ({ email }) => {
+                    const result = await authClient.forgetPassword({
+                      email,
+                      redirectTo: `http://127.0.0.1:3002/${locale}/reset-password`,
+                    });
+                    if (result.error) {
+                      toast.error(
+                        result.error.message || "Failed to forgot password."
+                      );
+                    }
+                    if (result.data) {
+                      router.push(`/email-forgot-password?email=${email}`);
+                    }
+                  })}
+                >
+                  <FieldGroup>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("form.email.title")}</FormLabel>
+                          <FormControl>
+                            <Input
+                              autoComplete="email"
+                              required
+                              type="email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Field>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full"
+                      >
+                        <LoadingSwap isLoading={isSubmitting}>
+                          {t("form.submit")}
+                        </LoadingSwap>
+                      </Button>
+                    </Field>
+                  </FieldGroup>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

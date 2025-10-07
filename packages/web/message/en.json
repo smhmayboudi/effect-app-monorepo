@@ -1,58 +1,177 @@
 {
+  "component": {
+    "service-list": {
+      "table": {
+        "head": {
+          "ownerId": "َUser ID",
+          "id": "Service ID",
+          "name": "Service Name",
+          "help": "Help"
+        },
+        "body": {
+          "help": "Help"
+        }
+      }
+    }
+  },
   "admin": {
     "dashboard": {
-      "description": "admin dashboard",
-      "title": "admin dashboard"
+      "description": "Admin Dashboard",
+      "title": "Admin Dashboard"
     }
   },
   "email-forgot-password": {
-    "description": "email-forgot-password",
-    "title": "email-forgot-password"
+    "content": "If email ({email}) exists in our system, check your email for thereset link.",
+    "description": "Email Forgot Password",
+    "title": "Email Forgot Password"
   },
   "email-verification": {
-    "description": "email-verification",
-    "title": "email-verification"
+    "content": "We sent you a verification link to {email}. Please check your email and click the link to verify your account.",
+    "description": "Email Verification",
+    "title": "Email Verification"
   },
   "forgot-password": {
-    "description": "forgot-password",
-    "title": "forgot-password"
+    "content": "Enter your email below to sign up your account",
+    "description": "Forgot Password",
+    "form": {
+      "email": {
+        "minLength": "Email must be at least 5 characters long",
+        "nonEmptyString": "a string at least 1 character",
+        "pattern": "Invalid email format",
+        "title": "Email"
+      },
+      "submit": "Forgot password"
+    },
+    "title": "Forgot Password"
   },
   "reset-password": {
-    "description": "reset-password",
-    "title": "reset-password"
+    "content": "Enter your new password to reset password your account",
+    "description": "Reset Password",
+    "error": {
+      "backToSignIn": "Back to sign in",
+      "content": "The password reset link is invalid or has expired.",
+      "title": "Reset Password Error"
+    },
+    "form": {
+      "newPassword": {
+        "nonEmptyString": "a string at least 1 character",
+        "title": "New Password"
+      },
+      "token": {
+        "nonEmptyString": "a string at least 1 character",
+        "title": "Token"
+      },
+      "submit": "Reset password"
+    },
+    "title": "Reset Password"
   },
   "sign-in": {
-    "description": "sign-in",
-    "title": "sign-in"
+    "content": "Enter your email below to sign in to your account",
+    "description": "Sign In",
+    "form": {
+      "description": "Don't have an account? <url>Sign up</url>",
+      "email": {
+        "minLength": "Email must be at least 5 characters long",
+        "nonEmptyString": "a string at least 1 character",
+        "pattern": "Invalid email format",
+        "title": "Email"
+      },
+      "forgotPassword": "Forgot password?",
+      "password": {
+        "nonEmptyString": "a string at least 1 character",
+        "title": "Password"
+      },
+      "submit": "Sign in"
+    },
+    "title": "Sign In",
+    "title2": "Welcome back"
   },
   "sign-up": {
-    "description": "sign-up",
-    "title": "sign-up"
+    "content": "Enter your email below to sign up your account",
+    "description": "Sign Up",
+    "description2": "By clicking continue, you agree to our <urlTOS>Terms of Service</urlTOS> and <urlPP>Privacy Policy</urlPP>.",
+    "form": {
+      "description": "Already have an account? <url>Sign in</url>",
+      "email": {
+        "minLength": "Email must be at least 5 characters long",
+        "nonEmptyString": "a string at least 1 character",
+        "pattern": "Invalid email format",
+        "title": "Email"
+      },
+      "name": {
+        "nonEmptyString": "a string at least 1 character",
+        "title": "Name"
+      },
+      "password": {
+        "nonEmptyString": "a string at least 1 character",
+        "title": "Password"
+      },
+      "submit": "Sign up"
+    },
+    "title": "Sign Up",
+    "title2": "Sign up your account"
   },
   "user": {
     "change-password": {
-      "description": "user change-password",
-      "title": "user change-password"
+      "content": "Enter your new password below to change password",
+      "form": {
+        "email": {
+          "minLength": "Email must be at least 5 characters long",
+          "nonEmptyString": "a string at least 1 character",
+          "pattern": "Invalid email format",
+          "title": "Email"
+        },
+        "currentPassword": {
+          "nonEmptyString": "a string at least 1 character",
+          "title": "Current Password"
+        },
+        "newPassword": {
+          "nonEmptyString": "a string at least 1 character",
+          "title": "New Password"
+        },
+        "submit": "Change password"
+      },
+      "description": "User Change Password",
+      "title": "User Change Password"
     },
     "dashboard": {
-      "description": "user dashboard",
-      "title": "user dashboard"
+      "description": "User Dashboard",
+      "title": "User Dashboard"
     },
     "service-create": {
-      "description": "user service-create",
-      "title": "user service-create"
+      "content": "Enter your name below to create your service",
+      "description": "Service Create",
+      "form": {
+        "name": {
+          "nonEmptyString": "a string at least 1 character",
+          "title": "Name"
+        },
+        "submit": "Service create"
+      },
+      "title": "Service Create"
     },
     "service-help": {
-      "description": "user service-help {serviceId}",
-      "title": "user service-help {serviceId}"
+      "content": "This is a help of {serviceId}",
+      "description": "Service Help {serviceId}",
+      "reference": "Reference",
+      "title": "Service Help {serviceId}",
+      "title2": "Service Help"
     },
     "update": {
-      "description": "user update",
-      "title": "user update"
+      "content": "Enter your name below to update your account",
+      "form": {
+        "name": {
+          "nonEmptyString": "a string at least 1 character",
+          "title": "Name"
+        },
+        "submit": "Update"
+      },
+      "description": "User Update",
+      "title": "User Update"
     }
   },
   "index": {
     "title": "Index",
-    "description": "This page uses messages from <code>./message/index/{locale}.json</code> and <code>./message/shared/{locale}.json</code>. Messages from the about page and other locales are not loaded."
+    "description": "Index"
   }
 }

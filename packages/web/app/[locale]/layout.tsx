@@ -1,16 +1,16 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import { WebVitals } from "@/component/web-vitals";
-import Nav from "@/component/nav";
+import { WebVitals } from "@/components/web-vitals";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import type { Product, WithContext } from "schema-dts";
 import { NextIntlClientProvider } from "next-intl";
-import LocaleSwitcher from "@/component/locale-switcher";
+import LocaleSwitcher from "@/components/locale-switcher";
 import { getLocale } from "next-intl/server";
-import { Provider } from "@/component/ui/provider";
-import { ColorModeButton } from "@/component/ui/color-mode";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ModeToggle } from "@/components/mode-toggle";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -63,16 +63,19 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          disableTransitionOnChange
+          enableSystem
+        >
           <NextIntlClientProvider>
-            <ColorModeButton />
+            <Toaster />
+            <ModeToggle />
             <LocaleSwitcher />
-            <br />
-            <Nav />
-            <br />
             {children}
           </NextIntlClientProvider>
-        </Provider>
+        </ThemeProvider>
         <GoogleTagManager
           gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
           nonce={nonce}

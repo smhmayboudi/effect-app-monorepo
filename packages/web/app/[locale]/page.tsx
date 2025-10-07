@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import Nav from "@/components/nav";
 
 export default async function Page() {
   const t = await getTranslations("index");
@@ -6,6 +7,7 @@ export default async function Page() {
   return (
     <div>
       <h2>{t("title")}</h2>
+      <Nav />
     </div>
   );
 }

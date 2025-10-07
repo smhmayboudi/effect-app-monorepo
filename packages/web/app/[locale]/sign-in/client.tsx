@@ -1,123 +1,173 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import {
-  AbsoluteCenter,
-  Button,
-  Field,
-  Fieldset,
-  Input,
-  Link,
-  Stack,
-} from "@chakra-ui/react";
 import { Schema } from "effect";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
-import { PasswordInput } from "@/component/ui/password-input";
-import { Toaster, toaster } from "@/component/ui/toaster";
-import { useRouter } from "next/navigation";
-import CLink from "@/component/ui/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { GalleryVerticalEnd } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import Link from "@/components/ui/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { toast } from "sonner";
 
-interface ClientProps {
-  callbackURL: string;
-}
-
-export default function Client({ callbackURL }: ClientProps) {
+export default function Client() {
   const t = useTranslations("sign-in");
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get("callbackURL") ?? "/user/dashboard";
   const schema = Schema.Struct({
-    email: Schema.NonEmptyString.pipe(
-      Schema.minLength(5),
-      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)
+    email: Schema.NonEmptyString.annotations({
+      message: () => t("form.email.nonEmptyString"),
+    }).pipe(
+      Schema.minLength(5, { message: () => t("form.email.minLength") }),
+      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim, {
+        message: () => t("form.email.pattern"),
+      })
     ),
-    password: Schema.NonEmptyString,
+    password: Schema.NonEmptyString.annotations({
+      message: () => t("form.password.nonEmptyString"),
+    }),
+  });
+  const form = useForm<typeof schema.Type>({
+    defaultValues: { email: "", password: "" },
+    resolver: effectTsResolver(schema),
   });
   const {
-    formState: { errors, isLoading, isValid },
+    formState: { isSubmitting },
     handleSubmit,
-    register,
-  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  } = form;
   const router = useRouter();
 
   return (
-    <AbsoluteCenter borderWidth="thin" padding="2">
-      <Stack>
-        <form
-          onSubmit={handleSubmit(async ({ email, password }) => {
-            const result = await authClient.signIn.email({ email, password });
-            if (result.error) {
-              toaster.create({
-                description: result.error.message || "Failed to sign in.",
-                type: "error",
-              });
-            }
-            if (result.data) {
-              router.push(callbackURL);
-            }
-          })}
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Link
+          href="#"
+          className="flex items-center gap-2 self-center font-medium"
         >
-          <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
-            <Stack>
-              <Fieldset.Legend
-                fontSize="x-large"
-                marginBottom="2"
-                textAlign="center"
-              >
-                {t("title")}
-              </Fieldset.Legend>
-              <Fieldset.HelperText textAlign="center">
-                Please provide your information below.
-              </Fieldset.HelperText>
-            </Stack>
-            <Fieldset.Content marginBottom="2">
-              <Field.Root invalid={!!errors.email} required>
-                <Field.Label htmlFor="email">
-                  Email
-                  <Field.RequiredIndicator />
-                </Field.Label>
-                <Input
-                  autoComplete="username"
-                  id="email"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <Field.ErrorText>{errors.email.message}</Field.ErrorText>
-                )}
-              </Field.Root>
-              <Field.Root invalid={!!errors.password} required>
-                <Field.Label htmlFor="password">
-                  Password
-                  <Field.RequiredIndicator />
-                </Field.Label>
-                <PasswordInput
-                  autoComplete="current-password"
-                  id="password"
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <Field.ErrorText>{errors.password.message}</Field.ErrorText>
-                )}
-              </Field.Root>
-              <Field.Root>
-                <Link asChild variant="underline">
-                  <CLink href="/forgot-password">Forgot Password</CLink>
-                </Link>
-              </Field.Root>
-            </Fieldset.Content>
-            <Button type="submit">Submit</Button>
-            {errors.root && (
-              <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
-            )}
-          </Fieldset.Root>
-        </form>
-        <p>
-          <Link asChild variant="underline">
-            <CLink href="/sign-">Sign up</CLink>
-          </Link>
-          &nbsp;if you do not have an account.
-        </p>
-      </Stack>
-      <Toaster />
-    </AbsoluteCenter>
+          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd className="size-4" />
+          </div>
+          Acme Inc.
+        </Link>
+        <div className={cn("flex flex-col gap-6")}>
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">{t("title2")}</CardTitle>
+              <CardDescription>{t("content")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  onSubmit={handleSubmit(async ({ email, password }) => {
+                    const result = await authClient.signIn.email({
+                      email,
+                      password,
+                    });
+                    if (result.error) {
+                      if (result.error.code === "EMAIL_NOT_VERIFIED") {
+                        router.push(`/email-verification?email=${email}`);
+                      }
+                      toast.error(result.error.message || "Failed to sign in.");
+                    }
+                    if (result.data) {
+                      router.push(callbackURL);
+                    }
+                  })}
+                >
+                  <FieldGroup>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("form.email.title")}</FormLabel>
+                          <FormControl>
+                            <Input
+                              autoComplete="email"
+                              required
+                              type="email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex justify-between items-center">
+                            <FormLabel>{t("form.password.title")}</FormLabel>
+                            <Link
+                              href="/forgot-password"
+                              className="text-sm font-normal ms-auto underline-offset-4 hover:underline"
+                            >
+                              {t("form.forgotPassword")}
+                            </Link>
+                          </div>
+                          <FormControl>
+                            <PasswordInput
+                              autoComplete="current-password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Field>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full"
+                      >
+                        <LoadingSwap isLoading={isSubmitting}>
+                          {t("form.submit")}
+                        </LoadingSwap>
+                      </Button>
+                      <FieldDescription className="text-center flex justify-center gap-1">
+                        {t.rich("form.description", {
+                          url: (chunks) => (
+                            <Link
+                              href="/sign-up"
+                              className="underline-offset-4 hover:underline"
+                            >
+                              {chunks}
+                            </Link>
+                          ),
+                        })}
+                      </FieldDescription>
+                    </Field>
+                  </FieldGroup>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

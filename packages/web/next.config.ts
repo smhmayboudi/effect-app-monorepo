@@ -8,9 +8,6 @@ const nextConfig: NextConfig = {
       exclude: ["debug", "error"],
     },
   },
-  experimental: {
-    optimizePackageImports: ["@chakra-ui/react"],
-  },
   output: "standalone",
 };
 

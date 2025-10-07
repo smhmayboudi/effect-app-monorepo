@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Client from "./client";
 
 export const metadata: Metadata = {
-  title: "debug-auth",
-  description: "debug-auth",
+  title: "Debug Auth",
+  description: "Debug Auth",
 };
 
 export default function Page() {

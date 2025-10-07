@@ -1,40 +1,64 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import {
-  AbsoluteCenter,
-  Button,
-  Field,
-  Fieldset,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
 import { Schema } from "effect";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
-import { PasswordInput } from "@/component/ui/password-input";
-import { Toaster, toaster } from "@/component/ui/toaster";
+import { GalleryVerticalEnd } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
+import Link from "@/components/ui/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { toast } from "sonner";
 import { useEffect } from "react";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
   const schema = Schema.Struct({
-    email: Schema.NonEmptyString.pipe(
-      Schema.minLength(5),
-      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)
+    email: Schema.NonEmptyString.annotations({
+      message: () => t("form.email.nonEmptyString"),
+    }).pipe(
+      Schema.minLength(5, { message: () => t("form.email.minLength") }),
+      Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim, {
+        message: () => t("form.email.pattern"),
+      })
     ),
-    currentPassword: Schema.NonEmptyString,
-    newPassword: Schema.NonEmptyString,
+    currentPassword: Schema.NonEmptyString.annotations({
+      message: () => t("form.currentPassword.nonEmptyString"),
+    }),
+    newPassword: Schema.NonEmptyString.annotations({
+      message: () => t("form.newPassword.nonEmptyString"),
+    }),
   });
-  const { data } = authClient.useSession();
+  const form = useForm<typeof schema.Type>({
+    defaultValues: { email: "", currentPassword: "", newPassword: "" },
+    resolver: effectTsResolver(schema),
+  });
   const {
-    formState: { errors, isLoading, isValid },
+    formState: { isSubmitting },
     handleSubmit,
-    register,
     reset,
-  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  } = form;
 
+  const { data } = authClient.useSession();
   useEffect(() => {
     if (data) {
       reset({ email: data.user.email });
@@ -42,86 +66,101 @@ export default function Client() {
   }, [data]);
 
   return (
-    <AbsoluteCenter borderWidth="thin" padding="2">
-      <form
-        onSubmit={handleSubmit(async ({ currentPassword, newPassword }) => {
-          const result = await authClient.changePassword({
-            currentPassword,
-            newPassword,
-            revokeOtherSessions: true,
-          });
-          if (result.error) {
-            toaster.create({
-              description: result.error.message || "Failed to change password.",
-              type: "error",
-            });
-          }
-          if (result.data) {
-            toaster.create({
-              description: "User change password successfully!",
-              type: "success",
-            });
-          }
-        })}
-      >
-        <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
-          <Stack>
-            <Fieldset.Legend
-              fontSize="x-large"
-              marginBottom="2"
-              textAlign="center"
-            >
-              {t("title")}
-            </Fieldset.Legend>
-            <Fieldset.HelperText textAlign="center">
-              Please provide your information below.
-            </Fieldset.HelperText>
-          </Stack>
-          <Fieldset.Content marginBottom="2">
-            <Input
-              autoComplete="username"
-              hidden={true}
-              id="email"
-              {...register("email")}
-            />
-            <Field.Root invalid={!!errors.currentPassword} required>
-              <Field.Label htmlFor="currentPassword">
-                Current Password
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <PasswordInput
-                autoComplete="current-password"
-                id="currentPassword"
-                {...register("currentPassword")}
-              />
-              {errors.currentPassword && (
-                <Field.ErrorText>
-                  {errors.currentPassword.message}
-                </Field.ErrorText>
-              )}
-            </Field.Root>
-            <Field.Root invalid={!!errors.newPassword} required>
-              <Field.Label htmlFor="newPassword">
-                new Password
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <PasswordInput
-                autoComplete="new-password"
-                id="newPassword"
-                {...register("newPassword")}
-              />
-              {errors.newPassword && (
-                <Field.ErrorText>{errors.newPassword.message}</Field.ErrorText>
-              )}
-            </Field.Root>
-          </Fieldset.Content>
-          <Button type="submit">Submit</Button>
-          {errors.root && (
-            <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
-          )}
-        </Fieldset.Root>
-      </form>
-      <Toaster />
-    </AbsoluteCenter>
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Link
+          href="#"
+          className="flex items-center gap-2 self-center font-medium"
+        >
+          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd className="size-4" />
+          </div>
+          Acme Inc.
+        </Link>
+        <div className={cn("flex flex-col gap-6")}>
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">{t("title")}</CardTitle>
+              <CardDescription>{t("content")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  onSubmit={handleSubmit(
+                    async ({ currentPassword, newPassword }) => {
+                      const result = await authClient.changePassword({
+                        currentPassword,
+                        newPassword,
+                        revokeOtherSessions: true,
+                      });
+                      if (result.error) {
+                        toast.error(
+                          result.error.message || "Failed to change password."
+                        );
+                      }
+                      if (result.data) {
+                        toast.success("User change password successfully!");
+                      }
+                    }
+                  )}
+                >
+                  <FieldGroup>
+                    <FormField
+                      control={form.control}
+                      name="currentPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex justify-between items-center">
+                            <FormLabel>
+                              {t("form.currentPassword.title")}
+                            </FormLabel>
+                          </div>
+                          <FormControl>
+                            <PasswordInput
+                              autoComplete="current-password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="newPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex justify-between items-center">
+                            <FormLabel>{t("form.newPassword.title")}</FormLabel>
+                          </div>
+                          <FormControl>
+                            <PasswordInput
+                              autoComplete="new-password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Field>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full"
+                      >
+                        <LoadingSwap isLoading={isSubmitting}>
+                          {t("form.submit")}
+                        </LoadingSwap>
+                      </Button>
+                    </Field>
+                  </FieldGroup>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

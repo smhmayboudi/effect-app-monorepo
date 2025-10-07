@@ -1,6 +1,177 @@
 {
+  "component": {
+    "service-list": {
+      "table": {
+        "head": {
+          "ownerId": "شناسه کاربر",
+          "id": "شناسه سرویس",
+          "name": "نام سرویس",
+          "help": "راهنما"
+        },
+        "body": {
+          "help": "راهنما"
+        }
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "description": "داشبورد مدیریت",
+      "title": "داشبورد مدیریت"
+    }
+  },
+  "email-forgot-password": {
+    "content": "اگر ایمیل ({email}) در سیستم ما وجود دارد، ایمیل خود را برای لینک بازنشانی بررسی کنید.",
+    "description": "ایمیل فراموشی رمز عبور",
+    "title": "ایمیل فراموشی رمز عبور"
+  },
+  "email-verification": {
+    "content": "ما یک لینک تأیید به {email} ارسال کردیم. لطفاً ایمیل خود را بررسی کرده و برای تأیید حساب کاربری روی لینک کلیک کنید.",
+    "description": "تأیید ایمیل",
+    "title": "تأیید ایمیل"
+  },
+  "forgot-password": {
+    "content": "ایمیل خود را زیر وارد کنید تا حساب کاربری خود را بازیابی کنید",
+    "description": "فراموشی رمز عبور",
+    "form": {
+      "email": {
+        "minLength": "ایمیل باید حداقل ۵ کاراکتر باشد",
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "pattern": "فرمت ایمیل نامعتبر است",
+        "title": "ایمیل"
+      },
+      "submit": "فراموشی رمز عبور"
+    },
+    "title": "فراموشی رمز عبور"
+  },
+  "reset-password": {
+    "content": "رمز عبور جدید خود را برای بازنشانی رمز عبور حساب کاربری وارد کنید",
+    "description": "بازنشانی رمز عبور",
+    "error": {
+      "backToSignIn": "بازگشت به ورود",
+      "content": "لینک بازنشانی رمز عبور نامعتبر یا منقضی شده است.",
+      "title": "خطای بازنشانی رمز عبور"
+    },
+    "form": {
+      "newPassword": {
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "title": "رمز عبور جدید"
+      },
+      "token": {
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "title": "تکن"
+      },
+      "submit": "بازنشانی رمز عبور"
+    },
+    "title": "بازنشانی رمز عبور"
+  },
+  "sign-in": {
+    "content": "ایمیل خود را زیر وارد کنید تا به حساب کاربری خود وارد شوید",
+    "description": "ورود",
+    "form": {
+      "description": "حساب کاربری ندارید؟ <url>ثبت نام</url>",
+      "email": {
+        "minLength": "ایمیل باید حداقل ۵ کاراکتر باشد",
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "pattern": "فرمت ایمیل نامعتبر است",
+        "title": "ایمیل"
+      },
+      "forgotPassword": "فراموشی رمز عبور؟",
+      "password": {
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "title": "رمز عبور"
+      },
+      "submit": "ورود"
+    },
+    "title": "ورود",
+    "title2": "خوش آمدید"
+  },
+  "sign-up": {
+    "content": "ایمیل خود را زیر وارد کنید تا حساب کاربری خود را ایجاد کنید",
+    "description": "ثبت نام",
+    "description2": "با ادامه دادن، شما با <urlTOS>شرایط خدمات</urlTOS> و <urlPP>سیاست حفظ حریم خصوصی</urlPP> ما موافقت می کنید.",
+    "form": {
+      "description": "قبلاً حساب کاربری دارید؟ <url>ورود</url>",
+      "email": {
+        "minLength": "ایمیل باید حداقل ۵ کاراکتر باشد",
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "pattern": "فرمت ایمیل نامعتبر است",
+        "title": "ایمیل"
+      },
+      "name": {
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "title": "نام"
+      },
+      "password": {
+        "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+        "title": "رمز عبور"
+      },
+      "submit": "ثبت نام"
+    },
+    "title": "ثبت نام",
+    "title2": "حساب کاربری خود را ایجاد کنید"
+  },
+  "user": {
+    "change-password": {
+      "content": "رمز عبور جدید خود را زیر وارد کنید تا رمز عبور تغییر کند",
+      "form": {
+        "email": {
+          "minLength": "ایمیل باید حداقل ۵ کاراکتر باشد",
+          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+          "pattern": "فرمت ایمیل نامعتبر است",
+          "title": "ایمیل"
+        },
+        "currentPassword": {
+          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+          "title": "رمز عبور فعلی"
+        },
+        "newPassword": {
+          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+          "title": "رمز عبور جدید"
+        },
+        "submit": "تغییر رمز عبور"
+      },
+      "description": "تغییر رمز عبور کاربر",
+      "title": "تغییر رمز عبور کاربر"
+    },
+    "dashboard": {
+      "description": "داشبورد کاربر",
+      "title": "داشبورد کاربر"
+    },
+    "service-create": {
+      "content": "نام خود را زیر وارد کنید تا سرویس خود را ایجاد کنید",
+      "description": "ایجاد سرویس",
+      "form": {
+        "name": {
+          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+          "title": "نام"
+        },
+        "submit": "ایجاد سرویس"
+      },
+      "title": "ایجاد سرویس"
+    },
+    "service-help": {
+      "content": "این راهنمای {serviceId} است",
+      "description": "راهنمای سرویس {serviceId}",
+      "reference": "مرجع",
+      "title": "راهنمای سرویس {serviceId}",
+      "title2": "راهنمای سرویس"
+    },
+    "update": {
+      "content": "نام خود را زیر وارد کنید تا حساب کاربری خود را به روز کنید",
+      "form": {
+        "name": {
+          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+          "title": "نام"
+        },
+        "submit": "به روزرسانی"
+      },
+      "description": "به روزرسانی کاربر",
+      "title": "به روزرسانی کاربر"
+    }
+  },
   "index": {
     "title": "صفحه اصلی",
-    "description": "این صفحه از پیام‌های <code>./message/index/{locale}.json</code> و <code>./message/shared/{locale}.json</code> استفاده می‌کند. پیام‌های صفحه درباره و سایر زبان‌ها بارگذاری نشده‌اند."
+    "description": "صفحه اصلی"
   }
 }

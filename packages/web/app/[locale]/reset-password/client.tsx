@@ -1,39 +1,59 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import {
-  AbsoluteCenter,
-  Button,
-  Field,
-  Fieldset,
-  Stack,
-} from "@chakra-ui/react";
 import { Schema } from "effect";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
-import { PasswordInput } from "@/component/ui/password-input";
-import { Toaster, toaster } from "@/component/ui/toaster";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import Link from "@/components/ui/link";
+import { GalleryVerticalEnd } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { toast } from "sonner";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Button } from "@/components/ui/button";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 
-interface ClientProps {
-  error?: string;
-  token?: string;
-}
-
-export default function Client({ error, token }: ClientProps) {
+export default function Client() {
   const t = useTranslations("reset-password");
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error") || "";
+  const token = searchParams.get("token") || "";
+
   const schema = Schema.Struct({
-    newPassword: Schema.NonEmptyString,
-    token: Schema.NonEmptyString,
+    newPassword: Schema.NonEmptyString.annotations({
+      message: () => t("form.newPassword.nonEmptyString"),
+    }),
+    token: Schema.NonEmptyString.annotations({
+      message: () => t("form.token.nonEmptyString"),
+    }),
+  });
+  const form = useForm<typeof schema.Type>({
+    defaultValues: { newPassword: "", token: "" },
+    resolver: effectTsResolver(schema),
   });
   const {
-    formState: { errors, isLoading, isValid },
+    formState: { isSubmitting },
     handleSubmit,
-    register,
     reset,
-  } = useForm<typeof schema.Type>({ resolver: effectTsResolver(schema) });
+  } = form;
   const router = useRouter();
 
   useEffect(() => {
@@ -43,64 +63,105 @@ export default function Client({ error, token }: ClientProps) {
   }, [token]);
 
   return error ? (
-    <AbsoluteCenter borderWidth="thin" padding="2">
-      <Stack>
-        <p>{t("title")}</p>
-        <p>The password reset link is invalid or has expired.</p>
-      </Stack>
-    </AbsoluteCenter>
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Link
+          href="#"
+          className="flex items-center gap-2 self-center font-medium"
+        >
+          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd className="size-4" />
+          </div>
+          Acme Inc.
+        </Link>
+        <div className={cn("flex flex-col gap-6")}>
+          <Card className="w-full max-w-md mx-auto">
+            <CardHeader>
+              <CardTitle className="text-xl">{t("error.title")}</CardTitle>
+              <CardDescription>{t("error.content")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" asChild>
+                <Link href="/auth/login">{t("error.backToSignIn")}</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   ) : (
-    <AbsoluteCenter borderWidth="thin" padding="2">
-      <form
-        onSubmit={handleSubmit(async ({ newPassword }) => {
-          const result = await authClient.resetPassword({ newPassword, token });
-          if (result.error) {
-            toaster.create({
-              description: result.error.message || "Failed to reset password.",
-              type: "error",
-            });
-          }
-          if (result.data) {
-            router.push("/sign-in");
-          }
-        })}
-      >
-        <Fieldset.Root disabled={isLoading} invalid={!isValid} width="md">
-          <Stack>
-            <Fieldset.Legend
-              fontSize="x-large"
-              marginBottom="2"
-              textAlign="center"
-            >
-              {t("title")}
-            </Fieldset.Legend>
-            <Fieldset.HelperText textAlign="center">
-              Please provide your information below.
-            </Fieldset.HelperText>
-          </Stack>
-          <Fieldset.Content marginBottom="2">
-            <Field.Root invalid={!!errors.newPassword} required>
-              <Field.Label htmlFor="newPassword">
-                New Password
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <PasswordInput
-                autoComplete="new-password"
-                id="newPassword"
-                {...register("newPassword")}
-              />
-              {errors.newPassword && (
-                <Field.ErrorText>{errors.newPassword.message}</Field.ErrorText>
-              )}
-            </Field.Root>
-          </Fieldset.Content>
-          <Button type="submit">Submit</Button>
-          {errors.root && (
-            <Fieldset.ErrorText>{errors.root.message}</Fieldset.ErrorText>
-          )}
-        </Fieldset.Root>
-      </form>
-      <Toaster />
-    </AbsoluteCenter>
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Link
+          href="#"
+          className="flex items-center gap-2 self-center font-medium"
+        >
+          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd className="size-4" />
+          </div>
+          Acme Inc.
+        </Link>
+        <div className={cn("flex flex-col gap-6")}>
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">{t("title")}</CardTitle>
+              <CardDescription>{t("content")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  onSubmit={handleSubmit(async ({ newPassword, token }) => {
+                    const result = await authClient.resetPassword({
+                      newPassword,
+                      token,
+                    });
+                    if (result.error) {
+                      toast.error(
+                        result.error.message || "Failed to reset password."
+                      );
+                    }
+                    if (result.data) {
+                      router.push("/sign-in");
+                    }
+                  })}
+                >
+                  <FieldGroup>
+                    <FormField
+                      control={form.control}
+                      name="newPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex justify-between items-center">
+                            <FormLabel>{t("form.newPassword.title")}</FormLabel>
+                          </div>
+                          <FormControl>
+                            <PasswordInput
+                              autoComplete="new-password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Field>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full"
+                      >
+                        <LoadingSwap isLoading={isSubmitting}>
+                          {t("form.submit")}
+                        </LoadingSwap>
+                      </Button>
+                    </Field>
+                  </FieldGroup>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

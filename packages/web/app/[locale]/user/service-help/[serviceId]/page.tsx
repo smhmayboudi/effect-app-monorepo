@@ -17,7 +17,5 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
-  const { serviceId } = await props.params;
-
-  return <Client serviceId={serviceId} />;
+  return <Client />;
 }
