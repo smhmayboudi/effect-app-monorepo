@@ -70,7 +70,9 @@ export default async function RootLayout({
           enableSystem
         >
           <NextIntlClientProvider>
-            <Toaster />
+            <Toaster
+              position={locale === "fa" ? "bottom-left" : "bottom-right"}
+            />
             <ModeToggle />
             <LocaleSwitcher />
             {children}

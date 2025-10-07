@@ -80,7 +80,7 @@ export const config: MiddlewareConfig = {
         { key: "purpose", type: "header", value: "prefetch" },
       ],
       source:
-        "/((?!_next/image|_next/static|api|apple-icon$|favicon.ico|icon$|manifest.webmanifest|opengraph-image$|robots.txt|sitemap.xml|twitter-image$).*)",
+        "/((?!_next/image|_next/static|api|apple-icon$|favicon.ico|icon$|manifest.webmanifest|opengraph-image$|robots.txt|sitemap.xml|twitter-image$|shadcn.jpg).*)",
     },
   ],
 };
