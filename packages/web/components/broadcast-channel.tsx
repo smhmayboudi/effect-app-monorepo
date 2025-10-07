@@ -26,7 +26,7 @@ export function BroadcastChannelProvider({
 }: PropsWithChildren<BroadcastChannelProviderProps>) {
   const broadcastChannelService = useMemo(
     () => new BroadcastChannelService(channelName),
-    [channelName]
+    [channelName],
   );
 
   const onMessage = <T,>(callback: (message: T) => void): void => {
@@ -48,7 +48,7 @@ export function useBroadcastChannel() {
   const context = useContext(BroadcastChannelContext);
   if (context === undefined) {
     throw new Error(
-      "useBroadcastChannel must be used within a BroadcastChannelProvider"
+      "useBroadcastChannel must be used within a BroadcastChannelProvider",
     );
   }
   return context;

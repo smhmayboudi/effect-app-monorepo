@@ -1,19 +1,18 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
-  const isRTL =
-    typeof document !== "undefined"
-      ? document.documentElement.dir === "rtl"
-      : false;
+
+  const locale = useLocale();
 
   return (
     <Sonner
       className="toaster group"
-      position={isRTL ? "bottom-left" : "bottom-right"}
+      position={locale === "fa" ? "bottom-left" : "bottom-right"}
       style={
         {
           "--normal-bg": "var(--popover)",

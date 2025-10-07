@@ -27,7 +27,7 @@ export default function ServiceList({ userId }: ServiceListProps) {
             }
           : { sort: [{ column: "ownerId", sort: "ASC" }] },
       }),
-    [userId]
+    [userId],
   );
 
   const result = useAtomValue(readAll);

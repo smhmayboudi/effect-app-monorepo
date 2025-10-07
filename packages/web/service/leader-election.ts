@@ -100,7 +100,7 @@ export class LeaderElectionService {
 
     return () => {
       this.leaderCallbacks = this.leaderCallbacks.filter(
-        (cb) => cb !== callback
+        (cb) => cb !== callback,
       );
     };
   }

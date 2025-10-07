@@ -79,7 +79,7 @@ export default function Client() {
                     try {
                       const createMutation = HttpClient.mutation(
                         "service",
-                        "create"
+                        "create",
                       );
                       const registry = Registry.make();
                       registry.set(createMutation, {
@@ -92,11 +92,11 @@ export default function Client() {
                       const result = await Effect.runPromise(
                         Registry.getResult(registry, createMutation, {
                           suspendOnWaiting: true,
-                        })
+                        }),
                       );
                       if (result.data) {
                         toast.success(
-                          `Service ${result.data} create successfully!`
+                          `Service ${result.data} create successfully!`,
                         );
                       }
                       router.push("/user/dashboard");
@@ -104,7 +104,7 @@ export default function Client() {
                       toast.error(
                         `Failed to service create. ${
                           (error as any).message || ""
-                        }`
+                        }`,
                       );
                     }
                   })}

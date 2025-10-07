@@ -26,7 +26,7 @@ const Link = ({
       const activePathname = new URL(pathname, location.href).pathname;
       const linkPathname = new URL(
         props.as?.toString() ?? props.href.toString(),
-        location.href
+        location.href,
       ).pathname;
       const newClassName =
         activePathname === linkPathname

@@ -7,7 +7,7 @@ vi.mock("next-intl/server", () => ({
     (key: string) =>
       ({
         title: "Index",
-      }[key] || key)
+      })[key] || key,
   ),
 }));
 
@@ -16,7 +16,7 @@ describe("Index", () => {
     render(await Home());
 
     expect(
-      await screen.findByRole("heading", { level: 2, name: "Index" })
+      await screen.findByRole("heading", { level: 2, name: "Index" }),
     ).toBeDefined();
   });
 });

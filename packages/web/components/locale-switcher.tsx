@@ -23,7 +23,7 @@ export default function LocaleSwitcher() {
             {loc.toUpperCase()}
           </Link>
         )),
-        "locale"
+        "locale",
       )}
     </div>
   );

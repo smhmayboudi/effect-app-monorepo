@@ -39,7 +39,7 @@ export default function Client() {
       Schema.minLength(5, { message: () => t("form.email.minLength") }),
       Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim, {
         message: () => t("form.email.pattern"),
-      })
+      }),
     ),
   });
   const form = useForm<typeof schema.Type>({
@@ -81,7 +81,7 @@ export default function Client() {
                     });
                     if (result.error) {
                       toast.error(
-                        result.error.message || "Failed to forgot password."
+                        result.error.message || "Failed to forgot password.",
                       );
                     }
                     if (result.data) {

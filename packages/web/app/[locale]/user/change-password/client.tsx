@@ -39,7 +39,7 @@ export default function Client() {
       Schema.minLength(5, { message: () => t("form.email.minLength") }),
       Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim, {
         message: () => t("form.email.pattern"),
-      })
+      }),
     ),
     currentPassword: Schema.NonEmptyString.annotations({
       message: () => t("form.currentPassword.nonEmptyString"),
@@ -95,13 +95,13 @@ export default function Client() {
                       });
                       if (result.error) {
                         toast.error(
-                          result.error.message || "Failed to change password."
+                          result.error.message || "Failed to change password.",
                         );
                       }
                       if (result.data) {
                         toast.success("User change password successfully!");
                       }
-                    }
+                    },
                   )}
                 >
                   <FieldGroup>

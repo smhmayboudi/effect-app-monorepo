@@ -22,14 +22,14 @@ async function handler(request: NextRequest) {
     const response = await fetch(
       `http://127.0.0.1:3001/auth/00000000-0000-0000-0000-000000000000/${pathname.replace(
         "/api/auth/",
-        ""
+        "",
       )}`,
       {
         body: request.method !== "GET" ? await request.text() : undefined,
         credentials: "include",
         headers,
         method: request.method,
-      }
+      },
     );
     const data = await response.json();
     const res = NextResponse.json(data, {
@@ -39,7 +39,7 @@ async function handler(request: NextRequest) {
           "authorization,b3,content-type,idempotency-key,traceparent",
         "access-control-allow-methods": "DELETE,GET,OPTIONS,PATCH,POST,PUT",
         "access-control-allow-origin": allowedOrigins.includes(origin ?? "")
-          ? origin ?? ""
+          ? (origin ?? "")
           : "",
         "access-control-expose-headers":
           "authorization,content-type,set-cookie",
@@ -56,7 +56,7 @@ async function handler(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -73,9 +73,9 @@ export async function OPTIONS(request: NextRequest) {
         "authorization,b3,content-type,idempotency-key,traceparent",
       "access-control-allow-methods": "DELETE,GET,OPTIONS,PATCH,POST,PUT",
       "access-control-allow-origin": allowedOrigins.includes(
-        request.headers.get("origin") ?? ""
+        request.headers.get("origin") ?? "",
       )
-        ? request.headers.get("origin") ?? ""
+        ? (request.headers.get("origin") ?? "")
         : "",
       "access-control-expose-headers": "authorization,content-type,set-cookie",
       "access-control-max-age": "86400",

@@ -42,7 +42,7 @@ export default function Client() {
       Schema.minLength(5, { message: () => t("form.email.minLength") }),
       Schema.pattern(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim, {
         message: () => t("form.email.pattern"),
-      })
+      }),
     ),
     password: Schema.NonEmptyString.annotations({
       message: () => t("form.password.nonEmptyString"),

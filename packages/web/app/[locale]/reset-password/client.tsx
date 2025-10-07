@@ -117,7 +117,7 @@ export default function Client() {
                     });
                     if (result.error) {
                       toast.error(
-                        result.error.message || "Failed to reset password."
+                        result.error.message || "Failed to reset password.",
                       );
                     }
                     if (result.data) {
