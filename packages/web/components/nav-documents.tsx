@@ -4,6 +4,7 @@ import {
   FolderIcon,
   MoreHorizontalIcon,
   ShareIcon,
+  Trash,
   type LucideIcon,
 } from "lucide-react";
 
@@ -11,6 +12,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -52,7 +54,7 @@ export function NavDocuments({
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
                   showOnHover
-                  className="rounded-sm data-[state=open]:bg-accent"
+                  className="data-[state=open]:bg-accent rounded-sm"
                 >
                   <MoreHorizontalIcon />
                   <span className="sr-only">More</span>
@@ -72,6 +74,11 @@ export function NavDocuments({
                 <DropdownMenuItem>
                   <ShareIcon />
                   <span>Share</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive">
+                  <Trash />
+                  <span>Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -3,6 +3,7 @@ import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
+  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -11,21 +12,21 @@ import {
 
 export function SectionCards() {
   return (
-    <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
-        <CardHeader className="relative">
+        <CardHeader>
           <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             $1,250.00
           </CardTitle>
-          <div className="absolute end-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
+          <CardAction>
+            <Badge variant="outline">
+              <TrendingUpIcon />
               +12.5%
             </Badge>
-          </div>
+          </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             Trending up this month <TrendingUpIcon className="size-4" />
           </div>
@@ -35,19 +36,19 @@ export function SectionCards() {
         </CardFooter>
       </Card>
       <Card className="@container/card">
-        <CardHeader className="relative">
+        <CardHeader>
           <CardDescription>New Customers</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             1,234
           </CardTitle>
-          <div className="absolute end-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingDownIcon className="size-3" />
+          <CardAction>
+            <Badge variant="outline">
+              <TrendingDownIcon />
               -20%
             </Badge>
-          </div>
+          </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             Down 20% this period <TrendingDownIcon className="size-4" />
           </div>
@@ -57,19 +58,19 @@ export function SectionCards() {
         </CardFooter>
       </Card>
       <Card className="@container/card">
-        <CardHeader className="relative">
+        <CardHeader>
           <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             45,678
           </CardTitle>
-          <div className="absolute end-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
+          <CardAction>
+            <Badge variant="outline">
+              <TrendingUpIcon />
               +12.5%
             </Badge>
-          </div>
+          </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             Strong user retention <TrendingUpIcon className="size-4" />
           </div>
@@ -77,21 +78,21 @@ export function SectionCards() {
         </CardFooter>
       </Card>
       <Card className="@container/card">
-        <CardHeader className="relative">
+        <CardHeader>
           <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             4.5%
           </CardTitle>
-          <div className="absolute end-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
+          <CardAction>
+            <Badge variant="outline">
+              <TrendingUpIcon />
               +4.5%
             </Badge>
-          </div>
+          </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance <TrendingUpIcon className="size-4" />
+            Steady performance increase <TrendingUpIcon className="size-4" />
           </div>
           <div className="text-muted-foreground">Meets growth projections</div>
         </CardFooter>

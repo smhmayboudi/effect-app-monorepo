@@ -19,7 +19,7 @@ function ToggleGroup({
   className,
   variant,
   size,
-  direction = "ltr",
+  direction,
   children,
   ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
