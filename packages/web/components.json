@@ -13,8 +13,8 @@
   "style": "new-york",
   "tailwind": {
     "baseColor": "neutral",
-    "config": "tailwind.config.ts",
-    "css": "app/globals.css",
+    "config": "./tailwind.config.ts",
+    "css": "./src/app/globals.css",
     "cssVariables": true,
     "prefix": ""
   },

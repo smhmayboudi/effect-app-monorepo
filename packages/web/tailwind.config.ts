@@ -2,9 +2,9 @@ import type { Config } from "tailwindcss";
 
 export default {
   content: [
-    "app/**/*.{ts,tsx}",
-    "component/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
+    "./src/app/**/*.{ts,tsx}",
+    "./src/component/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
   ],
   darkMode: "media",
   plugins: [],
