@@ -2,11 +2,9 @@ import type { ServiceId } from "@template/domain/service/application/ServiceAppl
 import type { BetterAuthOptions } from "better-auth"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { admin } from "better-auth/plugins"
 import { deepmerge } from "deepmerge-ts"
 import { drizzle } from "drizzle-orm/libsql/node"
 import { Redis } from "ioredis"
-import { ac, roles } from "./AuthenticationAdmin.js"
 import { options } from "./AuthenticationOptions.js"
 import * as schema from "./AuthenticationSchema.js"
 
@@ -27,9 +25,7 @@ export const auth = betterAuth(
         db,
         { debugLogs: true, provider: "sqlite", schema }
       ),
-      plugins: [
-        admin({ ac, roles })
-      ],
+      plugins: [],
       secondaryStorage: {
         delete: async (key) => {
           await redis.del(storageKey(key))
@@ -71,9 +67,7 @@ export const authF = (serviceId: ServiceId) => {
           db,
           { debugLogs: true, provider: "sqlite", schema }
         ),
-        plugins: [
-          admin({ ac, roles })
-        ],
+        plugins: [],
         secondaryStorage: {
           delete: async (key) => {
             await redis.del(storageKey(key))
