@@ -59,9 +59,10 @@ export default async function RootLayout({
       dir={locale === "fa" ? "rtl" : "ltr"}
       lang={locale}
       suppressHydrationWarning
+      className="theme-default"
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased theme-container`}
       >
         <ThemeProvider
           attribute="class"
