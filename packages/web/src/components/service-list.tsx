@@ -1,6 +1,6 @@
 "use client";
 
-import { ServiceListEmpty } from "./service-list-empty";
+import { ServiceListEmpty } from "@/components/service-list-empty";
 import Link from "@/components/ui/link";
 import { HttpClient } from "@/lib/http-client";
 import { Result, useAtomValue } from "@effect-atom/atom-react";
