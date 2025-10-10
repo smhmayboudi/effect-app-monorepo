@@ -61,7 +61,7 @@ export default function Client() {
   const locale = useLocale();
   const onSubmit = handleSubmit(async ({ email, name, password }) => {
     const result = await authClient.signUp.email({
-      callbackURL: `http://127.0.0.1:3001/${locale}/user/dashboard`,
+      callbackURL: `http://127.0.0.1:3002/${locale}/user/dashboard`,
       email,
       name,
       password,
