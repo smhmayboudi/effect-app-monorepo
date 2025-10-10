@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -25,6 +26,7 @@ export function SiteHeader({ direction }: { direction: "ltr" | "rtl" }) {
               GitHub
             </a>
           </Button>
+          <ModeToggle direction={direction} />
         </div>
       </div>
     </header>

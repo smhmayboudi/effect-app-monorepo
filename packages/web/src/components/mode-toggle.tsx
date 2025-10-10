@@ -7,31 +7,53 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Moon, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Check, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
 
-export function ModeToggle() {
-  const { setTheme } = useTheme();
+export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
+  const { setTheme, theme } = useTheme();
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir={direction}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="ghost" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem
+          defaultChecked={theme === "light"}
+          onClick={() => setTheme("light")}
+        >
           Light
+          <Check
+            size={14}
+            className={cn("ms-auto", theme !== "light" && "hidden")}
+          />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem
+          defaultChecked={theme === "dark"}
+          onClick={() => setTheme("dark")}
+        >
           Dark
+          <Check
+            size={14}
+            className={cn("ms-auto", theme !== "dark" && "hidden")}
+          />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem
+          defaultChecked={theme === "system"}
+          onClick={() => setTheme("system")}
+        >
           System
+          <Check
+            size={14}
+            className={cn("ms-auto", theme !== "system" && "hidden")}
+          />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
