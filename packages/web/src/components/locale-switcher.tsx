@@ -5,7 +5,7 @@ import { routing } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import { useFormatter } from "next-intl";
 
-export default function LocaleSwitcher() {
+export function LocaleSwitcher() {
   const format = useFormatter();
   const locale = useLocale();
   const pathname = usePathname();

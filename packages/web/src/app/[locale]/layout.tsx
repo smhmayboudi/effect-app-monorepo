@@ -1,6 +1,4 @@
 import "../globals.css";
-import LocaleSwitcher from "@/components/locale-switcher";
-import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitals } from "@/components/web-vitals";
@@ -71,12 +69,10 @@ export default async function RootLayout({
           enableSystem
         >
           <NextIntlClientProvider>
+            {children}
             <Toaster
               position={locale === "fa" ? "bottom-left" : "bottom-right"}
             />
-            <ModeToggle />
-            <LocaleSwitcher />
-            {children}
           </NextIntlClientProvider>
         </ThemeProvider>
         <GoogleTagManager

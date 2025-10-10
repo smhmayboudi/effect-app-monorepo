@@ -17,7 +17,7 @@ export function ServiceListEmpty() {
   return (
     <Empty className="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
       <EmptyHeader>
-        <EmptyMedia variant="icon">
+        <EmptyMedia className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-md" variant="icon">
           <List />
         </EmptyMedia>
         <EmptyTitle>{t("title")}</EmptyTitle>
