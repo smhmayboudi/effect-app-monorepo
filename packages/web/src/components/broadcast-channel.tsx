@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
+import * as React from "react";
 import { BroadcastChannelService } from "@/service/broadcast-channel";
 
 interface BroadcastChannelContextType {
@@ -14,7 +9,7 @@ interface BroadcastChannelContextType {
 }
 
 const BroadcastChannelContext =
-  createContext<BroadcastChannelContextType | null>(null);
+  React.createContext<BroadcastChannelContextType | null>(null);
 
 interface BroadcastChannelProviderProps {
   channelName: string;
@@ -23,8 +18,8 @@ interface BroadcastChannelProviderProps {
 export function BroadcastChannelProvider({
   channelName,
   children,
-}: PropsWithChildren<BroadcastChannelProviderProps>) {
-  const broadcastChannelService = useMemo(
+}: React.PropsWithChildren<BroadcastChannelProviderProps>) {
+  const broadcastChannelService = React.useMemo(
     () => new BroadcastChannelService(channelName),
     [channelName],
   );
@@ -45,7 +40,7 @@ export function BroadcastChannelProvider({
 }
 
 export function useBroadcastChannel() {
-  const context = useContext(BroadcastChannelContext);
+  const context = React.useContext(BroadcastChannelContext);
   if (context === undefined) {
     throw new Error(
       "useBroadcastChannel must be used within a BroadcastChannelProvider",

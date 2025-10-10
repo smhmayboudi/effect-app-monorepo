@@ -1,7 +1,7 @@
 "use client";
 
 import { useReportWebVitals } from "next/web-vitals";
-import { useEffect, useRef } from "react";
+import * as React from "react";
 import type { Metric } from "web-vitals";
 
 interface UseWebVitalsOptions {
@@ -15,9 +15,9 @@ export function useWebVitals({
   enabled = true,
   analyticsEndpoint = "/api/web-vitals",
 }: UseWebVitalsOptions = {}) {
-  const analyticsEndpointRef = useRef(analyticsEndpoint);
+  const analyticsEndpointRef = React.useRef(analyticsEndpoint);
 
-  useEffect(() => {
+  React.useEffect(() => {
     analyticsEndpointRef.current = analyticsEndpoint;
   }, [analyticsEndpoint]);
 

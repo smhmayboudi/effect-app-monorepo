@@ -2,7 +2,7 @@
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import { HttpClient } from "@/lib/http-client";
-import { useMemo } from "react";
+import * as React from "react";
 import Link from "@/components/ui/link";
 import { useTranslations } from "next-intl";
 
@@ -10,7 +10,7 @@ type ServiceListProps = { userId?: string };
 
 export default function ServiceList({ userId }: ServiceListProps) {
   const t = useTranslations("component.service-list");
-  const readAll = useMemo(
+  const readAll = React.useMemo(
     () =>
       HttpClient.query("service", "readAll", {
         reactivityKeys: userId ? [`services:${userId}`] : ["services"],

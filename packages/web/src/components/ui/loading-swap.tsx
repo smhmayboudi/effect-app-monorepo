@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Loader2Icon } from "lucide-react";
-import type { ReactNode } from "react";
+import * as React from "react";
 
 export function LoadingSwap({
   isLoading,
@@ -8,7 +8,7 @@ export function LoadingSwap({
   className,
 }: {
   isLoading: boolean;
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
 }) {
   return (
