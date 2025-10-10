@@ -12,6 +12,11 @@
           "help": "Help"
         }
       }
+    },
+    "service-list-empty": {
+      "description": "New services will appear here.",
+      "serviceCreate": "Service create",
+      "title": "No Services"
     }
   },
   "admin": {
