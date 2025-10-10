@@ -1,9 +1,10 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { LinkProps } from "next/link";
 import * as React from "react";
+
 import { Link as Linki18, usePathname } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 
 const Link = ({
