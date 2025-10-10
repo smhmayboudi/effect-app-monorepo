@@ -1,7 +1,16 @@
 import { ModeToggle } from "@/components/mode-toggle";
+import { NavUser } from "@/components/nav-user";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
+const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/shadcn.jpg",
+  },
+};
 
 export function SiteHeader({ direction }: { direction: "ltr" | "rtl" }) {
   return (
@@ -27,6 +36,7 @@ export function SiteHeader({ direction }: { direction: "ltr" | "rtl" }) {
             </a>
           </Button>
           <ModeToggle direction={direction} />
+          <NavUser direction={direction} isHeader={true} user={data.user} />
         </div>
       </div>
     </header>

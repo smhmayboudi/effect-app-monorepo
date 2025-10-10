@@ -178,7 +178,7 @@ export function AppSidebar({
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} direction={direction} />
+        <NavUser direction={direction} isHeader={false} user={data.user} />
       </SidebarFooter>
     </Sidebar>
   );
