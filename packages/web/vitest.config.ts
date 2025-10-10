@@ -1,7 +1,7 @@
+import shared from "./vitest.shared.js";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig, mergeConfig } from "vitest/config";
-import shared from "./vitest.shared.js";
 
 const config = defineConfig({
   plugins: [tsconfigPaths(), react()],

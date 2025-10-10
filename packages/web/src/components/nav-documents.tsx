@@ -1,14 +1,6 @@
 "use client";
 
 import {
-  FolderIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
-  Trash,
-  type LucideIcon,
-} from "lucide-react";
-
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -24,6 +16,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  FolderIcon,
+  type LucideIcon,
+  MoreHorizontalIcon,
+  ShareIcon,
+  Trash,
+} from "lucide-react";
 
 export function NavDocuments({
   direction,

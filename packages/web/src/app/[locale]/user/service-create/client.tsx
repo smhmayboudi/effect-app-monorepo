@@ -1,12 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { Effect, Schema } from "effect";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { GalleryVerticalEnd } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,8 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import Link from "@/components/ui/link";
 import {
   Form,
   FormControl,
@@ -26,12 +17,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
-import { toast } from "sonner";
-
-import { Registry } from "@effect-atom/atom-react";
 import { HttpClient } from "@/lib/http-client";
+import { cn } from "@/lib/utils";
+import { Registry } from "@effect-atom/atom-react";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
+import { Effect, Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { v7 } from "uuid";
 
 export default function Client() {

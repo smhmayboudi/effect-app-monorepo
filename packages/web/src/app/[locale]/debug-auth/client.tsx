@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { authClient } from "@/lib/auth-client";
-import { GalleryVerticalEnd } from "lucide-react";
-import Link from "@/components/ui/link";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
+import Link from "@/components/ui/link";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Client() {
   const { data, isPending, refetch } = authClient.useSession();

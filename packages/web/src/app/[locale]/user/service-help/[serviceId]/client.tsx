@@ -1,8 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import Link from "@/components/ui/link";
-import { ExternalLink, GalleryVerticalEnd } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,7 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "@/components/ui/link";
 import { cn } from "@/lib/utils";
+import { ExternalLink, GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 export default function Client() {

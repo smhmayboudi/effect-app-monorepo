@@ -1,12 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { Schema } from "effect";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { useForm } from "react-hook-form";
-import { authClient } from "@/lib/auth-client";
-import { GalleryVerticalEnd } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
-import Link from "@/components/ui/link";
 import {
   Form,
   FormControl,
@@ -25,10 +17,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/password-input";
+import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
-import { toast } from "sonner";
+import { PasswordInput } from "@/components/ui/password-input";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
@@ -105,7 +105,7 @@ export default function Client() {
                       name="currentPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex justify-between items-center">
+                          <div className="flex items-center justify-between">
                             <FormLabel>
                               {t("form.currentPassword.title")}
                             </FormLabel>
@@ -125,7 +125,7 @@ export default function Client() {
                       name="newPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex justify-between items-center">
+                          <div className="flex items-center justify-between">
                             <FormLabel>{t("form.newPassword.title")}</FormLabel>
                           </div>
                           <FormControl>

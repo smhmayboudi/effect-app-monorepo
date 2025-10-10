@@ -1,13 +1,5 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
-import { Schema } from "effect";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { useForm } from "react-hook-form";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { GalleryVerticalEnd } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,8 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import Link from "@/components/ui/link";
 import {
   Form,
   FormControl,
@@ -27,8 +17,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/password-input";
+import { Input } from "@/components/ui/input";
+import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function Client() {
@@ -132,7 +132,7 @@ export default function Client() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex justify-between items-center">
+                          <div className="flex items-center justify-between">
                             <FormLabel>{t("form.password.title")}</FormLabel>
                           </div>
                           <FormControl>
@@ -155,7 +155,7 @@ export default function Client() {
                           {t("form.submit")}
                         </LoadingSwap>
                       </Button>
-                      <FieldDescription className="text-center flex justify-center gap-1">
+                      <FieldDescription className="flex justify-center gap-1 text-center">
                         {t.rich("form.description", {
                           url: (chunks) => (
                             <Link
@@ -173,7 +173,7 @@ export default function Client() {
               </Form>
             </CardContent>
           </Card>
-          <FieldDescription className="px-6 text-center flex justify-center flex-wrap gap-1">
+          <FieldDescription className="flex flex-wrap justify-center gap-1 px-6 text-center">
             {t.rich("description2", {
               urlTOS: (chunks) => (
                 <Link href="#" className="underline-offset-4 hover:underline">

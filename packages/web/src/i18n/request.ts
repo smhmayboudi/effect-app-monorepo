@@ -1,7 +1,7 @@
-import { type Formats, hasLocale } from "next-intl";
-import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 import messagesDefault from "@/messages/en.json";
+import { type Formats, hasLocale } from "next-intl";
+import { getRequestConfig } from "next-intl/server";
 import { headers } from "next/headers";
 
 export const formats = {

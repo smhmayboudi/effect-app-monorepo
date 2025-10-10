@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("should navigate to the index page", async ({ page }) => {
   await page.goto("/");

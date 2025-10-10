@@ -1,11 +1,11 @@
 "use client";
 
 import ServiceList from "@/components/service-list";
-import { useTranslations } from "next-intl";
-import Link from "@/components/ui/link";
-import { GalleryVerticalEnd } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "@/components/ui/link";
 import { cn } from "@/lib/utils";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function Client() {
   const t = useTranslations("admin.dashboard");

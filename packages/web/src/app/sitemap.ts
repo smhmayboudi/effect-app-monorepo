@@ -1,5 +1,5 @@
-import { MetadataRoute } from "next";
 import { getPathname } from "@/i18n/navigation";
+import { MetadataRoute } from "next";
 
 const host = "http://127.0.0.1:3002";
 

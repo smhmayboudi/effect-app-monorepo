@@ -1,9 +1,8 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
-
-import { cn } from "@/lib/utils";
 
 function Drawer({
   ...props
@@ -82,7 +81,7 @@ function DrawerHeader({
       data-slot="drawer-header"
       className={cn(
         "flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5",
-        direction === "rtl" ? " md:text-right" : " md:text-left",
+        direction === "rtl" ? "md:text-right" : "md:text-left",
         className,
       )}
       {...props}

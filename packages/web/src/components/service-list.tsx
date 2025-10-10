@@ -1,11 +1,11 @@
 "use client";
 
-import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { HttpClient } from "@/lib/http-client";
-import * as React from "react";
-import Link from "@/components/ui/link";
-import { useTranslations } from "next-intl";
 import { ServiceListEmpty } from "./service-list-empty";
+import Link from "@/components/ui/link";
+import { HttpClient } from "@/lib/http-client";
+import { Result, useAtomValue } from "@effect-atom/atom-react";
+import { useTranslations } from "next-intl";
+import * as React from "react";
 
 type ServiceListProps = { userId?: string };
 

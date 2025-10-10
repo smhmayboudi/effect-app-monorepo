@@ -1,5 +1,5 @@
-import { getTranslations } from "next-intl/server";
 import Nav from "@/components/nav";
+import { getTranslations } from "next-intl/server";
 
 export default async function Page() {
   const t = await getTranslations("index");

@@ -1,23 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { Schema } from "effect";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { useForm } from "react-hook-form";
-import { authClient } from "@/lib/auth-client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import Link from "@/components/ui/link";
-import { GalleryVerticalEnd } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -26,10 +9,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { toast } from "sonner";
-import { PasswordInput } from "@/components/ui/password-input";
-import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function Client() {
   const t = useTranslations("reset-password");
@@ -86,7 +86,7 @@ export default function Client() {
           Acme Inc.
         </Link>
         <div className={cn("flex flex-col gap-6")}>
-          <Card className="w-full max-w-md mx-auto">
+          <Card className="mx-auto w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-xl">{t("error.title")}</CardTitle>
               <CardDescription>{t("error.content")}</CardDescription>
@@ -127,7 +127,7 @@ export default function Client() {
                       name="newPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex justify-between items-center">
+                          <div className="flex items-center justify-between">
                             <FormLabel>{t("form.newPassword.title")}</FormLabel>
                           </div>
                           <FormControl>

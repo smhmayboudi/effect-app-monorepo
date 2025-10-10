@@ -1,12 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, VariantProps } from "class-variance-authority";
-import { PanelLeftIcon, PanelRightIcon } from "lucide-react"; // Added PanelRightIcon
-
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +17,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+// Added PanelRightIcon
+
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot";
+import { VariantProps, cva } from "class-variance-authority";
+import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
+import * as React from "react";
 
 const SIDEBAR_COOKIE_NAME = "__next_sidebar";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -313,8 +314,8 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
         "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear after:absolute after:inset-y-0 after:w-[2px] sm:flex",
         // RTL-aware positioning
         direction === "rtl"
-          ? "group-data-[side=left]:-left-4 group-data-[side=right]:right-0 after:left-1/2 group-data-[side=left]:cursor-e-resize group-data-[side=right]:cursor-w-resize [[data-side=left][data-state=collapsed]_&]:cursor-w-resize [[data-side=right][data-state=collapsed]_&]:cursor-e-resize [[data-side=left][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-collapsible=offcanvas]_&]:-right-2"
-          : "group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:left-1/2 group-data-[side=left]:cursor-w-resize group-data-[side=right]:cursor-e-resize [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+          ? "group-data-[side=left]:-left-4 group-data-[side=left]:cursor-e-resize group-data-[side=right]:right-0 group-data-[side=right]:cursor-w-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-left-2 [[data-side=left][data-state=collapsed]_&]:cursor-w-resize [[data-side=right][data-collapsible=offcanvas]_&]:-right-2 [[data-side=right][data-state=collapsed]_&]:cursor-e-resize"
+          : "group-data-[side=left]:-right-4 group-data-[side=left]:cursor-w-resize group-data-[side=right]:left-0 group-data-[side=right]:cursor-e-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         "hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full",
         className,
       )}
@@ -547,8 +548,8 @@ function SidebarMenuButton({
         sidebarMenuButtonVariants({ variant, size }),
         // RTL-aware padding
         direction === "rtl"
-          ? "group-has-data-[sidebar=menu-action]/menu-item:pl-8 text-right"
-          : "group-has-data-[sidebar=menu-action]/menu-item:pr-8 text-left",
+          ? "text-right group-has-data-[sidebar=menu-action]/menu-item:pl-8"
+          : "text-left group-has-data-[sidebar=menu-action]/menu-item:pr-8",
         className,
       )}
       {...props}
