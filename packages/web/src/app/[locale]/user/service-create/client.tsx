@@ -50,6 +50,34 @@ export default function Client() {
     handleSubmit,
   } = form;
   const router = useRouter();
+  const onSubmit = handleSubmit(async ({ name }) => {
+    try {
+      const createMutation = HttpClient.mutation("service", "create");
+      const registry = Registry.make();
+      registry.set(createMutation, {
+        headers: {
+          "idempotency-key": IdempotencyKeyClient.make(v7()),
+        },
+        payload: { name },
+        reactivityKeys: ["services"],
+      });
+      const result = await Effect.runPromise(
+        Registry.getResult(registry, createMutation, {
+          suspendOnWaiting: true,
+        }),
+      );
+      if (result.data) {
+        toast.success(`Service ${result.data} create successfully!`);
+      }
+      router.push("/user/dashboard");
+    } catch (error) {
+      toast.error(
+        `Failed to service create. ${
+          (error as { message: string }).message || ""
+        }`,
+      );
+    }
+  });
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -71,41 +99,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(async ({ name }) => {
-                    try {
-                      const createMutation = HttpClient.mutation(
-                        "service",
-                        "create",
-                      );
-                      const registry = Registry.make();
-                      registry.set(createMutation, {
-                        headers: {
-                          "idempotency-key": IdempotencyKeyClient.make(v7()),
-                        },
-                        payload: { name },
-                        reactivityKeys: ["services"],
-                      });
-                      const result = await Effect.runPromise(
-                        Registry.getResult(registry, createMutation, {
-                          suspendOnWaiting: true,
-                        }),
-                      );
-                      if (result.data) {
-                        toast.success(
-                          `Service ${result.data} create successfully!`,
-                        );
-                      }
-                      router.push("/user/dashboard");
-                    } catch (error) {
-                      toast.error(
-                        `Failed to service create. ${
-                          (error as { message: string }).message || ""
-                        }`,
-                      );
-                    }
-                  })}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}

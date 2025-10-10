@@ -52,6 +52,18 @@ export default function Client() {
   } = form;
   const router = useRouter();
   const locale = useLocale();
+  const onSubmit = handleSubmit(async ({ email }) => {
+    const result = await authClient.forgetPassword({
+      email,
+      redirectTo: `http://127.0.0.1:3002/${locale}/reset-password`,
+    });
+    if (result.error) {
+      toast.error(result.error.message || "Failed to forgot password.");
+    }
+    if (result.data) {
+      router.push(`/email-forgot-password?email=${email}`);
+    }
+  });
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -73,22 +85,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(async ({ email }) => {
-                    const result = await authClient.forgetPassword({
-                      email,
-                      redirectTo: `http://127.0.0.1:3002/${locale}/reset-password`,
-                    });
-                    if (result.error) {
-                      toast.error(
-                        result.error.message || "Failed to forgot password.",
-                      );
-                    }
-                    if (result.data) {
-                      router.push(`/email-forgot-password?email=${email}`);
-                    }
-                  })}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}

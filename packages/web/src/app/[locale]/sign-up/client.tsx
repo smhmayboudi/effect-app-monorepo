@@ -59,6 +59,20 @@ export default function Client() {
   } = form;
   const router = useRouter();
   const locale = useLocale();
+  const onSubmit = handleSubmit(async ({ email, name, password }) => {
+    const result = await authClient.signUp.email({
+      callbackURL: `http://127.0.0.1:3001/${locale}/user/dashboard`,
+      email,
+      name,
+      password,
+    });
+    if (result.error) {
+      toast.error(result.error.message || "Failed to sign up.");
+    }
+    if (result.data) {
+      router.push(`/email-verification?email=${email}`);
+    }
+  });
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -80,22 +94,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(async ({ email, name, password }) => {
-                    const result = await authClient.signUp.email({
-                      callbackURL: `http://127.0.0.1:3001/${locale}/user/dashboard`,
-                      email,
-                      name,
-                      password,
-                    });
-                    if (result.error) {
-                      toast.error(result.error.message || "Failed to sign up.");
-                    }
-                    if (result.data) {
-                      router.push(`/email-verification?email=${email}`);
-                    }
-                  })}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}

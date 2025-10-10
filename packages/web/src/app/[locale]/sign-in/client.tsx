@@ -57,6 +57,21 @@ export default function Client() {
     handleSubmit,
   } = form;
   const router = useRouter();
+  const onSubmit = handleSubmit(async ({ email, password }) => {
+    const result = await authClient.signIn.email({
+      email,
+      password,
+    });
+    if (result.error) {
+      if (result.error.code === "EMAIL_NOT_VERIFIED") {
+        router.push(`/email-verification?email=${email}`);
+      }
+      toast.error(result.error.message || "Failed to sign in.");
+    }
+    if (result.data) {
+      router.push(callbackURL);
+    }
+  });
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -78,23 +93,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(async ({ email, password }) => {
-                    const result = await authClient.signIn.email({
-                      email,
-                      password,
-                    });
-                    if (result.error) {
-                      if (result.error.code === "EMAIL_NOT_VERIFIED") {
-                        router.push(`/email-verification?email=${email}`);
-                      }
-                      toast.error(result.error.message || "Failed to sign in.");
-                    }
-                    if (result.data) {
-                      router.push(callbackURL);
-                    }
-                  })}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}

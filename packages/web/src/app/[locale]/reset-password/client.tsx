@@ -33,10 +33,6 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 
 export default function Client() {
   const t = useTranslations("reset-password");
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error") || "";
-  const token = searchParams.get("token") || "";
-
   const schema = Schema.Struct({
     newPassword: Schema.NonEmptyString.annotations({
       message: () => t("form.newPassword.nonEmptyString"),
@@ -55,7 +51,22 @@ export default function Client() {
     reset,
   } = form;
   const router = useRouter();
+  const onSubmit = handleSubmit(async ({ newPassword, token }) => {
+    const result = await authClient.resetPassword({
+      newPassword,
+      token,
+    });
+    if (result.error) {
+      toast.error(result.error.message || "Failed to reset password.");
+    }
+    if (result.data) {
+      router.push("/sign-in");
+    }
+  });
 
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error") || "";
+  const token = searchParams.get("token") || "";
   useEffect(() => {
     if (token) {
       reset({ token });
@@ -109,22 +120,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(async ({ newPassword, token }) => {
-                    const result = await authClient.resetPassword({
-                      newPassword,
-                      token,
-                    });
-                    if (result.error) {
-                      toast.error(
-                        result.error.message || "Failed to reset password.",
-                      );
-                    }
-                    if (result.data) {
-                      router.push("/sign-in");
-                    }
-                  })}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}

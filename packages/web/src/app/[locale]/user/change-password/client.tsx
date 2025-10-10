@@ -57,6 +57,19 @@ export default function Client() {
     handleSubmit,
     reset,
   } = form;
+  const onSubmit = handleSubmit(async ({ currentPassword, newPassword }) => {
+    const result = await authClient.changePassword({
+      currentPassword,
+      newPassword,
+      revokeOtherSessions: true,
+    });
+    if (result.error) {
+      toast.error(result.error.message || "Failed to change password.");
+    }
+    if (result.data) {
+      toast.success("User change password successfully!");
+    }
+  });
 
   const { data } = authClient.useSession();
   useEffect(() => {
@@ -85,25 +98,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(
-                    async ({ currentPassword, newPassword }) => {
-                      const result = await authClient.changePassword({
-                        currentPassword,
-                        newPassword,
-                        revokeOtherSessions: true,
-                      });
-                      if (result.error) {
-                        toast.error(
-                          result.error.message || "Failed to change password.",
-                        );
-                      }
-                      if (result.data) {
-                        toast.success("User change password successfully!");
-                      }
-                    },
-                  )}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}

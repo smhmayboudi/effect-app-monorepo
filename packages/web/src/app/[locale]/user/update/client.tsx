@@ -48,6 +48,16 @@ export default function Client() {
     reset,
   } = form;
   const router = useRouter();
+  const onSubmit = handleSubmit(async ({ name }) => {
+    const result = await authClient.updateUser({ name });
+    if (result.error) {
+      toast.error(result.error.message || "Failed to sign up.");
+    }
+    if (result.data) {
+      toast.success("Update successfully!");
+      router.push("/user/dashboard");
+    }
+  });
 
   const { data } = authClient.useSession();
   useEffect(() => {
@@ -76,18 +86,7 @@ export default function Client() {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form
-                  onSubmit={handleSubmit(async ({ name }) => {
-                    const result = await authClient.updateUser({ name });
-                    if (result.error) {
-                      toast.error(result.error.message || "Failed to sign up.");
-                    }
-                    if (result.data) {
-                      toast.success("Update successfully!");
-                      router.push("/user/dashboard");
-                    }
-                  })}
-                >
+                <form onSubmit={onSubmit}>
                   <FieldGroup>
                     <FormField
                       control={form.control}
