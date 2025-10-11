@@ -17,12 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-// Added PanelRightIcon
-
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
-import { VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
 import * as React from "react";
 
@@ -41,7 +39,7 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
-  direction: "ltr" | "rtl"; // Added direction to context
+  direction: "ltr" | "rtl";
 };
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
@@ -59,7 +57,7 @@ function SidebarProvider({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
-  direction = "ltr", // Added direction prop
+  direction = "ltr",
   className,
   style,
   children,
@@ -68,7 +66,7 @@ function SidebarProvider({
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  direction?: "ltr" | "rtl"; // Added direction prop
+  direction?: "ltr" | "rtl";
 }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
@@ -126,7 +124,7 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
-      direction, // Added direction to context
+      direction,
     }),
     [
       state,
@@ -145,7 +143,7 @@ function SidebarProvider({
       <TooltipProvider delayDuration={0}>
         <div
           data-slot="sidebar-wrapper"
-          dir={direction} // Added dir attribute
+          dir={direction}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH,
@@ -180,8 +178,6 @@ function Sidebar({
 }) {
   const { isMobile, state, openMobile, setOpenMobile, direction } =
     useSidebar();
-
-  // In RTL, swap left/right sides
   const effectiveSide =
     direction === "rtl" ? (side === "left" ? "right" : "left") : side;
 
@@ -204,6 +200,7 @@ function Sidebar({
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
+          direction={direction}
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
@@ -213,7 +210,7 @@ function Sidebar({
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
             } as React.CSSProperties
           }
-          side={effectiveSide} // Use effective side
+          side={effectiveSide}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Sidebar</SheetTitle>
@@ -231,7 +228,7 @@ function Sidebar({
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
-      data-side={effectiveSide} // Use effective side
+      data-side={effectiveSide}
       data-slot="sidebar"
     >
       {/* This is what handles the sidebar gap on desktop */}
@@ -250,7 +247,7 @@ function Sidebar({
         data-slot="sidebar-container"
         className={cn(
           "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
-          effectiveSide === "left" // Use effective side
+          effectiveSide === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
           // Adjust the padding for floating and inset variants.
@@ -300,7 +297,7 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const { toggleSidebar, direction } = useSidebar();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <button
@@ -312,10 +309,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       title="Toggle Sidebar"
       className={cn(
         "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear after:absolute after:inset-y-0 after:w-[2px] sm:flex",
-        // RTL-aware positioning
-        direction === "rtl"
-          ? "group-data-[side=left]:-left-4 group-data-[side=left]:cursor-e-resize group-data-[side=right]:right-0 group-data-[side=right]:cursor-w-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-left-2 [[data-side=left][data-state=collapsed]_&]:cursor-w-resize [[data-side=right][data-collapsible=offcanvas]_&]:-right-2 [[data-side=right][data-state=collapsed]_&]:cursor-e-resize"
-          : "group-data-[side=left]:-right-4 group-data-[side=left]:cursor-w-resize group-data-[side=right]:left-0 group-data-[side=right]:cursor-e-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+        "group-data-[side=left]:-right-4 group-data-[side=left]:cursor-w-resize group-data-[side=right]:left-0 group-data-[side=right]:cursor-e-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         "hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full",
         className,
       )}
@@ -452,7 +446,6 @@ function SidebarGroupAction({
       data-sidebar="group-action"
       className={cn(
         "text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground absolute top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
-        // RTL-aware positioning
         direction === "rtl" ? "left-3" : "right-3",
         // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 md:after:hidden",
@@ -546,7 +539,6 @@ function SidebarMenuButton({
       data-active={isActive}
       className={cn(
         sidebarMenuButtonVariants({ variant, size }),
-        // RTL-aware padding
         direction === "rtl"
           ? "text-right group-has-data-[sidebar=menu-action]/menu-item:pl-8"
           : "text-left group-has-data-[sidebar=menu-action]/menu-item:pr-8",
@@ -570,7 +562,7 @@ function SidebarMenuButton({
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
       <TooltipContent
-        side={direction === "rtl" ? "left" : "right"} // RTL-aware tooltip
+        side={direction === "rtl" ? "left" : "right"}
         align="center"
         hidden={state !== "collapsed" || isMobile}
         {...tooltip}
@@ -597,7 +589,6 @@ function SidebarMenuAction({
       data-sidebar="menu-action"
       className={cn(
         "text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground absolute top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-hidden transition-transform focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
-        // RTL-aware positioning
         direction === "rtl" ? "left-1" : "right-1",
         // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 md:after:hidden",
@@ -626,7 +617,6 @@ function SidebarMenuBadge({
       data-sidebar="menu-badge"
       className={cn(
         "text-sidebar-foreground pointer-events-none absolute flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums select-none",
-        // RTL-aware positioning
         direction === "rtl" ? "left-1" : "right-1",
         "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground",
         "peer-data-[size=sm]/menu-button:top-1",

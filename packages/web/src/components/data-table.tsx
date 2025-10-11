@@ -276,7 +276,7 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
           <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
             Reviewer
           </Label>
-          <Select dir={direction}>
+          <Select>
             <SelectTrigger
               className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
               size="sm"
@@ -284,7 +284,7 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
             >
               <SelectValue placeholder="Assign reviewer" />
             </SelectTrigger>
-            <SelectContent align="end">
+            <SelectContent>
               <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
               <SelectItem value="Jamik Tashpulatov">
                 Jamik Tashpulatov
@@ -298,7 +298,7 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
   {
     id: "actions",
     cell: () => (
-      <DropdownMenu dir={direction}>
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
@@ -415,15 +415,14 @@ export function DataTable({
 
   return (
     <Tabs
-      dir={direction}
       defaultValue="outline"
-      className="w-full flex-col justify-start gap-6"
+      className="flex w-full flex-col justify-start gap-6"
     >
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <Select defaultValue="outline" dir={direction}>
+        <Select defaultValue="outline">
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
             size="sm"
@@ -449,7 +448,7 @@ export function DataTable({
           <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
-          <DropdownMenu dir={direction}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <ColumnsIcon />
@@ -559,7 +558,6 @@ export function DataTable({
                 Rows per page
               </Label>
               <Select
-                dir={direction}
                 value={`${table.getState().pagination.pageSize}`}
                 onValueChange={(value) => {
                   table.setPageSize(Number(value));
@@ -686,7 +684,7 @@ function TableCellViewer({
   direction,
   item,
 }: {
-  direction: "rtl" | "ltr";
+  direction: "ltr" | "rtl";
   item: typeof schema.Type;
 }) {
   const isMobile = useIsMobile();
@@ -778,7 +776,7 @@ function TableCellViewer({
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="type">Type</Label>
-                <Select defaultValue={item.type} dir={direction}>
+                <Select defaultValue={item.type}>
                   <SelectTrigger id="type" className="w-full">
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
@@ -804,11 +802,11 @@ function TableCellViewer({
               </div>
               <div className="flex flex-col gap-3">
                 <Label htmlFor="status">Status</Label>
-                <Select defaultValue={item.status} dir={direction}>
+                <Select defaultValue={item.status}>
                   <SelectTrigger id="status" className="w-full">
                     <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
-                  <SelectContent align={direction === "rtl" ? "start" : "end"}>
+                  <SelectContent>
                     <SelectItem value="Done">Done</SelectItem>
                     <SelectItem value="In Progress">In Progress</SelectItem>
                     <SelectItem value="Not Started">Not Started</SelectItem>
@@ -828,7 +826,7 @@ function TableCellViewer({
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="reviewer">Reviewer</Label>
-              <Select defaultValue={item.reviewer} dir={direction}>
+              <Select defaultValue={item.reviewer}>
                 <SelectTrigger id="reviewer" className="w-full">
                   <SelectValue placeholder="Select a reviewer" />
                 </SelectTrigger>

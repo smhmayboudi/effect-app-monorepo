@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useDirection } from "@/context/direction-provider";
 import {
   FolderIcon,
   type LucideIcon,
@@ -25,10 +26,8 @@ import {
 } from "lucide-react";
 
 export function NavDocuments({
-  direction,
   items,
 }: {
-  direction: "ltr" | "rtl";
   items: {
     name: string;
     url: string;
@@ -36,6 +35,7 @@ export function NavDocuments({
   }[];
 }) {
   const { isMobile } = useSidebar();
+  const { dir } = useDirection();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -49,7 +49,7 @@ export function NavDocuments({
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
-            <DropdownMenu dir={direction}>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
                   showOnHover
@@ -61,9 +61,7 @@ export function NavDocuments({
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-24 rounded-lg"
-                side={
-                  isMobile ? "bottom" : direction === "rtl" ? "left" : "right"
-                }
+                side={isMobile ? "bottom" : dir === "rtl" ? "left" : "right"}
                 align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuItem>
