@@ -25,11 +25,9 @@ import {
 } from "lucide-react";
 
 export function NavUser({
-  direction,
   isHeader,
   user,
 }: {
-  direction: "ltr" | "rtl";
   isHeader: boolean;
   user: {
     name: string;
@@ -42,11 +40,11 @@ export function NavUser({
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu dir={direction}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size={!isHeader ? "lg" : "default"}
-              className="p-0 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-0"
             >
               <Avatar
                 className={`h-8 w-8 ${!isHeader ? "rounded-lg" : "rounded-sm"} grayscale`}

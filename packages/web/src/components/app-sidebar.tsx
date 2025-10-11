@@ -1,5 +1,6 @@
 "use client";
 
+import { AppTitle } from "@/components/app-title";
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -9,10 +10,9 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
+import { useLayout } from "@/context/layout-provider";
 import {
   BarChartIcon,
   CameraIcon,
@@ -22,7 +22,6 @@ import {
   FileIcon,
   FileTextIcon,
   FolderIcon,
-  GalleryVerticalEnd,
   HelpCircleIcon,
   LayoutDashboardIcon,
   ListIcon,
@@ -149,37 +148,23 @@ const data = {
   ],
 };
 
-export function AppSidebar({
-  direction,
-  ...props
-}: React.ComponentProps<typeof Sidebar> & { direction: "ltr" | "rtl" }) {
+export function AppSidebar() {
+  const { collapsible, variant } = useLayout();
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <a href="#">
-                <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-                  <GalleryVerticalEnd className="size-4" />
-                </div>
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <AppTitle />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} direction={direction} />
+        <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser direction={direction} isHeader={false} user={data.user} />
+        <NavUser isHeader={false} user={data.user} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

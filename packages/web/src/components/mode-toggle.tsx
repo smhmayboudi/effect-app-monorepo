@@ -7,16 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/context/theme-provider";
 import { cn } from "@/lib/utils";
 import { Check, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import * as React from "react";
 
-export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
+export function ModeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <DropdownMenu dir={direction}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />

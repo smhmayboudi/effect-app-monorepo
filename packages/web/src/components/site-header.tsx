@@ -1,8 +1,10 @@
+import { ConfigDrawer } from "@/components/config-drawer";
 import { ModeToggle } from "@/components/mode-toggle";
 import { NavUser } from "@/components/nav-user";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useDirection } from "@/context/direction-provider";
 
 const data = {
   user: {
@@ -12,7 +14,9 @@ const data = {
   },
 };
 
-export function SiteHeader({ direction }: { direction: "ltr" | "rtl" }) {
+export function SiteHeader() {
+  const { dir } = useDirection();
+
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
@@ -23,7 +27,7 @@ export function SiteHeader({ direction }: { direction: "ltr" | "rtl" }) {
         />
         <h1 className="text-base font-medium">Documents</h1>
         <div
-          className={`${direction === "rtl" ? "mr-auto" : "ml-auto"} flex items-center gap-2`}
+          className={`${dir === "rtl" ? "mr-auto" : "ml-auto"} flex items-center gap-2`}
         >
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
             <a
@@ -35,8 +39,9 @@ export function SiteHeader({ direction }: { direction: "ltr" | "rtl" }) {
               GitHub
             </a>
           </Button>
-          <ModeToggle direction={direction} />
-          <NavUser direction={direction} isHeader={true} user={data.user} />
+          <ModeToggle />
+          <ConfigDrawer />
+          <NavUser isHeader={true} user={data.user} />
         </div>
       </div>
     </header>

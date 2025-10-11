@@ -1,7 +1,9 @@
 import "../globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitals } from "@/components/web-vitals";
+import { DirectionProvider } from "@/context/direction-provider";
+import { FontProvider } from "@/context/font-provider";
+import { ThemeProvider } from "@/context/theme-provider";
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
@@ -56,25 +58,24 @@ export default async function RootLayout({
     <html
       dir={locale === "fa" ? "rtl" : "ltr"}
       lang={locale}
-      suppressHydrationWarning
+      suppressHydrationWarning={true}
       className="theme-default"
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} theme-container antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          disableTransitionOnChange
-          enableSystem
-        >
-          <NextIntlClientProvider>
-            {children}
-            <Toaster
-              position={locale === "fa" ? "bottom-left" : "bottom-right"}
-            />
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <DirectionProvider>
+          <FontProvider>
+            <ThemeProvider>
+              <NextIntlClientProvider>
+                {children}
+                <Toaster
+                  position={locale === "fa" ? "bottom-left" : "bottom-right"}
+                />
+              </NextIntlClientProvider>
+            </ThemeProvider>
+          </FontProvider>
+        </DirectionProvider>
         <GoogleTagManager
           gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
           nonce={nonce}

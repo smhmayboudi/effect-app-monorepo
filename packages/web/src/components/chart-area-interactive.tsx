@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useDirection } from "@/context/direction-provider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
@@ -136,11 +137,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartAreaInteractive({
-  direction,
-}: {
-  direction: "ltr" | "rtl";
-}) {
+export function ChartAreaInteractive() {
   const isMobile = useIsMobile();
   const [timeRange, setTimeRange] = React.useState("90d");
 
@@ -164,6 +161,8 @@ export function ChartAreaInteractive({
     return date >= startDate;
   });
 
+  const { dir } = useDirection();
+
   return (
     <Card className="@container/card">
       <CardHeader>
@@ -176,7 +175,7 @@ export function ChartAreaInteractive({
         </CardDescription>
         <CardAction>
           <ToggleGroup
-            direction={direction}
+            direction={dir}
             type="single"
             value={timeRange}
             onValueChange={setTimeRange}
@@ -195,11 +194,7 @@ export function ChartAreaInteractive({
             >
               <SelectValue placeholder="Last 3 months" />
             </SelectTrigger>
-            <SelectContent
-              align={direction === "rtl" ? "start" : "end"}
-              className="rounded-xl"
-              dir={direction}
-            >
+            <SelectContent className="rounded-xl">
               <SelectItem value="90d" className="rounded-lg">
                 Last 3 months
               </SelectItem>
@@ -247,7 +242,7 @@ export function ChartAreaInteractive({
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
-              reversed={direction === "rtl"}
+              reversed={dir === "rtl"}
               dataKey="date"
               tickLine={false}
               axisLine={false}
@@ -262,7 +257,7 @@ export function ChartAreaInteractive({
               }}
             />
             <ChartTooltip
-              reverseDirection={{ x: direction === "rtl" }}
+              reverseDirection={{ x: dir === "rtl" }}
               cursor={false}
               content={
                 <ChartTooltipContent
