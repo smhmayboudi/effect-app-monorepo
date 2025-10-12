@@ -4,87 +4,87 @@ export function IconLayoutFull(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       data-name="icon-layout-full"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 79.86 51.14"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
+        d="M6.85 14.49L15.02 14.49"
         fill="none"
         opacity={0.75}
         strokeLinecap="round"
         strokeMiterlimit={10}
         strokeWidth="3px"
-        d="M6.85 14.49L15.02 14.49"
       />
       <rect
+        height={2.73}
+        opacity={0.5}
+        rx={0.64}
+        ry={0.64}
+        strokeLinecap="round"
+        strokeMiterlimit={10}
+        width={25.6}
         x={5.84}
         y={18.39}
-        width={25.6}
-        height={2.73}
-        rx={0.64}
-        ry={0.64}
-        opacity={0.5}
-        strokeLinecap="round"
-        strokeMiterlimit={10}
       />
       <rect
+        height={2.73}
+        opacity={0.9}
+        rx={0.64}
+        ry={0.64}
+        strokeLinecap="round"
+        strokeMiterlimit={10}
+        width={68.26}
         x={5.84}
         y={5.89}
-        width={68.26}
-        height={2.73}
-        rx={0.64}
-        ry={0.64}
-        opacity={0.9}
-        strokeLinecap="round"
-        strokeMiterlimit={10}
       />
       <rect
-        x={5.84}
-        y={24.22}
-        width={37.71}
         height={19.95}
+        opacity={0.4}
         rx={2.11}
         ry={2.11}
-        opacity={0.4}
         strokeLinecap="round"
         strokeMiterlimit={10}
+        width={37.71}
+        x={5.84}
+        y={24.22}
       />
       <g strokeLinecap="round" strokeMiterlimit={10}>
         <rect
+          height={3.42}
+          opacity={0.32}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={59.05}
           y={38.15}
-          width={2.01}
-          height={3.42}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.32}
         />
         <rect
+          height={6.58}
+          opacity={0.44}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={54.78}
           y={34.99}
-          width={2.01}
-          height={6.58}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.44}
         />
         <rect
+          height={8.7}
+          opacity={0.53}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={63.17}
           y={32.86}
-          width={2.01}
-          height={8.7}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.53}
         />
         <rect
-          x={67.54}
-          y={29.17}
-          width={2.01}
           height={12.4}
+          opacity={0.66}
           rx={0.33}
           ry={0.33}
-          opacity={0.66}
+          width={2.01}
+          x={67.54}
+          y={29.17}
         />
       </g>
       <g opacity={0.5}>

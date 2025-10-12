@@ -1,10 +1,11 @@
 "use client";
 
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-type Theme = "dark" | "light" | "system";
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
+
 type ResolvedTheme = Exclude<Theme, "system">;
+type Theme = "dark" | "light" | "system";
 
 const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const THEME_COOKIE_NAME = "__next_theme";
@@ -17,19 +18,19 @@ type ThemeProviderProps = {
 };
 
 type ThemeProviderState = {
-  resetTheme: () => void;
   defaultTheme: Theme;
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  resetTheme: () => void;
   resolvedTheme: ResolvedTheme;
+  setTheme: (theme: Theme) => void;
+  theme: Theme;
 };
 
 const initialState: ThemeProviderState = {
   defaultTheme: THEME_DEFAULT,
-  resolvedTheme: "light",
-  theme: THEME_DEFAULT,
-  setTheme: () => null,
   resetTheme: () => null,
+  resolvedTheme: "light",
+  setTheme: () => null,
+  theme: THEME_DEFAULT,
 };
 
 const ThemeContext = createContext<ThemeProviderState>(initialState);
@@ -87,11 +88,11 @@ export function ThemeProvider({
   };
 
   const contextValue = {
-    resetTheme,
     defaultTheme,
-    theme,
-    setTheme,
+    resetTheme,
     resolvedTheme,
+    setTheme,
+    theme,
   };
 
   return (

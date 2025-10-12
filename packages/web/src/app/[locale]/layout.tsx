@@ -1,16 +1,18 @@
 import "../globals.css";
+import type { Metadata } from "next";
+import type { Product, WithContext } from "schema-dts";
+
+import { GoogleTagManager } from "@next/third-parties/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
+import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
+
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitals } from "@/components/web-vitals";
 import { DirectionProvider } from "@/context/direction-provider";
 import { FontProvider } from "@/context/font-provider";
 import { ThemeProvider } from "@/context/theme-provider";
-import { GoogleTagManager } from "@next/third-parties/google";
-import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
-import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
-import type { Product, WithContext } from "schema-dts";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -56,10 +58,10 @@ export default async function RootLayout({
 
   return (
     <html
+      className="theme-default"
       dir={locale === "fa" ? "rtl" : "ltr"}
       lang={locale}
       suppressHydrationWarning={true}
-      className="theme-default"
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} theme-container antialiased`}
@@ -82,10 +84,10 @@ export default async function RootLayout({
         />
         <WebVitals />
         <script
-          type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
           }}
+          type="application/ld+json"
         />
       </body>
     </html>

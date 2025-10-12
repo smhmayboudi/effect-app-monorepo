@@ -1,5 +1,13 @@
 "use client";
 
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,13 +31,6 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export default function Client() {
   const t = useTranslations("sign-up");
@@ -78,8 +79,8 @@ export default function Client() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link
-          href="#"
           className="flex items-center gap-2 self-center font-medium"
+          href="#"
         >
           <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <GalleryVerticalEnd className="size-4" />
@@ -147,9 +148,9 @@ export default function Client() {
                     />
                     <Field>
                       <Button
-                        type="submit"
-                        disabled={isSubmitting}
                         className="w-full"
+                        disabled={isSubmitting}
+                        type="submit"
                       >
                         <LoadingSwap isLoading={isSubmitting}>
                           {t("form.submit")}
@@ -159,8 +160,8 @@ export default function Client() {
                         {t.rich("form.description", {
                           url: (chunks) => (
                             <Link
-                              href="/sign-in"
                               className="underline-offset-4 hover:underline"
+                              href="/sign-in"
                             >
                               {chunks}
                             </Link>
@@ -175,13 +176,13 @@ export default function Client() {
           </Card>
           <FieldDescription className="flex flex-wrap justify-center gap-1 px-6 text-center">
             {t.rich("description2", {
-              urlTOS: (chunks) => (
-                <Link href="#" className="underline-offset-4 hover:underline">
+              urlPP: (chunks) => (
+                <Link className="underline-offset-4 hover:underline" href="#">
                   {chunks}
                 </Link>
               ),
-              urlPP: (chunks) => (
-                <Link href="#" className="underline-offset-4 hover:underline">
+              urlTOS: (chunks) => (
+                <Link className="underline-offset-4 hover:underline" href="#">
                   {chunks}
                 </Link>
               ),

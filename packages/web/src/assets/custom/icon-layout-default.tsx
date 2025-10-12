@@ -4,8 +4,8 @@ export function IconLayoutDefault(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       data-name="con-layout-default"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 79.86 51.14"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
@@ -13,63 +13,63 @@ export function IconLayoutDefault(props: SVGProps<SVGSVGElement>) {
         opacity={0.75}
       />
       <rect
-        x={29.63}
-        y={18.39}
-        width={16.72}
         height={2.73}
+        opacity={0.5}
         rx={1.36}
         ry={1.36}
-        opacity={0.5}
+        width={16.72}
+        x={29.63}
+        y={18.39}
       />
       <path
         d="M75.1 6.68v1.45c0 .63-.49 1.14-1.09 1.14H30.72c-.6 0-1.09-.51-1.09-1.14V6.68c0-.62.49-1.14 1.09-1.14h43.29c.6 0 1.09.52 1.09 1.14z"
         opacity={0.9}
       />
       <rect
-        x={29.63}
-        y={24.22}
-        width={21.8}
         height={19.95}
+        opacity={0.4}
         rx={2.11}
         ry={2.11}
-        opacity={0.4}
+        width={21.8}
+        x={29.63}
+        y={24.22}
       />
       <g strokeLinecap="round" strokeMiterlimit={10}>
         <rect
+          height={3.42}
+          opacity={0.32}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={61.06}
           y={38.15}
-          width={2.01}
-          height={3.42}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.32}
         />
         <rect
+          height={6.58}
+          opacity={0.44}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={56.78}
           y={34.99}
-          width={2.01}
-          height={6.58}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.44}
         />
         <rect
+          height={8.7}
+          opacity={0.53}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={65.17}
           y={32.86}
-          width={2.01}
-          height={8.7}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.53}
         />
         <rect
-          x={69.55}
-          y={29.17}
-          width={2.01}
           height={12.4}
+          opacity={0.66}
           rx={0.33}
           ry={0.33}
-          opacity={0.66}
+          width={2.01}
+          x={69.55}
+          y={29.17}
         />
       </g>
       <g opacity={0.5}>
@@ -82,41 +82,41 @@ export function IconLayoutDefault(props: SVGProps<SVGSVGElement>) {
       </g>
       <g strokeLinecap="round" strokeMiterlimit={10}>
         <rect
-          x={5.84}
-          y={5.02}
-          width={19.14}
           height={40}
+          opacity={0.8}
           rx={2}
           ry={2}
-          opacity={0.8}
+          width={19.14}
+          x={5.84}
+          y={5.02}
         />
         <g stroke="#fff">
           <path
+            d="M9.02 17.39L21.25 17.39"
             fill="none"
             opacity={0.72}
             strokeWidth="2px"
-            d="M9.02 17.39L21.25 17.39"
           />
           <path
+            d="M9.02 24.6L19.54 24.6"
             fill="none"
             opacity={0.48}
             strokeWidth="2px"
-            d="M9.02 24.6L19.54 24.6"
           />
           <path
+            d="M9.02 20.88L18.4 20.88"
             fill="none"
             opacity={0.55}
             strokeWidth="2px"
-            d="M9.02 20.88L18.4 20.88"
           />
-          <circle cx={10.98} cy={9.91} r={2.54} fill="#fff" opacity={0.8} />
+          <circle cx={10.98} cy={9.91} fill="#fff" opacity={0.8} r={2.54} />
           <path
+            d="M15.53 8.65L21.25 8.65"
             fill="none"
             opacity={0.8}
             strokeWidth="2px"
-            d="M15.53 8.65L21.25 8.65"
           />
-          <path fill="none" opacity={0.6} d="M15.32 11.3L20.38 11.3" />
+          <path d="M15.32 11.3L20.38 11.3" fill="none" opacity={0.6} />
         </g>
       </g>
     </svg>

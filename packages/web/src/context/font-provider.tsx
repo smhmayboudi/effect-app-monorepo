@@ -1,7 +1,8 @@
 "use client";
 
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 import { createContext, useContext, useEffect, useState } from "react";
+
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
 const fonts = ["inter", "manrope", "system"] as const;
 type Font = (typeof fonts)[number];
@@ -10,9 +11,9 @@ const FONT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const FONT_COOKIE_NAME = "__next_font";
 
 type FontContextType = {
-  resetFont: () => void;
   defaultFornt: Font;
   font: Font;
+  resetFont: () => void;
   setFont: (font: Font) => void;
 };
 
@@ -47,7 +48,7 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <FontContext value={{ resetFont, defaultFornt: fonts[0], font, setFont }}>
+    <FontContext value={{ defaultFornt: fonts[0], font, resetFont, setFont }}>
       {children}
     </FontContext>
   );

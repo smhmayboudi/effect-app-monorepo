@@ -4,118 +4,118 @@ export function IconLayoutCompact(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       data-name="icon-layout-compact"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 79.86 51.14"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <rect
-        x={5.84}
-        y={5.2}
-        width={4}
         height={40}
         rx={2}
         ry={2}
         strokeLinecap="round"
         strokeMiterlimit={10}
+        width={4}
+        x={5.84}
+        y={5.2}
       />
       <g stroke="#fff" strokeLinecap="round" strokeMiterlimit={10}>
         <path
+          d="M7.26 11.56L8.37 11.56"
           fill="none"
           opacity={0.66}
           strokeWidth="2px"
-          d="M7.26 11.56L8.37 11.56"
         />
         <path
+          d="M7.26 14.49L8.37 14.49"
           fill="none"
           opacity={0.51}
           strokeWidth="2px"
-          d="M7.26 14.49L8.37 14.49"
         />
         <path
+          d="M7.26 17.39L8.37 17.39"
           fill="none"
           opacity={0.52}
           strokeWidth="2px"
-          d="M7.26 17.39L8.37 17.39"
         />
-        <circle cx={7.81} cy={7.25} r={1.16} fill="#fff" opacity={0.8} />
+        <circle cx={7.81} cy={7.25} fill="#fff" opacity={0.8} r={1.16} />
       </g>
       <path
+        d="M15.81 14.49L22.89 14.49"
         fill="none"
         opacity={0.75}
         strokeLinecap="round"
         strokeMiterlimit={10}
         strokeWidth="3px"
-        d="M15.81 14.49L22.89 14.49"
       />
       <rect
+        height={2.73}
+        opacity={0.5}
+        rx={0.64}
+        ry={0.64}
+        strokeLinecap="round"
+        strokeMiterlimit={10}
+        width={22.19}
         x={14.93}
         y={18.39}
-        width={22.19}
-        height={2.73}
-        rx={0.64}
-        ry={0.64}
-        opacity={0.5}
-        strokeLinecap="round"
-        strokeMiterlimit={10}
       />
       <rect
+        height={2.73}
+        opacity={0.9}
+        rx={0.64}
+        ry={0.64}
+        strokeLinecap="round"
+        strokeMiterlimit={10}
+        width={59.16}
         x={14.93}
         y={5.89}
-        width={59.16}
-        height={2.73}
-        rx={0.64}
-        ry={0.64}
-        opacity={0.9}
-        strokeLinecap="round"
-        strokeMiterlimit={10}
       />
       <rect
-        x={14.93}
-        y={24.22}
-        width={32.68}
         height={19.95}
+        opacity={0.4}
         rx={2.11}
         ry={2.11}
-        opacity={0.4}
         strokeLinecap="round"
         strokeMiterlimit={10}
+        width={32.68}
+        x={14.93}
+        y={24.22}
       />
       <g strokeLinecap="round" strokeMiterlimit={10}>
         <rect
+          height={3.42}
+          opacity={0.32}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={59.05}
           y={38.15}
-          width={2.01}
-          height={3.42}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.32}
         />
         <rect
+          height={6.58}
+          opacity={0.44}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={54.78}
           y={34.99}
-          width={2.01}
-          height={6.58}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.44}
         />
         <rect
+          height={8.7}
+          opacity={0.53}
+          rx={0.33}
+          ry={0.33}
+          width={2.01}
           x={63.17}
           y={32.86}
-          width={2.01}
-          height={8.7}
-          rx={0.33}
-          ry={0.33}
-          opacity={0.53}
         />
         <rect
-          x={67.54}
-          y={29.17}
-          width={2.01}
           height={12.4}
+          opacity={0.66}
           rx={0.33}
           ry={0.33}
-          opacity={0.66}
+          width={2.01}
+          x={67.54}
+          y={29.17}
         />
       </g>
       <g opacity={0.5}>

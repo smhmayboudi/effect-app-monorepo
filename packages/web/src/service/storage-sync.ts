@@ -12,7 +12,7 @@
  * storageSync.setItem("app-theme", "dark");
  */
 export class StorageSyncService {
-  private listeners: Map<string, Set<(value: string | null) => void>> =
+  private listeners: Map<string, Set<(value: null | string) => void>> =
     new Map();
 
   constructor() {
@@ -24,15 +24,15 @@ export class StorageSyncService {
     });
   }
 
+  getItem(key: string): null | string {
+    return localStorage.getItem(key);
+  }
+
   setItem(key: string, value: string): void {
     localStorage.setItem(key, value);
   }
 
-  getItem(key: string): string | null {
-    return localStorage.getItem(key);
-  }
-
-  subscribe(key: string, callback: (value: string | null) => void): () => void {
+  subscribe(callback: (value: null | string) => void, key: string): () => void {
     if (!this.listeners.has(key)) {
       this.listeners.set(key, new Set());
     }

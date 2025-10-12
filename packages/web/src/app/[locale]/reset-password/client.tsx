@@ -1,5 +1,14 @@
 "use client";
 
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,14 +31,6 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export default function Client() {
   const t = useTranslations("reset-password");
@@ -77,8 +78,8 @@ export default function Client() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link
-          href="#"
           className="flex items-center gap-2 self-center font-medium"
+          href="#"
         >
           <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <GalleryVerticalEnd className="size-4" />
@@ -92,7 +93,7 @@ export default function Client() {
               <CardDescription>{t("error.content")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" asChild>
+              <Button asChild className="w-full">
                 <Link href="/auth/login">{t("error.backToSignIn")}</Link>
               </Button>
             </CardContent>
@@ -104,8 +105,8 @@ export default function Client() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link
-          href="#"
           className="flex items-center gap-2 self-center font-medium"
+          href="#"
         >
           <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <GalleryVerticalEnd className="size-4" />
@@ -142,9 +143,9 @@ export default function Client() {
                     />
                     <Field>
                       <Button
-                        type="submit"
-                        disabled={isSubmitting}
                         className="w-full"
+                        disabled={isSubmitting}
+                        type="submit"
                       >
                         <LoadingSwap isLoading={isSubmitting}>
                           {t("form.submit")}

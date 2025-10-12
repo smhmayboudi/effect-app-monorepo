@@ -1,19 +1,20 @@
 "use client";
 
-import * as React from "react";
-import { useReportWebVitals } from "next/web-vitals";
 import type { Metric } from "web-vitals";
 
+import { useReportWebVitals } from "next/web-vitals";
+import * as React from "react";
+
 interface UseWebVitalsOptions {
-  onMetricReport?: (metric: Metric) => void;
-  enabled?: boolean;
   analyticsEndpoint?: string;
+  enabled?: boolean;
+  onMetricReport?: (metric: Metric) => void;
 }
 
 export function useWebVitals({
-  onMetricReport,
-  enabled = true,
   analyticsEndpoint = "/api/web-vitals",
+  enabled = true,
+  onMetricReport,
 }: UseWebVitalsOptions = {}) {
   const analyticsEndpointRef = React.useRef(analyticsEndpoint);
 
@@ -36,10 +37,10 @@ export function useWebVitals({
 function sendToAnalytics(metric: Metric, endpoint: string) {
   const body = JSON.stringify({
     ...metric,
+    timestamp: new Date().toISOString(),
     // Add additional context
     url: window.location.href,
     userAgent: navigator.userAgent,
-    timestamp: new Date().toISOString(),
   });
 
   if (navigator.sendBeacon) {
@@ -47,11 +48,11 @@ function sendToAnalytics(metric: Metric, endpoint: string) {
   } else {
     fetch(endpoint, {
       body,
-      method: "POST",
-      keepalive: true,
       headers: {
         "Content-Type": "application/json",
       },
+      keepalive: true,
+      method: "POST",
     }).catch((error) => {
       console.error("Failed to send web vitals:", error);
     });

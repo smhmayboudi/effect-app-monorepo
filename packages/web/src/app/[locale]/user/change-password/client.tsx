@@ -1,5 +1,13 @@
 "use client";
 
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,17 +30,13 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
   const schema = Schema.Struct({
+    currentPassword: Schema.NonEmptyString.annotations({
+      message: () => t("form.currentPassword.nonEmptyString"),
+    }),
     email: Schema.NonEmptyString.annotations({
       message: () => t("form.email.nonEmptyString"),
     }).pipe(
@@ -41,15 +45,12 @@ export default function Client() {
         message: () => t("form.email.pattern"),
       }),
     ),
-    currentPassword: Schema.NonEmptyString.annotations({
-      message: () => t("form.currentPassword.nonEmptyString"),
-    }),
     newPassword: Schema.NonEmptyString.annotations({
       message: () => t("form.newPassword.nonEmptyString"),
     }),
   });
   const form = useForm<typeof schema.Type>({
-    defaultValues: { email: "", currentPassword: "", newPassword: "" },
+    defaultValues: { currentPassword: "", email: "", newPassword: "" },
     resolver: effectTsResolver(schema),
   });
   const {
@@ -82,8 +83,8 @@ export default function Client() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link
-          href="#"
           className="flex items-center gap-2 self-center font-medium"
+          href="#"
         >
           <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <GalleryVerticalEnd className="size-4" />
@@ -140,9 +141,9 @@ export default function Client() {
                     />
                     <Field>
                       <Button
-                        type="submit"
-                        disabled={isSubmitting}
                         className="w-full"
+                        disabled={isSubmitting}
+                        type="submit"
                       >
                         <LoadingSwap isLoading={isSubmitting}>
                           {t("form.submit")}

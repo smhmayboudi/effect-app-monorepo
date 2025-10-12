@@ -1,3 +1,6 @@
+import { List, PlusIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -8,8 +11,6 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import Link from "@/components/ui/link";
-import { List, PlusIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 export function ServiceListEmpty() {
   const t = useTranslations("component.service-list-empty");

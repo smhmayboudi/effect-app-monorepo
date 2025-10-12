@@ -23,6 +23,15 @@ export function getCookie(name: string): string | undefined {
 }
 
 /**
+ * Remove a cookie by setting its max age to 0
+ */
+export function removeCookie(name: string): void {
+  if (typeof document === "undefined") return;
+
+  document.cookie = `${name}=; path=/; max-age=0`;
+}
+
+/**
  * Set a cookie with name, value, and optional max age
  */
 export function setCookie(
@@ -33,13 +42,4 @@ export function setCookie(
   if (typeof document === "undefined") return;
 
   document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`;
-}
-
-/**
- * Remove a cookie by setting its max age to 0
- */
-export function removeCookie(name: string): void {
-  if (typeof document === "undefined") return;
-
-  document.cookie = `${name}=; path=/; max-age=0`;
 }

@@ -1,8 +1,9 @@
-import { routing } from "@/i18n/routing";
 import { getCookieCache } from "better-auth/cookies";
 import createMiddleware from "next-intl/middleware";
 import { type MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 import { v7 } from "uuid";
+
+import { routing } from "@/i18n/routing";
 
 export async function middleware(request: NextRequest) {
   const isAuth = ["/forgot-password", "/sign-in", "/sign-up"].some((route) =>

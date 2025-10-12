@@ -1,15 +1,16 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
 import { Loader2Icon } from "lucide-react";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
 
 export function LoadingSwap({
-  isLoading,
   children,
   className,
+  isLoading,
 }: {
-  isLoading: boolean;
   children: React.ReactNode;
   className?: string;
+  isLoading: boolean;
 }) {
   return (
     <div className="grid grid-cols-1 items-center justify-items-center">

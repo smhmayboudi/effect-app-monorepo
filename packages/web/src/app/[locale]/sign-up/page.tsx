@@ -1,13 +1,15 @@
-import Client from "./client";
 import type { Metadata } from "next";
+
 import { getTranslations } from "next-intl/server";
+
+import Client from "./client";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("sign-up");
 
   return {
-    title: t("title"),
     description: t("description"),
+    title: t("title"),
   };
 }
 

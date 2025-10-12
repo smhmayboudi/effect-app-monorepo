@@ -25,7 +25,7 @@ export class LeaderElectionService {
   private intervalId?: number;
   private isLeader: boolean = false;
   private leaderCallbacks: Array<(isLeader: boolean) => void> = [];
-  private leaderId: string | null = null;
+  private leaderId: null | string = null;
   private tabId: string;
 
   constructor(channelName: string) {
@@ -35,52 +35,6 @@ export class LeaderElectionService {
     });
     this.tabId = Math.random().toString(36).substring(2, 10);
     this.startElection();
-  }
-
-  private announceLeadership(): void {
-    this.channel.postMessage({
-      tabId: this.tabId,
-      timestamp: Date.now(),
-      type: "leader",
-    });
-  }
-
-  private handleLeaderMessage(message: LeaderMessage): void {
-    if (message.type === "election") {
-      if (
-        !this.leaderId ||
-        message.timestamp > this.getCurrentLeaderTimestamp()
-      ) {
-        this.leaderId = message.tabId;
-        this.isLeader = this.tabId === this.leaderId;
-        if (this.isLeader) {
-          this.announceLeadership();
-        }
-        this.notifyLeaderChange();
-      }
-    } else if (message.type === "leader" && message.tabId !== this.tabId) {
-      this.leaderId = message.tabId;
-      this.isLeader = false;
-      this.notifyLeaderChange();
-    }
-  }
-
-  private getCurrentLeaderTimestamp(): number {
-    return this.leaderId === this.tabId ? Date.now() : 0;
-  }
-
-  private notifyLeaderChange(): void {
-    this.leaderCallbacks.forEach((callback) => callback(this.isLeader));
-  }
-
-  private startElection(): void {
-    this.intervalId = window.setInterval(() => {
-      this.channel.postMessage({
-        tabId: this.tabId,
-        timestamp: Date.now(),
-        type: "election",
-      });
-    }, this.electionInterval);
   }
 
   cleanup(): void {
@@ -103,5 +57,51 @@ export class LeaderElectionService {
         (cb) => cb !== callback,
       );
     };
+  }
+
+  private announceLeadership(): void {
+    this.channel.postMessage({
+      tabId: this.tabId,
+      timestamp: Date.now(),
+      type: "leader",
+    });
+  }
+
+  private getCurrentLeaderTimestamp(): number {
+    return this.leaderId === this.tabId ? Date.now() : 0;
+  }
+
+  private handleLeaderMessage(message: LeaderMessage): void {
+    if (message.type === "election") {
+      if (
+        !this.leaderId ||
+        message.timestamp > this.getCurrentLeaderTimestamp()
+      ) {
+        this.leaderId = message.tabId;
+        this.isLeader = this.tabId === this.leaderId;
+        if (this.isLeader) {
+          this.announceLeadership();
+        }
+        this.notifyLeaderChange();
+      }
+    } else if (message.type === "leader" && message.tabId !== this.tabId) {
+      this.leaderId = message.tabId;
+      this.isLeader = false;
+      this.notifyLeaderChange();
+    }
+  }
+
+  private notifyLeaderChange(): void {
+    this.leaderCallbacks.forEach((callback) => callback(this.isLeader));
+  }
+
+  private startElection(): void {
+    this.intervalId = window.setInterval(() => {
+      this.channel.postMessage({
+        tabId: this.tabId,
+        timestamp: Date.now(),
+        type: "election",
+      });
+    }, this.electionInterval);
   }
 }

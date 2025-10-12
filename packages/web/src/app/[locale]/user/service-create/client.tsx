@@ -1,5 +1,16 @@
 "use client";
 
+import { Registry } from "@effect-atom/atom-react";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts";
+import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
+import { Effect, Schema } from "effect";
+import { GalleryVerticalEnd } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { v7 } from "uuid";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,16 +33,6 @@ import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { HttpClient } from "@/lib/http-client";
 import { cn } from "@/lib/utils";
-import { Registry } from "@effect-atom/atom-react";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
-import { Effect, Schema } from "effect";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { v7 } from "uuid";
 
 export default function Client() {
   const t = useTranslations("user.service-create");
@@ -82,8 +83,8 @@ export default function Client() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link
-          href="#"
           className="flex items-center gap-2 self-center font-medium"
+          href="#"
         >
           <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <GalleryVerticalEnd className="size-4" />
@@ -115,9 +116,9 @@ export default function Client() {
                     />
                     <Field>
                       <Button
-                        type="submit"
-                        disabled={isSubmitting}
                         className="w-full"
+                        disabled={isSubmitting}
+                        type="submit"
                       >
                         <LoadingSwap isLoading={isSubmitting}>
                           {t("form.submit")}

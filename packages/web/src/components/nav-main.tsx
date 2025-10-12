@@ -1,5 +1,7 @@
 "use client";
 
+import { type LucideIcon, MailIcon, PlusIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
@@ -8,15 +10,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type LucideIcon, MailIcon, PlusIcon } from "lucide-react";
 
 export function NavMain({
   items,
 }: {
   items: {
+    icon?: LucideIcon;
     title: string;
     url: string;
-    icon?: LucideIcon;
   }[];
 }) {
   return (
@@ -25,15 +26,15 @@ export function NavMain({
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
-              tooltip="Quick Create"
               className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
+              tooltip="Quick Create"
             >
               <PlusIcon />
               <span>Quick Create</span>
             </SidebarMenuButton>
             <Button
-              size="icon"
               className="size-8 group-data-[collapsible=icon]:opacity-0"
+              size="icon"
               variant="outline"
             >
               <MailIcon />

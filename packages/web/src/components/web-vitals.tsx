@@ -1,40 +1,25 @@
 "use client";
 
-import { useReportWebVitals } from "next/web-vitals";
 import type { Metric } from "web-vitals";
+
+import { useReportWebVitals } from "next/web-vitals";
 
 // Define the metric handler function type
 type MetricHandler = (metric: Metric) => void;
 
 // Define the component props interface
 interface WebVitalsProps {
-  onMetricReport?: MetricHandler;
   enabled?: boolean;
+  onMetricReport?: MetricHandler;
 }
 
-export function WebVitals({ onMetricReport, enabled = true }: WebVitalsProps) {
+export function WebVitals({ enabled = true, onMetricReport }: WebVitalsProps) {
   const handleMetric: MetricHandler = (metric) => {
     // Call the custom handler if provided
     onMetricReport?.(metric);
 
     // Default metric handling
     switch (metric.name) {
-      case "TTFB": {
-        console.debug("Time to First Byte (TTFB):", metric.value, metric);
-        // You can send this to your analytics service
-        sendToAnalytics(metric);
-        break;
-      }
-      case "FCP": {
-        console.debug("First Contentful Paint (FCP):", metric.value, metric);
-        sendToAnalytics(metric);
-        break;
-      }
-      case "LCP": {
-        console.debug("Largest Contentful Paint (LCP):", metric.value, metric);
-        sendToAnalytics(metric);
-        break;
-      }
       // case "FID": {
       //   console.debug("First Input Delay (FID):", metric.value, metric);
       //   sendToAnalytics(metric);
@@ -45,8 +30,24 @@ export function WebVitals({ onMetricReport, enabled = true }: WebVitalsProps) {
         sendToAnalytics(metric);
         break;
       }
+      case "FCP": {
+        console.debug("First Contentful Paint (FCP):", metric.value, metric);
+        sendToAnalytics(metric);
+        break;
+      }
       case "INP": {
         console.debug("Interaction to Next Paint (INP):", metric.value, metric);
+        sendToAnalytics(metric);
+        break;
+      }
+      case "LCP": {
+        console.debug("Largest Contentful Paint (LCP):", metric.value, metric);
+        sendToAnalytics(metric);
+        break;
+      }
+      case "TTFB": {
+        console.debug("Time to First Byte (TTFB):", metric.value, metric);
+        // You can send this to your analytics service
         sendToAnalytics(metric);
         break;
       }
@@ -69,8 +70,8 @@ export function WebVitals({ onMetricReport, enabled = true }: WebVitalsProps) {
     } else {
       fetch("/api/web-vitals", {
         body,
-        method: "POST",
         keepalive: true,
+        method: "POST",
       });
     }
   };

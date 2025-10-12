@@ -27,9 +27,9 @@ self.onconnect = (e: MessageEvent) => {
  * workerService.postMessage({ payload: "some data", type: "update" });
  */
 export class SharedWorkerService<T> {
-  private worker: SharedWorker;
-  private port: MessagePort;
   private listeners: Array<(data: T) => void> = [];
+  private port: MessagePort;
+  private worker: SharedWorker;
 
   constructor(workerUrl: string) {
     this.worker = new SharedWorker(workerUrl);
@@ -40,15 +40,15 @@ export class SharedWorkerService<T> {
     this.port.start();
   }
 
-  postMessage(data: T): void {
-    this.port.postMessage(data);
-  }
-
   onMessage(callback: (data: T) => void): () => void {
     this.listeners.push(callback);
 
     return () => {
       this.listeners = this.listeners.filter((l) => l !== callback);
     };
+  }
+
+  postMessage(data: T): void {
+    this.port.postMessage(data);
   }
 }

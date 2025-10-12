@@ -1,6 +1,14 @@
 "use client";
 
 import {
+  FolderIcon,
+  type LucideIcon,
+  MoreHorizontalIcon,
+  ShareIcon,
+  Trash,
+} from "lucide-react";
+
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -17,21 +25,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useDirection } from "@/context/direction-provider";
-import {
-  FolderIcon,
-  type LucideIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
-  Trash,
-} from "lucide-react";
 
 export function NavDocuments({
   items,
 }: {
   items: {
+    icon: LucideIcon;
     name: string;
     url: string;
-    icon: LucideIcon;
   }[];
 }) {
   const { isMobile } = useSidebar();
@@ -52,17 +53,17 @@ export function NavDocuments({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
-                  showOnHover
                   className="rounded-sm data-[state=open]:bg-accent"
+                  showOnHover
                 >
                   <MoreHorizontalIcon />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
               <DropdownMenuContent
+                align={isMobile ? "end" : "start"}
                 className="w-24 rounded-lg"
                 side={isMobile ? "bottom" : dir === "rtl" ? "left" : "right"}
-                align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuItem>
                   <FolderIcon />

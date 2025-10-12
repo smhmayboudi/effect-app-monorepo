@@ -1,8 +1,9 @@
-import Home from "./page";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("next-intl/server", () => ({
+import Home from "./page";
+
+vi.mock(import("next-intl/server"), () => ({
   getTranslations: vi.fn().mockResolvedValue(
     (key: string) =>
       ({
@@ -11,12 +12,14 @@ vi.mock("next-intl/server", () => ({
   ),
 }));
 
-describe("Index", () => {
+describe("index", () => {
   it("should render index page", async () => {
+    expect.assertions(1);
+
     render(await Home());
 
-    expect(
-      await screen.findByRole("heading", { level: 2, name: "Index" }),
-    ).toBeDefined();
+    await expect(
+      screen.findByRole("heading", { level: 2, name: "Index" }),
+    ).resolves.toBeDefined();
   });
 });

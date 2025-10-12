@@ -1,8 +1,10 @@
-import { routing } from "./routing";
-import messagesDefault from "@/messages/en.json";
 import { type Formats, hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
 import { headers } from "next/headers";
+
+import messagesDefault from "@/messages/en.json";
+
+import { routing } from "./routing";
 
 export const formats = {
   dateTime: {
@@ -12,16 +14,16 @@ export const formats = {
       year: "numeric",
     },
   },
-  number: {
-    precise: {
-      maximumFractionDigits: 2,
-    },
-  },
   list: {
     locale: {
       localeMatcher: "lookup",
       style: "narrow",
       type: "unit",
+    },
+  },
+  number: {
+    precise: {
+      maximumFractionDigits: 2,
     },
   },
 } satisfies Formats;

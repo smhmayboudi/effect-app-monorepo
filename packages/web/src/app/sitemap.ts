@@ -1,5 +1,6 @@
-import { getPathname } from "@/i18n/navigation";
 import { MetadataRoute } from "next";
+
+import { getPathname } from "@/i18n/navigation";
 
 const host = "http://127.0.0.1:3002";
 
@@ -8,8 +9,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       alternates: {
         languages: {
-          es: host + (await getPathname({ locale: "en", href: "/" })),
-          de: host + (await getPathname({ locale: "fa", href: "/" })),
+          de: host + (await getPathname({ href: "/", locale: "fa" })),
+          es: host + (await getPathname({ href: "/", locale: "en" })),
         },
       },
       lastModified: new Date(),

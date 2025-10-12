@@ -13,6 +13,7 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   ...compat.extends("plugin:testing-library/react"),
   ...compat.extends("plugin:@vitest/legacy-all"),
+  ...compat.extends("plugin:perfectionist/recommended-natural-legacy"),
   {
     ignores: [
       "node_modules/**",
@@ -21,6 +22,9 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      "react/jsx-sort-props": "error",
+    },
   },
 ];
 

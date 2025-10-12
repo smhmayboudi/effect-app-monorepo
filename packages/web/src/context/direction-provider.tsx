@@ -1,8 +1,9 @@
 "use client";
 
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 import { DirectionProvider as RdxDirProvider } from "@radix-ui/react-direction";
 import { createContext, useContext, useEffect, useState } from "react";
+
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
 export type Direction = "ltr" | "rtl";
 
@@ -11,9 +12,9 @@ const DIRECTION_COOKIE_NAME = "__next_dir";
 const DIRECTION_DEFAULT = "ltr";
 
 type DirectionContextType = {
-  resetDir: () => void;
   defaultDir: Direction;
   dir: Direction;
+  resetDir: () => void;
   setDir: (dir: Direction) => void;
 };
 
@@ -42,9 +43,9 @@ export function DirectionProvider({ children }: { children: React.ReactNode }) {
   return (
     <DirectionContext
       value={{
-        resetDir,
         defaultDir: DIRECTION_DEFAULT,
         dir,
+        resetDir,
         setDir,
       }}
     >

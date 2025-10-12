@@ -21,7 +21,7 @@ type StateUpdate<T> = {
 export class SharedStateService<T> {
   private channel: BroadcastChannelService;
   private listeners: Map<string, Set<(value: T) => void>> = new Map();
-  private state: Map<string, { value: T; timestamp: number }> = new Map();
+  private state: Map<string, { timestamp: number; value: T }> = new Map();
 
   constructor(channelName: string) {
     this.channel = new BroadcastChannelService(channelName);
@@ -29,24 +29,6 @@ export class SharedStateService<T> {
     this.channel.onMessage<StateUpdate<T>>((update) => {
       this.handleIncomingUpdate(update);
     });
-  }
-
-  private handleIncomingUpdate(update: StateUpdate<T>): void {
-    const currentEntry = this.state.get(update.key);
-    if (!currentEntry || update.timestamp > currentEntry.timestamp) {
-      this.state.set(update.key, {
-        timestamp: update.timestamp,
-        value: update.value,
-      });
-      this.notifyListeners(update.key, update.value);
-    }
-  }
-
-  private notifyListeners(key: string, value: T): void {
-    const listeners = this.listeners.get(key);
-    if (listeners) {
-      listeners.forEach((callback) => callback(value));
-    }
   }
 
   get(key: string): T | undefined {
@@ -78,5 +60,23 @@ export class SharedStateService<T> {
     return () => {
       listeners.delete(callback);
     };
+  }
+
+  private handleIncomingUpdate(update: StateUpdate<T>): void {
+    const currentEntry = this.state.get(update.key);
+    if (!currentEntry || update.timestamp > currentEntry.timestamp) {
+      this.state.set(update.key, {
+        timestamp: update.timestamp,
+        value: update.value,
+      });
+      this.notifyListeners(update.key, update.value);
+    }
+  }
+
+  private notifyListeners(key: string, value: T): void {
+    const listeners = this.listeners.get(key);
+    if (listeners) {
+      listeners.forEach((callback) => callback(value));
+    }
   }
 }

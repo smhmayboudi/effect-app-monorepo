@@ -1,9 +1,10 @@
-import Client from "./client";
 import type { Metadata } from "next";
 
+import Client from "./client";
+
 export const metadata: Metadata = {
-  title: "Debug Auth",
   description: "Debug Auth",
+  title: "Debug Auth",
 };
 
 export default function Page() {

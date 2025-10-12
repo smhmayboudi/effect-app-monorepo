@@ -1,10 +1,11 @@
 "use client";
 
-import { getCookie, setCookie } from "@/lib/cookies";
 import { createContext, useContext, useState } from "react";
 
-export type Collapsible = "offcanvas" | "icon" | "none";
-export type Variant = "inset" | "sidebar" | "floating";
+import { getCookie, setCookie } from "@/lib/cookies";
+
+export type Collapsible = "icon" | "none" | "offcanvas";
+export type Variant = "floating" | "inset" | "sidebar";
 
 const LAYOUT_COLLAPSIBLE_COOKIE_NAME = "__next_layout_collapsible";
 const LAYOUT_COLLAPSIBLE_DEFAULT = "icon";
@@ -13,13 +14,13 @@ const LAYOUT_VARIANT_COOKIE_NAME = "__next_layout_variant";
 const LAYOUT_VARIANT_DEFAULT = "inset";
 
 type LayoutContextType = {
-  resetLayout: () => void;
-  defaultCollapsible: Collapsible;
   collapsible: Collapsible;
-  setCollapsible: (collapsible: Collapsible) => void;
+  defaultCollapsible: Collapsible;
   defaultVariant: Variant;
-  variant: Variant;
+  resetLayout: () => void;
+  setCollapsible: (collapsible: Collapsible) => void;
   setVariant: (variant: Variant) => void;
+  variant: Variant;
 };
 
 const LayoutContext = createContext<LayoutContextType | null>(null);
@@ -63,13 +64,13 @@ export function LayoutProvider({ children }: LayoutProviderProps) {
   };
 
   const contextValue: LayoutContextType = {
-    resetLayout,
-    defaultCollapsible: LAYOUT_COLLAPSIBLE_DEFAULT,
     collapsible,
-    setCollapsible,
+    defaultCollapsible: LAYOUT_COLLAPSIBLE_DEFAULT,
     defaultVariant: LAYOUT_VARIANT_DEFAULT,
-    variant,
+    resetLayout,
+    setCollapsible,
     setVariant,
+    variant,
   };
 
   return <LayoutContext value={contextValue}>{children}</LayoutContext>;

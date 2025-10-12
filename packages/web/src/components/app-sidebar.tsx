@@ -1,19 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { AppTitle } from "@/components/app-title";
-import { NavDocuments } from "@/components/nav-documents";
-import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import { useLayout } from "@/context/layout-provider";
 import {
   BarChartIcon,
   CameraIcon,
@@ -30,46 +16,44 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
+import * as React from "react";
+
+import { AppTitle } from "@/components/app-title";
+import { NavDocuments } from "@/components/nav-documents";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from "@/components/ui/sidebar";
+import { useLayout } from "@/context/layout-provider";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/shadcn.jpg",
-  },
-  navMain: [
+  documents: [
     {
-      title: "Dashboard",
+      icon: DatabaseIcon,
+      name: "Data Library",
       url: "#",
-      icon: LayoutDashboardIcon,
     },
     {
-      title: "Lifecycle",
+      icon: ClipboardListIcon,
+      name: "Reports",
       url: "#",
-      icon: ListIcon,
     },
     {
-      title: "Analytics",
+      icon: FileIcon,
+      name: "Word Assistant",
       url: "#",
-      icon: BarChartIcon,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: FolderIcon,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: UsersIcon,
     },
   ],
   navClouds: [
     {
-      title: "Capture",
       icon: CameraIcon,
       isActive: true,
-      url: "#",
       items: [
         {
           title: "Active Proposals",
@@ -80,11 +64,11 @@ const data = {
           url: "#",
         },
       ],
+      title: "Capture",
+      url: "#",
     },
     {
-      title: "Proposal",
       icon: FileTextIcon,
-      url: "#",
       items: [
         {
           title: "Active Proposals",
@@ -95,11 +79,11 @@ const data = {
           url: "#",
         },
       ],
+      title: "Proposal",
+      url: "#",
     },
     {
-      title: "Prompts",
       icon: FileCodeIcon,
-      url: "#",
       items: [
         {
           title: "Active Proposals",
@@ -110,42 +94,59 @@ const data = {
           url: "#",
         },
       ],
+      title: "Prompts",
+      url: "#",
+    },
+  ],
+  navMain: [
+    {
+      icon: LayoutDashboardIcon,
+      title: "Dashboard",
+      url: "#",
+    },
+    {
+      icon: ListIcon,
+      title: "Lifecycle",
+      url: "#",
+    },
+    {
+      icon: BarChartIcon,
+      title: "Analytics",
+      url: "#",
+    },
+    {
+      icon: FolderIcon,
+      title: "Projects",
+      url: "#",
+    },
+    {
+      icon: UsersIcon,
+      title: "Team",
+      url: "#",
     },
   ],
   navSecondary: [
     {
+      icon: SettingsIcon,
       title: "Settings",
       url: "#",
-      icon: SettingsIcon,
     },
     {
+      icon: HelpCircleIcon,
       title: "Get Help",
       url: "#",
-      icon: HelpCircleIcon,
     },
     {
+      icon: SearchIcon,
       title: "Search",
       url: "#",
-      icon: SearchIcon,
     },
   ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: DatabaseIcon,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: ClipboardListIcon,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: FileIcon,
-    },
-  ],
+  user: {
+    avatar: "/shadcn.jpg",
+    email: "m@example.com",
+    name: "shadcn",
+  },
 };
 
 export function AppSidebar() {
@@ -159,7 +160,7 @@ export function AppSidebar() {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary className="mt-auto" items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser isHeader={false} user={data.user} />

@@ -1,25 +1,26 @@
 "use client";
 
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import { type VariantProps } from "class-variance-authority";
 import * as React from "react";
+
 import { toggleVariants } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
-import { type VariantProps } from "class-variance-authority";
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants> & { direction?: "ltr" | "rtl" }
 >({
+  direction: "ltr",
   size: "default",
   variant: "default",
-  direction: "ltr",
 });
 
 function ToggleGroup({
-  className,
-  variant,
-  size,
-  direction,
   children,
+  className,
+  direction,
+  size,
+  variant,
   ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
   VariantProps<typeof toggleVariants> & {
@@ -27,18 +28,18 @@ function ToggleGroup({
   }) {
   return (
     <ToggleGroupPrimitive.Root
-      data-slot="toggle-group"
-      data-variant={variant}
-      data-size={size}
-      data-direction={direction}
-      dir={direction}
       className={cn(
         "group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs",
         className,
       )}
+      data-direction={direction}
+      data-size={size}
+      data-slot="toggle-group"
+      data-variant={variant}
+      dir={direction}
       {...props}
     >
-      <ToggleGroupContext.Provider value={{ variant, size, direction }}>
+      <ToggleGroupContext.Provider value={{ direction, size, variant }}>
         {children}
       </ToggleGroupContext.Provider>
     </ToggleGroupPrimitive.Root>
@@ -46,10 +47,10 @@ function ToggleGroup({
 }
 
 function ToggleGroupItem({
-  className,
   children,
-  variant,
+  className,
   size,
+  variant,
   ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
   VariantProps<typeof toggleVariants>) {
@@ -57,14 +58,10 @@ function ToggleGroupItem({
 
   return (
     <ToggleGroupPrimitive.Item
-      data-slot="toggle-group-item"
-      data-variant={context.variant || variant}
-      data-size={context.size || size}
-      data-direction={context.direction}
       className={cn(
         toggleVariants({
-          variant: context.variant || variant,
           size: context.size || size,
+          variant: context.variant || variant,
         }),
         "min-w-0 flex-1 shrink-0 rounded-none shadow-none focus:z-10 focus-visible:z-10",
         context.direction === "rtl"
@@ -72,6 +69,10 @@ function ToggleGroupItem({
           : "first:rounded-l-md last:rounded-r-md data-[variant=outline]:border-l-0 data-[variant=outline]:first:border-l",
         className,
       )}
+      data-direction={context.direction}
+      data-size={context.size || size}
+      data-slot="toggle-group-item"
+      data-variant={context.variant || variant}
       {...props}
     >
       {children}

@@ -1,6 +1,5 @@
 "use client";
 
-import data from "./data.json";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
@@ -11,6 +10,8 @@ import { useDirection } from "@/context/direction-provider";
 import { LayoutProvider } from "@/context/layout-provider";
 import { getCookie } from "@/lib/cookies";
 
+import data from "./data.json";
+
 export default function Client() {
   const { dir } = useDirection();
   const defaultOpen = getCookie("__next_sidebar") !== "false";
@@ -19,13 +20,13 @@ export default function Client() {
     <LayoutProvider>
       <SidebarProvider
         defaultOpen={defaultOpen}
+        direction={dir}
         style={
           {
-            "--sidebar-width": "calc(var(--spacing) * 72)",
             "--header-height": "calc(var(--spacing) * 12)",
+            "--sidebar-width": "calc(var(--spacing) * 72)",
           } as React.CSSProperties
         }
-        direction={dir}
       >
         <AppSidebar />
         <SidebarInset>

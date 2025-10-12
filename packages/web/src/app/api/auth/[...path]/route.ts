@@ -2,6 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 
 const allowedOrigins = ["http://127.0.0.1:3002"];
 
+export async function GET(request: NextRequest) {
+  return handler(request);
+}
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    headers: {
+      "access-control-allow-credentials": "true",
+      "access-control-allow-headers":
+        "authorization,b3,content-type,idempotency-key,traceparent",
+      "access-control-allow-methods": "DELETE,GET,OPTIONS,PATCH,POST,PUT",
+      "access-control-allow-origin": allowedOrigins.includes(
+        request.headers.get("origin") ?? "",
+      )
+        ? (request.headers.get("origin") ?? "")
+        : "",
+      "access-control-expose-headers": "authorization,content-type,set-cookie",
+      "access-control-max-age": "86400",
+    },
+    status: 200,
+  });
+}
+
+export async function POST(request: NextRequest) {
+  return handler(request);
+}
+
 async function handler(request: NextRequest) {
   try {
     const headers = new Headers();
@@ -59,31 +86,4 @@ async function handler(request: NextRequest) {
       { status: 500 },
     );
   }
-}
-
-export async function GET(request: NextRequest) {
-  return handler(request);
-}
-
-export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
-    headers: {
-      "access-control-allow-credentials": "true",
-      "access-control-allow-headers":
-        "authorization,b3,content-type,idempotency-key,traceparent",
-      "access-control-allow-methods": "DELETE,GET,OPTIONS,PATCH,POST,PUT",
-      "access-control-allow-origin": allowedOrigins.includes(
-        request.headers.get("origin") ?? "",
-      )
-        ? (request.headers.get("origin") ?? "")
-        : "",
-      "access-control-expose-headers": "authorization,content-type,set-cookie",
-      "access-control-max-age": "86400",
-    },
-    status: 200,
-  });
-}
-
-export async function POST(request: NextRequest) {
-  return handler(request);
 }
