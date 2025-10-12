@@ -1,6 +1,6 @@
 "use client";
 
-import { getCookie, setCookie, removeCookie } from "@/lib/cookies";
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 import { DirectionProvider as RdxDirProvider } from "@radix-ui/react-direction";
 import { createContext, useContext, useEffect, useState } from "react";
 

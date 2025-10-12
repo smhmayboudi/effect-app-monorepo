@@ -1,7 +1,7 @@
 "use client";
 
-import { useReportWebVitals } from "next/web-vitals";
 import * as React from "react";
+import { useReportWebVitals } from "next/web-vitals";
 import type { Metric } from "web-vitals";
 
 interface UseWebVitalsOptions {

@@ -1,7 +1,7 @@
 "use client";
 
-import { BroadcastChannelService } from "@/service/broadcast-channel";
 import * as React from "react";
+import { BroadcastChannelService } from "@/service/broadcast-channel";
 
 interface BroadcastChannelContextType {
   onMessage<T>(callback: (message: T) => void): void;

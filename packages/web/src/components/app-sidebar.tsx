@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { AppTitle } from "@/components/app-title";
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
@@ -29,7 +30,6 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
-import * as React from "react";
 
 const data = {
   user: {

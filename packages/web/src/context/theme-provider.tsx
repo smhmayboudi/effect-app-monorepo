@@ -1,7 +1,7 @@
 "use client";
 
-import { getCookie, setCookie, removeCookie } from "@/lib/cookies";
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
 type ResolvedTheme = Exclude<Theme, "system">;

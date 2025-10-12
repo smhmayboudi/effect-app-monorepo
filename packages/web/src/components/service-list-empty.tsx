@@ -15,10 +15,10 @@ export function ServiceListEmpty() {
   const t = useTranslations("component.service-list-empty");
 
   return (
-    <Empty className="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+    <Empty className="h-full bg-gradient-to-b from-muted/50 from-30% to-background">
       <EmptyHeader>
         <EmptyMedia
-          className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-md"
+          className="flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground"
           variant="icon"
         >
           <List />

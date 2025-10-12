@@ -1,6 +1,6 @@
 "use client";
 
-import { getCookie, setCookie, removeCookie } from "@/lib/cookies";
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const fonts = ["inter", "manrope", "system"] as const;
