@@ -8,7 +8,6 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { v7 } from "uuid";
 
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { withToast } from "@/components/with-toast";
 import { HttpClient } from "@/lib/http-client";
 import { cn } from "@/lib/utils";
 
@@ -51,31 +51,28 @@ export default function Client() {
   } = form;
   const router = useRouter();
   const onSubmit = handleSubmit(async ({ name }) => {
-    try {
-      const createMutation = HttpClient.mutation("service", "create");
-      const registry = Registry.make();
-      registry.set(createMutation, {
-        headers: {
-          "idempotency-key": IdempotencyKeyClient.make(v7()),
-        },
-        payload: { name },
-        reactivityKeys: ["services"],
-      });
-      const result = await Effect.runPromise(
-        Registry.getResult(registry, createMutation, {
-          suspendOnWaiting: true,
+    const createMutation = HttpClient.mutation("service", "create");
+    const registry = Registry.make();
+    registry.set(createMutation, {
+      headers: {
+        "idempotency-key": IdempotencyKeyClient.make(v7()),
+      },
+      payload: { name },
+      reactivityKeys: ["services"],
+    });
+    const result = await Effect.runPromise(
+      Registry.getResult(registry, createMutation, {
+        suspendOnWaiting: true,
+      }).pipe(
+        withToast({
+          onFailure: (e) => `Failed to service create. ${e.message}`,
+          onSuccess: (a) => `Service ${a.data} create successfully!`,
+          onWaiting: "onWaiting",
         }),
-      );
-      if (result.data) {
-        toast.success(`Service ${result.data} create successfully!`);
-      }
+      ),
+    );
+    if (result.data) {
       router.push("/user/dashboard");
-    } catch (error) {
-      toast.error(
-        `Failed to service create. ${
-          (error as { message: string }).message || ""
-        }`,
-      );
     }
   });
 
