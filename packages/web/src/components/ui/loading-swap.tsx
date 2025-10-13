@@ -7,11 +7,10 @@ export function LoadingSwap({
   children,
   className,
   isLoading,
-}: {
-  children: React.ReactNode;
+}: React.PropsWithChildren<{
   className?: string;
   isLoading: boolean;
-}) {
+}>) {
   return (
     <div className="grid grid-cols-1 items-center justify-items-center">
       <div
