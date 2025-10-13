@@ -54,7 +54,7 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useFont = () => {
+export function useFont() {
   const context = useContext(FontContext);
   if (!context) {
     throw new Error("useFont must be used within a FontProvider");

@@ -101,7 +101,6 @@ const data2 = [
   },
 ];
 
-
 export default function Client() {
   const { dir } = useDirection();
   const defaultOpen = getCookie("__next_sidebar") !== "false";
