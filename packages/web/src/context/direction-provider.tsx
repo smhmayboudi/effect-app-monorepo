@@ -1,28 +1,55 @@
 "use client";
 
 import { DirectionProvider as RdxDirProvider } from "@radix-ui/react-direction";
-import { createContext, useContext, useEffect, useState } from "react";
+import { Option, Schema } from "effect";
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
-export type Direction = "ltr" | "rtl";
+const Direction = Schema.Literal("ltr", "rtl");
+export type Direction = typeof Direction.Type;
 
 const DIRECTION_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const DIRECTION_COOKIE_NAME = "__next_dir";
 const DIRECTION_DEFAULT = "ltr";
 
-type DirectionContextType = {
+type DirectionProviderState = {
   defaultDir: Direction;
   dir: Direction;
   resetDir: () => void;
   setDir: (dir: Direction) => void;
 };
 
-const DirectionContext = createContext<DirectionContextType | null>(null);
+const initialState: DirectionProviderState = {
+  defaultDir: DIRECTION_DEFAULT,
+  dir: "ltr",
+  resetDir: () => null,
+  setDir: () => null,
+};
 
-export function DirectionProvider({ children }: { children: React.ReactNode }) {
-  const [dir, _setDir] = useState<Direction>(
-    () => (getCookie(DIRECTION_COOKIE_NAME) as Direction) || DIRECTION_DEFAULT,
+const DirectionContext = createContext<DirectionProviderState>(initialState);
+
+type DirectionProviderProps = {
+  defaultDir?: Direction;
+  storageKey?: string;
+};
+
+export function DirectionProvider({
+  children,
+  defaultDir = DIRECTION_DEFAULT,
+  storageKey = DIRECTION_COOKIE_NAME,
+}: PropsWithChildren<DirectionProviderProps>) {
+  const [dir, _setDir] = useState<Direction>(() =>
+    Option.fromNullable(getCookie(storageKey)).pipe(
+      Option.flatMap(Schema.decodeUnknownOption(Direction)),
+      Option.getOrElse(() => defaultDir),
+    ),
   );
 
   useEffect(() => {
@@ -31,19 +58,19 @@ export function DirectionProvider({ children }: { children: React.ReactNode }) {
   }, [dir]);
 
   const setDir = (dir: Direction) => {
+    setCookie(storageKey, dir, DIRECTION_COOKIE_MAX_AGE);
     _setDir(dir);
-    setCookie(DIRECTION_COOKIE_NAME, dir, DIRECTION_COOKIE_MAX_AGE);
   };
 
   const resetDir = () => {
-    _setDir(DIRECTION_DEFAULT);
-    removeCookie(DIRECTION_COOKIE_NAME);
+    removeCookie(storageKey);
+    _setDir(defaultDir);
   };
 
   return (
     <DirectionContext
       value={{
-        defaultDir: DIRECTION_DEFAULT,
+        defaultDir,
         dir,
         resetDir,
         setDir,
@@ -59,5 +86,6 @@ export function useDirection() {
   if (!context) {
     throw new Error("useDirection must be used within a DirectionProvider");
   }
+
   return context;
 }

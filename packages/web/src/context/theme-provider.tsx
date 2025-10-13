@@ -1,21 +1,25 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Option, Schema } from "effect";
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
-type ResolvedTheme = Exclude<Theme, "system">;
-type Theme = "dark" | "light" | "system";
+const Theme = Schema.Literal("dark", "light", "system");
+export type ResolvedTheme = Exclude<Theme, "system">;
+
+export type Theme = typeof Theme.Type;
 
 const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const THEME_COOKIE_NAME = "__next_theme";
 const THEME_DEFAULT = "system";
-
-type ThemeProviderProps = {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-};
 
 type ThemeProviderState = {
   defaultTheme: Theme;
@@ -35,23 +39,31 @@ const initialState: ThemeProviderState = {
 
 const ThemeContext = createContext<ThemeProviderState>(initialState);
 
+type ThemeProviderProps = {
+  defaultTheme?: Theme;
+  storageKey?: string;
+};
+
 export function ThemeProvider({
   children,
   defaultTheme = THEME_DEFAULT,
   storageKey = THEME_COOKIE_NAME,
   ...props
-}: ThemeProviderProps) {
-  const [theme, _setTheme] = useState<Theme>(
-    () => (getCookie(storageKey) as Theme) || defaultTheme,
+}: PropsWithChildren<ThemeProviderProps>) {
+  const [theme, _setTheme] = useState<Theme>(() =>
+    Option.fromNullable(getCookie(storageKey)).pipe(
+      Option.flatMap(Schema.decodeUnknownOption(Theme)),
+      Option.getOrElse(() => defaultTheme),
+    ),
   );
 
-  const resolvedTheme = useMemo((): ResolvedTheme => {
+  const resolvedTheme = useMemo<ResolvedTheme>(() => {
     if (theme === "system") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
     }
-    return theme as ResolvedTheme;
+    return theme;
   }, [theme]);
 
   useEffect(() => {
@@ -84,7 +96,7 @@ export function ThemeProvider({
 
   const resetTheme = () => {
     removeCookie(storageKey);
-    _setTheme(THEME_DEFAULT);
+    _setTheme(defaultTheme);
   };
 
   const contextValue = {
@@ -104,8 +116,9 @@ export function ThemeProvider({
 
 export function useTheme() {
   const context = useContext(ThemeContext);
-
-  if (!context) throw new Error("useTheme must be used within a ThemeProvider");
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
 
   return context;
-};
+}

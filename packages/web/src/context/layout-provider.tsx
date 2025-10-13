@@ -1,11 +1,20 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { Option, Schema } from "effect";
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 
-import { getCookie, setCookie } from "@/lib/cookies";
+import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
-export type Collapsible = "icon" | "none" | "offcanvas";
-export type Variant = "floating" | "inset" | "sidebar";
+const Collapsible = Schema.Literal("icon", "none", "offcanvas");
+export type Collapsible = typeof Collapsible.Type;
+
+const Variant = Schema.Literal("floating", "inset", "sidebar");
+export type Variant = typeof Variant.Type;
 
 const LAYOUT_COLLAPSIBLE_COOKIE_NAME = "__next_layout_collapsible";
 const LAYOUT_COLLAPSIBLE_DEFAULT = "icon";
@@ -23,50 +32,67 @@ type LayoutContextType = {
   variant: Variant;
 };
 
-const LayoutContext = createContext<LayoutContextType | null>(null);
-
-type LayoutProviderProps = {
-  children: React.ReactNode;
+const initialState: LayoutContextType = {
+  collapsible: "icon",
+  defaultCollapsible: LAYOUT_COLLAPSIBLE_DEFAULT,
+  defaultVariant: LAYOUT_VARIANT_DEFAULT,
+  resetLayout: () => null,
+  setCollapsible: () => null,
+  setVariant: () => null,
+  variant: "inset",
 };
 
-export function LayoutProvider({ children }: LayoutProviderProps) {
-  const [collapsible, _setCollapsible] = useState<Collapsible>(() => {
-    return (
-      (getCookie(LAYOUT_COLLAPSIBLE_COOKIE_NAME) as Collapsible) ||
-      LAYOUT_COLLAPSIBLE_DEFAULT
-    );
-  });
+const LayoutContext = createContext<LayoutContextType>(initialState);
 
-  const [variant, _setVariant] = useState<Variant>(() => {
-    return (
-      (getCookie(LAYOUT_VARIANT_COOKIE_NAME) as Variant) ||
-      LAYOUT_VARIANT_DEFAULT
-    );
-  });
+type LayoutProviderProps = {
+  defaultCollapsible: Collapsible;
+  defaultVariant?: Variant;
+  storageKeyCollapsible?: string;
+  storageKeyVariant?: string;
+};
+
+export function LayoutProvider({
+  children,
+  defaultCollapsible = LAYOUT_COLLAPSIBLE_DEFAULT,
+  defaultVariant = LAYOUT_VARIANT_DEFAULT,
+  storageKeyCollapsible = LAYOUT_COLLAPSIBLE_COOKIE_NAME,
+  storageKeyVariant = LAYOUT_VARIANT_COOKIE_NAME,
+}: PropsWithChildren<LayoutProviderProps>) {
+  const [collapsible, _setCollapsible] = useState<Collapsible>(() =>
+    Option.fromNullable(getCookie(storageKeyCollapsible)).pipe(
+      Option.flatMap(Schema.decodeUnknownOption(Collapsible)),
+      Option.getOrElse(() => defaultCollapsible),
+    ),
+  );
+
+  const [variant, _setVariant] = useState<Variant>(() =>
+    Option.fromNullable(getCookie(storageKeyVariant)).pipe(
+      Option.flatMap(Schema.decodeUnknownOption(Variant)),
+      Option.getOrElse(() => defaultVariant),
+    ),
+  );
 
   const setCollapsible = (newCollapsible: Collapsible) => {
+    setCookie(storageKeyCollapsible, newCollapsible, LAYOUT_COOKIE_MAX_AGE);
     _setCollapsible(newCollapsible);
-    setCookie(
-      LAYOUT_COLLAPSIBLE_COOKIE_NAME,
-      newCollapsible,
-      LAYOUT_COOKIE_MAX_AGE,
-    );
   };
 
   const setVariant = (newVariant: Variant) => {
+    setCookie(storageKeyVariant, newVariant, LAYOUT_COOKIE_MAX_AGE);
     _setVariant(newVariant);
-    setCookie(LAYOUT_VARIANT_COOKIE_NAME, newVariant, LAYOUT_COOKIE_MAX_AGE);
   };
 
   const resetLayout = () => {
-    setCollapsible(LAYOUT_COLLAPSIBLE_DEFAULT);
-    setVariant(LAYOUT_VARIANT_DEFAULT);
+    removeCookie(storageKeyCollapsible);
+    removeCookie(storageKeyVariant);
+    setCollapsible(defaultCollapsible);
+    setVariant(defaultVariant);
   };
 
   const contextValue: LayoutContextType = {
     collapsible,
-    defaultCollapsible: LAYOUT_COLLAPSIBLE_DEFAULT,
-    defaultVariant: LAYOUT_VARIANT_DEFAULT,
+    defaultCollapsible,
+    defaultVariant,
     resetLayout,
     setCollapsible,
     setVariant,
@@ -81,5 +107,6 @@ export function useLayout() {
   if (!context) {
     throw new Error("useLayout must be used within a LayoutProvider");
   }
+
   return context;
 }

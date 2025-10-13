@@ -1,29 +1,55 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { Option, Schema } from "effect";
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
-const fonts = ["inter", "manrope", "system"] as const;
-type Font = (typeof fonts)[number];
+const Font = Schema.Literal("inter", "manrope", "system");
+export type Font = typeof Font.Type;
 
 const FONT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const FONT_COOKIE_NAME = "__next_font";
+const FONT_DEFAULT = "inter";
 
-type FontContextType = {
-  defaultFornt: Font;
+type FontProviderState = {
+  defaultFont: Font;
   font: Font;
   resetFont: () => void;
   setFont: (font: Font) => void;
 };
 
-const FontContext = createContext<FontContextType | null>(null);
+const initialState: FontProviderState = {
+  defaultFont: FONT_DEFAULT,
+  font: "inter",
+  resetFont: () => null,
+  setFont: () => null,
+};
 
-export function FontProvider({ children }: { children: React.ReactNode }) {
-  const [font, _setFont] = useState<Font>(() => {
-    const savedFont = getCookie(FONT_COOKIE_NAME);
-    return fonts.includes(savedFont as Font) ? (savedFont as Font) : fonts[0];
-  });
+const FontContext = createContext<FontProviderState>(initialState);
+
+type FontProviderProps = {
+  defaultFont?: Font;
+  storageKey?: string;
+};
+
+export function FontProvider({
+  children,
+  defaultFont = FONT_DEFAULT,
+  storageKey = FONT_COOKIE_NAME,
+}: PropsWithChildren<FontProviderProps>) {
+  const [font, _setFont] = useState<Font>(() =>
+    Option.fromNullable(getCookie(storageKey)).pipe(
+      Option.flatMap(Schema.decodeUnknownOption(Font)),
+      Option.getOrElse(() => defaultFont),
+    ),
+  );
 
   useEffect(() => {
     const applyFont = (font: string) => {
@@ -38,17 +64,17 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
   }, [font]);
 
   const setFont = (font: Font) => {
-    setCookie(FONT_COOKIE_NAME, font, FONT_COOKIE_MAX_AGE);
+    setCookie(storageKey, font, FONT_COOKIE_MAX_AGE);
     _setFont(font);
   };
 
   const resetFont = () => {
-    removeCookie(FONT_COOKIE_NAME);
-    _setFont(fonts[0]);
+    removeCookie(storageKey);
+    _setFont(defaultFont);
   };
 
   return (
-    <FontContext value={{ defaultFornt: fonts[0], font, resetFont, setFont }}>
+    <FontContext value={{ defaultFont, font, resetFont, setFont }}>
       {children}
     </FontContext>
   );
@@ -59,5 +85,6 @@ export function useFont() {
   if (!context) {
     throw new Error("useFont must be used within a FontProvider");
   }
+
   return context;
-};
+}
