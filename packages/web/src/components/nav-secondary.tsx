@@ -13,8 +13,7 @@ import {
 
 export function NavSecondary({
   items,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof SidebarGroup> & {
+}: {
   items: {
     icon: LucideIcon;
     title: string;
@@ -22,7 +21,7 @@ export function NavSecondary({
   }[];
 }) {
   return (
-    <SidebarGroup {...props}>
+    <SidebarGroup className="mt-auto">
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
