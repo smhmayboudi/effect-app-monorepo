@@ -1,12 +1,11 @@
 "use client";
 
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
+import { Effect, Schema } from "effect";
 import { GalleryVerticalEnd } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +30,7 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { withToast } from "@/components/with-toast";
 
 export default function Client() {
   const t = useTranslations("sign-in");
@@ -59,18 +59,26 @@ export default function Client() {
   } = form;
   const router = useRouter();
   const onSubmit = handleSubmit(async ({ email, password }) => {
-    const result = await authClient.signIn.email({
-      email,
-      password,
-    });
+    const result = await Effect.runPromise(
+      Effect.tryPromise({
+        try: (signal) =>
+          authClient.signIn.email({ email, password }, { signal }),
+        catch: (error) => new Error(String(error)),
+      }).pipe(
+        withToast({
+          onFailure: (e) => `Failed to sign in with email. ${e.message}`,
+          onSuccess: () => `Sign in with email successfully!`,
+          onWaiting: "onWaiting",
+        }),
+      ),
+    );
+    if (result.data) {
+      router.push(callbackURL);
+    }
     if (result.error) {
       if (result.error.code === "EMAIL_NOT_VERIFIED") {
         router.push(`/email-verification?email=${email}`);
       }
-      toast.error(result.error.message || "Failed to sign in.");
-    }
-    if (result.data) {
-      router.push(callbackURL);
     }
   });
 

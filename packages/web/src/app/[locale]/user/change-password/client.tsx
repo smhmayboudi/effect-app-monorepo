@@ -1,12 +1,11 @@
 "use client";
 
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
+import { Effect, Schema } from "effect";
 import { GalleryVerticalEnd } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +29,7 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { withToast } from "@/components/with-toast";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
@@ -59,17 +59,26 @@ export default function Client() {
     reset,
   } = form;
   const onSubmit = handleSubmit(async ({ currentPassword, newPassword }) => {
-    const result = await authClient.changePassword({
-      currentPassword,
-      newPassword,
-      revokeOtherSessions: true,
-    });
-    if (result.error) {
-      toast.error(result.error.message || "Failed to change password.");
-    }
-    if (result.data) {
-      toast.success("User change password successfully!");
-    }
+    const result = await Effect.runPromise(
+      Effect.tryPromise({
+        try: (signal) =>
+          authClient.changePassword(
+            {
+              currentPassword,
+              newPassword,
+              revokeOtherSessions: true,
+            },
+            { signal },
+          ),
+        catch: (error) => new Error(String(error)),
+      }).pipe(
+        withToast({
+          onFailure: (e) => `Failed to change password. ${e.message}`,
+          onSuccess: () => `Change password successfully!`,
+          onWaiting: "onWaiting",
+        }),
+      ),
+    );
   });
 
   const { data } = authClient.useSession();

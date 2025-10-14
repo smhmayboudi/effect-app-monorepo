@@ -1,12 +1,11 @@
 "use client";
 
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
+import { Effect, Schema } from "effect";
 import { GalleryVerticalEnd } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +30,7 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { withToast } from "@/components/with-toast";
 
 export default function Client() {
   const t = useTranslations("sign-up");
@@ -61,15 +61,27 @@ export default function Client() {
   const router = useRouter();
   const locale = useLocale();
   const onSubmit = handleSubmit(async ({ email, name, password }) => {
-    const result = await authClient.signUp.email({
-      callbackURL: `http://127.0.0.1:3002/${locale}/user/dashboard`,
-      email,
-      name,
-      password,
-    });
-    if (result.error) {
-      toast.error(result.error.message || "Failed to sign up.");
-    }
+    const result = await Effect.runPromise(
+      Effect.tryPromise({
+        try: (signal) =>
+          authClient.signUp.email(
+            {
+              callbackURL: `http://127.0.0.1:3002/${locale}/user/dashboard`,
+              email,
+              name,
+              password,
+            },
+            { signal },
+          ),
+        catch: (error) => new Error(String(error)),
+      }).pipe(
+        withToast({
+          onFailure: (e) => `Failed to sign up with email. ${e.message}`,
+          onSuccess: () => `Sign up with email successfully!`,
+          onWaiting: "onWaiting",
+        }),
+      ),
+    );
     if (result.data) {
       router.push(`/email-verification?email=${email}`);
     }
