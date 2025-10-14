@@ -1,7 +1,8 @@
 "use client";
 
+import { Cookies } from "@effect/platform";
 import { DirectionProvider as RdxDirProvider } from "@radix-ui/react-direction";
-import { Option, Schema } from "effect";
+import { Duration, Effect, Either, Option, Schema } from "effect";
 import {
   createContext,
   type PropsWithChildren,
@@ -9,8 +10,6 @@ import {
   useEffect,
   useState,
 } from "react";
-
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
 const Direction = Schema.Literal("ltr", "rtl");
 export type Direction = typeof Direction.Type;
@@ -46,7 +45,10 @@ export function DirectionProvider({
   storageKey = DIRECTION_COOKIE_NAME,
 }: PropsWithChildren<DirectionProviderProps>) {
   const [dir, _setDir] = useState<Direction>(() =>
-    Option.fromNullable(getCookie(storageKey)).pipe(
+    Cookies.getValue(
+      Cookies.fromSetCookie(document.cookie.split(";")),
+      storageKey,
+    ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Direction)),
       Option.getOrElse(() => defaultDir),
     ),
@@ -58,13 +60,39 @@ export function DirectionProvider({
   }, [dir]);
 
   const setDir = (dir: Direction) => {
-    setCookie(storageKey, dir, DIRECTION_COOKIE_MAX_AGE);
-    _setDir(dir);
+    Cookies.makeCookie(storageKey, dir, {
+      maxAge: Duration.seconds(DIRECTION_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setDir(dir);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setDir(dir);
+        },
+      }),
+    );
   };
 
   const resetDir = () => {
-    removeCookie(storageKey);
-    _setDir(defaultDir);
+    Cookies.makeCookie(storageKey, "", {
+      maxAge: Duration.seconds(0),
+      path: "/"
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setDir(defaultDir);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setDir(defaultDir);
+        },
+      }),
+    );
   };
 
   return (

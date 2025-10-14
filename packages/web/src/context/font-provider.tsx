@@ -1,6 +1,7 @@
 "use client";
 
-import { Option, Schema } from "effect";
+import { Cookies } from "@effect/platform";
+import { Duration, Either, Option, Schema } from "effect";
 import {
   createContext,
   type PropsWithChildren,
@@ -8,8 +9,6 @@ import {
   useEffect,
   useState,
 } from "react";
-
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
 const Font = Schema.Literal("inter", "manrope", "system");
 export type Font = typeof Font.Type;
@@ -45,7 +44,10 @@ export function FontProvider({
   storageKey = FONT_COOKIE_NAME,
 }: PropsWithChildren<FontProviderProps>) {
   const [font, _setFont] = useState<Font>(() =>
-    Option.fromNullable(getCookie(storageKey)).pipe(
+    Cookies.getValue(
+      Cookies.fromSetCookie(document.cookie.split(";")),
+      storageKey,
+    ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Font)),
       Option.getOrElse(() => defaultFont),
     ),
@@ -64,13 +66,39 @@ export function FontProvider({
   }, [font]);
 
   const setFont = (font: Font) => {
-    setCookie(storageKey, font, FONT_COOKIE_MAX_AGE);
-    _setFont(font);
+    Cookies.makeCookie(storageKey, font, {
+      maxAge: Duration.seconds(FONT_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setFont(font);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setFont(font);
+        },
+      }),
+    );
   };
 
   const resetFont = () => {
-    removeCookie(storageKey);
-    _setFont(defaultFont);
+    Cookies.makeCookie(storageKey, "", {
+      maxAge: Duration.seconds(0),
+      path: "/"
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setFont(defaultFont);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setFont(defaultFont);
+        },
+      }),
+    );
   };
 
   return (

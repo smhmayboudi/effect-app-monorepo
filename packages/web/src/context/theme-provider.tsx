@@ -1,6 +1,7 @@
 "use client";
 
-import { Option, Schema } from "effect";
+import { Cookies } from "@effect/platform";
+import { Duration, Either, Option, Schema } from "effect";
 import {
   createContext,
   type PropsWithChildren,
@@ -9,8 +10,6 @@ import {
   useMemo,
   useState,
 } from "react";
-
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
 const Theme = Schema.Literal("dark", "light", "system");
 export type ResolvedTheme = Exclude<Theme, "system">;
@@ -51,7 +50,10 @@ export function ThemeProvider({
   ...props
 }: PropsWithChildren<ThemeProviderProps>) {
   const [theme, _setTheme] = useState<Theme>(() =>
-    Option.fromNullable(getCookie(storageKey)).pipe(
+    Cookies.getValue(
+      Cookies.fromSetCookie(document.cookie.split(";")),
+      storageKey,
+    ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Theme)),
       Option.getOrElse(() => defaultTheme),
     ),
@@ -90,13 +92,39 @@ export function ThemeProvider({
   }, [theme, resolvedTheme]);
 
   const setTheme = (theme: Theme) => {
-    setCookie(storageKey, theme, THEME_COOKIE_MAX_AGE);
-    _setTheme(theme);
+    Cookies.makeCookie(storageKey, theme, {
+      maxAge: Duration.seconds(THEME_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setTheme(theme);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setTheme(theme);
+        },
+      }),
+    );
   };
 
   const resetTheme = () => {
-    removeCookie(storageKey);
-    _setTheme(defaultTheme);
+    Cookies.makeCookie(storageKey, "", {
+      maxAge: Duration.seconds(0),
+      path: "/"
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setTheme(defaultTheme);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setTheme(defaultTheme);
+        },
+      }),
+    );
   };
 
   const contextValue = {

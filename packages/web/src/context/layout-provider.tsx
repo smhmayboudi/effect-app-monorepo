@@ -1,14 +1,13 @@
 "use client";
 
-import { Option, Schema } from "effect";
+import { Cookies } from "@effect/platform";
+import { Duration, Either, Option, Schema } from "effect";
 import {
   createContext,
   type PropsWithChildren,
   useContext,
   useState,
 } from "react";
-
-import { getCookie, removeCookie, setCookie } from "@/lib/cookies";
 
 const Collapsible = Schema.Literal("icon", "none", "offcanvas");
 export type Collapsible = typeof Collapsible.Type;
@@ -45,7 +44,7 @@ const initialState: LayoutContextType = {
 const LayoutContext = createContext<LayoutContextType>(initialState);
 
 type LayoutProviderProps = {
-  defaultCollapsible: Collapsible;
+  defaultCollapsible?: Collapsible;
   defaultVariant?: Variant;
   storageKeyCollapsible?: string;
   storageKeyVariant?: string;
@@ -59,34 +58,92 @@ export function LayoutProvider({
   storageKeyVariant = LAYOUT_VARIANT_COOKIE_NAME,
 }: PropsWithChildren<LayoutProviderProps>) {
   const [collapsible, _setCollapsible] = useState<Collapsible>(() =>
-    Option.fromNullable(getCookie(storageKeyCollapsible)).pipe(
+    Cookies.getValue(
+      Cookies.fromSetCookie(document.cookie.split(";")),
+      storageKeyCollapsible,
+    ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Collapsible)),
       Option.getOrElse(() => defaultCollapsible),
     ),
   );
 
   const [variant, _setVariant] = useState<Variant>(() =>
-    Option.fromNullable(getCookie(storageKeyVariant)).pipe(
+    Cookies.getValue(
+      Cookies.fromSetCookie(document.cookie.split(";")),
+      storageKeyVariant,
+    ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Variant)),
       Option.getOrElse(() => defaultVariant),
     ),
   );
 
   const setCollapsible = (newCollapsible: Collapsible) => {
-    setCookie(storageKeyCollapsible, newCollapsible, LAYOUT_COOKIE_MAX_AGE);
-    _setCollapsible(newCollapsible);
+    Cookies.makeCookie(storageKeyCollapsible, newCollapsible, {
+      maxAge: Duration.seconds(LAYOUT_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setCollapsible(newCollapsible);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setCollapsible(newCollapsible);
+        },
+      }),
+    );
   };
 
   const setVariant = (newVariant: Variant) => {
-    setCookie(storageKeyVariant, newVariant, LAYOUT_COOKIE_MAX_AGE);
-    _setVariant(newVariant);
+    Cookies.makeCookie(storageKeyVariant, newVariant, {
+      maxAge: Duration.seconds(LAYOUT_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setVariant(newVariant);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setVariant(newVariant);
+        },
+      }),
+    );
   };
 
   const resetLayout = () => {
-    removeCookie(storageKeyCollapsible);
-    removeCookie(storageKeyVariant);
-    setCollapsible(defaultCollapsible);
-    setVariant(defaultVariant);
+    Cookies.makeCookie(storageKeyCollapsible, "", {
+      maxAge: Duration.seconds(0),
+      path: "/"
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setCollapsible(defaultCollapsible);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setCollapsible(defaultCollapsible);
+        },
+      }),
+    );
+    Cookies.makeCookie(storageKeyVariant, "", {
+      maxAge: Duration.seconds(0),
+      path: "/"
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left);
+          _setVariant(defaultVariant);
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right);
+          _setVariant(defaultVariant);
+        },
+      }),
+    );
   };
 
   const contextValue: LayoutContextType = {

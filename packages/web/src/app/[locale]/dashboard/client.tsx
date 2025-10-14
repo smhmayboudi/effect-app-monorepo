@@ -1,5 +1,7 @@
 "use client";
 
+import { Cookies } from "@effect/platform";
+import { Effect } from "effect";
 import {
   BarChartIcon,
   ClipboardListIcon,
@@ -22,7 +24,6 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useDirection } from "@/context/direction-provider";
 import { LayoutProvider } from "@/context/layout-provider";
-import { getCookie } from "@/lib/cookies";
 
 const data1 = {
   navDocuments: [
@@ -103,7 +104,15 @@ const data2 = [
 
 export default function Client() {
   const { dir } = useDirection();
-  const defaultOpen = getCookie("__next_sidebar") !== "false";
+  const defaultOpen = Effect.runSync(
+    Cookies.getValue(
+      Cookies.fromSetCookie(document.cookie.split(";")),
+      "__next_sidebar",
+    ).pipe(
+      Effect.catchTag("NoSuchElementException", () => Effect.succeed(false)),
+      Effect.map((value) => value === "true"),
+    ),
+  );
 
   return (
     <LayoutProvider>
