@@ -116,7 +116,7 @@ export function LayoutProvider({
   const resetLayout = () => {
     Cookies.makeCookie(storageKeyCollapsible, "", {
       maxAge: Duration.seconds(0),
-      path: "/"
+      path: "/",
     }).pipe(
       Either.match({
         onLeft: (left) => {
@@ -131,7 +131,7 @@ export function LayoutProvider({
     );
     Cookies.makeCookie(storageKeyVariant, "", {
       maxAge: Duration.seconds(0),
-      path: "/"
+      path: "/",
     }).pipe(
       Either.match({
         onLeft: (left) => {

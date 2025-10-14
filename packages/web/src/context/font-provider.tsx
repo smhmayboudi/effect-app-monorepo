@@ -86,7 +86,7 @@ export function FontProvider({
   const resetFont = () => {
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
-      path: "/"
+      path: "/",
     }).pipe(
       Either.match({
         onLeft: (left) => {

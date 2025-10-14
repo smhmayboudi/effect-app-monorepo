@@ -2,7 +2,7 @@
 
 import { Cookies } from "@effect/platform";
 import { DirectionProvider as RdxDirProvider } from "@radix-ui/react-direction";
-import { Duration, Effect, Either, Option, Schema } from "effect";
+import { Duration, Either, Option, Schema } from "effect";
 import {
   createContext,
   type PropsWithChildren,
@@ -80,7 +80,7 @@ export function DirectionProvider({
   const resetDir = () => {
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
-      path: "/"
+      path: "/",
     }).pipe(
       Either.match({
         onLeft: (left) => {

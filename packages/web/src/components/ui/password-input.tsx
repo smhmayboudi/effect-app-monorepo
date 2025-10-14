@@ -1,7 +1,7 @@
 "use client";
 
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import * as React from "react";
+import { type ComponentProps, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 export function PasswordInput({
   className,
   ...props
-}: Omit<React.ComponentProps<typeof Input>, "type">) {
-  const [showPassword, setShowPassword] = React.useState(false);
+}: Omit<ComponentProps<typeof Input>, "type">) {
+  const [showPassword, setShowPassword] = useState(false);
   const Icon = showPassword ? EyeOffIcon : EyeIcon;
 
   return (

@@ -27,9 +27,9 @@ import {
 import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
+import { withToast } from "@/components/with-toast";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { withToast } from "@/components/with-toast";
 
 export default function Client() {
   const t = useTranslations("user.change-password");
@@ -59,8 +59,9 @@ export default function Client() {
     reset,
   } = form;
   const onSubmit = handleSubmit(async ({ currentPassword, newPassword }) => {
-    const result = await Effect.runPromise(
+    await Effect.runPromise(
       Effect.tryPromise({
+        catch: (error) => new Error(String(error)),
         try: (signal) =>
           authClient.changePassword(
             {
@@ -70,7 +71,6 @@ export default function Client() {
             },
             { signal },
           ),
-        catch: (error) => new Error(String(error)),
       }).pipe(
         withToast({
           onFailure: (e) => `Failed to change password. ${e.message}`,

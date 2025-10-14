@@ -3,7 +3,7 @@
 import type { Metric } from "web-vitals";
 
 import { useReportWebVitals } from "next/web-vitals";
-import * as React from "react";
+import { useEffect, useRef } from "react";
 
 interface UseWebVitalsOptions {
   analyticsEndpoint?: string;
@@ -16,9 +16,9 @@ export function useWebVitals({
   enabled = true,
   onMetricReport,
 }: UseWebVitalsOptions = {}) {
-  const analyticsEndpointRef = React.useRef(analyticsEndpoint);
+  const analyticsEndpointRef = useRef(analyticsEndpoint);
 
-  React.useEffect(() => {
+  useEffect(() => {
     analyticsEndpointRef.current = analyticsEndpoint;
   }, [analyticsEndpoint]);
 

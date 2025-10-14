@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { LinkProps } from "next/link";
-import * as React from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 
 import { Link as Linki18, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -12,15 +12,15 @@ const Link = ({
   className,
   classNameActive,
   ...props
-}: React.PropsWithChildren<LinkProps> & {
+}: PropsWithChildren<LinkProps> & {
   className?: string;
   classNameActive?: string;
 }) => {
   const locale = useLocale();
   const pathname = usePathname();
-  const [computedClassName, setComputedClassName] = React.useState(className);
+  const [computedClassName, setComputedClassName] = useState(className);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (pathname) {
       const activePathname = new URL(pathname, location.href).pathname;
       const linkPathname = new URL(

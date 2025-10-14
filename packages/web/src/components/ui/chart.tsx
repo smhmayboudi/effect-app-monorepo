@@ -1,6 +1,15 @@
 "use client";
 
-import * as React from "react";
+import {
+  type ComponentProps,
+  type ComponentType,
+  type CSSProperties,
+  type ReactNode,
+  createContext,
+  useContext,
+  useId,
+  useMemo,
+} from "react";
 import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";
@@ -10,8 +19,8 @@ const THEMES = { dark: ".dark", light: "" } as const;
 
 export type ChartConfig = {
   [k in string]: {
-    icon?: React.ComponentType;
-    label?: React.ReactNode;
+    icon?: ComponentType;
+    label?: ReactNode;
   } & (
     | { color?: never; theme: Record<keyof typeof THEMES, string> }
     | { color?: string; theme?: never }
@@ -22,7 +31,7 @@ type ChartContextProps = {
   config: ChartConfig;
 };
 
-const ChartContext = React.createContext<ChartContextProps | null>(null);
+const ChartContext = createContext<ChartContextProps | null>(null);
 
 function ChartContainer({
   children,
@@ -30,13 +39,13 @@ function ChartContainer({
   config,
   id,
   ...props
-}: React.ComponentProps<"div"> & {
-  children: React.ComponentProps<
+}: ComponentProps<"div"> & {
+  children: ComponentProps<
     typeof RechartsPrimitive.ResponsiveContainer
   >["children"];
   config: ChartConfig;
 }) {
-  const uniqueId = React.useId();
+  const uniqueId = useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
 
   return (
@@ -60,7 +69,7 @@ function ChartContainer({
 }
 
 function useChart() {
-  const context = React.useContext(ChartContext);
+  const context = useContext(ChartContext);
 
   if (!context) {
     throw new Error("useChart must be used within a <ChartContainer />");
@@ -118,8 +127,8 @@ function ChartTooltipContent({
   labelKey,
   nameKey,
   payload,
-}: React.ComponentProps<"div"> &
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> & {
+}: ComponentProps<"div"> &
+  ComponentProps<typeof RechartsPrimitive.Tooltip> & {
     hideIndicator?: boolean;
     hideLabel?: boolean;
     indicator?: "dashed" | "dot" | "line";
@@ -128,7 +137,7 @@ function ChartTooltipContent({
   }) {
   const { config } = useChart();
 
-  const tooltipLabel = React.useMemo(() => {
+  const tooltipLabel = useMemo(() => {
     if (hideLabel || !payload?.length) {
       return null;
     }
@@ -217,7 +226,7 @@ function ChartTooltipContent({
                             {
                               "--color-bg": indicatorColor,
                               "--color-border": indicatorColor,
-                            } as React.CSSProperties
+                            } as CSSProperties
                           }
                         />
                       )
@@ -258,8 +267,8 @@ function ChartLegendContent({
   nameKey,
   payload,
   verticalAlign = "bottom",
-}: Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> &
-  React.ComponentProps<"div"> & {
+}: ComponentProps<"div"> &
+  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean;
     nameKey?: string;
   }) {

@@ -1,6 +1,7 @@
+import type { SVGProps } from "react";
+
 import { Item, Root as Radio } from "@radix-ui/react-radio-group";
 import { CircleCheck, RotateCcw, Settings } from "lucide-react";
-import type { SVGProps } from "react";
 
 import { IconDir } from "@/assets/custom/icon-dir";
 import { IconLayoutCompact } from "@/assets/custom/icon-layout-compact";

@@ -112,7 +112,7 @@ export function ThemeProvider({
   const resetTheme = () => {
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
-      path: "/"
+      path: "/",
     }).pipe(
       Either.match({
         onLeft: (left) => {

@@ -28,9 +28,9 @@ import { Input } from "@/components/ui/input";
 import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
+import { withToast } from "@/components/with-toast";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { withToast } from "@/components/with-toast";
 
 export default function Client() {
   const t = useTranslations("sign-in");
@@ -61,9 +61,9 @@ export default function Client() {
   const onSubmit = handleSubmit(async ({ email, password }) => {
     const result = await Effect.runPromise(
       Effect.tryPromise({
+        catch: (error) => new Error(String(error)),
         try: (signal) =>
           authClient.signIn.email({ email, password }, { signal }),
-        catch: (error) => new Error(String(error)),
       }).pipe(
         withToast({
           onFailure: (e) => `Failed to sign in with email. ${e.message}`,
