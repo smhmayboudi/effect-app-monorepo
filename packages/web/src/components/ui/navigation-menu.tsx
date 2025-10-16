@@ -29,7 +29,7 @@ NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 const NavigationMenuList = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.List>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List> & {
-    direction?: "ltr" | "rtl";
+    direction: "ltr" | "rtl";
   }
 >(({ className, direction = "ltr", ...props }, ref) => (
   <NavigationMenuPrimitive.List
@@ -53,7 +53,7 @@ const navigationMenuTriggerStyle = cva(
 const NavigationMenuTrigger = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger> & {
-    direction?: "ltr" | "rtl";
+    direction: "ltr" | "rtl";
   }
 >(({ children, className, direction = "ltr", ...props }, ref) => (
   <NavigationMenuPrimitive.Trigger
@@ -76,7 +76,7 @@ NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 const NavigationMenuContent = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Content>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content> & {
-    direction?: "ltr" | "rtl";
+    direction: "ltr" | "rtl";
   }
 >(({ className, direction = "ltr", ...props }, ref) => (
   <NavigationMenuPrimitive.Content
@@ -96,7 +96,7 @@ const NavigationMenuLink = NavigationMenuPrimitive.Link;
 const NavigationMenuViewport = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Viewport>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport> & {
-    direction?: "ltr" | "rtl";
+    direction: "ltr" | "rtl";
   }
 >(({ className, direction = "ltr", ...props }, ref) => (
   <div

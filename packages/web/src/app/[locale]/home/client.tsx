@@ -95,10 +95,10 @@ const Navbar5 = () => {
             </span>
           </a>
           <NavigationMenu className="hidden lg:block" direction="ltr">
-            <NavigationMenuList>
+            <NavigationMenuList direction="ltr">
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Features</NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuTrigger direction="ltr">Features</NavigationMenuTrigger>
+                <NavigationMenuContent direction="ltr">
                   <div className="grid w-[600px] grid-cols-2 p-3">
                     {features.map((feature, index) => (
                       <NavigationMenuLink

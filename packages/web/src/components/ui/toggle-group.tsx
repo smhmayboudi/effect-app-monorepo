@@ -25,7 +25,7 @@ function ToggleGroup({
   ...props
 }: ComponentProps<typeof ToggleGroupPrimitive.Root> &
   VariantProps<typeof toggleVariants> & {
-    direction?: "ltr" | "rtl";
+    direction: "ltr" | "rtl";
   }) {
   return (
     <ToggleGroupPrimitive.Root

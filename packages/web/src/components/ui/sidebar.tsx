@@ -326,7 +326,7 @@ function SidebarProvider({
   ...props
 }: ComponentProps<"div"> & {
   defaultOpen?: boolean;
-  direction?: "ltr" | "rtl";
+  direction: "ltr" | "rtl";
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
 }) {
