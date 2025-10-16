@@ -169,10 +169,7 @@ function FieldError({
   );
 }
 
-function FieldLabel({
-  className,
-  ...props
-}: ComponentProps<typeof Label>) {
+function FieldLabel({ className, ...props }: ComponentProps<typeof Label>) {
   return (
     <Label
       className={cn(
@@ -192,7 +189,7 @@ function FieldSeparator({
   className,
   ...props
 }: ComponentProps<"div"> & {
-  children?: ReactNode
+  children?: ReactNode;
 }) {
   return (
     <div

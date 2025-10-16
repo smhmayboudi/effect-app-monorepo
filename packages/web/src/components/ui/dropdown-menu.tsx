@@ -176,12 +176,14 @@ function DropdownMenuSeparator({
 
 function DropdownMenuShortcut({
   className,
+  direction,
   ...props
-}: ComponentProps<"span">) {
+}: ComponentProps<"span"> & { direction: "ltr" | "rtl" }) {
   return (
     <span
       className={cn(
-        "ml-auto text-xs tracking-widest text-muted-foreground",
+        "text-xs tracking-widest text-muted-foreground",
+        direction === "rtl" ? "mr-auto" : "ml-auto",
         className,
       )}
       data-slot="dropdown-menu-shortcut"
@@ -215,9 +217,11 @@ function DropdownMenuSubContent({
 function DropdownMenuSubTrigger({
   children,
   className,
+  direction,
   inset,
   ...props
 }: ComponentProps<typeof DropdownMenuPrimitive.SubTrigger> & {
+  direction: "ltr" | "rtl";
   inset?: boolean;
 }) {
   return (
@@ -231,7 +235,9 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      <ChevronRightIcon
+        className={`${direction === "rtl" ? "mr-auto" : "ml-auto"} size-4`}
+      />
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

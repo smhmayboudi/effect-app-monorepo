@@ -5,8 +5,8 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
 import {
   type ComponentProps,
-  type CSSProperties,
   createContext,
+  type CSSProperties,
   useCallback,
   useContext,
   useEffect,
