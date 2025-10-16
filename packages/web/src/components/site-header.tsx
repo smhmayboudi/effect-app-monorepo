@@ -39,9 +39,9 @@ export function SiteHeader() {
               GitHub
             </a>
           </Button>
-          <ModeToggle />
+          <ModeToggle direction={dir} />
           <ConfigDrawer />
-          <NavUser isHeader={true} user={data.user} />
+          <NavUser direction={dir} isHeader={true} user={data.user} />
         </div>
       </div>
     </header>

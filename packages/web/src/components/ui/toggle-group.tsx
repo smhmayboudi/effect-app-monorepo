@@ -8,7 +8,7 @@ import { toggleVariants } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
 
 const ToggleGroupContext = createContext<
-  VariantProps<typeof toggleVariants> & { direction?: "ltr" | "rtl" }
+  VariantProps<typeof toggleVariants> & { direction: "ltr" | "rtl" }
 >({
   direction: "ltr",
   size: "default",

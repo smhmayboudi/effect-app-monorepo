@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  // BellIcon,
-  // CreditCardIcon,
+  BellIcon,
+  CreditCardIcon,
   LogOutIcon,
   MoreVerticalIcon,
   UserCircleIcon,
@@ -18,7 +18,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "@/components/ui/link";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -27,9 +26,11 @@ import {
 } from "@/components/ui/sidebar";
 
 export function NavUser({
+  direction,
   isHeader,
   user,
 }: {
+  direction: "ltr" | "rtl";
   isHeader: boolean;
   user: {
     avatar: string;
@@ -66,7 +67,9 @@ export function NavUser({
                       {user.email}
                     </span>
                   </div>
-                  <MoreVerticalIcon className="ml-auto size-4" />
+                  <MoreVerticalIcon
+                    className={`${direction === "rtl" ? "mr-auto" : "ml-auto"} size-4`}
+                  />
                 </>
               )}
             </SidebarMenuButton>
@@ -95,16 +98,16 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <UserCircleIcon />
-                <Link href="/user/update">Account</Link>
+                Account
               </DropdownMenuItem>
-              {/* <DropdownMenuItem>
+              <DropdownMenuItem>
                 <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon />
                 Notifications
-              </DropdownMenuItem> */}
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>

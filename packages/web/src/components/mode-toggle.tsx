@@ -6,13 +6,12 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/context/theme-provider";
-import { cn } from "@/lib/utils";
 
-export function ModeToggle() {
+export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
   const { setTheme, theme } = useTheme();
 
   return (
@@ -25,36 +24,30 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          defaultChecked={theme === "light"}
-          onClick={() => setTheme("light")}
+        <DropdownMenuCheckboxItem
+          checked={theme === "light"}
+          className="capitalize"
+          direction={direction}
+          onCheckedChange={() => setTheme("light")}
         >
           Light
-          <Check
-            className={cn("ms-auto", theme !== "light" && "hidden")}
-            size={14}
-          />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          defaultChecked={theme === "dark"}
-          onClick={() => setTheme("dark")}
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={theme === "dark"}
+          className="capitalize"
+          direction={direction}
+          onCheckedChange={() => setTheme("dark")}
         >
           Dark
-          <Check
-            className={cn("ms-auto", theme !== "dark" && "hidden")}
-            size={14}
-          />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          defaultChecked={theme === "system"}
-          onClick={() => setTheme("system")}
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={theme === "system"}
+          className="capitalize"
+          direction={direction}
+          onCheckedChange={() => setTheme("system")}
         >
           System
-          <Check
-            className={cn("ms-auto", theme !== "system" && "hidden")}
-            size={14}
-          />
-        </DropdownMenuItem>
+        </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

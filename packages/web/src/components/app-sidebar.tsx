@@ -3,9 +3,9 @@
 import type { LucideIcon } from "lucide-react";
 
 import { AppTitle } from "@/components/app-title";
-// import { NavDocuments } from "@/components/nav-documents";
+import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
-// import { NavSecondary } from "@/components/nav-secondary";
+import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -18,6 +18,7 @@ import { useLayout } from "@/context/layout-provider";
 
 export function AppSidebar({
   data,
+  direction,
 }: {
   data: {
     navDocuments: Array<{
@@ -41,6 +42,7 @@ export function AppSidebar({
       name: string;
     };
   };
+  direction: "ltr" | "rtl";
 }) {
   const { collapsible, variant } = useLayout();
 
@@ -51,11 +53,11 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavDocuments items={data.navDocuments} /> */}
-        {/* <NavSecondary items={data.navSecondary} /> */}
+        <NavDocuments items={data.navDocuments} />
+        <NavSecondary items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser isHeader={false} user={data.user} />
+        <NavUser direction={direction} isHeader={false} user={data.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

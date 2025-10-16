@@ -2,8 +2,7 @@
 
 import { type LucideIcon, MailIcon, PlusIcon } from "lucide-react";
 
-// import { Button } from "@/components/ui/button";
-import Link from "@/components/ui/link";
+import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -28,24 +27,22 @@ export function NavMain({
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
               className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
-              tooltip="Service Create"
+              tooltip="Quick Create"
             >
               <PlusIcon />
-              <Link href="/user/service-create">
-                <span>Service Create</span>
-              </Link>
+              <span>Quick Create</span>
             </SidebarMenuButton>
-            {/* <Button
+            <Button
               className="size-8 group-data-[collapsible=icon]:opacity-0"
               size="icon"
               variant="outline"
             >
               <MailIcon />
               <span className="sr-only">Inbox</span>
-            </Button> */}
+            </Button>
           </SidebarMenuItem>
         </SidebarMenu>
-        {/* <SidebarMenu>
+        <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title}>
@@ -54,7 +51,7 @@ export function NavMain({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
-        </SidebarMenu> */}
+        </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
   );
