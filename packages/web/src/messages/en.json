@@ -49,6 +49,10 @@
     },
     "title": "Forgot Password"
   },
+  "home": {
+    "description": "Home",
+    "title": "Home"
+  },
   "reset-password": {
     "content": "Enter your new password to reset password your account",
     "description": "Reset Password",
