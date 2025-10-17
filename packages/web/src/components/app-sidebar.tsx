@@ -59,7 +59,7 @@ export function AppSidebar({
       <SidebarFooter>
         <NavUser direction={direction} isHeader={false} user={data.user} />
       </SidebarFooter>
-      <SidebarRail />
+      <SidebarRail direction={direction} />
     </Sidebar>
   );
 }

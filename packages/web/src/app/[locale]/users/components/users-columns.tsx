@@ -42,11 +42,17 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
   {
     accessorKey: "username",
     cell: ({ row }) => (
-      <LongText className="max-w-36">{row.getValue("username")}</LongText>
+      <LongText className="max-w-36" direction={direction}>
+        {row.getValue("username")}
+      </LongText>
     ),
     enableHiding: false,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Username" />
+      <DataTableColumnHeader
+        column={column}
+        direction={direction}
+        title="Username"
+      />
     ),
     meta: {
       className: cn(
@@ -59,10 +65,18 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
     cell: ({ row }) => {
       const { firstName, lastName } = row.original;
       const fullName = `${firstName} ${lastName}`;
-      return <LongText className="max-w-36">{fullName}</LongText>;
+      return (
+        <LongText className="max-w-36" direction={direction}>
+          {fullName}
+        </LongText>
+      );
     },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader
+        column={column}
+        direction={direction}
+        title="Name"
+      />
     ),
     id: "fullName",
     meta: { className: "w-36" },
@@ -73,7 +87,11 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
       <div className="w-fit text-nowrap">{row.getValue("email")}</div>
     ),
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader
+        column={column}
+        direction={direction}
+        title="Email"
+      />
     ),
   },
   {
@@ -81,7 +99,11 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
     cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
     enableSorting: false,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number" />
+      <DataTableColumnHeader
+        column={column}
+        direction={direction}
+        title="Phone Number"
+      />
     ),
   },
   {
@@ -103,7 +125,11 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
       return value.includes(row.getValue(id));
     },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader
+        column={column}
+        direction={direction}
+        title="Status"
+      />
     ),
   },
   {
@@ -131,7 +157,11 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
       return value.includes(row.getValue(id));
     },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Role" />
+      <DataTableColumnHeader
+        column={column}
+        direction={direction}
+        title="Role"
+      />
     ),
   },
   {

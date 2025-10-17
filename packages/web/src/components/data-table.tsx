@@ -100,6 +100,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export const schema = Schema.Struct({
   header: Schema.String,
@@ -213,9 +214,10 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
           Target
         </Label>
         <Input
-          className={`h-8 w-16 border-transparent bg-transparent hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 ${
-            direction === "rtl" ? "text-left" : "text-right"
-          } shadow-none focus-visible:border dark:bg-transparent`}
+          className={cn(
+            "size-8 border-transparent bg-transparent shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:hover:bg-input/30 dark:focus-visible:bg-input/30",
+            direction === "rtl" ? "text-left" : "text-right",
+          )}
           defaultValue={row.original.target}
           id={`${row.original.id}-target`}
         />
@@ -223,7 +225,10 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
     ),
     header: () => (
       <div
-        className={`w-full ${direction === "rtl" ? "text-left" : "text-right"}`}
+        className={cn(
+          "w-full",
+          direction === "rtl" ? "text-left" : "text-right",
+        )}
       >
         Target
       </div>
@@ -246,9 +251,10 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
           Limit
         </Label>
         <Input
-          className={`h-8 w-16 border-transparent bg-transparent hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 ${
-            direction === "rtl" ? "text-left" : "text-right"
-          } shadow-none focus-visible:border dark:bg-transparent`}
+          className={cn(
+            "size-8 border-transparent bg-transparent shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:hover:bg-input/30 dark:focus-visible:bg-input/30",
+            direction === "rtl" ? "text-left" : "text-right",
+          )}
           defaultValue={row.original.limit}
           id={`${row.original.id}-limit`}
         />
@@ -256,7 +262,10 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
     ),
     header: () => (
       <div
-        className={`w-full ${direction === "rtl" ? "text-left" : "text-right"}`}
+        className={cn(
+          "w-full",
+          direction === "rtl" ? "text-left" : "text-right",
+        )}
       >
         Limit
       </div>
@@ -284,9 +293,11 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
             >
               <SelectValue placeholder="Assign reviewer" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-              <SelectItem value="Jamik Tashpulatov">
+            <SelectContent direction={direction}>
+              <SelectItem direction={direction} value="Eddie Lake">
+                Eddie Lake
+              </SelectItem>
+              <SelectItem direction={direction} value="Jamik Tashpulatov">
                 Jamik Tashpulatov
               </SelectItem>
             </SelectContent>
@@ -309,12 +320,14 @@ const columns = (direction: "ltr" | "rtl"): ColumnDef<typeof schema.Type>[] => [
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
+        <DropdownMenuContent align="end" className="w-32" direction={direction}>
+          <DropdownMenuItem direction={direction}>Edit</DropdownMenuItem>
+          <DropdownMenuItem direction={direction}>Make a copy</DropdownMenuItem>
+          <DropdownMenuItem direction={direction}>Favorite</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+          <DropdownMenuItem direction={direction} variant="destructive">
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
@@ -403,11 +416,19 @@ export function DataTable({
           >
             <SelectValue placeholder="Select a view" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="outline">Outline</SelectItem>
-            <SelectItem value="past-performance">Past Performance</SelectItem>
-            <SelectItem value="key-personnel">Key Personnel</SelectItem>
-            <SelectItem value="focus-documents">Focus Documents</SelectItem>
+          <SelectContent direction={direction}>
+            <SelectItem direction={direction} value="outline">
+              Outline
+            </SelectItem>
+            <SelectItem direction={direction} value="past-performance">
+              Past Performance
+            </SelectItem>
+            <SelectItem direction={direction} value="key-personnel">
+              Key Personnel
+            </SelectItem>
+            <SelectItem direction={direction} value="focus-documents">
+              Focus Documents
+            </SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
@@ -430,7 +451,11 @@ export function DataTable({
                 <ChevronDownIcon />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent
+              align="end"
+              className="w-56"
+              direction={direction}
+            >
               {table
                 .getAllColumns()
                 .filter(
@@ -546,9 +571,13 @@ export function DataTable({
                     placeholder={table.getState().pagination.pageSize}
                   />
                 </SelectTrigger>
-                <SelectContent side="top">
+                <SelectContent direction={direction} side="top">
                   {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
+                    <SelectItem
+                      direction={direction}
+                      key={pageSize}
+                      value={`${pageSize}`}
+                    >
                       {pageSize}
                     </SelectItem>
                   ))}
@@ -560,10 +589,13 @@ export function DataTable({
               {table.getPageCount()}
             </div>
             <div
-              className={`${direction === "rtl" ? "mr-auto" : "ml-auto"} flex items-center gap-2 lg:ml-0`}
+              className={cn(
+                "flex items-center gap-2",
+                direction === "rtl" ? "mr-auto lg:mr-0" : "ml-auto lg:ml-0",
+              )}
             >
               <Button
-                className="hidden h-8 w-8 p-0 lg:flex"
+                className="hidden size-8 p-0 lg:flex"
                 disabled={!table.getCanPreviousPage()}
                 onClick={() => table.setPageIndex(0)}
                 variant="outline"
@@ -703,9 +735,10 @@ function TableCellViewer({
     >
       <DrawerTrigger asChild>
         <Button
-          className={`w-fit px-0 text-foreground ${
-            direction === "rtl" ? "text-right" : "text-left"
-          }`}
+          className={cn(
+            "w-fit px-0 text-foreground",
+            direction === "rtl" ? "text-right" : "text-left",
+          )}
           variant="link"
         >
           {item.header}
@@ -735,6 +768,7 @@ function TableCellViewer({
                     axisLine={false}
                     dataKey="month"
                     hide
+                    reversed={direction === "rtl"}
                     tickFormatter={(value) => value.slice(0, 3)}
                     tickLine={false}
                     tickMargin={8}
@@ -742,6 +776,7 @@ function TableCellViewer({
                   <ChartTooltip
                     content={<ChartTooltipContent indicator="dot" />}
                     cursor={false}
+                    reverseDirection={{ x: direction === "rtl" }}
                   />
                   <Area
                     dataKey="mobile"
@@ -788,23 +823,34 @@ function TableCellViewer({
                   <SelectTrigger className="w-full" id="type">
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Table of Contents">
+                  <SelectContent direction={direction}>
+                    <SelectItem direction={direction} value="Table of Contents">
                       Table of Contents
                     </SelectItem>
-                    <SelectItem value="Executive Summary">
+                    <SelectItem direction={direction} value="Executive Summary">
                       Executive Summary
                     </SelectItem>
-                    <SelectItem value="Technical Approach">
+                    <SelectItem
+                      direction={direction}
+                      value="Technical Approach"
+                    >
                       Technical Approach
                     </SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Capabilities">Capabilities</SelectItem>
-                    <SelectItem value="Focus Documents">
+                    <SelectItem direction={direction} value="Design">
+                      Design
+                    </SelectItem>
+                    <SelectItem direction={direction} value="Capabilities">
+                      Capabilities
+                    </SelectItem>
+                    <SelectItem direction={direction} value="Focus Documents">
                       Focus Documents
                     </SelectItem>
-                    <SelectItem value="Narrative">Narrative</SelectItem>
-                    <SelectItem value="Cover Page">Cover Page</SelectItem>
+                    <SelectItem direction={direction} value="Narrative">
+                      Narrative
+                    </SelectItem>
+                    <SelectItem direction={direction} value="Cover Page">
+                      Cover Page
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -814,10 +860,16 @@ function TableCellViewer({
                   <SelectTrigger className="w-full" id="status">
                     <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Done">Done</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Not Started">Not Started</SelectItem>
+                  <SelectContent direction={direction}>
+                    <SelectItem direction={direction} value="Done">
+                      Done
+                    </SelectItem>
+                    <SelectItem direction={direction} value="In Progress">
+                      In Progress
+                    </SelectItem>
+                    <SelectItem direction={direction} value="Not Started">
+                      Not Started
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -838,12 +890,16 @@ function TableCellViewer({
                 <SelectTrigger className="w-full" id="reviewer">
                   <SelectValue placeholder="Select a reviewer" />
                 </SelectTrigger>
-                <SelectContent side="top">
-                  <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                  <SelectItem value="Jamik Tashpulatov">
+                <SelectContent direction={direction} side="top">
+                  <SelectItem direction={direction} value="Eddie Lake">
+                    Eddie Lake
+                  </SelectItem>
+                  <SelectItem direction={direction} value="Jamik Tashpulatov">
                     Jamik Tashpulatov
                   </SelectItem>
-                  <SelectItem value="Emily Whalen">Emily Whalen</SelectItem>
+                  <SelectItem direction={direction} value="Emily Whalen">
+                    Emily Whalen
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>

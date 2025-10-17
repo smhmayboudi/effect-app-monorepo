@@ -52,9 +52,13 @@ export function DataTablePagination<TData>({
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
-            <SelectContent side="top">
+            <SelectContent direction={direction} side="top">
               {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
+                <SelectItem
+                  direction={direction}
+                  key={pageSize}
+                  value={`${pageSize}`}
+                >
                   {pageSize}
                 </SelectItem>
               ))}
@@ -77,9 +81,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">Go to first page</span>
             {direction === "rtl" ? (
-              <DoubleArrowRightIcon className="h-4 w-4" />
+              <DoubleArrowRightIcon className="size-4" />
             ) : (
-              <DoubleArrowLeftIcon className="h-4 w-4" />
+              <DoubleArrowLeftIcon className="size-4" />
             )}
           </Button>
           <Button
@@ -90,9 +94,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">Go to previous page</span>
             {direction === "rtl" ? (
-              <ChevronRightIcon className="h-4 w-4" />
+              <ChevronRightIcon className="size-4" />
             ) : (
-              <ChevronLeftIcon className="h-4 w-4" />
+              <ChevronLeftIcon className="size-4" />
             )}
           </Button>
 
@@ -122,9 +126,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">Go to next page</span>
             {direction === "rtl" ? (
-              <ChevronLeftIcon className="h-4 w-4" />
+              <ChevronLeftIcon className="size-4" />
             ) : (
-              <ChevronRightIcon className="h-4 w-4" />
+              <ChevronRightIcon className="size-4" />
             )}
           </Button>
           <Button
@@ -135,9 +139,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">Go to last page</span>
             {direction === "rtl" ? (
-              <DoubleArrowLeftIcon className="h-4 w-4" />
+              <DoubleArrowLeftIcon className="size-4" />
             ) : (
-              <DoubleArrowRightIcon className="h-4 w-4" />
+              <DoubleArrowRightIcon className="size-4" />
             )}
           </Button>
         </div>

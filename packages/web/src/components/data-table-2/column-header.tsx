@@ -20,12 +20,14 @@ import { cn } from "@/lib/utils";
 type DataTableColumnHeaderProps<TData, TValue> =
   React.HTMLAttributes<HTMLDivElement> & {
     column: Column<TData, TValue>;
+    direction: "ltr" | "rtl";
     title: string;
   };
 
 export function DataTableColumnHeader<TData, TValue>({
   className,
   column,
+  direction,
   title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
@@ -43,27 +45,36 @@ export function DataTableColumnHeader<TData, TValue>({
           >
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ms-2 h-4 w-4" />
+              <ArrowDownIcon className="ms-2 size-4" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ms-2 h-4 w-4" />
+              <ArrowUpIcon className="ms-2 size-4" />
             ) : (
-              <CaretSortIcon className="ms-2 h-4 w-4" />
+              <CaretSortIcon className="ms-2 size-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
+        <DropdownMenuContent align="start" direction={direction}>
+          <DropdownMenuItem
+            direction={direction}
+            onClick={() => column.toggleSorting(false)}
+          >
             <ArrowUpIcon className="size-3.5 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
+          <DropdownMenuItem
+            direction={direction}
+            onClick={() => column.toggleSorting(true)}
+          >
             <ArrowDownIcon className="size-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
           {column.getCanHide() && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+              <DropdownMenuItem
+                direction={direction}
+                onClick={() => column.toggleVisibility(false)}
+              >
                 <EyeNoneIcon className="size-3.5 text-muted-foreground/70" />
                 Hide
               </DropdownMenuItem>

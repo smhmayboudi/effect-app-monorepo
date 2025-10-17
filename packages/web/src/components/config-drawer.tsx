@@ -54,11 +54,7 @@ export function ConfigDrawer() {
           <Settings aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetContent
-        className="flex flex-col"
-        direction={dir}
-        side={dir === "rtl" ? "left" : "right"}
-      >
+      <SheetContent className="flex flex-col" direction={dir} side="right">
         <SheetHeader className="pb-0 text-start">
           <SheetTitle>Theme Settings</SheetTitle>
           <SheetDescription id="config-drawer-description">

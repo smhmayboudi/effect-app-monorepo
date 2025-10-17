@@ -57,7 +57,7 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar entityName="user" table={table}>
+      <BulkActionsToolbar direction={direction} entityName="user" table={table}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -72,7 +72,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Invite selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent direction={direction}>
             <p>Invite selected users</p>
           </TooltipContent>
         </Tooltip>
@@ -91,7 +91,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Activate selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent direction={direction}>
             <p>Activate selected users</p>
           </TooltipContent>
         </Tooltip>
@@ -110,7 +110,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Deactivate selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent direction={direction}>
             <p>Deactivate selected users</p>
           </TooltipContent>
         </Tooltip>
@@ -129,7 +129,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Delete selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent direction={direction}>
             <p>Delete selected users</p>
           </TooltipContent>
         </Tooltip>

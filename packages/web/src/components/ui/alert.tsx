@@ -4,7 +4,7 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
+  "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
   {
     defaultVariants: {
       variant: "default",
@@ -21,10 +21,15 @@ const alertVariants = cva(
 
 const Alert = forwardRef<
   HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
+  HTMLAttributes<HTMLDivElement> &
+    VariantProps<typeof alertVariants> & { direction: "ltr" | "rtl" }
+>(({ className, direction, variant, ...props }, ref) => (
   <div
-    className={cn(alertVariants({ variant }), className)}
+    className={cn(
+      alertVariants({ variant }),
+      direction === "rtl" ? "[&>svg~*]:pr-7" : "[&>svg~*]:pl-7",
+      className,
+    )}
     ref={ref}
     role="alert"
     {...props}

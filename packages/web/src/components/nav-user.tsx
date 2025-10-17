@@ -24,6 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function NavUser({
   direction,
@@ -50,7 +51,7 @@ export function NavUser({
               size={!isHeader ? "lg" : "default"}
             >
               <Avatar
-                className={`h-8 w-8 ${!isHeader ? "rounded-lg" : "rounded-sm"} grayscale`}
+                className={`size-8 ${!isHeader ? "rounded-lg" : "rounded-sm"} grayscale`}
               >
                 <AvatarImage alt={user.name} src={user.avatar} />
                 <AvatarFallback
@@ -68,7 +69,10 @@ export function NavUser({
                     </span>
                   </div>
                   <MoreVerticalIcon
-                    className={`${direction === "rtl" ? "mr-auto" : "ml-auto"} size-4`}
+                    className={cn(
+                      "size-4",
+                      direction === "rtl" ? "mr-auto" : "ml-auto",
+                    )}
                   />
                 </>
               )}
@@ -77,12 +81,16 @@ export function NavUser({
           <DropdownMenuContent
             align="end"
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            direction={direction}
             side={isMobile ? "bottom" : !isHeader ? "right" : "top"}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
+            <DropdownMenuLabel
+              className="p-0 font-normal"
+              direction={direction}
+            >
               <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar className="size-8 rounded-lg">
                   <AvatarImage alt={user.name} src={user.avatar} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
@@ -96,21 +104,21 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem direction={direction}>
                 <UserCircleIcon />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem direction={direction}>
                 <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem direction={direction}>
                 <BellIcon />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem direction={direction}>
               <LogOutIcon />
               Log out
             </DropdownMenuItem>

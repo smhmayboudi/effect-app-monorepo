@@ -17,12 +17,14 @@ type LongTextProps = {
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
+  direction: "ltr" | "rtl";
 };
 
 export function LongText({
   children,
   className = "",
   contentClassName = "",
+  direction,
 }: LongTextProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isOverflown, setIsOverflown] = useState(false);
@@ -53,7 +55,7 @@ export function LongText({
                 {children}
               </div>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent direction={direction}>
               <p className={contentClassName}>{children}</p>
             </TooltipContent>
           </Tooltip>
@@ -66,7 +68,10 @@ export function LongText({
               {children}
             </div>
           </PopoverTrigger>
-          <PopoverContent className={cn("w-fit", contentClassName)}>
+          <PopoverContent
+            className={cn("w-fit", contentClassName)}
+            direction={direction}
+          >
             <p>{children}</p>
           </PopoverContent>
         </Popover>

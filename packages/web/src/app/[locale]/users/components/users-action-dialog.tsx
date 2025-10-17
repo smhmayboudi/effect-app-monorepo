@@ -235,6 +235,7 @@ export function UsersActionDialog({
                     <SelectDropdown
                       className="col-span-4"
                       defaultValue={field.value}
+                      direction={direction}
                       items={roles.map(({ label, value }) => ({
                         label,
                         value,

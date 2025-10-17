@@ -68,8 +68,6 @@ function Sidebar({
 }) {
   const { direction, isMobile, openMobile, setOpenMobile, state } =
     useSidebar();
-  const effectiveSide =
-    direction === "rtl" ? (side === "left" ? "right" : "left") : side;
 
   if (collapsible === "none") {
     return (
@@ -95,7 +93,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           direction={direction}
-          side={effectiveSide}
+          side={side}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -116,7 +114,7 @@ function Sidebar({
     <div
       className="group peer hidden text-sidebar-foreground md:block"
       data-collapsible={state === "collapsed" ? collapsible : ""}
-      data-side={effectiveSide}
+      data-side={side}
       data-slot="sidebar"
       data-state={state}
       data-variant={variant}
@@ -136,9 +134,9 @@ function Sidebar({
       <div
         className={cn(
           "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
-          effectiveSide === "left"
-            ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-            : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+          direction === "rtl"
+            ? "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]"
+            : "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]",
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
@@ -426,7 +424,11 @@ function SidebarProvider({
   );
 }
 
-function SidebarRail({ className, ...props }: ComponentProps<"button">) {
+function SidebarRail({
+  className,
+  direction,
+  ...props
+}: ComponentProps<"button"> & { direction: "ltr" | "rtl" }) {
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -434,7 +436,9 @@ function SidebarRail({ className, ...props }: ComponentProps<"button">) {
       aria-label="Toggle Sidebar"
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear after:absolute after:inset-y-0 after:w-[2px] hover:after:bg-sidebar-border sm:flex",
-        "group-data-[side=left]:-right-4 group-data-[side=left]:cursor-w-resize group-data-[side=right]:left-0 group-data-[side=right]:cursor-e-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+        direction === "rtl"
+          ? "group-data-[side=left]:-left-4 group-data-[side=left]:cursor-e-resize group-data-[side=right]:right-0 group-data-[side=right]:cursor-w-resize after:right-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-left-2 [[data-side=left][data-state=collapsed]_&]:cursor-w-resize [[data-side=right][data-collapsible=offcanvas]_&]:-right-2 [[data-side=right][data-state=collapsed]_&]:cursor-e-resize"
+          : "group-data-[side=left]:-right-4 group-data-[side=left]:cursor-w-resize group-data-[side=right]:left-0 group-data-[side=right]:cursor-e-resize after:left-1/2 [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar",
         className,
       )}
@@ -616,6 +620,7 @@ function SidebarMenuButton({
   if (typeof tooltip === "string") {
     tooltip = {
       children: tooltip,
+      direction,
     };
   }
 
@@ -625,7 +630,7 @@ function SidebarMenuButton({
       <TooltipContent
         align="center"
         hidden={state !== "collapsed" || isMobile}
-        side={direction === "rtl" ? "left" : "right"}
+        side="left"
         {...tooltip}
       />
     </Tooltip>

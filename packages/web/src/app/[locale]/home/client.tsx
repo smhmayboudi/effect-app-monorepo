@@ -43,7 +43,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-const Navbar5 = () => {
+const Navbar5 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   const features = [
     {
       description: "Overview of your activity",
@@ -97,7 +97,9 @@ const Navbar5 = () => {
           <NavigationMenu className="hidden lg:block" direction="ltr">
             <NavigationMenuList direction="ltr">
               <NavigationMenuItem>
-                <NavigationMenuTrigger direction="ltr">Features</NavigationMenuTrigger>
+                <NavigationMenuTrigger direction="ltr">
+                  Features
+                </NavigationMenuTrigger>
                 <NavigationMenuContent direction="ltr">
                   <div className="grid w-[600px] grid-cols-2 p-3">
                     {features.map((feature, index) => (
@@ -152,7 +154,7 @@ const Navbar5 = () => {
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
               <Button size="icon" variant="outline">
-                <MenuIcon className="h-4 w-4" />
+                <MenuIcon className="size-4" />
               </Button>
             </SheetTrigger>
             <SheetContent
@@ -180,7 +182,10 @@ const Navbar5 = () => {
               <div className="flex flex-col p-4">
                 <Accordion className="mt-4 mb-2" collapsible type="single">
                   <AccordionItem className="border-none" value="solutions">
-                    <AccordionTrigger className="text-base hover:no-underline">
+                    <AccordionTrigger
+                      className="text-base hover:no-underline"
+                      direction={direction}
+                    >
                       Features
                     </AccordionTrigger>
                     <AccordionContent>
@@ -229,7 +234,7 @@ const Navbar5 = () => {
   );
 };
 
-const Hero12 = () => {
+const Hero12 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   return (
     <section className="relative overflow-hidden py-32">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
@@ -266,11 +271,21 @@ const Hero12 = () => {
               </Button>
               <Button className="group" variant="outline">
                 Learn more{" "}
-                <ExternalLink className="ml-2 h-4 transition-transform group-hover:translate-x-0.5" />
+                <ExternalLink
+                  className={cn(
+                    "h-4 transition-transform group-hover:translate-x-0.5",
+                    direction === "rtl" ? "mr-2" : "ml-2",
+                  )}
+                />
               </Button>
             </div>
             <div className="mt-20 flex flex-col items-center gap-5">
-              <p className="font-medium text-muted-foreground lg:text-left">
+              <p
+                className={cn(
+                  "font-medium text-muted-foreground",
+                  direction === "rtl" ? "lg:text-right" : "lg:text-left",
+                )}
+              >
                 Built with open-source technologies
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
@@ -464,7 +479,7 @@ const Community1 = () => {
   );
 };
 
-const Faq3 = () => {
+const Faq3 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   const description =
     "Find answers to common questions about our products. Can't find what you're looking for? Contact our support team.";
   const faqItems = [
@@ -516,7 +531,12 @@ const Faq3 = () => {
   return (
     <section className="py-32">
       <div className="container space-y-16">
-        <div className="mx-auto flex max-w-3xl flex-col text-left md:text-center">
+        <div
+          className={cn(
+            "mx-auto flex max-w-3xl flex-col md:text-center",
+            direction === "rtl" ? "text-right" : "text-left",
+          )}
+        >
           <h2 className="mb-3 text-3xl font-semibold md:mb-4 lg:mb-6 lg:text-4xl">
             {heading}
           </h2>
@@ -529,7 +549,10 @@ const Faq3 = () => {
         >
           {faqItems.map((item) => (
             <AccordionItem key={item.id} value={item.id}>
-              <AccordionTrigger className="transition-opacity duration-200 hover:no-underline hover:opacity-60">
+              <AccordionTrigger
+                className="transition-opacity duration-200 hover:no-underline hover:opacity-60"
+                direction={direction}
+              >
                 <div className="font-medium sm:py-1 lg:py-2 lg:text-lg">
                   {item.question}
                 </div>
@@ -547,7 +570,7 @@ const Faq3 = () => {
   );
 };
 
-const Footer7 = () => {
+const Footer7 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   const copyright = "© 2024 Shadcnblocks.com. All rights reserved.";
   const description =
     "A collection of components for your startup business or side project.";
@@ -611,7 +634,12 @@ const Footer7 = () => {
   return (
     <section className="py-32">
       <div className="container">
-        <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-left">
+        <div
+          className={cn(
+            "flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start",
+            direction === "rtl" ? "lg:text-right" : "lg:text-left",
+          )}
+        >
           <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
             <div className="flex items-center gap-2 lg:justify-start">
               <a href={logo.url}>
@@ -655,7 +683,12 @@ const Footer7 = () => {
             ))}
           </div>
         </div>
-        <div className="mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium text-muted-foreground md:flex-row md:items-center md:text-left">
+        <div
+          className={cn(
+            "mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium text-muted-foreground md:flex-row md:items-center",
+            direction === "rtl" ? "md:text-right" : "md:text-left",
+          )}
+        >
           <p className="order-2 lg:order-1">{copyright}</p>
           <ul className="order-1 flex flex-col gap-2 md:order-2 md:flex-row">
             {legalLinks.map((link, idx) => (
@@ -673,12 +706,12 @@ const Footer7 = () => {
 export default function Client() {
   return (
     <>
-      <Navbar5 />
-      <Hero12 />
+      <Navbar5 direction="ltr" />
+      <Hero12 direction="ltr" />
       <Feature43 />
       <Community1 />
-      <Faq3 />
-      <Footer7 />
+      <Faq3 direction="ltr" />
+      <Footer7 direction="ltr" />
     </>
   );
 }

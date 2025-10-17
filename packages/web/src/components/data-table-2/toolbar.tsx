@@ -81,7 +81,7 @@ export function DataTableToolbar<TData>({
             variant="ghost"
           >
             Reset
-            <Cross2Icon className="ms-2 h-4 w-4" />
+            <Cross2Icon className="ms-2 size-4" />
           </Button>
         )}
       </div>

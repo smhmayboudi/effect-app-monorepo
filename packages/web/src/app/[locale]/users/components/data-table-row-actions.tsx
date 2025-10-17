@@ -32,15 +32,20 @@ export function DataTableRowActions({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            className="flex size-8 p-0 data-[state=open]:bg-muted"
             variant="ghost"
           >
-            <DotsHorizontalIcon className="h-4 w-4" />
+            <DotsHorizontalIcon className="size-4" />
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuContent
+          align="end"
+          className="w-[160px]"
+          direction={direction}
+        >
           <DropdownMenuItem
+            direction={direction}
             onClick={() => {
               setCurrentRow(row.original);
               setOpen("edit");
@@ -54,6 +59,7 @@ export function DataTableRowActions({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="text-red-500!"
+            direction={direction}
             onClick={() => {
               setCurrentRow(row.original);
               setOpen("delete");

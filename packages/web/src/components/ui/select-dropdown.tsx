@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 type SelectDropdownProps = {
   className?: string;
   defaultValue: string | undefined;
+  direction: "ltr" | "rtl";
   disabled?: boolean;
   isControlled?: boolean;
   isPending?: boolean;
@@ -24,6 +25,7 @@ type SelectDropdownProps = {
 export function SelectDropdown({
   className = "",
   defaultValue,
+  direction,
   disabled,
   isControlled = false,
   isPending,
@@ -41,18 +43,23 @@ export function SelectDropdown({
           <SelectValue placeholder={placeholder ?? "Select"} />
         </SelectTrigger>
       </FormControl>
-      <SelectContent>
+      <SelectContent direction={direction}>
         {isPending ? (
-          <SelectItem className="h-14" disabled value="loading">
+          <SelectItem
+            className="h-14"
+            direction={direction}
+            disabled
+            value="loading"
+          >
             <div className="flex items-center justify-center gap-2">
-              <Loader className="h-5 w-5 animate-spin" />
+              <Loader className="size-5 animate-spin" />
               {"  "}
               Loading...
             </div>
           </SelectItem>
         ) : (
           items?.map(({ label, value }) => (
-            <SelectItem key={value} value={value}>
+            <SelectItem direction={direction} key={value} value={value}>
               {label}
             </SelectItem>
           ))

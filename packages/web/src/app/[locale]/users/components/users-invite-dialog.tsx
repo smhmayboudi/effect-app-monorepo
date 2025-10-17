@@ -115,6 +115,7 @@ export function UsersInviteDialog({
                   <FormLabel>Role</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
+                    direction={direction}
                     items={roles.map(({ label, value }) => ({
                       label,
                       value,

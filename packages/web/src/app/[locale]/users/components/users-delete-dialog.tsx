@@ -58,7 +58,7 @@ export function UsersDeleteDialog({
             />
           </Label>
 
-          <Alert variant="destructive">
+          <Alert direction={direction} variant="destructive">
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               Please be careful, this operation can not be rolled back.

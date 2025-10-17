@@ -63,18 +63,19 @@ export function NavDocuments({
               <DropdownMenuContent
                 align={isMobile ? "end" : "start"}
                 className="w-24 rounded-lg"
-                side={isMobile ? "bottom" : dir === "rtl" ? "left" : "right"}
+                direction={dir}
+                side={isMobile ? "bottom" : "right"}
               >
-                <DropdownMenuItem>
+                <DropdownMenuItem direction={dir}>
                   <FolderIcon />
                   <span>Open</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem direction={dir}>
                   <ShareIcon />
                   <span>Share</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem direction={dir} variant="destructive">
                   <Trash />
                   <span>Delete</span>
                 </DropdownMenuItem>

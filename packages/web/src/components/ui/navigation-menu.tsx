@@ -65,7 +65,7 @@ const NavigationMenuTrigger = forwardRef<
     <ChevronDown
       aria-hidden="true"
       className={cn(
-        "relative top-[1px] h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180",
+        "relative top-[1px] size-3 transition duration-300 group-data-[state=open]:rotate-180",
         direction === "ltr" ? "ml-1" : "mr-1 rotate-180",
       )}
     />
@@ -81,8 +81,10 @@ const NavigationMenuContent = forwardRef<
 >(({ className, direction = "ltr", ...props }, ref) => (
   <NavigationMenuPrimitive.Content
     className={cn(
-      "top-0 w-full data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out md:absolute md:w-auto",
-      direction === "ltr" ? "left-0" : "right-0",
+      "top-0 w-full data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out md:absolute md:w-auto",
+      direction === "rtl"
+        ? "left-0 data-[motion=from-end]:slide-in-from-left-52 data-[motion=from-start]:slide-in-from-right-52 data-[motion=to-end]:slide-out-to-left-52 data-[motion=to-start]:slide-out-to-right-52"
+        : "right-0 data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52",
       className,
     )}
     ref={ref}
@@ -130,7 +132,7 @@ const NavigationMenuIndicator = forwardRef<
     ref={ref}
     {...props}
   >
-    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+    <div className="relative top-[60%] size-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
   </NavigationMenuPrimitive.Indicator>
 ));
 NavigationMenuIndicator.displayName =

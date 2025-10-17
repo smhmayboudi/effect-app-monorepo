@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 
 type DataTableBulkActionsProps<TData> = {
   children: React.ReactNode;
+  direction: "ltr" | "rtl";
   entityName: string;
   table: Table<TData>;
 };
@@ -25,12 +26,14 @@ type DataTableBulkActionsProps<TData> = {
  * @template TData The type of data in the table.
  * @param {object} props The component props.
  * @param {Table<TData>} props.table The react-table instance.
+ * @param {string} props.direction Left to Right or Right to left.
  * @param {string} props.entityName The name of the entity being acted upon (e.g., "task", "user").
  * @param {React.ReactNode} props.children The action buttons to be rendered inside the toolbar.
  * @returns {React.ReactNode | null} The rendered component or null if no rows are selected.
  */
 export function DataTableBulkActions<TData>({
   children,
+  direction,
   entityName,
   table,
 }: DataTableBulkActionsProps<TData>): null | React.ReactNode {
@@ -168,7 +171,7 @@ export function DataTableBulkActions<TData>({
                 <span className="sr-only">Clear selection</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent direction={direction}>
               <p>Clear selection (Escape)</p>
             </TooltipContent>
           </Tooltip>

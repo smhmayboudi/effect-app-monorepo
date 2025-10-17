@@ -23,7 +23,7 @@ export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" direction={direction}>
         <DropdownMenuCheckboxItem
           checked={theme === "light"}
           className="capitalize"
