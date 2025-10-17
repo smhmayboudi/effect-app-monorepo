@@ -1,7 +1,6 @@
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { Schema } from "effect";
 import { MailPlus, Send } from "lucide-react";
-// import { z } from 'zod'
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";

@@ -58,8 +58,8 @@ export default async function RootLayout({
 
   return (
     <html
-      className="theme-default"
-      dir={locale === "fa" ? "rtl" : "ltr"}
+      className="theme-default dark"
+      dir="ltr"
       lang={locale}
       suppressHydrationWarning={true}
     >

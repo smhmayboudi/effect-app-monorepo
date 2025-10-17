@@ -42,13 +42,10 @@ export function DataTableBulkActions<TData>({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const [announcement, setAnnouncement] = useState("");
 
-  // Announce selection changes to screen readers
   useEffect(() => {
     if (selectedCount > 0) {
       const message = `${selectedCount} ${entityName}${selectedCount > 1 ? "s" : ""} selected. Bulk actions toolbar is available.`;
       setAnnouncement(message);
-
-      // Clear announcement after a delay
       const timer = setTimeout(() => setAnnouncement(""), 3000);
       return () => clearTimeout(timer);
     }

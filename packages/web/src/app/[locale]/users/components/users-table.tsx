@@ -52,10 +52,6 @@ export function UsersTable({
   navigate,
   search,
 }: DataTableProps) {
-  useEffect(() => {
-    // Any side effects that depend on search params
-    console.log("Search params changed:", search);
-  }, [search]); // search object as dependency
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

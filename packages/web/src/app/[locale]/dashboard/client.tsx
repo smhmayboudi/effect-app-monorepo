@@ -100,10 +100,12 @@ export default function Client() {
   const { dir } = useDirection();
   const defaultOpen = Effect.runSync(
     Cookies.getValue(
-      Cookies.fromSetCookie(document.cookie.split(";")),
+      Cookies.fromSetCookie(
+        typeof document === "undefined" ? [] : document.cookie.split(";"),
+      ),
       "__next_sidebar",
     ).pipe(
-      Effect.catchTag("NoSuchElementException", () => Effect.succeed(false)),
+      Effect.catchTag("NoSuchElementException", () => Effect.succeed("true")),
       Effect.map((value) => value === "true"),
     ),
   );
