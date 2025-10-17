@@ -43,7 +43,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
   } = props;
   return (
     <AlertDialog {...actions}>
-      <AlertDialogContent className={cn(className && className)}>
+      <AlertDialogContent className={className} direction={direction}>
         <AlertDialogHeader className="text-start" direction={direction}>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription asChild>

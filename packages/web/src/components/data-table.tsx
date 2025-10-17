@@ -744,7 +744,7 @@ function TableCellViewer({
           {item.header}
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent direction={direction}>
         <DrawerHeader className="gap-1" direction={direction}>
           <DrawerTitle>{item.header}</DrawerTitle>
           <DrawerDescription>

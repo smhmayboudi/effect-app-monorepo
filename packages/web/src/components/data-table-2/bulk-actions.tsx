@@ -140,23 +140,17 @@ export function DataTableBulkActions<TData>({
         aria-describedby="bulk-actions-description"
         aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? "s" : ""}`}
         className={cn(
-          "fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl",
-          "transition-all delay-100 duration-300 ease-out hover:scale-105",
-          "focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+          "fixed bottom-6 z-50 rounded-xl transition-all delay-100 duration-300 ease-out hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+          direction === "rtl"
+            ? "right-1/2 translate-x-1/2"
+            : "left-1/2 -translate-x-1/2",
         )}
         onKeyDown={handleKeyDown}
         ref={toolbarRef}
         role="toolbar"
         tabIndex={-1}
       >
-        <div
-          className={cn(
-            "p-2 shadow-xl",
-            "rounded-xl border",
-            "bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60",
-            "flex items-center gap-x-2",
-          )}
-        >
+        <div className="flex items-center gap-x-2 rounded-xl border bg-background/95 p-2 shadow-xl backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

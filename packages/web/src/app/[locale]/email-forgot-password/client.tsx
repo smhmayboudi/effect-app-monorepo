@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "@/components/ui/link";
-import { cn } from "@/lib/utils";
 
 export default function Client() {
   const t = useTranslations("email-forgot-password");
@@ -25,7 +24,7 @@ export default function Client() {
           </div>
           Acme Inc.
         </Link>
-        <div className={cn("flex flex-col gap-6")}>
+        <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-xl">{t("title")}</CardTitle>

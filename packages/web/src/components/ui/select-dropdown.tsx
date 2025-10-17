@@ -39,7 +39,7 @@ export function SelectDropdown({
   return (
     <Select {...defaultState}>
       <FormControl>
-        <SelectTrigger className={cn(className)} disabled={disabled}>
+        <SelectTrigger className={className} disabled={disabled}>
           <SelectValue placeholder={placeholder ?? "Select"} />
         </SelectTrigger>
       </FormControl>

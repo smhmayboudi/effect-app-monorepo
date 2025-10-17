@@ -31,7 +31,10 @@ function SelectContent({
             ? "data-[side=left]:slide-in-from-left-2 data-[side=right]:slide-in-from-right-2"
             : "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2",
           position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+            "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
+          position === "popper" && direction === "ltr"
+            ? "data-[side=left]:translate-x-1 data-[side=right]:-translate-x-1"
+            : "data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1",
           className,
         )}
         data-slot="select-content"
@@ -76,7 +79,12 @@ function SelectItem({
       data-slot="select-item"
       {...props}
     >
-      <span className="absolute right-2 flex size-3.5 items-center justify-center">
+      <span
+        className={cn(
+          "absolute flex size-3.5 items-center justify-center",
+          direction === "rtl" ? "left-2" : "right-2",
+        )}
+      >
         <SelectPrimitive.ItemIndicator>
           <CheckIcon className="size-4" />
         </SelectPrimitive.ItemIndicator>

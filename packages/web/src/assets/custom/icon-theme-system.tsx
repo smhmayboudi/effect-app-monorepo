@@ -9,8 +9,7 @@ export function IconThemeSystem({
   return (
     <svg
       className={cn(
-        "overflow-hidden rounded-[6px]",
-        "fill-primary stroke-primary group-data-[state=unchecked]:fill-muted-foreground group-data-[state=unchecked]:stroke-muted-foreground",
+        "overflow-hidden rounded-[6px] fill-primary stroke-primary group-data-[state=unchecked]:fill-muted-foreground group-data-[state=unchecked]:stroke-muted-foreground",
         className,
       )}
       data-name="icon-theme-system"

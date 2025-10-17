@@ -167,7 +167,12 @@ function DropdownMenuRadioItem({
       data-slot="dropdown-menu-radio-item"
       {...props}
     >
-      <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+      <span
+        className={cn(
+          "pointer-events-none absolute flex size-3.5 items-center justify-center",
+          direction === "rtl" ? "right-2" : "left-2",
+        )}
+      >
         <DropdownMenuPrimitive.ItemIndicator>
           <CircleIcon className="size-2 fill-current" />
         </DropdownMenuPrimitive.ItemIndicator>

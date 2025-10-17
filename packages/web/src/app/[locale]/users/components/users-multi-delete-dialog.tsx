@@ -62,7 +62,9 @@ export function UsersMultiDeleteDialog<TData>({
           </p>
 
           <Label className="my-4 flex flex-col items-start gap-1.5">
-            <span className="">Confirm by typing &quot;{CONFIRM_WORD}&quot;:</span>
+            <span className="">
+              Confirm by typing &quot;{CONFIRM_WORD}&quot;:
+            </span>
             <Input
               onChange={(e) => setValue(e.target.value)}
               placeholder={`Type "${CONFIRM_WORD}" to confirm.`}

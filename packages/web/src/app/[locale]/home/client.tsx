@@ -273,8 +273,10 @@ const Hero12 = ({ direction }: { direction: "ltr" | "rtl" }) => {
                 Learn more{" "}
                 <ExternalLink
                   className={cn(
-                    "h-4 transition-transform group-hover:translate-x-0.5",
-                    direction === "rtl" ? "mr-2" : "ml-2",
+                    "h-4 transition-transform",
+                    direction === "rtl"
+                      ? "mr-2 group-hover:-translate-x-0.5"
+                      : "ml-2 group-hover:translate-x-0.5",
                   )}
                 />
               </Button>

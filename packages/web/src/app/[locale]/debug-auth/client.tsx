@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
 import Link from "@/components/ui/link";
 import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
 
 export default function Client() {
   const { data, isPending, refetch } = authClient.useSession();
@@ -31,7 +30,7 @@ export default function Client() {
           </div>
           Acme Inc.
         </Link>
-        <div className={cn("flex flex-col gap-6")}>
+        <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-xl">Debug Auth</CardTitle>

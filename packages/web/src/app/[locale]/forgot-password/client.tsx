@@ -29,7 +29,6 @@ import Link from "@/components/ui/link";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { withToast } from "@/components/with-toast";
 import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
 
 export default function Client() {
   const t = useTranslations("forgot-password");
@@ -90,7 +89,7 @@ export default function Client() {
           </div>
           Acme Inc.
         </Link>
-        <div className={cn("flex flex-col gap-6")}>
+        <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-xl">{t("title")}</CardTitle>

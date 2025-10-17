@@ -36,7 +36,7 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
     ),
     id: "select",
     meta: {
-      className: cn("sticky start-0 z-10 rounded-tl-[inherit] md:table-cell"),
+      className: "sticky start-0 z-10 rounded-tl-[inherit] md:table-cell",
     },
   },
   {
@@ -55,10 +55,8 @@ export const usersColumns = (direction: "ltr" | "rtl"): ColumnDef<User>[] => [
       />
     ),
     meta: {
-      className: cn(
-        "drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)]",
-        "sticky start-6 @4xl/content:table-cell @4xl/content:drop-shadow-none",
-      ),
+      className:
+        "drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)] sticky start-6 @4xl/content:table-cell @4xl/content:drop-shadow-none",
     },
   },
   {

@@ -64,7 +64,7 @@ export function NavDocuments({
                 align={isMobile ? "end" : "start"}
                 className="w-24 rounded-lg"
                 direction={dir}
-                side={isMobile ? "bottom" : "right"}
+                side={isMobile ? "bottom" : dir === "rtl" ? "left" : "right"}
               >
                 <DropdownMenuItem direction={dir}>
                   <FolderIcon />

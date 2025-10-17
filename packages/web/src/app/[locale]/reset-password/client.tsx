@@ -30,7 +30,6 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { withToast } from "@/components/with-toast";
 import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
 
 export default function Client() {
   const t = useTranslations("reset-password");
@@ -92,7 +91,7 @@ export default function Client() {
           </div>
           Acme Inc.
         </Link>
-        <div className={cn("flex flex-col gap-6")}>
+        <div className="flex flex-col gap-6">
           <Card className="mx-auto w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-xl">{t("error.title")}</CardTitle>
@@ -119,7 +118,7 @@ export default function Client() {
           </div>
           Acme Inc.
         </Link>
-        <div className={cn("flex flex-col gap-6")}>
+        <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-xl">{t("title")}</CardTitle>
