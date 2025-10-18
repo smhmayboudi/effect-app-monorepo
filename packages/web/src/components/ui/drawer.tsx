@@ -19,11 +19,8 @@ function DrawerClose({
 function DrawerContent({
   children,
   className,
-  direction,
   ...props
-}: ComponentProps<typeof DrawerPrimitive.Content> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof DrawerPrimitive.Content> & {}) {
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
@@ -65,16 +62,11 @@ function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-function DrawerHeader({
-  className,
-  direction,
-  ...props
-}: ComponentProps<"div"> & { direction: "ltr" | "rtl" }) {
+function DrawerHeader({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5",
-        direction === "rtl" ? "md:text-right" : "md:text-left",
+        "flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5 md:text-start",
         className,
       )}
       data-slot="drawer-header"

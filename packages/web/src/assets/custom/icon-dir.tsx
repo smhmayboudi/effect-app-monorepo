@@ -9,7 +9,7 @@ type IconDirProps = SVGProps<SVGSVGElement> & {
 export function IconDir({ className, dir, ...props }: IconDirProps) {
   return (
     <svg
-      className={cn(dir === "rtl" && "rotate-y-180", className)}
+      className={cn({ "rotate-y-180": dir === "rtl" }, className)}
       data-name={`icon-dir-${dir}`}
       viewBox="0 0 79.86 51.14"
       xmlns="http://www.w3.org/2000/svg"

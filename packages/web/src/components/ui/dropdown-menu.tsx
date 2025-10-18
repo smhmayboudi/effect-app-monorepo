@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
 function DropdownMenu({
@@ -17,27 +18,19 @@ function DropdownMenuCheckboxItem({
   checked,
   children,
   className,
-  direction,
   ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>) {
   return (
     <DropdownMenuPrimitive.CheckboxItem
       checked={checked}
       className={cn(
-        "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        direction === "rtl" ? "pr-8 pl-2" : "pr-2 pl-8",
+        "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       data-slot="dropdown-menu-checkbox-item"
       {...props}
     >
-      <span
-        className={`pointer-events-none absolute ${
-          direction === "rtl" ? "right-2" : "left-2"
-        } flex size-3.5 items-center justify-center`}
-      >
+      <span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
           <CheckIcon className="size-4" />
         </DropdownMenuPrimitive.ItemIndicator>
@@ -49,18 +42,17 @@ function DropdownMenuCheckboxItem({
 
 function DropdownMenuContent({
   className,
-  direction,
   sideOffset = 4,
   ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.Content> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+  const { dir } = useDirection();
+
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         className={cn(
           "z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-          direction === "rtl"
+          dir === "rtl"
             ? "data-[side=left]:slide-in-from-left-2 data-[side=right]:slide-in-from-right-2"
             : "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2",
           className,
@@ -83,20 +75,17 @@ function DropdownMenuGroup({
 
 function DropdownMenuItem({
   className,
-  direction,
   inset,
   variant = "default",
   ...props
 }: ComponentProps<typeof DropdownMenuPrimitive.Item> & {
-  direction: "ltr" | "rtl";
   inset?: boolean;
   variant?: "default" | "destructive";
 }) {
   return (
     <DropdownMenuPrimitive.Item
       className={cn(
-        "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground data-[variant=destructive]:*:[svg]:!text-destructive",
-        direction === "rtl" ? "data-[inset]:pr-8" : "data-[inset]:pl-8",
+        "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:ps-8 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground data-[variant=destructive]:*:[svg]:!text-destructive",
         className,
       )}
       data-inset={inset}
@@ -109,18 +98,15 @@ function DropdownMenuItem({
 
 function DropdownMenuLabel({
   className,
-  direction,
   inset,
   ...props
 }: ComponentProps<typeof DropdownMenuPrimitive.Label> & {
-  direction: "ltr" | "rtl";
   inset?: boolean;
 }) {
   return (
     <DropdownMenuPrimitive.Label
       className={cn(
-        "px-2 py-1.5 text-sm font-medium",
-        direction === "rtl" ? "data-[inset]:pr-8" : "data-[inset]:pl-8",
+        "px-2 py-1.5 text-sm font-medium data-[inset]:ps-8",
         className,
       )}
       data-inset={inset}
@@ -152,27 +138,18 @@ function DropdownMenuRadioGroup({
 function DropdownMenuRadioItem({
   children,
   className,
-  direction,
   ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.RadioItem> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof DropdownMenuPrimitive.RadioItem>) {
   return (
     <DropdownMenuPrimitive.RadioItem
       className={cn(
-        "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        direction === "rtl" ? "pr-8 pl-2" : "pr-2 pl-8",
+        "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       data-slot="dropdown-menu-radio-item"
       {...props}
     >
-      <span
-        className={cn(
-          "pointer-events-none absolute flex size-3.5 items-center justify-center",
-          direction === "rtl" ? "right-2" : "left-2",
-        )}
-      >
+      <span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
           <CircleIcon className="size-2 fill-current" />
         </DropdownMenuPrimitive.ItemIndicator>
@@ -195,16 +172,11 @@ function DropdownMenuSeparator({
   );
 }
 
-function DropdownMenuShortcut({
-  className,
-  direction,
-  ...props
-}: ComponentProps<"span"> & { direction: "ltr" | "rtl" }) {
+function DropdownMenuShortcut({ className, ...props }: ComponentProps<"span">) {
   return (
     <span
       className={cn(
-        "text-xs tracking-widest text-muted-foreground",
-        direction === "rtl" ? "mr-auto" : "ml-auto",
+        "ms-auto text-xs tracking-widest text-muted-foreground",
         className,
       )}
       data-slot="dropdown-menu-shortcut"
@@ -221,16 +193,15 @@ function DropdownMenuSub({
 
 function DropdownMenuSubContent({
   className,
-  direction,
   ...props
-}: ComponentProps<typeof DropdownMenuPrimitive.SubContent> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof DropdownMenuPrimitive.SubContent> & {}) {
+  const { dir } = useDirection();
+
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
         "z-50 min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-        direction === "rtl"
+        dir === "rtl"
           ? "data-[side=left]:slide-in-from-left-2 data-[side=right]:slide-in-from-right-2"
           : "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2",
         className,
@@ -244,18 +215,15 @@ function DropdownMenuSubContent({
 function DropdownMenuSubTrigger({
   children,
   className,
-  direction,
   inset,
   ...props
 }: ComponentProps<typeof DropdownMenuPrimitive.SubTrigger> & {
-  direction: "ltr" | "rtl";
   inset?: boolean;
 }) {
   return (
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
-        "flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
-        direction === "rtl" ? "data-[inset]:pr-8" : "data-[inset]:pl-8",
+        "flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[inset]:ps-8 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
         className,
       )}
       data-inset={inset}
@@ -263,9 +231,7 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon
-        className={cn("size-4", direction === "rtl" ? "mr-auto" : "ml-auto")}
-      />
+      <ChevronRightIcon className="ms-auto size-4" />
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

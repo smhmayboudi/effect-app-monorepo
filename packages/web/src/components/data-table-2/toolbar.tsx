@@ -9,7 +9,6 @@ import { DataTableFacetedFilter } from "./faceted-filter";
 import { DataTableViewOptions } from "./view-options";
 
 type DataTableToolbarProps<TData> = {
-  direction: "ltr" | "rtl";
   filters?: {
     columnId: string;
     options: {
@@ -25,7 +24,6 @@ type DataTableToolbarProps<TData> = {
 };
 
 export function DataTableToolbar<TData>({
-  direction = "ltr",
   filters = [],
   searchKey,
   searchPlaceholder = "Filter...",
@@ -63,7 +61,6 @@ export function DataTableToolbar<TData>({
             return (
               <DataTableFacetedFilter
                 column={column}
-                direction={direction}
                 key={filter.columnId}
                 options={filter.options}
                 title={filter.title}
@@ -85,7 +82,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions direction={direction} table={table} />
+      <DataTableViewOptions table={table} />
     </div>
   );
 }

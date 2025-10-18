@@ -39,18 +39,11 @@ function TableCaption({ className, ...props }: ComponentProps<"caption">) {
   );
 }
 
-function TableCell({
-  className,
-  direction,
-  ...props
-}: ComponentProps<"td"> & { direction: "ltr" | "rtl" }) {
+function TableCell({ className, ...props }: ComponentProps<"td">) {
   return (
     <td
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&>[role=checkbox]]:translate-y-[2px]",
-        direction === "rtl"
-          ? "[&:has([role=checkbox])]:pl-0"
-          : "[&:has([role=checkbox])]:pr-0",
+        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       data-slot="table-cell"
@@ -72,18 +65,11 @@ function TableFooter({ className, ...props }: ComponentProps<"tfoot">) {
   );
 }
 
-function TableHead({
-  className,
-  direction,
-  ...props
-}: ComponentProps<"th"> & { direction: "ltr" | "rtl" }) {
+function TableHead({ className, ...props }: ComponentProps<"th">) {
   return (
     <th
       className={cn(
-        "h-10 px-2 align-middle font-medium whitespace-nowrap text-foreground [&>[role=checkbox]]:translate-y-[2px]",
-        direction === "rtl"
-          ? "text-right [&:has([role=checkbox])]:pl-0"
-          : "text-left [&:has([role=checkbox])]:pr-0",
+        "h-10 px-2 text-start align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       data-slot="table-head"

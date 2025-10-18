@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
 function Select({ ...props }: ComponentProps<typeof SelectPrimitive.Root>) {
@@ -15,26 +16,28 @@ function SelectContent({
   align = "center",
   children,
   className,
-  direction,
   position = "popper",
   ...props
-}: ComponentProps<typeof SelectPrimitive.Content> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof SelectPrimitive.Content> & {}) {
+  const { dir } = useDirection();
+
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         align={align}
         className={cn(
           "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-          direction === "rtl"
+          dir === "rtl"
             ? "data-[side=left]:slide-in-from-left-2 data-[side=right]:slide-in-from-right-2"
             : "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2",
-          position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
-          position === "popper" && direction === "ltr"
-            ? "data-[side=left]:translate-x-1 data-[side=right]:-translate-x-1"
-            : "data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1",
+          {
+            "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1":
+              position === "popper",
+            "data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1":
+              position === "popper" && dir === "ltr",
+            "data-[side=left]:translate-x-1 data-[side=right]:-translate-x-1":
+              position === "popper" && dir === "rtl",
+          },
           className,
         )}
         data-slot="select-content"
@@ -43,11 +46,10 @@ function SelectContent({
       >
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
-          className={cn(
-            "p-1",
-            position === "popper" &&
-              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1",
-          )}
+          className={cn("p-1", {
+            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1":
+              position === "popper",
+          })}
         >
           {children}
         </SelectPrimitive.Viewport>
@@ -66,25 +68,18 @@ function SelectGroup({
 function SelectItem({
   children,
   className,
-  direction,
   ...props
-}: ComponentProps<typeof SelectPrimitive.Item> & { direction: "ltr" | "rtl" }) {
+}: ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
-        direction === "rtl" ? "pr-2 pl-8" : "pr-8 pl-2",
+        "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       data-slot="select-item"
       {...props}
     >
-      <span
-        className={cn(
-          "absolute flex size-3.5 items-center justify-center",
-          direction === "rtl" ? "left-2" : "right-2",
-        )}
-      >
+      <span className="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
           <CheckIcon className="size-4" />
         </SelectPrimitive.ItemIndicator>

@@ -29,14 +29,10 @@ const Command = forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-const CommandDialog = ({
-  children,
-  direction,
-  ...props
-}: DialogProps & { direction: "ltr" | "rtl" }) => {
+const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0" direction={direction}>
+      <DialogContent className="overflow-hidden p-0">
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
           {children}
         </Command>
@@ -47,17 +43,10 @@ const CommandDialog = ({
 
 const CommandInput = forwardRef<
   ElementRef<typeof CommandPrimitive.Input>,
-  ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
-    direction: "ltr" | "rtl";
-  }
->(({ className, direction, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {}
+>(({ className, ...props }, ref) => (
   <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-    <Search
-      className={cn(
-        "size-4 shrink-0 opacity-50",
-        direction === "rtl" ? "ml-2" : "mr-2",
-      )}
-    />
+    <Search className="me-2 size-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       className={cn(
         "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
@@ -143,14 +132,12 @@ CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 const CommandShortcut = ({
   className,
-  direction,
   ...props
-}: HTMLAttributes<HTMLSpanElement> & { direction: "ltr" | "rtl" }) => {
+}: HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
       className={cn(
-        "text-xs tracking-widest text-muted-foreground",
-        direction === "rtl" ? "mr-auto" : "ml-auto",
+        "ms-auto text-xs tracking-widest text-muted-foreground",
         className,
       )}
       {...props}

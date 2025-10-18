@@ -13,12 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type DataTableViewOptionsProps<TData> = {
-  direction: "ltr" | "rtl";
   table: Table<TData>;
 };
 
 export function DataTableViewOptions<TData>({
-  direction,
   table,
 }: DataTableViewOptionsProps<TData>) {
   return (
@@ -33,14 +31,8 @@ export function DataTableViewOptions<TData>({
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="w-[150px]"
-        direction={direction}
-      >
-        <DropdownMenuLabel direction={direction}>
-          Toggle columns
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-[150px]">
+        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
@@ -53,7 +45,6 @@ export function DataTableViewOptions<TData>({
               <DropdownMenuCheckboxItem
                 checked={column.getIsVisible()}
                 className="capitalize"
-                direction={direction}
                 key={column.id}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >

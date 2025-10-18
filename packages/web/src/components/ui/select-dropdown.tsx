@@ -8,12 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 
 type SelectDropdownProps = {
   className?: string;
   defaultValue: string | undefined;
-  direction: "ltr" | "rtl";
+
   disabled?: boolean;
   isControlled?: boolean;
   isPending?: boolean;
@@ -25,7 +24,6 @@ type SelectDropdownProps = {
 export function SelectDropdown({
   className = "",
   defaultValue,
-  direction,
   disabled,
   isControlled = false,
   isPending,
@@ -36,6 +34,7 @@ export function SelectDropdown({
   const defaultState = isControlled
     ? { onValueChange, value: defaultValue }
     : { defaultValue, onValueChange };
+
   return (
     <Select {...defaultState}>
       <FormControl>
@@ -43,14 +42,9 @@ export function SelectDropdown({
           <SelectValue placeholder={placeholder ?? "Select"} />
         </SelectTrigger>
       </FormControl>
-      <SelectContent direction={direction}>
+      <SelectContent>
         {isPending ? (
-          <SelectItem
-            className="h-14"
-            direction={direction}
-            disabled
-            value="loading"
-          >
+          <SelectItem className="h-14" disabled value="loading">
             <div className="flex items-center justify-center gap-2">
               <Loader className="size-5 animate-spin" />
               {"  "}
@@ -59,7 +53,7 @@ export function SelectDropdown({
           </SelectItem>
         ) : (
           items?.map(({ label, value }) => (
-            <SelectItem direction={direction} key={value} value={value}>
+            <SelectItem key={value} value={value}>
               {label}
             </SelectItem>
           ))

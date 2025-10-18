@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { sleep } from "@/lib/utils";
 
 type UserMultiDeleteDialogProps<TData> = {
-  direction: "ltr" | "rtl";
   onOpenChange: (open: boolean) => void;
   open: boolean;
   table: Table<TData>;
@@ -22,7 +21,6 @@ type UserMultiDeleteDialogProps<TData> = {
 const CONFIRM_WORD = "DELETE";
 
 export function UsersMultiDeleteDialog<TData>({
-  direction,
   onOpenChange,
   open,
   table,
@@ -72,7 +70,7 @@ export function UsersMultiDeleteDialog<TData>({
             />
           </Label>
 
-          <Alert direction={direction} variant="destructive">
+          <Alert variant="destructive">
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               Please be careful, this operation can not be rolled back.
@@ -81,7 +79,6 @@ export function UsersMultiDeleteDialog<TData>({
         </div>
       }
       destructive
-      direction={direction}
       disabled={value.trim() !== CONFIRM_WORD}
       handleConfirm={handleDelete}
       onOpenChange={onOpenChange}

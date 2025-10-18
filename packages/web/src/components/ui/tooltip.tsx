@@ -4,6 +4,7 @@ import type { ComponentProps } from "react";
 
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
 function Tooltip({ ...props }: ComponentProps<typeof TooltipPrimitive.Root>) {
@@ -17,18 +18,17 @@ function Tooltip({ ...props }: ComponentProps<typeof TooltipPrimitive.Root>) {
 function TooltipContent({
   children,
   className,
-  direction,
   sideOffset = 0,
   ...props
-}: ComponentProps<typeof TooltipPrimitive.Content> & {
-  direction: "ltr" | "rtl";
-}) {
+}: ComponentProps<typeof TooltipPrimitive.Content> & {}) {
+  const { dir } = useDirection();
+
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
         className={cn(
           "z-50 w-fit origin-(--radix-tooltip-content-transform-origin) animate-in rounded-md bg-foreground px-3 py-1.5 text-xs text-balance text-background fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-          direction === "rtl"
+          dir === "rtl"
             ? "data-[side=left]:slide-in-from-left-2 data-[side=right]:slide-in-from-right-2"
             : "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2",
           className,

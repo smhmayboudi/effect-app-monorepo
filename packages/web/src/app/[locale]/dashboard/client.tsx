@@ -22,7 +22,6 @@ import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { useDirection } from "@/context/direction-provider";
 import { LayoutProvider } from "@/context/layout-provider";
 
 import data from "./data.json";
@@ -97,7 +96,6 @@ const dataSide = {
 };
 
 export default function Client() {
-  const { dir } = useDirection();
   const defaultOpen = Effect.runSync(
     Cookies.getValue(
       Cookies.fromSetCookie(
@@ -114,7 +112,6 @@ export default function Client() {
     <LayoutProvider>
       <SidebarProvider
         defaultOpen={defaultOpen}
-        direction={dir}
         style={
           {
             "--header-height": "calc(var(--spacing) * 12)",
@@ -122,7 +119,7 @@ export default function Client() {
           } as React.CSSProperties
         }
       >
-        <AppSidebar data={dataSide} direction={dir} />
+        <AppSidebar data={dataSide} />
         <SidebarInset>
           <SiteHeader />
           <div className="flex flex-1 flex-col">
@@ -132,7 +129,7 @@ export default function Client() {
                 <div className="px-4 lg:px-6">
                   <ChartAreaInteractive />
                 </div>
-                <DataTable data={data} direction={dir} />
+                <DataTable data={data} />
               </div>
             </div>
           </div>

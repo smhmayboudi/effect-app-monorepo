@@ -21,7 +21,7 @@ export default async function Page() {
   return (
     <div>
       <h2>{t("title")}</h2>
-      <ModeToggle direction="ltr" />
+      <ModeToggle />
       <LocaleSwitcher />
       <Nav />
     </div>

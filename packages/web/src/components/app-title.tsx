@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 export function AppTitle() {
   const { setOpenMobile } = useSidebar();
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>

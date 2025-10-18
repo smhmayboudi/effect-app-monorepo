@@ -31,6 +31,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useDirection } from "@/context/direction-provider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +43,6 @@ const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContextProps = {
-  direction: "ltr" | "rtl";
   isMobile: boolean;
   open: boolean;
   openMobile: boolean;
@@ -66,8 +66,7 @@ function Sidebar({
   side?: "left" | "right";
   variant?: "floating" | "inset" | "sidebar";
 }) {
-  const { direction, isMobile, openMobile, setOpenMobile, state } =
-    useSidebar();
+  const { isMobile, openMobile, setOpenMobile, state } = useSidebar();
 
   if (collapsible === "none") {
     return (
@@ -92,7 +91,6 @@ function Sidebar({
           data-mobile="true"
           data-sidebar="sidebar"
           data-slot="sidebar"
-          direction={direction}
           side={side}
           style={
             {
@@ -130,16 +128,10 @@ function Sidebar({
       />
       <div
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
-          direction === "rtl"
-            ? "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]"
-            : "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]",
+          "fixed inset-y-0 start-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear group-data-[collapsible=offcanvas]:start-[calc(var(--sidebar-width)*-1)] md:flex",
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
-            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)",
-          (variant === "floating" || variant === "inset") && direction === "rtl"
-            ? "group-data-[side=left]:border-l group-data-[side=right]:border-r"
-            : "group-data-[side=left]:border-r group-data-[side=right]:border-l",
+            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-e group-data-[side=right]:border-s",
           className,
         )}
         data-slot="sidebar-container"
@@ -198,14 +190,12 @@ function SidebarGroupAction({
   className,
   ...props
 }: ComponentProps<"button"> & { asChild?: boolean }) {
-  const { direction } = useSidebar();
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
       className={cn(
-        "absolute top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 md:after:hidden [&>svg]:size-4 [&>svg]:shrink-0",
-        direction === "rtl" ? "left-3" : "right-3",
+        "absolute end-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 md:after:hidden [&>svg]:size-4 [&>svg]:shrink-0",
         className,
       )}
       data-sidebar="group-action"
@@ -269,15 +259,10 @@ function SidebarInput({ className, ...props }: ComponentProps<typeof Input>) {
 }
 
 function SidebarInset({ className, ...props }: ComponentProps<"main">) {
-  const { direction } = useSidebar();
-
   return (
     <main
       className={cn(
-        "relative flex w-full flex-1 flex-col bg-background",
-        direction === "rtl"
-          ? "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:mr-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:mr-2"
-          : "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2",
+        "relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ms-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ms-2",
         className,
       )}
       data-slot="sidebar-inset"
@@ -312,14 +297,12 @@ function SidebarProvider({
   children,
   className,
   defaultOpen = true,
-  direction = "ltr",
   onOpenChange: setOpenProp,
   open: openProp,
   style,
   ...props
 }: ComponentProps<"div"> & {
   defaultOpen?: boolean;
-  direction: "ltr" | "rtl";
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
 }) {
@@ -372,7 +355,6 @@ function SidebarProvider({
 
   const contextValue = useMemo<SidebarContextProps>(
     () => ({
-      direction,
       isMobile,
       open,
       openMobile,
@@ -381,17 +363,10 @@ function SidebarProvider({
       state,
       toggleSidebar,
     }),
-    [
-      state,
-      open,
-      setOpen,
-      isMobile,
-      openMobile,
-      setOpenMobile,
-      toggleSidebar,
-      direction,
-    ],
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
   );
+
+  const { dir } = useDirection();
 
   return (
     <SidebarContext.Provider value={contextValue}>
@@ -402,7 +377,7 @@ function SidebarProvider({
             className,
           )}
           data-slot="sidebar-wrapper"
-          dir={direction}
+          dir={dir}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH,
@@ -419,21 +394,18 @@ function SidebarProvider({
   );
 }
 
-function SidebarRail({
-  className,
-  direction,
-  ...props
-}: ComponentProps<"button"> & { direction: "ltr" | "rtl" }) {
+function SidebarRail({ className, ...props }: ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar();
+  const { dir } = useDirection();
 
   return (
     <button
       aria-label="Toggle Sidebar"
       className={cn(
-        "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear after:absolute after:inset-y-0 after:w-[2px] hover:group-data-[collapsible=offcanvas]:bg-sidebar hover:after:bg-sidebar-border sm:flex",
-        direction === "rtl"
-          ? "group-data-[collapsible=offcanvas]:-translate-x-0 group-data-[side=left]:-left-4 group-data-[side=left]:cursor-e-resize group-data-[side=right]:right-0 group-data-[side=right]:cursor-w-resize after:right-1/2 group-data-[collapsible=offcanvas]:after:right-full [[data-side=left][data-collapsible=offcanvas]_&]:-left-2 [[data-side=left][data-state=collapsed]_&]:cursor-w-resize [[data-side=right][data-collapsible=offcanvas]_&]:-right-2 [[data-side=right][data-state=collapsed]_&]:cursor-e-resize"
-          : "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[side=left]:-right-4 group-data-[side=left]:cursor-w-resize group-data-[side=right]:left-0 group-data-[side=right]:cursor-e-resize after:left-1/2 group-data-[collapsible=offcanvas]:after:left-full [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-collapsible=offcanvas]_&]:-left-2 [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+        "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-end-4 group-data-[side=right]:start-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] group-data-[collapsible=offcanvas]:after:start-full hover:group-data-[collapsible=offcanvas]:bg-sidebar hover:after:bg-sidebar-border sm:flex [[data-side=left][data-collapsible=offcanvas]_&]:-end-2 [[data-side=right][data-collapsible=offcanvas]_&]:-start-2",
+        dir === "rtl"
+          ? "group-data-[collapsible=offcanvas]:-translate-x-0 group-data-[side=left]:cursor-e-resize group-data-[side=right]:cursor-w-resize [[data-side=left][data-state=collapsed]_&]:cursor-w-resize [[data-side=right][data-state=collapsed]_&]:cursor-e-resize"
+          : "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[side=left]:cursor-w-resize group-data-[side=right]:cursor-e-resize [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         className,
       )}
       data-sidebar="rail"
@@ -465,7 +437,8 @@ function SidebarTrigger({
   onClick,
   ...props
 }: ComponentProps<typeof Button>) {
-  const { direction, toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebar();
+  const { dir } = useDirection();
 
   return (
     <Button
@@ -480,7 +453,7 @@ function SidebarTrigger({
       variant="ghost"
       {...props}
     >
-      {direction === "rtl" ? <PanelRightIcon /> : <PanelLeftIcon />}
+      {dir === "rtl" ? <PanelRightIcon /> : <PanelLeftIcon />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -526,17 +499,16 @@ function SidebarMenuAction({
   asChild?: boolean;
   showOnHover?: boolean;
 }) {
-  const { direction } = useSidebar();
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
       className={cn(
-        "absolute top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform group-data-[collapsible=icon]:hidden peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1 after:absolute after:-inset-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 md:after:hidden [&>svg]:size-4 [&>svg]:shrink-0",
-        direction === "rtl" ? "left-1" : "right-1",
-        showOnHover
-          ? "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground data-[state=open]:opacity-100 md:opacity-0"
-          : "",
+        "absolute end-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform group-data-[collapsible=icon]:hidden peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1 after:absolute after:-inset-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 md:after:hidden [&>svg]:size-4 [&>svg]:shrink-0",
+        {
+          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground data-[state=open]:opacity-100 md:opacity-0":
+            showOnHover,
+        },
         className,
       )}
       data-sidebar="menu-action"
@@ -547,13 +519,10 @@ function SidebarMenuAction({
 }
 
 function SidebarMenuBadge({ className, ...props }: ComponentProps<"div">) {
-  const { direction } = useSidebar();
-
   return (
     <div
       className={cn(
-        "pointer-events-none absolute flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none group-data-[collapsible=icon]:hidden peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1",
-        direction === "rtl" ? "left-1" : "right-1",
+        "pointer-events-none absolute end-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium text-sidebar-foreground tabular-nums select-none group-data-[collapsible=icon]:hidden peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 peer-data-[size=sm]/menu-button:top-1",
         className,
       )}
       data-sidebar="menu-badge"
@@ -578,15 +547,13 @@ function SidebarMenuButton({
     tooltip?: ComponentProps<typeof TooltipContent> | string;
   }) {
   const Comp = asChild ? Slot : "button";
-  const { direction, isMobile, state } = useSidebar();
+  const { isMobile, state } = useSidebar();
 
   const button = (
     <Comp
       className={cn(
         sidebarMenuButtonVariants({ size, variant }),
-        direction === "rtl"
-          ? "text-right group-has-data-[sidebar=menu-action]/menu-item:pl-8"
-          : "text-left group-has-data-[sidebar=menu-action]/menu-item:pr-8",
+        "text-start group-has-data-[sidebar=menu-action]/menu-item:pe-8",
         className,
       )}
       data-active={isActive}
@@ -604,7 +571,6 @@ function SidebarMenuButton({
   if (typeof tooltip === "string") {
     tooltip = {
       children: tooltip,
-      direction,
     };
   }
 
@@ -659,18 +625,14 @@ function SidebarMenuSkeleton({
   );
 }
 
-function SidebarMenuSub({
-  className,
-  direction,
-  ...props
-}: ComponentProps<"ul"> & { direction: "ltr" | "rtl" }) {
+function SidebarMenuSub({ className, ...props }: ComponentProps<"ul">) {
+  const { dir } = useDirection();
+
   return (
     <ul
       className={cn(
-        "mx-3.5 flex min-w-0 flex-col gap-1 border-sidebar-border px-2.5 py-0.5 group-data-[collapsible=icon]:hidden",
-        direction === "rtl"
-          ? "-translate-x-px border-r"
-          : "translate-x-px border-l",
+        "mx-3.5 flex min-w-0 flex-col gap-1 border-s border-sidebar-border px-2.5 py-0.5 group-data-[collapsible=icon]:hidden",
+        dir === "rtl" ? "-translate-x-px" : "translate-x-px",
         className,
       )}
       data-sidebar="menu-sub"
@@ -683,25 +645,27 @@ function SidebarMenuSub({
 function SidebarMenuSubButton({
   asChild = false,
   className,
-  direction,
   isActive = false,
   size = "md",
   ...props
 }: ComponentProps<"a"> & {
   asChild?: boolean;
-  direction: "ltr" | "rtl";
+
   isActive?: boolean;
   size?: "md" | "sm";
 }) {
   const Comp = asChild ? Slot : "a";
+  const { dir } = useDirection();
 
   return (
     <Comp
       className={cn(
         "flex h-7 min-w-0 items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
-        direction === "rtl" ? "translate-x-px" : "-translate-x-px",
-        size === "sm" && "text-xs",
-        size === "md" && "text-sm",
+        dir === "rtl" ? "translate-x-px" : "-translate-x-px",
+        {
+          "text-sm": size === "md",
+          "text-xs": size === "sm",
+        },
         "group-data-[collapsible=icon]:hidden",
         className,
       )}

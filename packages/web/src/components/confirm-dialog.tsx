@@ -8,7 +8,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 type ConfirmDialogProps = {
   cancelBtnText?: string;
@@ -17,7 +16,7 @@ type ConfirmDialogProps = {
   confirmText?: React.ReactNode;
   desc: React.JSX.Element | string;
   destructive?: boolean;
-  direction: "ltr" | "rtl";
+
   disabled?: boolean;
   handleConfirm: () => void;
   isLoading?: boolean;
@@ -34,17 +33,17 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
     confirmText,
     desc,
     destructive,
-    direction,
     disabled = false,
     handleConfirm,
     isLoading,
     title,
     ...actions
   } = props;
+
   return (
     <AlertDialog {...actions}>
-      <AlertDialogContent className={className} direction={direction}>
-        <AlertDialogHeader className="text-start" direction={direction}>
+      <AlertDialogContent className={className}>
+        <AlertDialogHeader className="text-start">
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription asChild>
             <div>{desc}</div>

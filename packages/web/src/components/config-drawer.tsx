@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 
 export function ConfigDrawer() {
   const { setOpen } = useSidebar();
-  const { dir, resetDir } = useDirection();
+  const { resetDir } = useDirection();
   const { resetTheme } = useTheme();
   const { resetLayout } = useLayout();
 
@@ -54,7 +54,7 @@ export function ConfigDrawer() {
           <Settings aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col" direction={dir} side="right">
+      <SheetContent className="flex flex-col" side="right">
         <SheetHeader className="pb-0 text-start">
           <SheetTitle>Theme Settings</SheetTitle>
           <SheetDescription id="config-drawer-description">
@@ -62,10 +62,10 @@ export function ConfigDrawer() {
           </SheetDescription>
         </SheetHeader>
         <div className="space-y-6 overflow-y-auto px-4">
-          <ThemeConfig direction={dir} />
-          <SidebarConfig direction={dir} />
-          <LayoutConfig direction={dir} />
-          <DirConfig direction={dir} />
+          <ThemeConfig />
+          <SidebarConfig />
+          <LayoutConfig />
+          <DirConfig />
         </div>
         <SheetFooter className="gap-2">
           <Button
@@ -81,8 +81,9 @@ export function ConfigDrawer() {
   );
 }
 
-function DirConfig({ direction }: { direction: "ltr" | "rtl" }) {
+function DirConfig() {
   const { defaultDir, dir, setDir } = useDirection();
+
   return (
     <div>
       <SectionTitle
@@ -113,7 +114,7 @@ function DirConfig({ direction }: { direction: "ltr" | "rtl" }) {
             value: "rtl",
           },
         ].map((item) => (
-          <RadioGroupItem direction={direction} item={item} key={item.value} />
+          <RadioGroupItem item={item} key={item.value} />
         ))}
       </Radio>
       <div className="sr-only" id="direction-description">
@@ -123,7 +124,7 @@ function DirConfig({ direction }: { direction: "ltr" | "rtl" }) {
   );
 }
 
-function LayoutConfig({ direction }: { direction: "ltr" | "rtl" }) {
+function LayoutConfig() {
   const { open, setOpen } = useSidebar();
   const { collapsible, defaultCollapsible, setCollapsible } = useLayout();
 
@@ -170,7 +171,7 @@ function LayoutConfig({ direction }: { direction: "ltr" | "rtl" }) {
             value: "offcanvas",
           },
         ].map((item) => (
-          <RadioGroupItem direction={direction} item={item} key={item.value} />
+          <RadioGroupItem item={item} key={item.value} />
         ))}
       </Radio>
       <div className="sr-only" id="layout-description">
@@ -181,11 +182,9 @@ function LayoutConfig({ direction }: { direction: "ltr" | "rtl" }) {
 }
 
 function RadioGroupItem({
-  direction,
   isTheme = false,
   item,
 }: {
-  direction: "ltr" | "rtl";
   isTheme?: boolean;
   item: {
     icon: (props: SVGProps<SVGSVGElement>) => React.ReactElement;
@@ -193,6 +192,8 @@ function RadioGroupItem({
     value: string;
   };
 }) {
+  const { dir } = useDirection();
+
   return (
     <Item
       aria-describedby={`${item.value}-description`}
@@ -209,10 +210,8 @@ function RadioGroupItem({
         <CircleCheck
           aria-hidden="true"
           className={cn(
-            "absolute top-0 size-6 -translate-y-1/2 fill-primary stroke-white group-data-[state=unchecked]:hidden",
-            direction === "rtl"
-              ? "left-0 -translate-x-1/2"
-              : "right-0 translate-x-1/2",
+            "absolute end-0 top-0 size-6 -translate-y-1/2 fill-primary stroke-white group-data-[state=unchecked]:hidden",
+            dir === "rtl" ? "-translate-x-1/2" : "translate-x-1/2",
           )}
         />
         <item.icon
@@ -268,8 +267,9 @@ function SectionTitle({
   );
 }
 
-function SidebarConfig({ direction }: { direction: "ltr" | "rtl" }) {
+function SidebarConfig() {
   const { defaultVariant, setVariant, variant } = useLayout();
+
   return (
     <div className="max-md:hidden">
       <SectionTitle
@@ -301,7 +301,7 @@ function SidebarConfig({ direction }: { direction: "ltr" | "rtl" }) {
             value: "sidebar",
           },
         ].map((item) => (
-          <RadioGroupItem direction={direction} item={item} key={item.value} />
+          <RadioGroupItem item={item} key={item.value} />
         ))}
       </Radio>
       <div className="sr-only" id="sidebar-description">
@@ -311,8 +311,9 @@ function SidebarConfig({ direction }: { direction: "ltr" | "rtl" }) {
   );
 }
 
-function ThemeConfig({ direction }: { direction: "ltr" | "rtl" }) {
+function ThemeConfig() {
   const { defaultTheme, setTheme, theme } = useTheme();
+
   return (
     <div>
       <SectionTitle
@@ -344,12 +345,7 @@ function ThemeConfig({ direction }: { direction: "ltr" | "rtl" }) {
             value: "dark",
           },
         ].map((item) => (
-          <RadioGroupItem
-            direction={direction}
-            isTheme
-            item={item}
-            key={item.value}
-          />
+          <RadioGroupItem isTheme item={item} key={item.value} />
         ))}
       </Radio>
       <div className="sr-only" id="theme-description">

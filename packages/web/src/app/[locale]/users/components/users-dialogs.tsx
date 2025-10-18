@@ -3,20 +3,18 @@ import { UsersDeleteDialog } from "./users-delete-dialog";
 import { UsersInviteDialog } from "./users-invite-dialog";
 import { useUsers } from "./users-provider";
 
-export function UsersDialogs({ direction }: { direction: "ltr" | "rtl" }) {
+export function UsersDialogs() {
   const { currentRow, open, setCurrentRow, setOpen } = useUsers();
 
   return (
     <>
       <UsersActionDialog
-        direction={direction}
         key="user-add"
         onOpenChange={() => setOpen("add")}
         open={open === "add"}
       />
 
       <UsersInviteDialog
-        direction={direction}
         key="user-invite"
         onOpenChange={() => setOpen("invite")}
         open={open === "invite"}
@@ -26,7 +24,6 @@ export function UsersDialogs({ direction }: { direction: "ltr" | "rtl" }) {
         <>
           <UsersActionDialog
             currentRow={currentRow}
-            direction={direction}
             key={`user-edit-${currentRow.id}`}
             onOpenChange={() => {
               setOpen("edit");
@@ -39,7 +36,6 @@ export function UsersDialogs({ direction }: { direction: "ltr" | "rtl" }) {
 
           <UsersDeleteDialog
             currentRow={currentRow}
-            direction={direction}
             key={`user-delete-${currentRow.id}`}
             onOpenChange={() => {
               setOpen("delete");

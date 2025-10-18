@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/context/theme-provider";
 
-export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
+export function ModeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
@@ -23,11 +23,10 @@ export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" direction={direction}>
+      <DropdownMenuContent align="end">
         <DropdownMenuCheckboxItem
           checked={theme === "light"}
           className="capitalize"
-          direction={direction}
           onCheckedChange={() => setTheme("light")}
         >
           Light
@@ -35,7 +34,6 @@ export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
         <DropdownMenuCheckboxItem
           checked={theme === "dark"}
           className="capitalize"
-          direction={direction}
           onCheckedChange={() => setTheme("dark")}
         >
           Dark
@@ -43,7 +41,6 @@ export function ModeToggle({ direction }: { direction: "ltr" | "rtl" }) {
         <DropdownMenuCheckboxItem
           checked={theme === "system"}
           className="capitalize"
-          direction={direction}
           onCheckedChange={() => setTheme("system")}
         >
           System

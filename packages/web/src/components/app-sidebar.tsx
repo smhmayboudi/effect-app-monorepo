@@ -18,7 +18,6 @@ import { useLayout } from "@/context/layout-provider";
 
 export function AppSidebar({
   data,
-  direction,
 }: {
   data: {
     navDocuments: Array<{
@@ -42,7 +41,6 @@ export function AppSidebar({
       name: string;
     };
   };
-  direction: "ltr" | "rtl";
 }) {
   const { collapsible, variant } = useLayout();
 
@@ -57,9 +55,9 @@ export function AppSidebar({
         <NavSecondary items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser direction={direction} isHeader={false} user={data.user} />
+        <NavUser isHeader={false} user={data.user} />
       </SidebarFooter>
-      <SidebarRail direction={direction} />
+      <SidebarRail />
     </Sidebar>
   );
 }

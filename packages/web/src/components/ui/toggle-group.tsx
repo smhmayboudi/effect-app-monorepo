@@ -6,12 +6,10 @@ import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
 import { type ComponentProps, createContext, useContext } from "react";
 
 import { toggleVariants } from "@/components/ui/toggle";
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
-const ToggleGroupContext = createContext<
-  VariantProps<typeof toggleVariants> & { direction: "ltr" | "rtl" }
->({
-  direction: "ltr",
+const ToggleGroupContext = createContext<VariantProps<typeof toggleVariants>>({
   size: "default",
   variant: "default",
 });
@@ -19,28 +17,27 @@ const ToggleGroupContext = createContext<
 function ToggleGroup({
   children,
   className,
-  direction,
   size,
   variant,
   ...props
 }: ComponentProps<typeof ToggleGroupPrimitive.Root> &
-  VariantProps<typeof toggleVariants> & {
-    direction: "ltr" | "rtl";
-  }) {
+  VariantProps<typeof toggleVariants> & {}) {
+  const { dir } = useDirection();
+
   return (
     <ToggleGroupPrimitive.Root
       className={cn(
         "group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs",
         className,
       )}
-      data-direction={direction}
+      data-
       data-size={size}
       data-slot="toggle-group"
       data-variant={variant}
-      dir={direction}
+      dir={dir}
       {...props}
     >
-      <ToggleGroupContext.Provider value={{ direction, size, variant }}>
+      <ToggleGroupContext.Provider value={{ size, variant }}>
         {children}
       </ToggleGroupContext.Provider>
     </ToggleGroupPrimitive.Root>
@@ -56,6 +53,7 @@ function ToggleGroupItem({
 }: ComponentProps<typeof ToggleGroupPrimitive.Item> &
   VariantProps<typeof toggleVariants>) {
   const context = useContext(ToggleGroupContext);
+  const { dir } = useDirection();
 
   return (
     <ToggleGroupPrimitive.Item
@@ -64,13 +62,10 @@ function ToggleGroupItem({
           size: context.size || size,
           variant: context.variant || variant,
         }),
-        "min-w-0 flex-1 shrink-0 rounded-none shadow-none focus:z-10 focus-visible:z-10",
-        context.direction === "rtl"
-          ? "first:rounded-r-md last:rounded-l-md data-[variant=outline]:border-r-0 data-[variant=outline]:first:border-r"
-          : "first:rounded-l-md last:rounded-r-md data-[variant=outline]:border-l-0 data-[variant=outline]:first:border-l",
+        "min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus:z-10 focus-visible:z-10 data-[variant=outline]:border-s-0 data-[variant=outline]:first:border-s",
         className,
       )}
-      data-direction={context.direction}
+      data-direction={dir}
       data-size={context.size || size}
       data-slot="toggle-group-item"
       data-variant={context.variant || variant}

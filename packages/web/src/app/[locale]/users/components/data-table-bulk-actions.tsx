@@ -18,12 +18,10 @@ import type { User } from "../data/schema";
 import { UsersMultiDeleteDialog } from "./users-multi-delete-dialog";
 
 type DataTableBulkActionsProps<TData> = {
-  direction: "ltr" | "rtl";
   table: Table<TData>;
 };
 
 export function DataTableBulkActions<TData>({
-  direction,
   table,
 }: DataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -57,7 +55,7 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar direction={direction} entityName="user" table={table}>
+      <BulkActionsToolbar entityName="user" table={table}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -72,7 +70,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Invite selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent direction={direction}>
+          <TooltipContent>
             <p>Invite selected users</p>
           </TooltipContent>
         </Tooltip>
@@ -91,7 +89,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Activate selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent direction={direction}>
+          <TooltipContent>
             <p>Activate selected users</p>
           </TooltipContent>
         </Tooltip>
@@ -110,7 +108,7 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Deactivate selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent direction={direction}>
+          <TooltipContent>
             <p>Deactivate selected users</p>
           </TooltipContent>
         </Tooltip>
@@ -129,14 +127,13 @@ export function DataTableBulkActions<TData>({
               <span className="sr-only">Delete selected users</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent direction={direction}>
+          <TooltipContent>
             <p>Delete selected users</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
 
       <UsersMultiDeleteDialog
-        direction={direction}
         onOpenChange={setShowDeleteConfirm}
         open={showDeleteConfirm}
         table={table}

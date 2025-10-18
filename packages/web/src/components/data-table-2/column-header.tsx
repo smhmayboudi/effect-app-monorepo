@@ -20,14 +20,12 @@ import { cn } from "@/lib/utils";
 type DataTableColumnHeaderProps<TData, TValue> =
   React.HTMLAttributes<HTMLDivElement> & {
     column: Column<TData, TValue>;
-    direction: "ltr" | "rtl";
     title: string;
   };
 
 export function DataTableColumnHeader<TData, TValue>({
   className,
   column,
-  direction,
   title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
@@ -53,28 +51,19 @@ export function DataTableColumnHeader<TData, TValue>({
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" direction={direction}>
-          <DropdownMenuItem
-            direction={direction}
-            onClick={() => column.toggleSorting(false)}
-          >
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUpIcon className="size-3.5 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
-          <DropdownMenuItem
-            direction={direction}
-            onClick={() => column.toggleSorting(true)}
-          >
+          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className="size-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
           {column.getCanHide() && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                direction={direction}
-                onClick={() => column.toggleVisibility(false)}
-              >
+              <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
                 <EyeNoneIcon className="size-3.5 text-muted-foreground/70" />
                 Hide
               </DropdownMenuItem>

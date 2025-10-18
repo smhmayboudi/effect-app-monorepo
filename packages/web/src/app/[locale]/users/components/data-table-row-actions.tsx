@@ -18,15 +18,12 @@ import type { User } from "../data/schema";
 import { useUsers } from "./users-provider";
 
 type DataTableRowActionsProps = {
-  direction: "ltr" | "rtl";
   row: Row<User>;
 };
 
-export function DataTableRowActions({
-  direction,
-  row,
-}: DataTableRowActionsProps) {
+export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setCurrentRow, setOpen } = useUsers();
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -39,34 +36,28 @@ export function DataTableRowActions({
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          className="w-[160px]"
-          direction={direction}
-        >
+        <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
-            direction={direction}
             onClick={() => {
               setCurrentRow(row.original);
               setOpen("edit");
             }}
           >
             Edit
-            <DropdownMenuShortcut direction={direction}>
+            <DropdownMenuShortcut>
               <UserPen size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="text-red-500!"
-            direction={direction}
             onClick={() => {
               setCurrentRow(row.original);
               setOpen("delete");
             }}
           >
             Delete
-            <DropdownMenuShortcut direction={direction}>
+            <DropdownMenuShortcut>
               <Trash2 size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>

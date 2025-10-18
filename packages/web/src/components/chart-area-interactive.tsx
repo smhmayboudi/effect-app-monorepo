@@ -177,7 +177,6 @@ export function ChartAreaInteractive() {
         <CardAction>
           <ToggleGroup
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
-            direction={dir}
             onValueChange={setTimeRange}
             type="single"
             value={timeRange}
@@ -195,14 +194,14 @@ export function ChartAreaInteractive() {
             >
               <SelectValue placeholder="Last 3 months" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl" direction={dir}>
-              <SelectItem className="rounded-lg" direction={dir} value="90d">
+            <SelectContent className="rounded-xl">
+              <SelectItem className="rounded-lg" value="90d">
                 Last 3 months
               </SelectItem>
-              <SelectItem className="rounded-lg" direction={dir} value="30d">
+              <SelectItem className="rounded-lg" value="30d">
                 Last 30 days
               </SelectItem>
-              <SelectItem className="rounded-lg" direction={dir} value="7d">
+              <SelectItem className="rounded-lg" value="7d">
                 Last 7 days
               </SelectItem>
             </SelectContent>

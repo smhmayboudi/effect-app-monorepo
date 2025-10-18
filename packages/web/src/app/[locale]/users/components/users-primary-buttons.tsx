@@ -6,6 +6,7 @@ import { useUsers } from "./users-provider";
 
 export function UsersPrimaryButtons() {
   const { setOpen } = useUsers();
+
   return (
     <div className="flex gap-2">
       <Button

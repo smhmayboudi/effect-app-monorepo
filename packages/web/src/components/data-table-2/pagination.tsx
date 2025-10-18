@@ -15,20 +15,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn, getPageNumbers } from "@/lib/utils";
+import { useDirection } from "@/context/direction-provider";
+import { getPageNumbers } from "@/lib/utils";
 
 type DataTablePaginationProps<TData> = {
-  direction: "ltr" | "rtl";
   table: Table<TData>;
 };
 
 export function DataTablePagination<TData>({
-  direction,
   table,
 }: DataTablePaginationProps<TData>) {
   const currentPage = table.getState().pagination.pageIndex + 1;
   const totalPages = table.getPageCount();
   const pageNumbers = getPageNumbers(currentPage, totalPages);
+
+  const { dir } = useDirection();
 
   return (
     <div
@@ -49,13 +50,9 @@ export function DataTablePagination<TData>({
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
-            <SelectContent direction={direction} side="top">
+            <SelectContent side="top">
               {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem
-                  direction={direction}
-                  key={pageSize}
-                  value={`${pageSize}`}
-                >
+                <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>
               ))}
@@ -77,7 +74,7 @@ export function DataTablePagination<TData>({
             variant="outline"
           >
             <span className="sr-only">Go to first page</span>
-            {direction === "rtl" ? (
+            {dir === "rtl" ? (
               <DoubleArrowRightIcon className="size-4" />
             ) : (
               <DoubleArrowLeftIcon className="size-4" />
@@ -90,7 +87,7 @@ export function DataTablePagination<TData>({
             variant="outline"
           >
             <span className="sr-only">Go to previous page</span>
-            {direction === "rtl" ? (
+            {dir === "rtl" ? (
               <ChevronRightIcon className="size-4" />
             ) : (
               <ChevronLeftIcon className="size-4" />
@@ -122,7 +119,7 @@ export function DataTablePagination<TData>({
             variant="outline"
           >
             <span className="sr-only">Go to next page</span>
-            {direction === "rtl" ? (
+            {dir === "rtl" ? (
               <ChevronLeftIcon className="size-4" />
             ) : (
               <ChevronRightIcon className="size-4" />
@@ -135,7 +132,7 @@ export function DataTablePagination<TData>({
             variant="outline"
           >
             <span className="sr-only">Go to last page</span>
-            {direction === "rtl" ? (
+            {dir === "rtl" ? (
               <DoubleArrowLeftIcon className="size-4" />
             ) : (
               <DoubleArrowRightIcon className="size-4" />

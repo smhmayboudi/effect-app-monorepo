@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 
 type DataTableFacetedFilterProps<TData, TValue> = {
   column?: Column<TData, TValue>;
-  direction: "ltr" | "rtl";
+
   options: {
     icon?: ComponentType<{ className?: string }>;
     label: string;
@@ -35,7 +35,6 @@ type DataTableFacetedFilterProps<TData, TValue> = {
 
 export function DataTableFacetedFilter<TData, TValue>({
   column,
-  direction,
   options,
   title,
 }: DataTableFacetedFilterProps<TData, TValue>) {
@@ -83,13 +82,9 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="w-[200px] p-0"
-        direction={direction}
-      >
+      <PopoverContent align="start" className="w-[200px] p-0">
         <Command>
-          <CommandInput direction={direction} placeholder={title} />
+          <CommandInput placeholder={title} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>

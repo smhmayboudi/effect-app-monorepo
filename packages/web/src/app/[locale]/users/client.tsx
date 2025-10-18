@@ -1,6 +1,5 @@
 "use client";
 
-import { useDirection } from "@/context/direction-provider";
 import { useSearchNavigation } from "@/hooks/use-search-navigation";
 
 import { UsersDialogs } from "./components/users-dialogs";
@@ -11,7 +10,6 @@ import { users } from "./data/users";
 
 export function Client() {
   const { navigate, search } = useSearchNavigation();
-  const { dir } = useDirection();
 
   return (
     <UsersProvider>
@@ -25,14 +23,9 @@ export function Client() {
         <UsersPrimaryButtons />
       </div>
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-        <UsersTable
-          data={users}
-          direction={dir}
-          navigate={navigate}
-          search={search}
-        />
+        <UsersTable data={users} navigate={navigate} search={search} />
       </div>
-      <UsersDialogs direction={dir} />
+      <UsersDialogs />
     </UsersProvider>
   );
 }

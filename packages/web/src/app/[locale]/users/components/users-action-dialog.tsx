@@ -64,7 +64,7 @@ const formSchema = Schema.Struct({
 
 type UserActionDialogProps = {
   currentRow?: User;
-  direction: "ltr" | "rtl";
+
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };
@@ -73,7 +73,6 @@ type UserForm = Schema.Schema.Type<typeof formSchema>;
 
 export function UsersActionDialog({
   currentRow,
-  direction,
   onOpenChange,
   open,
 }: UserActionDialogProps) {
@@ -116,8 +115,8 @@ export function UsersActionDialog({
       }}
       open={open}
     >
-      <DialogContent className="sm:max-w-lg" direction={direction}>
-        <DialogHeader className="text-start" direction={direction}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader className="text-start">
           <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
           <DialogDescription>
             {isEdit ? "Update the user here. " : "Create new user here. "}
@@ -235,7 +234,6 @@ export function UsersActionDialog({
                     <SelectDropdown
                       className="col-span-4"
                       defaultValue={field.value}
-                      direction={direction}
                       items={roles.map(({ label, value }) => ({
                         label,
                         value,

@@ -24,14 +24,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
 
 export function NavUser({
-  direction,
   isHeader,
   user,
 }: {
-  direction: "ltr" | "rtl";
   isHeader: boolean;
   user: {
     avatar: string;
@@ -68,12 +65,7 @@ export function NavUser({
                       {user.email}
                     </span>
                   </div>
-                  <MoreVerticalIcon
-                    className={cn(
-                      "size-4",
-                      direction === "rtl" ? "mr-auto" : "ml-auto",
-                    )}
-                  />
+                  <MoreVerticalIcon className="ms-auto size-4" />
                 </>
               )}
             </SidebarMenuButton>
@@ -81,14 +73,10 @@ export function NavUser({
           <DropdownMenuContent
             align="end"
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            direction={direction}
             side={isMobile ? "bottom" : !isHeader ? "right" : "top"}
             sideOffset={4}
           >
-            <DropdownMenuLabel
-              className="p-0 font-normal"
-              direction={direction}
-            >
+            <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                 <Avatar className="size-8 rounded-lg">
                   <AvatarImage alt={user.name} src={user.avatar} />
@@ -104,21 +92,21 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem direction={direction}>
+              <DropdownMenuItem>
                 <UserCircleIcon />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem direction={direction}>
+              <DropdownMenuItem>
                 <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem direction={direction}>
+              <DropdownMenuItem>
                 <BellIcon />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem direction={direction}>
+            <DropdownMenuItem>
               <LogOutIcon />
               Log out
             </DropdownMenuItem>

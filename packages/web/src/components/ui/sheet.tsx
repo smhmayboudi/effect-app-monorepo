@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
 function Sheet({ ...props }: ComponentProps<typeof SheetPrimitive.Root>) {
@@ -18,43 +19,40 @@ function SheetClose({ ...props }: ComponentProps<typeof SheetPrimitive.Close>) {
 function SheetContent({
   children,
   className,
-  direction,
   side = "right",
   ...props
 }: ComponentProps<typeof SheetPrimitive.Content> & {
-  direction: "ltr" | "rtl";
   side?: "bottom" | "left" | "right" | "top";
 }) {
+  const { dir } = useDirection();
+
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Content
         className={cn(
           "fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-in-out data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:animate-in data-[state=open]:duration-500",
-          side === "right" &&
-            (direction === "rtl"
-              ? "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm"
-              : "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm"),
-          side === "left" &&
-            (direction === "rtl"
-              ? "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm"
-              : "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm"),
-          side === "top" &&
-            "inset-x-0 top-0 h-auto border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
-          side === "bottom" &&
-            "inset-x-0 bottom-0 h-auto border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+          {
+            "inset-x-0 bottom-0 h-auto border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom":
+              side === "bottom",
+            "inset-x-0 top-0 h-auto border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top":
+              side === "top",
+            "inset-y-0 end-0 h-full w-3/4 border-s data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm":
+              side === "right" && dir === "rtl",
+            "inset-y-0 end-0 h-full w-3/4 border-s data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm":
+              side === "right" && dir === "ltr",
+            "inset-y-0 start-0 h-full w-3/4 border-e data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm":
+              side === "left" && dir === "ltr",
+            "inset-y-0 start-0 h-full w-3/4 border-e data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm":
+              side === "left" && dir === "rtl",
+          },
           className,
         )}
         data-slot="sheet-content"
         {...props}
       >
         {children}
-        <SheetPrimitive.Close
-          className={cn(
-            "absolute top-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary",
-            direction === "rtl" ? "left-4" : "right-4",
-          )}
-        >
+        <SheetPrimitive.Close className="absolute end-4 top-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary">
           <XIcon className="size-4" />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>

@@ -41,9 +41,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
-const Navbar5 = ({ direction }: { direction: "ltr" | "rtl" }) => {
+const Navbar5 = () => {
   const features = [
     {
       description: "Overview of your activity",
@@ -94,13 +95,11 @@ const Navbar5 = ({ direction }: { direction: "ltr" | "rtl" }) => {
               Shadcnblocks.com
             </span>
           </a>
-          <NavigationMenu className="hidden lg:block" direction="ltr">
-            <NavigationMenuList direction="ltr">
+          <NavigationMenu className="hidden lg:block">
+            <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger direction="ltr">
-                  Features
-                </NavigationMenuTrigger>
-                <NavigationMenuContent direction="ltr">
+                <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+                <NavigationMenuContent>
                   <div className="grid w-[600px] grid-cols-2 p-3">
                     {features.map((feature, index) => (
                       <NavigationMenuLink
@@ -157,11 +156,7 @@ const Navbar5 = ({ direction }: { direction: "ltr" | "rtl" }) => {
                 <MenuIcon className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent
-              className="max-h-screen overflow-auto"
-              direction="ltr"
-              side="top"
-            >
+            <SheetContent className="max-h-screen overflow-auto" side="top">
               <SheetHeader>
                 <SheetTitle>
                   <a
@@ -182,10 +177,7 @@ const Navbar5 = ({ direction }: { direction: "ltr" | "rtl" }) => {
               <div className="flex flex-col p-4">
                 <Accordion className="mt-4 mb-2" collapsible type="single">
                   <AccordionItem className="border-none" value="solutions">
-                    <AccordionTrigger
-                      className="text-base hover:no-underline"
-                      direction={direction}
-                    >
+                    <AccordionTrigger className="text-base hover:no-underline">
                       Features
                     </AccordionTrigger>
                     <AccordionContent>
@@ -234,7 +226,9 @@ const Navbar5 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   );
 };
 
-const Hero12 = ({ direction }: { direction: "ltr" | "rtl" }) => {
+const Hero12 = () => {
+  const { dir } = useDirection();
+
   return (
     <section className="relative overflow-hidden py-32">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
@@ -273,21 +267,16 @@ const Hero12 = ({ direction }: { direction: "ltr" | "rtl" }) => {
                 Learn more{" "}
                 <ExternalLink
                   className={cn(
-                    "h-4 transition-transform",
-                    direction === "rtl"
-                      ? "mr-2 group-hover:-translate-x-0.5"
-                      : "ml-2 group-hover:translate-x-0.5",
+                    "ms-2 h-4 transition-transform",
+                    dir === "rtl"
+                      ? "group-hover:-translate-x-0.5"
+                      : "group-hover:translate-x-0.5",
                   )}
                 />
               </Button>
             </div>
             <div className="mt-20 flex flex-col items-center gap-5">
-              <p
-                className={cn(
-                  "font-medium text-muted-foreground",
-                  direction === "rtl" ? "lg:text-right" : "lg:text-left",
-                )}
-              >
+              <p className="font-medium text-muted-foreground lg:text-start">
                 Built with open-source technologies
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
@@ -481,7 +470,7 @@ const Community1 = () => {
   );
 };
 
-const Faq3 = ({ direction }: { direction: "ltr" | "rtl" }) => {
+const Faq3 = () => {
   const description =
     "Find answers to common questions about our products. Can't find what you're looking for? Contact our support team.";
   const faqItems = [
@@ -533,12 +522,7 @@ const Faq3 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   return (
     <section className="py-32">
       <div className="container space-y-16">
-        <div
-          className={cn(
-            "mx-auto flex max-w-3xl flex-col md:text-center",
-            direction === "rtl" ? "text-right" : "text-left",
-          )}
-        >
+        <div className="mx-auto flex max-w-3xl flex-col text-start md:text-center">
           <h2 className="mb-3 text-3xl font-semibold md:mb-4 lg:mb-6 lg:text-4xl">
             {heading}
           </h2>
@@ -551,10 +535,7 @@ const Faq3 = ({ direction }: { direction: "ltr" | "rtl" }) => {
         >
           {faqItems.map((item) => (
             <AccordionItem key={item.id} value={item.id}>
-              <AccordionTrigger
-                className="transition-opacity duration-200 hover:no-underline hover:opacity-60"
-                direction={direction}
-              >
+              <AccordionTrigger className="transition-opacity duration-200 hover:no-underline hover:opacity-60">
                 <div className="font-medium sm:py-1 lg:py-2 lg:text-lg">
                   {item.question}
                 </div>
@@ -572,7 +553,7 @@ const Faq3 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   );
 };
 
-const Footer7 = ({ direction }: { direction: "ltr" | "rtl" }) => {
+const Footer7 = () => {
   const copyright = "© 2024 Shadcnblocks.com. All rights reserved.";
   const description =
     "A collection of components for your startup business or side project.";
@@ -636,12 +617,7 @@ const Footer7 = ({ direction }: { direction: "ltr" | "rtl" }) => {
   return (
     <section className="py-32">
       <div className="container">
-        <div
-          className={cn(
-            "flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start",
-            direction === "rtl" ? "lg:text-right" : "lg:text-left",
-          )}
-        >
+        <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-start">
           <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
             <div className="flex items-center gap-2 lg:justify-start">
               <a href={logo.url}>
@@ -685,12 +661,7 @@ const Footer7 = ({ direction }: { direction: "ltr" | "rtl" }) => {
             ))}
           </div>
         </div>
-        <div
-          className={cn(
-            "mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium text-muted-foreground md:flex-row md:items-center",
-            direction === "rtl" ? "md:text-right" : "md:text-left",
-          )}
-        >
+        <div className="mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium text-muted-foreground md:flex-row md:items-center md:text-start">
           <p className="order-2 lg:order-1">{copyright}</p>
           <ul className="order-1 flex flex-col gap-2 md:order-2 md:flex-row">
             {legalLinks.map((link, idx) => (
@@ -708,12 +679,12 @@ const Footer7 = ({ direction }: { direction: "ltr" | "rtl" }) => {
 export default function Client() {
   return (
     <>
-      <Navbar5 direction="ltr" />
-      <Hero12 direction="ltr" />
+      <Navbar5 />
+      <Hero12 />
       <Feature43 />
       <Community1 />
-      <Faq3 direction="ltr" />
-      <Footer7 direction="ltr" />
+      <Faq3 />
+      <Footer7 />
     </>
   );
 }

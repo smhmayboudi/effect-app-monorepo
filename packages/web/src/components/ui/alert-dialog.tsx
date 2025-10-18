@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { buttonVariants } from "@/components/ui/button";
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
 const AlertDialog = AlertDialogPrimitive.Root;
@@ -34,36 +35,34 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 
 const AlertDialogContent = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content> & {
-    direction: "ltr" | "rtl";
-  }
->(({ className, direction, ...props }, ref) => (
-  <AlertDialogPortal>
-    <AlertDialogOverlay />
-    <AlertDialogPrimitive.Content
-      className={cn(
-        "fixed top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:max-w-lg",
-        direction === "rtl"
-          ? "right-[50%] -translate-x-[-50%]"
-          : "left-[50%] translate-x-[-50%]",
-        className,
-      )}
-      ref={ref}
-      {...props}
-    />
-  </AlertDialogPortal>
-));
+  ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content> & {}
+>(({ className, ...props }, ref) => {
+  const { dir } = useDirection();
+
+  return (
+    <AlertDialogPortal>
+      <AlertDialogOverlay />
+      <AlertDialogPrimitive.Content
+        className={cn(
+          "fixed start-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:max-w-lg",
+          dir === "rtl" ? "-translate-x-[-50%]" : "translate-x-[-50%]",
+          className,
+        )}
+        ref={ref}
+        {...props}
+      />
+    </AlertDialogPortal>
+  );
+});
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeader = ({
   className,
-  direction,
   ...props
-}: HTMLAttributes<HTMLDivElement> & { direction: "ltr" | "rtl" }) => (
+}: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-2 text-center",
-      direction === "rtl" ? "sm:text-right" : "sm:text-left",
+      "flex flex-col space-y-2 text-center sm:text-start",
       className,
     )}
     {...props}

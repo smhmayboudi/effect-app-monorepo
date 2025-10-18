@@ -11,11 +11,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
 
 type DataTableBulkActionsProps<TData> = {
   children: React.ReactNode;
-  direction: "ltr" | "rtl";
   entityName: string;
   table: Table<TData>;
 };
@@ -33,7 +33,6 @@ type DataTableBulkActionsProps<TData> = {
  */
 export function DataTableBulkActions<TData>({
   children,
-  direction,
   entityName,
   table,
 }: DataTableBulkActionsProps<TData>): null | React.ReactNode {
@@ -117,11 +116,11 @@ export function DataTableBulkActions<TData>({
     }
   };
 
-  if (selectedCount === 0) {
-    return null;
-  }
+  const { dir } = useDirection();
 
-  return (
+  return selectedCount === 0 ? (
+    <></>
+  ) : (
     <>
       {/* Live region for screen reader announcements */}
       <div
@@ -137,10 +136,8 @@ export function DataTableBulkActions<TData>({
         aria-describedby="bulk-actions-description"
         aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? "s" : ""}`}
         className={cn(
-          "fixed bottom-6 z-50 rounded-xl transition-all delay-100 duration-300 ease-out hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
-          direction === "rtl"
-            ? "right-1/2 translate-x-1/2"
-            : "left-1/2 -translate-x-1/2",
+          "fixed start-1/2 bottom-6 z-50 rounded-xl transition-all delay-100 duration-300 ease-out hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+          dir === "rtl" ? "translate-x-1/2" : "-translate-x-1/2",
         )}
         onKeyDown={handleKeyDown}
         ref={toolbarRef}
@@ -162,7 +159,7 @@ export function DataTableBulkActions<TData>({
                 <span className="sr-only">Clear selection</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent direction={direction}>
+            <TooltipContent>
               <p>Clear selection (Escape)</p>
             </TooltipContent>
           </Tooltip>

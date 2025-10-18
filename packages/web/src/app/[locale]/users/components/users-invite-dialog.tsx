@@ -42,7 +42,6 @@ const formSchema = Schema.Struct({
   }),
 });
 type UserInviteDialogProps = {
-  direction: "ltr" | "rtl";
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };
@@ -50,7 +49,6 @@ type UserInviteDialogProps = {
 type UserInviteForm = typeof formSchema.Type;
 
 export function UsersInviteDialog({
-  direction,
   onOpenChange,
   open,
 }: UserInviteDialogProps) {
@@ -73,8 +71,8 @@ export function UsersInviteDialog({
       }}
       open={open}
     >
-      <DialogContent className="sm:max-w-md" direction={direction}>
-        <DialogHeader className="text-start" direction={direction}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="text-start">
           <DialogTitle className="flex items-center gap-2">
             <MailPlus /> Invite User
           </DialogTitle>
@@ -114,7 +112,6 @@ export function UsersInviteDialog({
                   <FormLabel>Role</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
-                    direction={direction}
                     items={roles.map(({ label, value }) => ({
                       label,
                       value,

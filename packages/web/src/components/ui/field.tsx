@@ -120,11 +120,9 @@ function FieldDescription({ className, ...props }: ComponentProps<"p">) {
 function FieldError({
   children,
   className,
-  direction,
   errors,
   ...props
 }: ComponentProps<"div"> & {
-  direction: "ltr" | "rtl";
   errors?: Array<undefined | { message?: string }>;
 }) {
   const content = useMemo(() => {
@@ -141,12 +139,7 @@ function FieldError({
     }
 
     return (
-      <ul
-        className={cn(
-          "flex list-disc flex-col gap-1",
-          direction === "rtl" ? "mr-4" : "ml-4",
-        )}
-      >
+      <ul className="ms-4 flex list-disc flex-col gap-1">
         {errors.map(
           (error, index) =>
             error?.message && <li key={index}>{error.message}</li>,

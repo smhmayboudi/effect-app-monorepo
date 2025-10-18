@@ -41,17 +41,11 @@ declare module "@tanstack/react-table" {
 
 type DataTableProps = {
   data: User[];
-  direction: "ltr" | "rtl";
   navigate: NavigateFn;
   search: Record<string, unknown>;
 };
 
-export function UsersTable({
-  data,
-  direction,
-  navigate,
-  search,
-}: DataTableProps) {
+export function UsersTable({ data, navigate, search }: DataTableProps) {
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -82,7 +76,7 @@ export function UsersTable({
   });
 
   const table = useReactTable({
-    columns: columns(direction),
+    columns,
     data,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
@@ -112,7 +106,6 @@ export function UsersTable({
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
       <DataTableToolbar
-        direction={direction}
         filters={[
           {
             columnId: "status",
@@ -147,7 +140,6 @@ export function UsersTable({
                         header.column.columnDef.meta?.className ?? "",
                       )}
                       colSpan={header.colSpan}
-                      direction={direction}
                       key={header.id}
                     >
                       {header.isPlaceholder
@@ -176,7 +168,6 @@ export function UsersTable({
                         "bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
                         cell.column.columnDef.meta?.className ?? "",
                       )}
-                      direction={direction}
                       key={cell.id}
                     >
                       {flexRender(
@@ -191,8 +182,7 @@ export function UsersTable({
               <TableRow>
                 <TableCell
                   className="h-24 text-center"
-                  colSpan={columns(direction).length}
-                  direction={direction}
+                  colSpan={columns.length}
                 >
                   No results.
                 </TableCell>
@@ -201,8 +191,8 @@ export function UsersTable({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination direction={direction} table={table} />
-      <DataTableBulkActions direction={direction} table={table} />
+      <DataTablePagination table={table} />
+      <DataTableBulkActions table={table} />
     </div>
   );
 }

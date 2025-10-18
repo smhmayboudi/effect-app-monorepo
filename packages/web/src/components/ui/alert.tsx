@@ -21,15 +21,12 @@ const alertVariants = cva(
 
 const Alert = forwardRef<
   HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> &
-    VariantProps<typeof alertVariants> & { direction: "ltr" | "rtl" }
->(({ className, direction, variant, ...props }, ref) => (
+  HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
+>(({ className, variant, ...props }, ref) => (
   <div
     className={cn(
       alertVariants({ variant }),
-      direction === "rtl"
-        ? "[&>svg]:right-4 [&>svg~*]:pr-7"
-        : "[&>svg]:left-4 [&>svg~*]:pl-7",
+      "[&>svg]:start-4 [&>svg~*]:ps-7",
       className,
     )}
     ref={ref}

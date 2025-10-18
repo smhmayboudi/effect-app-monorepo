@@ -13,14 +13,13 @@ import type { User } from "../data/schema";
 
 type UserDeleteDialogProps = {
   currentRow: User;
-  direction: "ltr" | "rtl";
+
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };
 
 export function UsersDeleteDialog({
   currentRow,
-  direction,
   onOpenChange,
   open,
 }: UserDeleteDialogProps) {
@@ -58,7 +57,7 @@ export function UsersDeleteDialog({
             />
           </Label>
 
-          <Alert direction={direction} variant="destructive">
+          <Alert variant="destructive">
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               Please be careful, this operation can not be rolled back.
@@ -67,7 +66,6 @@ export function UsersDeleteDialog({
         </div>
       }
       destructive
-      direction={direction}
       disabled={value.trim() !== currentRow.username}
       handleConfirm={handleDelete}
       onOpenChange={onOpenChange}
