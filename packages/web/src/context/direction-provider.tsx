@@ -44,22 +44,32 @@ export function DirectionProvider({
   defaultDir = DIRECTION_DEFAULT,
   storageKey = DIRECTION_COOKIE_NAME,
 }: PropsWithChildren<DirectionProviderProps>) {
-  const [dir, _setDir] = useState<Direction>(() =>
-    Cookies.getValue(
+  const [dir, _setDir] = useState<Direction>(defaultDir);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const initialDir = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
     ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Direction)),
       Option.getOrElse(() => defaultDir),
-    ),
-  );
+    );
+    _setDir(initialDir);
+  }, [defaultDir, storageKey]);
 
   useEffect(() => {
+    if (!isClient) return;
+
     const htmlElement = document.documentElement;
     htmlElement.setAttribute("dir", dir);
-  }, [dir]);
+  }, [dir, isClient]);
 
   const setDir = (dir: Direction) => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKey, dir, {
       maxAge: Duration.seconds(DIRECTION_COOKIE_MAX_AGE),
       path: "/",
@@ -78,6 +88,9 @@ export function DirectionProvider({
   };
 
   const resetDir = () => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
       path: "/",
@@ -96,7 +109,7 @@ export function DirectionProvider({
   };
 
   return (
-    <DirectionContext
+    <DirectionContext.Provider
       value={{
         defaultDir,
         dir,
@@ -105,7 +118,7 @@ export function DirectionProvider({
       }}
     >
       <RdxDirProvider dir={dir}>{children}</RdxDirProvider>
-    </DirectionContext>
+    </DirectionContext.Provider>
   );
 }
 

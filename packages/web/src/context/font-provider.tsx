@@ -43,17 +43,24 @@ export function FontProvider({
   defaultFont = FONT_DEFAULT,
   storageKey = FONT_COOKIE_NAME,
 }: PropsWithChildren<FontProviderProps>) {
-  const [font, _setFont] = useState<Font>(() =>
-    Cookies.getValue(
+  const [font, _setFont] = useState<Font>(defaultFont);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const initialFont = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
     ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Font)),
       Option.getOrElse(() => defaultFont),
-    ),
-  );
+    );
+    _setFont(initialFont);
+  }, [defaultFont, storageKey]);
 
   useEffect(() => {
+    if (!isClient) return;
+
     const applyFont = (font: string) => {
       const root = document.documentElement;
       root.classList.forEach((cls) => {
@@ -63,9 +70,12 @@ export function FontProvider({
     };
 
     applyFont(font);
-  }, [font]);
+  }, [font, isClient]);
 
   const setFont = (font: Font) => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKey, font, {
       maxAge: Duration.seconds(FONT_COOKIE_MAX_AGE),
       path: "/",
@@ -84,6 +94,9 @@ export function FontProvider({
   };
 
   const resetFont = () => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
       path: "/",
@@ -102,9 +115,9 @@ export function FontProvider({
   };
 
   return (
-    <FontContext value={{ defaultFont, font, resetFont, setFont }}>
+    <FontContext.Provider value={{ defaultFont, font, resetFont, setFont }}>
       {children}
-    </FontContext>
+    </FontContext.Provider>
   );
 }
 

@@ -6,6 +6,7 @@ import {
   createContext,
   type PropsWithChildren,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -57,27 +58,40 @@ export function LayoutProvider({
   storageKeyCollapsible = LAYOUT_COLLAPSIBLE_COOKIE_NAME,
   storageKeyVariant = LAYOUT_VARIANT_COOKIE_NAME,
 }: PropsWithChildren<LayoutProviderProps>) {
-  const [collapsible, _setCollapsible] = useState<Collapsible>(() =>
-    Cookies.getValue(
+  const [collapsible, _setCollapsible] =
+    useState<Collapsible>(defaultCollapsible);
+  const [variant, _setVariant] = useState<Variant>(defaultVariant);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const initialCollapsible = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKeyCollapsible,
     ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Collapsible)),
       Option.getOrElse(() => defaultCollapsible),
-    ),
-  );
-
-  const [variant, _setVariant] = useState<Variant>(() =>
-    Cookies.getValue(
+    );
+    const initialVariant = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKeyVariant,
     ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Variant)),
       Option.getOrElse(() => defaultVariant),
-    ),
-  );
+    );
+    _setCollapsible(initialCollapsible);
+    _setVariant(initialVariant);
+  }, [
+    defaultCollapsible,
+    defaultVariant,
+    storageKeyCollapsible,
+    storageKeyVariant,
+  ]);
 
   const setCollapsible = (newCollapsible: Collapsible) => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKeyCollapsible, newCollapsible, {
       maxAge: Duration.seconds(LAYOUT_COOKIE_MAX_AGE),
       path: "/",
@@ -96,6 +110,9 @@ export function LayoutProvider({
   };
 
   const setVariant = (newVariant: Variant) => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKeyVariant, newVariant, {
       maxAge: Duration.seconds(LAYOUT_COOKIE_MAX_AGE),
       path: "/",
@@ -114,6 +131,9 @@ export function LayoutProvider({
   };
 
   const resetLayout = () => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKeyCollapsible, "", {
       maxAge: Duration.seconds(0),
       path: "/",
@@ -156,7 +176,11 @@ export function LayoutProvider({
     variant,
   };
 
-  return <LayoutContext value={contextValue}>{children}</LayoutContext>;
+  return (
+    <LayoutContext.Provider value={contextValue}>
+      {children}
+    </LayoutContext.Provider>
+  );
 }
 
 export function useLayout() {

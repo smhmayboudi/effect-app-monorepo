@@ -39,9 +39,9 @@ export function BroadcastChannelProvider({
   };
 
   return (
-    <BroadcastChannelContext value={{ onMessage, postMessage }}>
+    <BroadcastChannelContext.Provider value={{ onMessage, postMessage }}>
       {children}
-    </BroadcastChannelContext>
+    </BroadcastChannelContext.Provider>
   );
 }
 

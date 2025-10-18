@@ -49,26 +49,37 @@ export function ThemeProvider({
   storageKey = THEME_COOKIE_NAME,
   ...props
 }: PropsWithChildren<ThemeProviderProps>) {
-  const [theme, _setTheme] = useState<Theme>(() =>
-    Cookies.getValue(
+  const [theme, _setTheme] = useState<Theme>(defaultTheme);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const initialTheme = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
     ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Theme)),
       Option.getOrElse(() => defaultTheme),
-    ),
-  );
+    );
+    _setTheme(initialTheme);
+  }, [defaultTheme, storageKey]);
 
   const resolvedTheme = useMemo<ResolvedTheme>(() => {
+    if (!isClient) {
+      return "light";
+    }
     if (theme === "system") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
     }
     return theme;
-  }, [theme]);
+  }, [theme, isClient]);
 
   useEffect(() => {
+    if (!isClient) {
+      return;
+    }
     const root = window.document.documentElement;
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -89,9 +100,11 @@ export function ThemeProvider({
     mediaQuery.addEventListener("change", handleChange);
 
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme, resolvedTheme]);
+  }, [theme, resolvedTheme, isClient]);
 
   const setTheme = (theme: Theme) => {
+    if (!isClient) return;
+
     Cookies.makeCookie(storageKey, theme, {
       maxAge: Duration.seconds(THEME_COOKIE_MAX_AGE),
       path: "/",
@@ -110,6 +123,9 @@ export function ThemeProvider({
   };
 
   const resetTheme = () => {
+    if (!isClient) {
+      return;
+    }
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
       path: "/",
@@ -136,9 +152,9 @@ export function ThemeProvider({
   };
 
   return (
-    <ThemeContext value={contextValue} {...props}>
+    <ThemeContext.Provider value={contextValue} {...props}>
       {children}
-    </ThemeContext>
+    </ThemeContext.Provider>
   );
 }
 
