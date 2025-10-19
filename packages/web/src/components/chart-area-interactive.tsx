@@ -159,6 +159,7 @@ export function ChartAreaInteractive() {
     }
     const startDate = new Date(referenceDate);
     startDate.setDate(startDate.getDate() - daysToSubtract);
+
     return date >= startDate;
   });
 
@@ -248,6 +249,7 @@ export function ChartAreaInteractive() {
               reversed={dir === "rtl"}
               tickFormatter={(value) => {
                 const date = new Date(value);
+
                 return date.toLocaleDateString("en", {
                   day: "numeric",
                   month: "short",
@@ -260,12 +262,12 @@ export function ChartAreaInteractive() {
               content={
                 <ChartTooltipContent
                   indicator="dot"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en", {
+                  labelFormatter={(value) =>
+                    new Date(value).toLocaleDateString("en", {
                       day: "numeric",
                       month: "short",
-                    });
-                  }}
+                    })
+                  }
                 />
               }
               cursor={false}

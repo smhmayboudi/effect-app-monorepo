@@ -132,25 +132,23 @@ export function UsersTable({ data, navigate, search }: DataTableProps) {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow className="group/row" key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      className={cn(
-                        "bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
-                        header.column.columnDef.meta?.className ?? "",
-                      )}
-                      colSpan={header.colSpan}
-                      key={header.id}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    className={cn(
+                      "bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted",
+                      header.column.columnDef.meta?.className ?? "",
+                    )}
+                    colSpan={header.colSpan}
+                    key={header.id}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

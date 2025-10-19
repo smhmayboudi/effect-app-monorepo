@@ -40,18 +40,16 @@ export function DataTableViewOptions<TData>({
             (column) =>
               typeof column.accessorFn !== "undefined" && column.getCanHide(),
           )
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                checked={column.getIsVisible()}
-                className="capitalize"
-                key={column.id}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {column.id}
-              </DropdownMenuCheckboxItem>
-            );
-          })}
+          .map((column) => (
+            <DropdownMenuCheckboxItem
+              checked={column.getIsVisible()}
+              className="capitalize"
+              key={column.id}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
+            >
+              {column.id}
+            </DropdownMenuCheckboxItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

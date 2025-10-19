@@ -13,7 +13,6 @@ import type { User } from "../data/schema";
 
 type UserDeleteDialogProps = {
   currentRow: User;
-
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };

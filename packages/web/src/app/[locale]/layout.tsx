@@ -64,16 +64,14 @@ export default async function RootLayout({
       suppressHydrationWarning={true}
     >
       <body
-        className={`antialiased theme-container ${geistSans.variable} ${geistMono.variable}`}
+        className={`theme-container antialiased ${geistSans.variable} ${geistMono.variable}`}
       >
         <DirectionProvider>
           <FontProvider>
             <ThemeProvider>
               <NextIntlClientProvider>
                 {children}
-                <Toaster
-                  position={locale === "fa" ? "bottom-left" : "bottom-right"}
-                />
+                <Toaster />
               </NextIntlClientProvider>
             </ThemeProvider>
           </FontProvider>

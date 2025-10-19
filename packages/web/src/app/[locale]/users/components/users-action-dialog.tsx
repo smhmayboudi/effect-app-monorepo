@@ -64,7 +64,6 @@ const formSchema = Schema.Struct({
 
 type UserActionDialogProps = {
   currentRow?: User;
-
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };

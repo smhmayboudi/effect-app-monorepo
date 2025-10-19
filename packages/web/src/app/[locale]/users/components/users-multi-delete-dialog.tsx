@@ -32,6 +32,7 @@ export function UsersMultiDeleteDialog<TData>({
   const handleDelete = () => {
     if (value.trim() !== CONFIRM_WORD) {
       toast.error(`Please type "${CONFIRM_WORD}" to confirm.`);
+
       return;
     }
 
@@ -42,6 +43,7 @@ export function UsersMultiDeleteDialog<TData>({
       loading: "Deleting users...",
       success: () => {
         table.resetRowSelection();
+
         return `Deleted ${selectedRows.length} ${
           selectedRows.length > 1 ? "users" : "user"
         }`;

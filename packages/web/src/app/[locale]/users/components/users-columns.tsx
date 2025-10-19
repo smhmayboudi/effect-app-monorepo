@@ -57,6 +57,7 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const { firstName, lastName } = row.original;
       const fullName = `${firstName} ${lastName}`;
+
       return <LongText className="max-w-36">{fullName}</LongText>;
     },
     header: ({ column }) => (
@@ -87,6 +88,7 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const { status } = row.original;
       const badgeColor = callTypes.get(status);
+
       return (
         <div className="flex space-x-2">
           <Badge className={cn("capitalize", badgeColor)} variant="outline">
@@ -97,9 +99,7 @@ export const usersColumns: ColumnDef<User>[] = [
     },
     enableHiding: false,
     enableSorting: false,
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
@@ -125,9 +125,7 @@ export const usersColumns: ColumnDef<User>[] = [
     },
     enableHiding: false,
     enableSorting: false,
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Role" />
     ),

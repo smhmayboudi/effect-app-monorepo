@@ -46,6 +46,7 @@ export function DataTableBulkActions<TData>({
       const message = `${selectedCount} ${entityName}${selectedCount > 1 ? "s" : ""} selected. Bulk actions toolbar is available.`;
       setAnnouncement(message);
       const timer = setTimeout(() => setAnnouncement(""), 3000);
+
       return () => clearTimeout(timer);
     }
   }, [selectedCount, entityName]);

@@ -117,6 +117,7 @@ export function useTableUrlState(
     const pageNum = typeof rawPage === "number" ? rawPage : defaultPage;
     const pageSizeNum =
       typeof rawPageSize === "number" ? rawPageSize : defaultPageSize;
+
     return { pageIndex: Math.max(0, pageNum - 1), pageSize: pageSizeNum };
   }, [search, pageKey, pageSizeKey, defaultPage, defaultPageSize]);
 
@@ -137,6 +138,7 @@ export function useTableUrlState(
   const [globalFilter, setGlobalFilter] = useState<string | undefined>(() => {
     if (!globalFilterEnabled) return undefined;
     const raw = (search as SearchRecord)[globalFilterKey];
+
     return typeof raw === "string" ? raw : "";
   });
 

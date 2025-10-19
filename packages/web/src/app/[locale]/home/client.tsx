@@ -107,14 +107,12 @@ const Navbar5 = () => {
                         href={feature.href}
                         key={index}
                       >
-                        <div key={feature.title}>
-                          <p className="mb-1 font-semibold text-foreground">
-                            {feature.title}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {feature.description}
-                          </p>
-                        </div>
+                        <p className="mb-1 font-semibold text-foreground">
+                          {feature.title}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {feature.description}
+                        </p>
                       </NavigationMenuLink>
                     ))}
                   </div>
@@ -188,14 +186,12 @@ const Navbar5 = () => {
                             href={feature.href}
                             key={index}
                           >
-                            <div key={feature.title}>
-                              <p className="mb-1 font-semibold text-foreground">
-                                {feature.title}
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {feature.description}
-                              </p>
-                            </div>
+                            <p className="mb-1 font-semibold text-foreground">
+                              {feature.title}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {feature.description}
+                            </p>
                           </a>
                         ))}
                       </div>

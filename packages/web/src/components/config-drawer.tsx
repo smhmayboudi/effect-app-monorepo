@@ -147,6 +147,7 @@ function LayoutConfig() {
         onValueChange={(v) => {
           if (v === "default") {
             setOpen(true);
+
             return;
           }
           setOpen(false);

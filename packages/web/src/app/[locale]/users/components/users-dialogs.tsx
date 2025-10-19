@@ -9,13 +9,13 @@ export function UsersDialogs() {
   return (
     <>
       <UsersActionDialog
-        key="user-add"
+        // key="user-add"
         onOpenChange={() => setOpen("add")}
         open={open === "add"}
       />
 
       <UsersInviteDialog
-        key="user-invite"
+        // key="user-invite"
         onOpenChange={() => setOpen("invite")}
         open={open === "invite"}
       />
@@ -24,7 +24,7 @@ export function UsersDialogs() {
         <>
           <UsersActionDialog
             currentRow={currentRow}
-            key={`user-edit-${currentRow.id}`}
+            // key={`user-edit-${currentRow.id}`}
             onOpenChange={() => {
               setOpen("edit");
               setTimeout(() => {
@@ -36,7 +36,7 @@ export function UsersDialogs() {
 
           <UsersDeleteDialog
             currentRow={currentRow}
-            key={`user-delete-${currentRow.id}`}
+            // key={`user-delete-${currentRow.id}`}
             onOpenChange={() => {
               setOpen("delete");
               setTimeout(() => {

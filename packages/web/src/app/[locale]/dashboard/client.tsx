@@ -1,5 +1,7 @@
 "use client";
 
+import type { CSSProperties } from "react";
+
 import { Cookies } from "@effect/platform";
 import { Effect } from "effect";
 import {
@@ -116,7 +118,7 @@ export default function Client() {
           {
             "--header-height": "calc(var(--spacing) * 12)",
             "--sidebar-width": "calc(var(--spacing) * 72)",
-          } as React.CSSProperties
+          } as CSSProperties
         }
       >
         <AppSidebar data={dataSide} />
