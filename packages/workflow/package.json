@@ -25,7 +25,6 @@
     "@effect/experimental": "latest",
     "@effect/platform": "latest",
     "@effect/platform-node": "latest",
-    "@effect/rpc": "latest",
     "@effect/sql": "latest",
     "@effect/sql-sqlite-node": "latest",
     "@effect/workflow": "latest",
