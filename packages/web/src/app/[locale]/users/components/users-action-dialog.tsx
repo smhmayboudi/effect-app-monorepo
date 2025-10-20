@@ -61,20 +61,19 @@ const formSchema = Schema.Struct({
     message: () => "Username is required.",
   }),
 });
+type UserForm = Schema.Schema.Type<typeof formSchema>;
 
-type UserActionDialogProps = {
+type UsersActionDialogProps = {
   currentRow?: User;
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };
 
-type UserForm = Schema.Schema.Type<typeof formSchema>;
-
 export function UsersActionDialog({
   currentRow,
   onOpenChange,
   open,
-}: UserActionDialogProps) {
+}: UsersActionDialogProps) {
   const isEdit = !!currentRow;
   const form = useForm<UserForm>({
     defaultValues: isEdit

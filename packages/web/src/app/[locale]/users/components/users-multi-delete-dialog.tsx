@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { sleep } from "@/lib/utils";
 
-type UserMultiDeleteDialogProps<TData> = {
+type UsersMultiDeleteDialogProps<TData> = {
   onOpenChange: (open: boolean) => void;
   open: boolean;
   table: Table<TData>;
@@ -24,7 +24,7 @@ export function UsersMultiDeleteDialog<TData>({
   onOpenChange,
   open,
   table,
-}: UserMultiDeleteDialogProps<TData>) {
+}: UsersMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState("");
 
   const selectedRows = table.getFilteredSelectedRowModel().rows;

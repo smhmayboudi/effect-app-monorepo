@@ -1,3 +1,5 @@
+"use client";
+
 import type { Table } from "@tanstack/react-table";
 
 import { Mail, Trash2, UserCheck, UserX } from "lucide-react";
@@ -17,13 +19,13 @@ import type { User } from "../data/schema";
 
 import { UsersMultiDeleteDialog } from "./users-multi-delete-dialog";
 
-type DataTableBulkActionsProps<TData> = {
+type UsersDataTableBulkActionsProps<TData> = {
   table: Table<TData>;
 };
 
-export function DataTableBulkActions<TData>({
+export function UsersDataTableBulkActions<TData>({
   table,
-}: DataTableBulkActionsProps<TData>) {
+}: UsersDataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const selectedRows = table.getFilteredSelectedRowModel().rows;
 

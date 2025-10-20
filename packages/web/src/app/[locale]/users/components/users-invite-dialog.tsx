@@ -1,3 +1,5 @@
+"use client";
+
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { Schema } from "effect";
 import { MailPlus, Send } from "lucide-react";
@@ -41,17 +43,17 @@ const formSchema = Schema.Struct({
     message: () => "Role is required.",
   }),
 });
-type UserInviteDialogProps = {
+type UserInviteForm = typeof formSchema.Type;
+
+type UsersInviteDialogProps = {
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };
 
-type UserInviteForm = typeof formSchema.Type;
-
 export function UsersInviteDialog({
   onOpenChange,
   open,
-}: UserInviteDialogProps) {
+}: UsersInviteDialogProps) {
   const form = useForm<UserInviteForm>({
     defaultValues: { desc: "", email: "", role: "" },
     resolver: effectTsResolver(formSchema),

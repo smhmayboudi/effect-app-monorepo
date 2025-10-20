@@ -1,3 +1,5 @@
+"use client";
+
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "@/components/data-table-2";
@@ -9,7 +11,7 @@ import { cn } from "@/lib/utils";
 import type { User } from "../data/schema";
 
 import { callTypes, roles } from "../data/data";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { UsersDataTableRowActions } from "./users-data-table-row-actions";
 
 export const usersColumns: ColumnDef<User>[] = [
   {
@@ -131,7 +133,7 @@ export const usersColumns: ColumnDef<User>[] = [
     ),
   },
   {
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => <UsersDataTableRowActions row={row} />,
     id: "actions",
   },
 ];

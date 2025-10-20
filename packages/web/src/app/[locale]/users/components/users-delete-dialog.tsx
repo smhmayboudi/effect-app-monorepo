@@ -11,7 +11,7 @@ import { showSubmittedData } from "@/lib/show-submitted-data";
 
 import type { User } from "../data/schema";
 
-type UserDeleteDialogProps = {
+type UsersDeleteDialogProps = {
   currentRow: User;
   onOpenChange: (open: boolean) => void;
   open: boolean;
@@ -21,7 +21,7 @@ export function UsersDeleteDialog({
   currentRow,
   onOpenChange,
   open,
-}: UserDeleteDialogProps) {
+}: UsersDeleteDialogProps) {
   const [value, setValue] = useState("");
 
   const handleDelete = () => {

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import { createContext, useContext, useState } from "react";
 
 import useDialogState from "@/hooks/use-dialog-state";
 
@@ -13,7 +15,7 @@ type UsersContextType = {
 
 type UsersDialogType = "add" | "delete" | "edit" | "invite";
 
-const UsersContext = React.createContext<null | UsersContextType>(null);
+const UsersContext = createContext<null | UsersContextType>(null);
 
 export function UsersProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useDialogState<UsersDialogType>(null);
@@ -27,7 +29,7 @@ export function UsersProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+  const usersContext = useContext(UsersContext);
 
   if (!usersContext) {
     throw new Error("useUsers has to be used within <UsersContext>");

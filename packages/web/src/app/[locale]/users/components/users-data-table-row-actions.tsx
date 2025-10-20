@@ -1,3 +1,5 @@
+"use client";
+
 import type { Row } from "@tanstack/react-table";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -17,11 +19,11 @@ import type { User } from "../data/schema";
 
 import { useUsers } from "./users-provider";
 
-type DataTableRowActionsProps = {
+type UsersDataTableRowActionsProps = {
   row: Row<User>;
 };
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function UsersDataTableRowActions({ row }: UsersDataTableRowActionsProps) {
   const { setCurrentRow, setOpen } = useUsers();
 
   return (

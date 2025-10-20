@@ -1,3 +1,5 @@
+"use client";
+
 import {
   flexRender,
   getCoreRowModel,
@@ -30,8 +32,8 @@ import { cn } from "@/lib/utils";
 import type { User } from "../data/schema";
 
 import { roles } from "../data/data";
-import { DataTableBulkActions } from "./data-table-bulk-actions";
 import { usersColumns as columns } from "./users-columns";
+import { UsersDataTableBulkActions } from "./users-data-table-bulk-actions";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
@@ -39,13 +41,13 @@ declare module "@tanstack/react-table" {
   }
 }
 
-type DataTableProps = {
+type UsersTableProps = {
   data: User[];
   navigate: NavigateFn;
   search: Record<string, unknown>;
 };
 
-export function UsersTable({ data, navigate, search }: DataTableProps) {
+export function UsersTable({ data, navigate, search }: UsersTableProps) {
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -190,7 +192,7 @@ export function UsersTable({ data, navigate, search }: DataTableProps) {
         </Table>
       </div>
       <DataTablePagination table={table} />
-      <DataTableBulkActions table={table} />
+      <UsersDataTableBulkActions table={table} />
     </div>
   );
 }
