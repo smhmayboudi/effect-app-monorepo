@@ -1,4 +1,4 @@
-import type { BetterAuthOptions } from "better-auth"
+import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth"
 import { bearer, createAuthMiddleware, openAPI } from "better-auth/plugins"
 import { v7 } from "uuid"
 
@@ -95,7 +95,7 @@ export const options: BetterAuthOptions = {
     })
   },
   plugins: [
-    bearer(),
+    bearer() as BetterAuthPlugin,
     // jwt({ jwt: { definePayload: (_session) => ({}) } }),
     openAPI()
   ],
