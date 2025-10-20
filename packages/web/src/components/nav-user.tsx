@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  BellIcon,
-  CreditCardIcon,
-  LogOutIcon,
-  MoreVerticalIcon,
-  UserCircleIcon,
-} from "lucide-react";
+import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -24,19 +18,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { authClient } from "@/lib/auth-client";
+import Link from "@/components/ui/link";
 
-export function NavUser({
-  isHeader,
-  user,
-}: {
-  isHeader: boolean;
-  user: {
-    avatar: string;
-    email: string;
-    name: string;
-  };
-}) {
+export function NavUser({ isHeader }: { isHeader: boolean }) {
   const { isMobile } = useSidebar();
+  const { data } = authClient.useSession();
 
   return (
     <SidebarMenu>
@@ -50,7 +37,10 @@ export function NavUser({
               <Avatar
                 className={`size-8 ${!isHeader ? "rounded-lg" : "rounded-sm"} grayscale`}
               >
-                <AvatarImage alt={user.name} src={user.avatar} />
+                <AvatarImage
+                  alt={data?.user.name ?? ""}
+                  src={data?.user.image ?? ""}
+                />
                 <AvatarFallback
                   className={!isHeader ? "rounded-lg" : "rounded-sm"}
                 >
@@ -60,9 +50,11 @@ export function NavUser({
               {!isHeader && (
                 <>
                   <div className="grid flex-1 text-start text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
+                    <span className="truncate font-medium">
+                      {data?.user.name ?? ""}
+                    </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      {user.email}
+                      {data?.user.email ?? ""}
                     </span>
                   </div>
                   <MoreVerticalIcon className="ms-auto size-4" />
@@ -79,13 +71,18 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage alt={user.name} src={user.avatar} />
+                  <AvatarImage
+                    alt={data?.user.name ?? ""}
+                    src={data?.user.image ?? ""}
+                  />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-start text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">
+                    {data?.user.name ?? ""}
+                  </span>
                   <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
+                    {data?.user.email ?? ""}
                   </span>
                 </div>
               </div>
@@ -94,21 +91,21 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <UserCircleIcon />
-                Account
+                <Link href="/user/update">Account</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon />
                 Notifications
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOutIcon />
-              Log out
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

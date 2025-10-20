@@ -72,7 +72,9 @@ const NavigationMenuTrigger = forwardRef<
         aria-hidden="true"
         className={cn(
           "relative top-[1px] ms-1 size-3 transition duration-300",
-          dir === "rtl" ? "group-data-[state=open]:-rotate-180" : "group-data-[state=open]:rotate-180",
+          dir === "rtl"
+            ? "group-data-[state=open]:-rotate-180"
+            : "group-data-[state=open]:rotate-180",
         )}
       />
     </NavigationMenuPrimitive.Trigger>

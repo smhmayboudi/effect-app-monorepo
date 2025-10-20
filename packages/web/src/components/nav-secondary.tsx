@@ -1,7 +1,8 @@
 "use client";
 
-import { LucideIcon } from "lucide-react";
+import { HelpCircleIcon, SearchIcon, SettingsIcon } from "lucide-react";
 
+import Link from "@/components/ui/link";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,15 +11,25 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-export function NavSecondary({
-  items,
-}: {
-  items: {
-    icon: LucideIcon;
-    title: string;
-    url: string;
-  }[];
-}) {
+export function NavSecondary() {
+  const items = [
+    {
+      icon: SettingsIcon,
+      title: "Settings",
+      url: "#",
+    },
+    {
+      icon: HelpCircleIcon,
+      title: "Get Help",
+      url: "#",
+    },
+    {
+      icon: SearchIcon,
+      title: "Search",
+      url: "#",
+    },
+  ];
+
   return (
     <SidebarGroup className="mt-auto">
       <SidebarGroupContent>
@@ -26,10 +37,10 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link href={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

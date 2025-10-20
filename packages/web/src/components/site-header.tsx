@@ -5,14 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-const data = {
-  user: {
-    avatar: "/shadcn.jpg",
-    email: "m@example.com",
-    name: "shadcn",
-  },
-};
-
 export function SiteHeader() {
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -22,9 +14,9 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
           orientation="vertical"
         />
-        <h1 className="text-base font-medium">Documents</h1>
+        <h1 className="text-base font-medium">Dashboard</h1>
         <div className="ms-auto flex items-center gap-2">
-          <Button asChild className="hidden sm:flex" size="sm" variant="ghost">
+          {/* <Button asChild className="hidden sm:flex" size="sm" variant="ghost">
             <a
               className="dark:text-foreground"
               href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
@@ -33,10 +25,10 @@ export function SiteHeader() {
             >
               GitHub
             </a>
-          </Button>
+          </Button> */}
           <ModeToggle />
           <ConfigDrawer />
-          <NavUser isHeader={true} user={data.user} />
+          <NavUser isHeader={true} />
         </div>
       </div>
     </header>

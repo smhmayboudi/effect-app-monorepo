@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  ClipboardListIcon,
+  DatabaseIcon,
+  FileIcon,
   FolderIcon,
-  type LucideIcon,
   MoreHorizontalIcon,
   ShareIcon,
   Trash,
@@ -15,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "@/components/ui/link";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -26,17 +29,26 @@ import {
 } from "@/components/ui/sidebar";
 import { useDirection } from "@/context/direction-provider";
 
-export function NavDocuments({
-  items,
-}: {
-  items: {
-    icon: LucideIcon;
-    title: string;
-    url: string;
-  }[];
-}) {
+export function NavDocuments() {
   const { isMobile } = useSidebar();
   const { dir } = useDirection();
+  const items = [
+    {
+      icon: DatabaseIcon,
+      title: "Data Library",
+      url: "#",
+    },
+    {
+      icon: ClipboardListIcon,
+      title: "Reports",
+      url: "#",
+    },
+    {
+      icon: FileIcon,
+      title: "Word Assistant",
+      url: "#",
+    },
+  ];
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -45,10 +57,10 @@ export function NavDocuments({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.title}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
