@@ -1,6 +1,8 @@
 "use client";
 
+import { Effect } from "effect";
 import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,18 +14,42 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "@/components/ui/link";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { withToast } from "@/components/with-toast";
 import { authClient } from "@/lib/auth-client";
-import Link from "@/components/ui/link";
 
 export function NavUser({ isHeader }: { isHeader: boolean }) {
   const { isMobile } = useSidebar();
   const { data } = authClient.useSession();
+  const router = useRouter();
+
+  const handleAccount = async () => {
+    router.push("/user/update");
+  };
+
+  const handleSignOut = async () => {
+    const result = await Effect.runPromise(
+      Effect.tryPromise({
+        catch: (error) => new Error(String(error)),
+        try: (signal) => authClient.signOut({}, { signal }),
+      }).pipe(
+        withToast({
+          onFailure: (e) => `Failed to sign out. ${e.message}`,
+          onSuccess: () => `Sign out successfully!`,
+          onWaiting: "onWaiting",
+        }),
+      ),
+    );
+    if (result.data) {
+      router.push("/");
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -89,9 +115,9 @@ export function NavUser({ isHeader }: { isHeader: boolean }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAccount}>
                 <UserCircleIcon />
-                <Link href="/user/update">Account</Link>
+                Account
               </DropdownMenuItem>
               {/* <DropdownMenuItem>
                 <CreditCardIcon />
@@ -103,7 +129,7 @@ export function NavUser({ isHeader }: { isHeader: boolean }) {
               </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />
               Sign out
             </DropdownMenuItem>
