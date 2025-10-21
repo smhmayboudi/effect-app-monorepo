@@ -23,7 +23,9 @@ type UsersDataTableRowActionsProps = {
   row: Row<User>;
 };
 
-export function UsersDataTableRowActions({ row }: UsersDataTableRowActionsProps) {
+export function UsersDataTableRowActions({
+  row,
+}: UsersDataTableRowActionsProps) {
   const { setCurrentRow, setOpen } = useUsers();
 
   return (

@@ -72,7 +72,9 @@ export default function ServiceList({ userId }: ServiceListProps) {
                   <td>{value.id}</td>
                   <td>{value.name}</td>
                   <td>
-                    <Link href={`/user/service-help?serviceId=${String(value.id)}`}>
+                    <Link
+                      href={`/user/service-help?serviceId=${String(value.id)}`}
+                    >
                       {t("table.body.help")}
                     </Link>
                   </td>
