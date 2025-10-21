@@ -1,4 +1,4 @@
-import { SqlClient } from "@effect/sql"
+import * as SqlClient from "@effect/sql/SqlClient"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Service, ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
 import { ServiceErrorAlreadyExists } from "@template/domain/service/application/ServiceApplicationErrorAlreadyExists"
@@ -14,7 +14,7 @@ export const ServiceDriven = Layer.effect(
     Effect.flatMap((sql) =>
       Effect.sync(() => {
         const readById = (id: ServiceId) =>
-          sql`SELECT id, name, text, created_at, updated_at, deleted_at FROM tbl_service WHERE id = ${id}`
+          sql`SELECT id, owner_id, name, created_at, updated_at, deleted_at FROM tbl_service WHERE id = ${id}`
             .pipe(
               Effect.catchTag("SqlError", Effect.die),
               Effect.flatMap((rows) =>
@@ -94,7 +94,9 @@ export const ServiceDriven = Layer.effect(
             ),
           readById,
           readByIds: (ids) =>
-            sql`SELECT id, name, text, created_at, updated_at, deleted_at FROM tbl_service WHERE id IN ${sql.in(ids)}`
+            sql`SELECT id, owner_id, name, created_at, updated_at, deleted_at FROM tbl_service WHERE id IN ${
+              sql.in(ids)
+            }`
               .pipe(
                 Effect.catchTag("SqlError", Effect.die),
                 Effect.flatMap((rows) =>
