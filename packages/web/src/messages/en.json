@@ -182,7 +182,7 @@
           "confirm-description": "Are you sure you want to delete <bold>{name}</bold>? This action will permanently remove the service from the system. This cannot be undone.",
           "confirm-name-placeholder": "Enter name to confirm deletion.",
           "confirm-name": "Name",
-          "confirm-name-title": "Confirm by typing <quot>{name}</quot>",
+          "confirm-name-title": "Confirm by typing \"{name}\"",
           "confirm-text": "Delete",
           "confirm-title": "Delete service"
         },
@@ -191,8 +191,8 @@
           "alert-title": "Warning!",
           "confirm-cancel": "Cancel",
           "confirm-description": "Are you sure you want to delete <bold>the selected services?</bold>? This action will permanently remove the service from the system. This cannot be undone.",
-          "confirm-name-placeholder": "Type <quot>{name}</quot> to confirm.",
-          "confirm-name-title": "Confirm by typing <quot>{name}</quot>",
+          "confirm-name-placeholder": "Type \"{name}\" to confirm.",
+          "confirm-name-title": "Confirm by typing \"{name}\"",
           "confirm-text": "Delete",
           "confirm-title": "Delete {length} {length, plural, =1 {service} other {services}}"
         },

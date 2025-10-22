@@ -182,7 +182,7 @@
           "confirm-description": "آیا مطمئن هستید که می‌خواهید <bold>{name}</bold> را حذف کنید؟ این عمل، سرویس را به طور دائمی از سیستم حذف می‌کند. این عمل غیرقابل بازگشت است.",
           "confirm-name": "نام",
           "confirm-name-placeholder": "برای تأیید حذف، نام را وارد کنید.",
-          "confirm-name-title": "برای تأیید <quot>{name}</quot> را تایپ کنید",
+          "confirm-name-title": "برای تأیید \"{name}\" را تایپ کنید",
           "confirm-text": "حذف",
           "confirm-title": "حذف سرویس"
         },
@@ -191,8 +191,8 @@
           "alert-title": "هشدار!",
           "confirm-cancel": "لغو",
           "confirm-description": "آیا مطمئن هستید که می‌خواهید <bold>سرویس‌های انتخاب شده</bold> را حذف کنید؟ این عمل، سرویس‌ها را به طور دائمی از سیستم حذف می‌کند. این عمل غیرقابل بازگشت است.",
-          "confirm-name-placeholder": "برای تأیید <quot>{name}</quot> را تایپ کنید",
-          "confirm-name-title": "برای تأیید <quot>{name}</quot> را تایپ کنید",
+          "confirm-name-placeholder": "برای تأیید \"{name}\" را تایپ کنید",
+          "confirm-name-title": "برای تأیید \"{name}\" را تایپ کنید",
           "confirm-text": "حذف",
           "confirm-title": "حذف {length} سرویس"
         },

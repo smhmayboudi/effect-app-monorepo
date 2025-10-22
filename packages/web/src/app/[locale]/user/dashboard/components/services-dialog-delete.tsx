@@ -54,10 +54,7 @@ export function ServicesDialogDelete({
             })}
           </p>
           <Label className="my-4 flex flex-col items-start gap-1.5">
-            {t.rich("confirm-name-title", {
-              name: t("confirm-name"),
-              quot: (chunks) => `"${chunks}"`,
-            })}
+            {t.markup("confirm-name-title", { name: t("confirm-name") })}
             <Input
               onChange={(e) => setValue(e.target.value)}
               placeholder={t("confirm-name-placeholder")}

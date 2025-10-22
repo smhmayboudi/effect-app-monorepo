@@ -64,16 +64,10 @@ export function ServicesDialogMultipleDelete<TData>({
             })}
           </p>
           <Label className="my-4 flex flex-col items-start gap-1.5">
-            {t.rich("confirm-name-title", {
-              name: CONFIRM_WORD,
-              quot: (chunks) => `"${chunks}"`,
-            })}
+            {t.markup("confirm-name-title", { name: CONFIRM_WORD })}
             <Input
               onChange={(e) => setValue(e.target.value)}
-              // placeholder={t.rich("confirm-name-placeholder", {
-              //   name: CONFIRM_WORD,
-              //   quot: (chunks) => `"${chunks}"`,
-              // })}
+              placeholder={t.markup("confirm-name-placeholder", { name: CONFIRM_WORD })}
               value={value}
             />
           </Label>
