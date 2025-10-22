@@ -60,7 +60,9 @@ export function DirectionProvider({
   }, [defaultDir, storageKey]);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient) {
+      return;
+    }
 
     const htmlElement = document.documentElement;
     htmlElement.setAttribute("dir", dir);

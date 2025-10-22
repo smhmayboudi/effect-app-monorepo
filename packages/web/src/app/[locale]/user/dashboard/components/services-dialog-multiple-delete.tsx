@@ -67,7 +67,9 @@ export function ServicesDialogMultipleDelete<TData>({
             {t.markup("confirm-name-title", { name: CONFIRM_WORD })}
             <Input
               onChange={(e) => setValue(e.target.value)}
-              placeholder={t.markup("confirm-name-placeholder", { name: CONFIRM_WORD })}
+              placeholder={t.markup("confirm-name-placeholder", {
+                name: CONFIRM_WORD,
+              })}
               value={value}
             />
           </Label>

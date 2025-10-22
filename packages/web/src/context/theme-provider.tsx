@@ -103,7 +103,9 @@ export function ThemeProvider({
   }, [theme, resolvedTheme, isClient]);
 
   const setTheme = (theme: Theme) => {
-    if (!isClient) return;
+    if (!isClient) {
+      return;
+    }
 
     Cookies.makeCookie(storageKey, theme, {
       maxAge: Duration.seconds(THEME_COOKIE_MAX_AGE),

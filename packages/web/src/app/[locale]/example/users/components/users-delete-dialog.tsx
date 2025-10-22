@@ -25,7 +25,9 @@ export function UsersDeleteDialog({
   const [value, setValue] = useState("");
 
   const handleDelete = () => {
-    if (value.trim() !== currentRow.username) return;
+    if (value.trim() !== currentRow.username) {
+      return;
+    }
 
     showSubmittedData(currentRow, "The following user has been deleted:");
     onOpenChange(false);

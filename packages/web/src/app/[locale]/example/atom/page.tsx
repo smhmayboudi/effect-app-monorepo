@@ -31,7 +31,9 @@ const getAtom = Atom.writable(
   (get) => get(remoteGetAtom),
   (ctx, update: CacheUpdate) => {
     const result = ctx.get(getAtom);
-    if (result._tag !== "Success") return;
+    if (result._tag !== "Success") {
+      return;
+    }
 
     const newResult = CacheUpdate.$match(update, {
       Create: (args) =>

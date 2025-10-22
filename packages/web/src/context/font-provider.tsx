@@ -59,7 +59,9 @@ export function FontProvider({
   }, [defaultFont, storageKey]);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient) {
+      return;
+    }
 
     const applyFont = (font: string) => {
       const root = document.documentElement;
