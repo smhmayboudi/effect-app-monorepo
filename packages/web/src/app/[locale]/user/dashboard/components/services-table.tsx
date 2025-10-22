@@ -46,7 +46,7 @@ export function ServicesTable({
   navigate,
   search,
 }: {
-  data: ReadonlyArray<Service>;
+  data: Array<Service>;
   navigate: NavigateFn;
   search: Record<string, unknown>;
 }) {

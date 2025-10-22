@@ -15,7 +15,7 @@ export default function ServiceList({ userId }: ServiceListProps) {
   const readAll = useMemo(
     () =>
       HttpClient.query("service", "readAll", {
-        reactivityKeys: userId ? [`services:${userId}`] : ["services"],
+        reactivityKeys: ["services"],
         urlParams: userId
           ? {
               filters: [

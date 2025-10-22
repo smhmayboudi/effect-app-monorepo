@@ -29,9 +29,7 @@ export default function Client() {
   const readAll = useMemo(
     () =>
       HttpClient.query("service", "readAll", {
-        reactivityKeys: data?.user.id
-          ? [`services:${data.user.id}`]
-          : ["services"],
+        reactivityKeys: ["services"],
         urlParams: data?.user.id
           ? {
               filters: [

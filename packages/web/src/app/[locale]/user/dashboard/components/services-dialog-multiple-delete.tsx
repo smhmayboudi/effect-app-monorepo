@@ -2,7 +2,7 @@
 
 import type { Table } from "@tanstack/react-table";
 
-import { useAtom } from "@effect-atom/atom-react";
+import { useAtomSet } from "@effect-atom/atom-react";
 import { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain";
 import { AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -28,7 +28,7 @@ export function ServicesDialogMultipleDelete<TData>({
   );
   const CONFIRM_WORD = "DELETE";
   const deleteMutationAtom = HttpClient.mutation("service", "delete");
-  const [, deleteService] = useAtom(deleteMutationAtom, {
+  const deleteService = useAtomSet(deleteMutationAtom, {
     mode: "promise",
   });
   const [value, setValue] = useState("");

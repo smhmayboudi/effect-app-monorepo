@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "@effect-atom/atom-react";
+import { useAtomSet } from "@effect-atom/atom-react";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
@@ -49,10 +49,10 @@ export function ServicesDialogCreateUpdate({
   type UserForm = Schema.Schema.Type<typeof formSchema>;
   const createMutationAtom = HttpClient.mutation("service", "create");
   const updateMutationAtom = HttpClient.mutation("service", "update");
-  const [, createService] = useAtom(createMutationAtom, {
+  const createService = useAtomSet(createMutationAtom, {
     mode: "promise",
   });
-  const [, updateService] = useAtom(updateMutationAtom, {
+  const updateService = useAtomSet(updateMutationAtom, {
     mode: "promise",
   });
   const form = useForm<UserForm>({

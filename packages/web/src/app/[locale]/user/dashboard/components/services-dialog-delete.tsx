@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "@effect-atom/atom-react";
+import { useAtomSet } from "@effect-atom/atom-react";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 import { AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -23,7 +23,7 @@ export function ServicesDialogDelete({
 }) {
   const t = useTranslations("user.dashboard.components.services-dialog-delete");
   const deleteMutationAtom = HttpClient.mutation("service", "delete");
-  const [, deleteService] = useAtom(deleteMutationAtom, {
+  const deleteService = useAtomSet(deleteMutationAtom, {
     mode: "promise",
   });
   const [value, setValue] = useState("");
