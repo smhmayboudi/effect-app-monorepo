@@ -136,7 +136,9 @@ export function useTableUrlState(
   };
 
   const [globalFilter, setGlobalFilter] = useState<string | undefined>(() => {
-    if (!globalFilterEnabled) return undefined;
+    if (!globalFilterEnabled) {
+      return undefined;
+    }
     const raw = (search as SearchRecord)[globalFilterKey];
 
     return typeof raw === "string" ? raw : "";

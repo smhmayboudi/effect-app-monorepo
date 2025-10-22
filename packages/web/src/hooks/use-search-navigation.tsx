@@ -77,7 +77,9 @@ function parseSearchParamValue(value: string): number | string | string[] {
   // Try to parse as number first
   if (/^\d+$/.test(value)) {
     const num = Number(value);
-    if (!isNaN(num)) return num;
+    if (!isNaN(num)) {
+      return num;
+    }
   }
 
   // Try to parse as array

@@ -50,7 +50,9 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
               ) =>
                 Effect.sync(() => {
                   const entry = store.get(JSON.stringify(key))
-                  if (!entry) return Option.none()
+                  if (!entry) {
+                    return Option.none()
+                  }
 
                   if (entry.expiresAt !== undefined && entry.expiresAt <= Date.now()) {
                     store.delete(JSON.stringify(key))
@@ -65,7 +67,9 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
                 Effect.sync(() => {
                   return keys.map((key) => {
                     const entry = store.get(JSON.stringify(key))
-                    if (!entry) return Option.none()
+                    if (!entry) {
+                      return Option.none()
+                    }
 
                     if (entry.expiresAt !== undefined && entry.expiresAt <= Date.now()) {
                       store.delete(JSON.stringify(key))
