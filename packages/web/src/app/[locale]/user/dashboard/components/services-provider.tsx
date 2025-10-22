@@ -5,8 +5,6 @@ import { createContext, useContext, useState } from "react";
 
 import useDialogState from "@/hooks/use-dialog-state";
 
-// import type { Service } from "../data/schema";
-
 type UsersContextType = {
   currentRow: null | Service;
   open: null | UsersDialogType;

@@ -97,10 +97,10 @@ export default function Client() {
                     <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
                       <div>
                         <h2 className="text-2xl font-bold tracking-tight">
-                          Service List
+                          {t("service-list-title")}
                         </h2>
                         <p className="text-muted-foreground">
-                          Manage your services here.
+                          {t("service-list-description")}
                         </p>
                       </div>
                       <ServicesPrimaryButtons />

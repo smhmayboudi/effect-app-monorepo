@@ -5,6 +5,7 @@ import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
 import { Schema } from "effect";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { v7 } from "uuid";
 
@@ -28,26 +29,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { HttpClient } from "@/lib/http-client";
 
-// import type { Service } from "../data/schema";
-
-const formSchema = Schema.Struct({
-  name: Schema.NonEmptyString.annotations({
-    message: () => "Name is required.",
-  }),
-});
-type ServicesDialogCreateUpdateProps = {
-  currentRow?: Service;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-};
-
-type UserForm = Schema.Schema.Type<typeof formSchema>;
-
 export function ServicesDialogCreateUpdate({
   currentRow,
   onOpenChange,
   open,
-}: ServicesDialogCreateUpdateProps) {
+}: {
+  currentRow?: Service;
+  onOpenChange: (open: boolean) => void;
+  open: boolean;
+}) {
+  const t = useTranslations(
+    "user.dashboard.components.services-dialog-create-update",
+  );
+  const formSchema = Schema.Struct({
+    name: Schema.NonEmptyString.annotations({
+      message: () => t("form.name.nonEmptyString"),
+    }),
+  });
+  type UserForm = Schema.Schema.Type<typeof formSchema>;
   const createMutationAtom = HttpClient.mutation("service", "create");
   const updateMutationAtom = HttpClient.mutation("service", "update");
   const [, createService] = useAtom(createMutationAtom, {
@@ -56,9 +55,8 @@ export function ServicesDialogCreateUpdate({
   const [, updateService] = useAtom(updateMutationAtom, {
     mode: "promise",
   });
-  const isEdit = !!currentRow;
   const form = useForm<UserForm>({
-    defaultValues: isEdit
+    defaultValues: currentRow
       ? {
           ...currentRow,
         }
@@ -70,7 +68,7 @@ export function ServicesDialogCreateUpdate({
 
   const onSubmit = async (values: UserForm) => {
     form.reset();
-    if (currentRow && isEdit) {
+    if (currentRow) {
       await updateService({
         headers: {
           "idempotency-key": IdempotencyKeyClient.make(v7()),
@@ -102,11 +100,10 @@ export function ServicesDialogCreateUpdate({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="text-start">
           <DialogTitle>
-            {isEdit ? "Edit Service" : "Create New Service"}
+            {currentRow ? t("edit-title") : t("create-title")}
           </DialogTitle>
           <DialogDescription>
-            {isEdit ? "Update the service here. " : "Create new service here. "}
-            Click save when you&apos;re done.
+            {currentRow ? t("edit-description") : t("create-description")}
           </DialogDescription>
         </DialogHeader>
         <div className="h-[4.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3">
@@ -121,7 +118,9 @@ export function ServicesDialogCreateUpdate({
                 name="name"
                 render={({ field }) => (
                   <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">Name</FormLabel>
+                    <FormLabel className="col-span-2 text-end">
+                      {t("form.name.title")}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         autoComplete="off"
@@ -139,7 +138,7 @@ export function ServicesDialogCreateUpdate({
         </div>
         <DialogFooter>
           <Button form="service-form" type="submit">
-            Save changes
+            {currentRow ? t("form.edit-submit") : t("form.create-submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

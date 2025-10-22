@@ -3,6 +3,7 @@
 import { useAtom } from "@effect-atom/atom-react";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 import { AlertTriangle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -11,19 +12,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HttpClient } from "@/lib/http-client";
 
-// import type { Service } from "../data/schema";
-
-type ServicesDialogDeleteProps = {
-  currentRow: Service;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-};
-
 export function ServicesDialogDelete({
   currentRow,
   onOpenChange,
   open,
-}: ServicesDialogDeleteProps) {
+}: {
+  currentRow: Service;
+  onOpenChange: (open: boolean) => void;
+  open: boolean;
+}) {
+  const t = useTranslations("user.dashboard.components.services-dialog-delete");
   const deleteMutationAtom = HttpClient.mutation("service", "delete");
   const [, deleteService] = useAtom(deleteMutationAtom, {
     mode: "promise",
@@ -45,29 +43,30 @@ export function ServicesDialogDelete({
 
   return (
     <ConfirmDialog
-      confirmText="Delete"
+      cancelBtnText={t("confirm-cancel")}
+      confirmText={t("confirm-text")}
       desc={
         <div className="space-y-4">
           <p className="mb-2">
-            Are you sure you want to delete{" "}
-            <span className="font-bold">{currentRow.name}</span>?
-            <br />
-            This action will permanently remove the service from the system.
-            This cannot be undone.
+            {t.rich("confirm-description", {
+              bold: (chunks) => <span className="font-bold">{chunks}</span>,
+              name: currentRow.name,
+            })}
           </p>
-          <Label className="my-2">
-            Name:
+          <Label className="my-4 flex flex-col items-start gap-1.5">
+            {t.rich("confirm-name-title", {
+              name: t("confirm-name"),
+              quot: (chunks) => `"${chunks}"`,
+            })}
             <Input
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Enter name to confirm deletion."
+              placeholder={t("confirm-name-placeholder")}
               value={value}
             />
           </Label>
           <Alert variant="destructive">
-            <AlertTitle>Warning!</AlertTitle>
-            <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+            <AlertTitle>{t("alert-title")}</AlertTitle>
+            <AlertDescription>{t("alert-description")}</AlertDescription>
           </Alert>
         </div>
       }
@@ -81,8 +80,8 @@ export function ServicesDialogDelete({
           <AlertTriangle
             className="me-1 inline-block stroke-destructive"
             size={18}
-          />{" "}
-          Delete service
+          />
+          {t("confirm-title")}
         </span>
       }
     />

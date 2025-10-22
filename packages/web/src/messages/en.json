@@ -144,8 +144,67 @@
       "title": "User Change Password"
     },
     "dashboard": {
+      "components": {
+        "services-columns": {
+          "select-all": "Select all",
+          "select-row": "Select row"
+        },
+        "services-data-table-bulk-actions": {
+          "delete-selected-services": "Delete selected services"
+        },
+        "services-data-table-row-actions": {
+          "delete": "Delete",
+          "edit": "Edit",
+          "help": "Help",
+          "open-menu": "Open menu"
+        },
+        "services-dialog-create-update": {
+          "create-title": "Create New Service",
+          "create-description": "Create new service here.",
+          "edit-title": "Edit Service",
+          "edit-description": "Update the service here.",
+          "form": {
+            "create-submit": "Create",
+            "edit-submit": "Update",
+            "name": {
+              "nonEmptyString": "a string at least 1 character",
+              "title": "Name"
+            }
+          }
+        },
+        "services-dialog-delete": {
+          "alert-description": "Please be careful, this operation can not be rolled back.",
+          "alert-title": "Warning!",
+          "confirm-cancel": "Cancel",
+          "confirm-description": "Are you sure you want to delete <bold>{name}</bold>? This action will permanently remove the service from the system. This cannot be undone.",
+          "confirm-name-placeholder": "Enter name to confirm deletion.",
+          "confirm-name": "Name",
+          "confirm-name-title": "Confirm by typing <quot>{name}</quot>",
+          "confirm-text": "Delete",
+          "confirm-title": "Delete service"
+        },
+        "services-dialog-multiple-delete": {
+          "alert-description": "Please be careful, this operation can not be rolled back.",
+          "alert-title": "Warning!",
+          "confirm-cancel": "Cancel",
+          "confirm-description": "Are you sure you want to delete <bold>the selected services?</bold>? This action will permanently remove the service from the system. This cannot be undone.",
+          "confirm-name-placeholder": "Type <quot>{name}</quot> to confirm.",
+          "confirm-name-title": "Confirm by typing <quot>{name}</quot>",
+          "confirm-text": "Delete",
+          "confirm-title": "Delete {length} {length, plural, =1 {service} other {services}}"
+        },
+        "services-primary-buttons": {
+          "service-create": "Service Create"
+        },
+        "services-table": {
+          "no-result": "No results.",
+          "search-placeholder": "Filter services..."
+        }
+      },
       "description": "User Dashboard",
-      "title": "User Dashboard"
+      "title": "User Dashboard",
+      "service-list-description": "Manage your services here.",
+      "service-list-title": "Service List"
     },
     "service-create": {
       "content": "Enter your name below to create your service",

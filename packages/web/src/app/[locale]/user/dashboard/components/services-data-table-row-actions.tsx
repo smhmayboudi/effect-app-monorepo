@@ -5,10 +5,10 @@ import type { Row } from "@tanstack/react-table";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 import { HelpCircle, Trash2, UserPen } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-// import type { Service } from "../data/schema";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,13 +20,10 @@ import {
 
 import { useUsers } from "./services-provider";
 
-type ServicesDataTableRowActionsProps = {
-  row: Row<Service>;
-};
-
-export function ServicesDataTableRowActions({
-  row,
-}: ServicesDataTableRowActionsProps) {
+export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
+  const t = useTranslations(
+    "user.dashboard.components.services-data-table-row-actions",
+  );
   const { setCurrentRow, setOpen } = useUsers();
   const router = useRouter();
 
@@ -39,7 +36,7 @@ export function ServicesDataTableRowActions({
             variant="ghost"
           >
             <DotsHorizontalIcon className="size-4" />
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">{t("open-menu")}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
@@ -49,7 +46,7 @@ export function ServicesDataTableRowActions({
               setOpen("update");
             }}
           >
-            Edit
+            {t("edit")}
             <DropdownMenuShortcut>
               <UserPen size={16} />
             </DropdownMenuShortcut>
@@ -59,7 +56,7 @@ export function ServicesDataTableRowActions({
               router.push(`/user/service-help?serviceId=${row.original.id}`);
             }}
           >
-            Help
+            {t("help")}
             <DropdownMenuShortcut>
               <HelpCircle size={16} />
             </DropdownMenuShortcut>
@@ -72,7 +69,7 @@ export function ServicesDataTableRowActions({
             }}
             variant="destructive"
           >
-            Delete
+            {t("delete")}
             <DropdownMenuShortcut>
               <Trash2 size={16} />
             </DropdownMenuShortcut>

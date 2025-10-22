@@ -3,6 +3,7 @@
 import type { Table } from "@tanstack/react-table";
 
 import { Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { DataTableBulkActions as BulkActionsToolbar } from "@/components/data-table-2";
@@ -13,15 +14,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { ServicesDialogMultipleDelete } from "./services-dialog-multiiple-delete";
-
-type ServicesDataTableBulkActionsProps<TData> = {
-  table: Table<TData>;
-};
+import { ServicesDialogMultipleDelete } from "./services-dialog-multiple-delete";
 
 export function ServicesDataTableBulkActions<TData>({
   table,
-}: ServicesDataTableBulkActionsProps<TData>) {
+}: {
+  table: Table<TData>;
+}) {
+  const t = useTranslations(
+    "user.dashboard.components.services-data-table-bulk-actions",
+  );
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
@@ -30,19 +32,18 @@ export function ServicesDataTableBulkActions<TData>({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              aria-label="Delete selected services"
+              aria-label={t("delete-selected-services")}
               className="size-8"
               onClick={() => setShowDeleteConfirm(true)}
               size="icon"
-              title="Delete selected services"
               variant="destructive"
             >
               <Trash2 />
-              <span className="sr-only">Delete selected services</span>
+              <span className="sr-only">{t("delete-selected-services")}</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected services</p>
+            <p>{t("delete-selected-services")}</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

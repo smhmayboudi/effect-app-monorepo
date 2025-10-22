@@ -14,6 +14,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import {
@@ -40,13 +41,12 @@ declare module "@tanstack/react-table" {
   }
 }
 
-type ServicesTableProps = {
-  data: Service[];
+export function ServicesTable({ data, navigate, search }: {
+  data: ReadonlyArray<Service>;
   navigate: NavigateFn;
   search: Record<string, unknown>;
-};
-
-export function ServicesTable({ data, navigate, search }: ServicesTableProps) {
+}) {
+  const t = useTranslations("user.dashboard.components.services-table");
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -117,7 +117,7 @@ export function ServicesTable({ data, navigate, search }: ServicesTableProps) {
           ]
         }
         searchKey="name"
-        searchPlaceholder="Filter services..."
+        searchPlaceholder={t("search-placeholder")}
         table={table}
       />
       <div className="overflow-hidden rounded-md border">
@@ -175,7 +175,7 @@ export function ServicesTable({ data, navigate, search }: ServicesTableProps) {
                   className="h-24 text-center"
                   colSpan={columns.length}
                 >
-                  No results.
+                  {t("no-result")}
                 </TableCell>
               </TableRow>
             )}

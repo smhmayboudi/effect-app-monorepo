@@ -144,8 +144,67 @@
       "title": "تغییر رمز عبور کاربر"
     },
     "dashboard": {
+      "components": {
+        "services-columns": {
+          "select-all": "انتخاب همه",
+          "select-row": "انتخاب ردیف"
+        },
+        "services-data-table-bulk-actions": {
+          "delete-selected-services": "حذف سرویس‌های انتخاب شده"
+        },
+        "services-data-table-row-actions": {
+          "delete": "حذف",
+          "edit": "ویرایش",
+          "help": "راهنما",
+          "open-menu": "باز کردن منو"
+        },
+        "services-dialog-create-update": {
+          "create-title": "ایجاد سرویس جدید",
+          "create-description": "سرویس جدید را اینجا ایجاد کنید. پس از اتمام، ایجاد را کلیک کنید.",
+          "edit-title": "ویرایش سرویس",
+          "edit-description": "سرویس را اینجا به‌روزرسانی کنید. پس از اتمام، به‌روزرسانی را کلیک کنید.",
+          "form": {
+            "create-submit": "ایجاد",
+            "edit-submit": "به‌روزرسانی",
+            "name": {
+              "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+              "title": "نام"
+            }
+          }
+        },
+        "services-dialog-delete": {
+          "alert-description": "لطفاً دقت کنید، این عملیات قابل بازگشت نیست.",
+          "alert-title": "هشدار!",
+          "confirm-cancel": "لغو",
+          "confirm-description": "آیا مطمئن هستید که می‌خواهید <bold>{name}</bold> را حذف کنید؟ این عمل، سرویس را به طور دائمی از سیستم حذف می‌کند. این عمل غیرقابل بازگشت است.",
+          "confirm-name": "نام",
+          "confirm-name-placeholder": "برای تأیید حذف، نام را وارد کنید.",
+          "confirm-name-title": "برای تأیید <quot>{name}</quot> را تایپ کنید",
+          "confirm-text": "حذف",
+          "confirm-title": "حذف سرویس"
+        },
+        "services-dialog-multiple-delete": {
+          "alert-description": "لطفاً دقت کنید، این عملیات قابل بازگشت نیست.",
+          "alert-title": "هشدار!",
+          "confirm-cancel": "لغو",
+          "confirm-description": "آیا مطمئن هستید که می‌خواهید <bold>سرویس‌های انتخاب شده</bold> را حذف کنید؟ این عمل، سرویس‌ها را به طور دائمی از سیستم حذف می‌کند. این عمل غیرقابل بازگشت است.",
+          "confirm-name-placeholder": "برای تأیید <quot>{name}</quot> را تایپ کنید",
+          "confirm-name-title": "برای تأیید <quot>{name}</quot> را تایپ کنید",
+          "confirm-text": "حذف",
+          "confirm-title": "حذف {length} سرویس"
+        },
+        "services-primary-buttons": {
+          "service-create": "ایجاد سرویس"
+        },
+        "services-table": {
+          "no-result": "نتیجه‌ای یافت نشد.",
+          "search-placeholder": "فیلتر سرویس‌ها..."
+        }
+      },
       "description": "داشبورد کاربر",
-      "title": "داشبورد کاربر"
+      "title": "داشبورد کاربر",
+      "service-list-description": "سرویس‌های خود را از اینجا مدیریت کنید.",
+      "service-list-title": "لیست سرویس‌ها"
     },
     "service-create": {
       "content": "نام خود را زیر وارد کنید تا سرویس خود را ایجاد کنید",
