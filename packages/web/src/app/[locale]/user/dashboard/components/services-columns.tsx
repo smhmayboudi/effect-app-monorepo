@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 
@@ -11,25 +13,33 @@ import { ServicesDataTableRowActions } from "./services-data-table-row-actions";
 
 export const servicesColumns: ColumnDef<Service>[] = [
   {
-    cell: ({ row }) => (
-      <Checkbox
-        aria-label="Select row"
-        checked={row.getIsSelected()}
-        className="translate-y-[2px]"
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-      />
-    ),
-    header: ({ table }) => (
-      <Checkbox
-        aria-label="Select all"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        className="translate-y-[2px]"
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-      />
-    ),
+    cell: ({ row }) => {
+      const t = useTranslations("user.dashboard.components.services-columns");
+
+      return (
+        <Checkbox
+          aria-label={t("select-row")}
+          checked={row.getIsSelected()}
+          className="translate-y-[2px]"
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+        />
+      );
+    },
+    header: ({ table }) => {
+      const t = useTranslations("user.dashboard.components.services-columns");
+
+      return (
+        <Checkbox
+          aria-label={t("select-all")}
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          className="translate-y-[2px]"
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        />
+      );
+    },
     id: "select",
     meta: {
       className: "w-8 sticky start-0 z-10 rounded-tl-[inherit] md:table-cell",
@@ -39,9 +49,13 @@ export const servicesColumns: ColumnDef<Service>[] = [
     cell: ({ row }) => (
       <LongText className="max-w-72">{row.original.id}</LongText>
     ),
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Identification" />
-    ),
+    header: ({ column }) => {
+      const t = useTranslations("user.dashboard.components.services-columns");
+
+      return (
+        <DataTableColumnHeader column={column} title={t("identification")} />
+      );
+    },
     id: "id",
     meta: { className: "w-36" },
   },
@@ -49,9 +63,16 @@ export const servicesColumns: ColumnDef<Service>[] = [
     cell: ({ row }) => (
       <LongText className="max-w-72">{row.original.ownerId}</LongText>
     ),
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Owner Identification" />
-    ),
+    header: ({ column }) => {
+      const t = useTranslations("user.dashboard.components.services-columns");
+
+      return (
+        <DataTableColumnHeader
+          column={column}
+          title={t("owner-identification")}
+        />
+      );
+    },
     id: "ownerId",
     meta: { className: "w-36" },
   },
@@ -60,9 +81,11 @@ export const servicesColumns: ColumnDef<Service>[] = [
     cell: ({ row }) => (
       <LongText className="max-w-72">{row.original.name}</LongText>
     ),
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
-    ),
+    header: ({ column }) => {
+      const t = useTranslations("user.dashboard.components.services-columns");
+
+      return <DataTableColumnHeader column={column} title={t("name")} />;
+    },
     id: "name",
     meta: { className: "w-36" },
   },

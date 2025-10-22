@@ -146,6 +146,9 @@
     "dashboard": {
       "components": {
         "services-columns": {
+          "identification": "Identification",
+          "name": "Name",
+          "owner-identification": "Identification",
           "select-all": "Select all",
           "select-row": "Select row"
         },

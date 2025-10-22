@@ -146,6 +146,9 @@
     "dashboard": {
       "components": {
         "services-columns": {
+          "identification": "کد شناسایی",
+          "name": "نام",
+          "owner-identification": "کد شناسایی صاحب",
           "select-all": "انتخاب همه",
           "select-row": "انتخاب ردیف"
         },

@@ -41,7 +41,11 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export function ServicesTable({ data, navigate, search }: {
+export function ServicesTable({
+  data,
+  navigate,
+  search,
+}: {
   data: ReadonlyArray<Service>;
   navigate: NavigateFn;
   search: Record<string, unknown>;

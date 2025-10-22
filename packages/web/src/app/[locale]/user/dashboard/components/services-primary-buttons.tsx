@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { useUsers } from "./services-provider";
 
 export function ServicesPrimaryButtons() {
-  const t = useTranslations("user.dashboard.components.services-primary-buttons");
+  const t = useTranslations(
+    "user.dashboard.components.services-primary-buttons",
+  );
   const { setOpen } = useUsers();
 
   return (
