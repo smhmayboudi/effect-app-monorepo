@@ -11,7 +11,7 @@ import { HttpClient } from "@/lib/http-client";
 type ServiceListProps = { userId?: string };
 
 export default function ServiceList({ userId }: ServiceListProps) {
-  const t = useTranslations("component.service-list");
+  const t = useTranslations("components.service-list");
   const readAll = useMemo(
     () =>
       HttpClient.query("service", "readAll", {

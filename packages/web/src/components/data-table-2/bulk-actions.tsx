@@ -2,6 +2,7 @@ import type { Table } from "@tanstack/react-table";
 
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export function DataTableBulkActions<TData>({
   entityName,
   table,
 }: DataTableBulkActionsProps<TData>): null | React.ReactNode {
+  const t = useTranslations("components.data-table-2.bulk-actions");
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const selectedCount = selectedRows.length;
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -43,8 +45,7 @@ export function DataTableBulkActions<TData>({
 
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? "s" : ""} selected. Bulk actions toolbar is available.`;
-      setAnnouncement(message);
+      setAnnouncement(t("message", { entityName, selectedCount }));
       const timer = setTimeout(() => setAnnouncement(""), 3000);
 
       return () => clearTimeout(timer);
@@ -57,7 +58,9 @@ export function DataTableBulkActions<TData>({
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const buttons = toolbarRef.current?.querySelectorAll("button");
-    if (!buttons) return;
+    if (!buttons) {
+      return;
+    }
 
     const currentIndex = Array.from(buttons).findIndex(
       (button) => button === document.activeElement,
@@ -118,6 +121,7 @@ export function DataTableBulkActions<TData>({
   };
 
   const { dir } = useDirection();
+  const selected = t("selected")
 
   return selectedCount === 0 ? (
     <></>
@@ -135,7 +139,7 @@ export function DataTableBulkActions<TData>({
 
       <div
         aria-describedby="bulk-actions-description"
-        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? "s" : ""}`}
+        aria-label={t("toolbar-content", { entityName, selectedCount })}
         className={cn(
           "fixed start-1/2 bottom-6 z-50 rounded-xl transition-all delay-100 duration-300 ease-out hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
           dir === "rtl" ? "translate-x-1/2" : "-translate-x-1/2",
@@ -149,11 +153,10 @@ export function DataTableBulkActions<TData>({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                aria-label="Clear selection"
+                aria-label={t("tooltip-content")}
                 className="size-6 rounded-full"
                 onClick={handleClearSelection}
                 size="icon"
-                title="Clear selection (Escape)"
                 variant="outline"
               >
                 <X />
@@ -161,7 +164,7 @@ export function DataTableBulkActions<TData>({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Clear selection (Escape)</p>
+              <p>{t("tooltip-content")}</p>
             </TooltipContent>
           </Tooltip>
 
@@ -175,18 +178,19 @@ export function DataTableBulkActions<TData>({
             className="flex items-center gap-x-1 text-sm"
             id="bulk-actions-description"
           >
-            <Badge
-              aria-label={`${selectedCount} selected`}
-              className="min-w-8 rounded-lg"
-              variant="default"
-            >
-              {selectedCount}
-            </Badge>{" "}
-            <span className="hidden sm:inline">
-              {entityName}
-              {selectedCount > 1 ? "s" : ""}
-            </span>{" "}
-            selected
+            {t.rich("description", {
+              badge: (chunks) => (
+                <Badge
+                  aria-label={`${selectedCount} ${selected}`}
+                  className="min-w-8 rounded-lg"
+                  variant="default">
+                  {chunks}
+                </Badge>
+              ),
+              entityName,
+              selectedCount,
+              span: (chunks) => <span className="hidden sm:inline">{chunks}</span>,
+            })}
           </div>
 
           <Separator

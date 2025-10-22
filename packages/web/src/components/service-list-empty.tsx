@@ -13,7 +13,7 @@ import {
 import Link from "@/components/ui/link";
 
 export function ServiceListEmpty() {
-  const t = useTranslations("component.service-list-empty");
+  const t = useTranslations("components.service-list-empty");
 
   return (
     <Empty className="h-full bg-gradient-to-b from-muted/50 from-30% to-background">

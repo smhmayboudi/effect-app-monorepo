@@ -1,15 +1,54 @@
 {
-  "component": {
+  "admin": {
+    "dashboard": {
+      "description": "Admin Dashboard",
+      "title": "Admin Dashboard"
+    }
+  },
+  "components": {
+    "data-table-2": {
+      "bulk-actions": {
+        "description": "<badge>{selectedCount}</badge> <span>{entityName}{selectedCount, plural, =1 {} other {s}}</span> selected",
+        "message": "{selectedCount} {entityName}{selectedCount, plural, =1 {} other {s}} selected. Bulk actions toolbar is available.",
+        "selected": "selected",
+        "toolbar-content": "Bulk actions for {selectedCount} selected {entityName}{selectedCount, plural, =1 {} other {s}}",
+        "tooltip-content": "Clear selection (Escape)"
+      },
+      "column-header": {
+        "asc": "Asc",
+        "desc": "Desc",
+        "hide": "Hide"
+      },
+      "faceted-filter": {
+        "clear-filters": "Clear filters",
+        "no-results-found": "No results found."
+      },
+      "pagination": {
+        "go-to-last-page": "Go to last page",
+        "go-to-next-page": "Go to next page",
+        "go-to-page": "Go to page {pageNumber}",
+        "go-to-previous-page": "Go to previous page",
+        "page-of": "Page {currentPage} of {totalPages}",
+        "rows-per-page": "Rows per page"
+      },
+      "toolbar": {
+        "reset": "Reset"
+      },
+      "view-options": {
+        "toggle-columns": "Toggle columns",
+        "view": "View"
+      }
+    },
     "service-list": {
       "table": {
-        "head": {
-          "ownerId": "َUser ID",
-          "id": "Service ID",
-          "name": "Service Name",
-          "help": "Help"
-        },
         "body": {
           "help": "Help"
+        },
+        "head": {
+          "help": "Help",
+          "id": "Service ID",
+          "name": "Service Name",
+          "ownerId": "َUser ID"
         }
       }
     },
@@ -17,12 +56,6 @@
       "description": "New services will appear here.",
       "serviceCreate": "Service create",
       "title": "No Services"
-    }
-  },
-  "admin": {
-    "dashboard": {
-      "description": "Admin Dashboard",
-      "title": "Admin Dashboard"
     }
   },
   "email-forgot-password": {
@@ -53,6 +86,10 @@
     "description": "Home",
     "title": "Home"
   },
+  "index": {
+    "description": "Index",
+    "title": "Index"
+  },
   "reset-password": {
     "content": "Enter your new password to reset password your account",
     "description": "Reset Password",
@@ -66,11 +103,11 @@
         "nonEmptyString": "a string at least 1 character",
         "title": "New Password"
       },
+      "submit": "Reset password",
       "token": {
         "nonEmptyString": "a string at least 1 character",
         "title": "Token"
-      },
-      "submit": "Reset password"
+      }
     },
     "title": "Reset Password"
   },
@@ -123,16 +160,17 @@
   "user": {
     "change-password": {
       "content": "Enter your new password below to change password",
+      "description": "User Change Password",
       "form": {
+        "currentPassword": {
+          "nonEmptyString": "a string at least 1 character",
+          "title": "Current Password"
+        },
         "email": {
           "minLength": "Email must be at least 5 characters long",
           "nonEmptyString": "a string at least 1 character",
           "pattern": "Invalid email format",
           "title": "Email"
-        },
-        "currentPassword": {
-          "nonEmptyString": "a string at least 1 character",
-          "title": "Current Password"
         },
         "newPassword": {
           "nonEmptyString": "a string at least 1 character",
@@ -140,7 +178,6 @@
         },
         "submit": "Change password"
       },
-      "description": "User Change Password",
       "title": "User Change Password"
     },
     "dashboard": {
@@ -153,7 +190,8 @@
           "select-row": "Select row"
         },
         "services-data-table-bulk-actions": {
-          "delete-selected-services": "Delete selected services"
+          "delete-selected-services": "Delete selected services",
+          "service": "service"
         },
         "services-data-table-row-actions": {
           "delete": "Delete",
@@ -162,10 +200,10 @@
           "open-menu": "Open menu"
         },
         "services-dialog-create-update": {
-          "create-title": "Create New Service",
           "create-description": "Create new service here.",
-          "edit-title": "Edit Service",
+          "create-title": "Create New Service",
           "edit-description": "Update the service here.",
+          "edit-title": "Edit Service",
           "form": {
             "create-submit": "Create",
             "edit-submit": "Update",
@@ -180,8 +218,8 @@
           "alert-title": "Warning!",
           "confirm-cancel": "Cancel",
           "confirm-description": "Are you sure you want to delete <bold>{name}</bold>? This action will permanently remove the service from the system. This cannot be undone.",
-          "confirm-name-placeholder": "Enter name to confirm deletion.",
           "confirm-name": "Name",
+          "confirm-name-placeholder": "Enter name to confirm deletion.",
           "confirm-name-title": "Confirm by typing \"{name}\"",
           "confirm-text": "Delete",
           "confirm-title": "Delete service"
@@ -205,9 +243,9 @@
         }
       },
       "description": "User Dashboard",
-      "title": "User Dashboard",
       "service-list-description": "Manage your services here.",
-      "service-list-title": "Service List"
+      "service-list-title": "Service List",
+      "title": "User Dashboard"
     },
     "service-create": {
       "content": "Enter your name below to create your service",
@@ -230,6 +268,7 @@
     },
     "update": {
       "content": "Enter your name below to update your account",
+      "description": "User Update",
       "form": {
         "name": {
           "nonEmptyString": "a string at least 1 character",
@@ -237,12 +276,7 @@
         },
         "submit": "Update"
       },
-      "description": "User Update",
       "title": "User Update"
     }
-  },
-  "index": {
-    "title": "Index",
-    "description": "Index"
   }
 }

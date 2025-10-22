@@ -2,6 +2,7 @@ import type { Column } from "@tanstack/react-table";
 import type { ComponentType } from "react";
 
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   title,
 }: DataTableFacetedFilterProps<TData, TValue>) {
+  const t = useTranslations("components.data-table-2.faceted-filter");
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
 
@@ -86,7 +88,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>{t("no-results-found")}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
@@ -137,7 +139,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     className="justify-center text-center"
                     onSelect={() => column?.setFilterValue(undefined)}
                   >
-                    Clear filters
+                    {t("clear-filters")}
                   </CommandItem>
                 </CommandGroup>
               </>

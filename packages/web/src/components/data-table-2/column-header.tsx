@@ -6,6 +6,7 @@ import {
   CaretSortIcon,
   EyeNoneIcon,
 } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const t = useTranslations("components.data-table-2.column-header");
   if (!column.getCanSort()) {
     return <div className={className}>{title}</div>;
   }
@@ -54,18 +56,18 @@ export function DataTableColumnHeader<TData, TValue>({
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUpIcon className="size-3.5 text-muted-foreground/70" />
-            Asc
+            {t("asc")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className="size-3.5 text-muted-foreground/70" />
-            Desc
+            {t("desc")}
           </DropdownMenuItem>
           {column.getCanHide() && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
                 <EyeNoneIcon className="size-3.5 text-muted-foreground/70" />
-                Hide
+                {t("hide")}
               </DropdownMenuItem>
             </>
           )}

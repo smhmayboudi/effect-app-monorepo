@@ -28,7 +28,7 @@ export function ServicesDataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar entityName="service" table={table}>
+      <BulkActionsToolbar entityName={t("service")} table={table}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

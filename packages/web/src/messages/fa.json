@@ -1,15 +1,54 @@
 {
-  "component": {
+  "admin": {
+    "dashboard": {
+      "description": "داشبورد مدیریت",
+      "title": "داشبورد مدیریت"
+    }
+  },
+  "components": {
+    "data-table-2": {
+      "bulk-actions": {
+        "description": "<badge>{selectedCount}</badge> <span>{entityName}</span> انتخاب شده",
+        "message": "{selectedCount} {entityName} انتخاب شده است. نوار ابزار عملیات گروهی در دسترس است.",
+        "selected": "انتخاب شده",
+        "toolbar-content": "عملیات گروهی برای {selectedCount} {entityName} انتخاب شده",
+        "tooltip-content": "پاک کردن انتخاب (Escape)"
+      },
+      "column-header": {
+        "asc": "صعودی",
+        "desc": "نزولی",
+        "hide": "پنهان کردن"
+      },
+      "faceted-filter": {
+        "clear-filters": "پاک کردن فیلترها",
+        "no-results-found": "نتیجه‌ای یافت نشد."
+      },
+      "pagination": {
+        "go-to-last-page": "برو به آخرین صفحه",
+        "go-to-next-page": "برو به صفحه بعد",
+        "go-to-page": "برو به صفحه {pageNumber}",
+        "go-to-previous-page": "برو به صفحه قبل",
+        "page-of": "صفحه {currentPage} از {totalPages}",
+        "rows-per-page": "تعداد سطر در هر صفحه"
+      },
+      "toolbar": {
+        "reset": "بازنشانی"
+      },
+      "view-options": {
+        "toggle-columns": "تغییر وضعیت ستون‌ها",
+        "view": "نمایش"
+      }
+    },
     "service-list": {
       "table": {
-        "head": {
-          "ownerId": "شناسه کاربر",
-          "id": "شناسه سرویس",
-          "name": "نام سرویس",
-          "help": "راهنما"
-        },
         "body": {
           "help": "راهنما"
+        },
+        "head": {
+          "help": "راهنما",
+          "id": "شناسه سرویس",
+          "name": "نام سرویس",
+          "ownerId": "شناسه کاربر"
         }
       }
     },
@@ -17,12 +56,6 @@
       "description": "سرویس‌های جدید در اینجا نمایش داده خواهند شد.",
       "serviceCreate": "ایجاد سرویس",
       "title": "سرویسی موجود نیست"
-    }
-  },
-  "admin": {
-    "dashboard": {
-      "description": "داشبورد مدیریت",
-      "title": "داشبورد مدیریت"
     }
   },
   "email-forgot-password": {
@@ -53,6 +86,10 @@
     "description": "خانه",
     "title": "خانه"
   },
+  "index": {
+    "description": "صفحه اصلی",
+    "title": "صفحه اصلی"
+  },
   "reset-password": {
     "content": "رمز عبور جدید خود را برای بازنشانی رمز عبور حساب کاربری وارد کنید",
     "description": "بازنشانی رمز عبور",
@@ -66,11 +103,11 @@
         "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
         "title": "رمز عبور جدید"
       },
+      "submit": "بازنشانی رمز عبور",
       "token": {
         "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
         "title": "تکن"
-      },
-      "submit": "بازنشانی رمز عبور"
+      }
     },
     "title": "بازنشانی رمز عبور"
   },
@@ -123,16 +160,17 @@
   "user": {
     "change-password": {
       "content": "رمز عبور جدید خود را زیر وارد کنید تا رمز عبور تغییر کند",
+      "description": "تغییر رمز عبور کاربر",
       "form": {
+        "currentPassword": {
+          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
+          "title": "رمز عبور فعلی"
+        },
         "email": {
           "minLength": "ایمیل باید حداقل ۵ کاراکتر باشد",
           "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
           "pattern": "فرمت ایمیل نامعتبر است",
           "title": "ایمیل"
-        },
-        "currentPassword": {
-          "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
-          "title": "رمز عبور فعلی"
         },
         "newPassword": {
           "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
@@ -140,7 +178,6 @@
         },
         "submit": "تغییر رمز عبور"
       },
-      "description": "تغییر رمز عبور کاربر",
       "title": "تغییر رمز عبور کاربر"
     },
     "dashboard": {
@@ -153,7 +190,8 @@
           "select-row": "انتخاب ردیف"
         },
         "services-data-table-bulk-actions": {
-          "delete-selected-services": "حذف سرویس‌های انتخاب شده"
+          "delete-selected-services": "حذف سرویس‌های انتخاب شده",
+          "service": "سرویس"
         },
         "services-data-table-row-actions": {
           "delete": "حذف",
@@ -162,10 +200,10 @@
           "open-menu": "باز کردن منو"
         },
         "services-dialog-create-update": {
-          "create-title": "ایجاد سرویس جدید",
           "create-description": "سرویس جدید را اینجا ایجاد کنید. پس از اتمام، ایجاد را کلیک کنید.",
-          "edit-title": "ویرایش سرویس",
+          "create-title": "ایجاد سرویس جدید",
           "edit-description": "سرویس را اینجا به‌روزرسانی کنید. پس از اتمام، به‌روزرسانی را کلیک کنید.",
+          "edit-title": "ویرایش سرویس",
           "form": {
             "create-submit": "ایجاد",
             "edit-submit": "به‌روزرسانی",
@@ -205,9 +243,9 @@
         }
       },
       "description": "داشبورد کاربر",
-      "title": "داشبورد کاربر",
       "service-list-description": "سرویس‌های خود را از اینجا مدیریت کنید.",
-      "service-list-title": "لیست سرویس‌ها"
+      "service-list-title": "لیست سرویس‌ها",
+      "title": "داشبورد کاربر"
     },
     "service-create": {
       "content": "نام خود را زیر وارد کنید تا سرویس خود را ایجاد کنید",
@@ -230,6 +268,7 @@
     },
     "update": {
       "content": "نام خود را زیر وارد کنید تا حساب کاربری خود را به روز کنید",
+      "description": "به روزرسانی کاربر",
       "form": {
         "name": {
           "nonEmptyString": "یک رشته با حداقل ۱ کاراکتر",
@@ -237,12 +276,7 @@
         },
         "submit": "به روزرسانی"
       },
-      "description": "به روزرسانی کاربر",
       "title": "به روزرسانی کاربر"
     }
-  },
-  "index": {
-    "title": "صفحه اصلی",
-    "description": "صفحه اصلی"
   }
 }
