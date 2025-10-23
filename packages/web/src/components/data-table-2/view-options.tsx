@@ -1,7 +1,7 @@
 import type { Table } from "@tanstack/react-table";
 
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ export function DataTableViewOptions<TData>({
           size="sm"
           variant="outline"
         >
-          <MixerHorizontalIcon className="size-4" />
+          <SlidersHorizontal className="size-4" />
           {t("view")}
         </Button>
       </DropdownMenuTrigger>

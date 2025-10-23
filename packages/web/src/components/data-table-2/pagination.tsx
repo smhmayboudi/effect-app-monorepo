@@ -1,11 +1,11 @@
 import type { Table } from "@tanstack/react-table";
 
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -79,9 +79,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">Go to first page</span>
             {dir === "rtl" ? (
-              <DoubleArrowRightIcon className="size-4" />
+              <ChevronsRight className="size-4" />
             ) : (
-              <DoubleArrowLeftIcon className="size-4" />
+              <ChevronsLeft className="size-4" />
             )}
           </Button>
           <Button
@@ -92,9 +92,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">{t("go-to-previous-page")}</span>
             {dir === "rtl" ? (
-              <ChevronRightIcon className="size-4" />
+              <ChevronRight className="size-4" />
             ) : (
-              <ChevronLeftIcon className="size-4" />
+              <ChevronLeft className="size-4" />
             )}
           </Button>
 
@@ -126,9 +126,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">{t("go-to-next-page")}</span>
             {dir === "rtl" ? (
-              <ChevronLeftIcon className="size-4" />
+              <ChevronLeft className="size-4" />
             ) : (
-              <ChevronRightIcon className="size-4" />
+              <ChevronRight className="size-4" />
             )}
           </Button>
           <Button
@@ -139,9 +139,9 @@ export function DataTablePagination<TData>({
           >
             <span className="sr-only">{t("go-to-last-page")}</span>
             {dir === "rtl" ? (
-              <DoubleArrowLeftIcon className="size-4" />
+              <ChevronsLeft className="size-4" />
             ) : (
-              <DoubleArrowRightIcon className="size-4" />
+              <ChevronsRight className="size-4" />
             )}
           </Button>
         </div>

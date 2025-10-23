@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import type { ComponentType } from "react";
 
-import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { Check, CirclePlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +47,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button className="h-8 border-dashed" size="sm" variant="outline">
-          <PlusCircledIcon className="size-4" />
+          <CirclePlus className="size-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -116,7 +116,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : "opacity-50 [&_svg]:invisible",
                       )}
                     >
-                      <CheckIcon className="size-4 text-background" />
+                      <Check className="size-4 text-background" />
                     </div>
                     {option.icon && (
                       <option.icon className="size-4 text-muted-foreground" />

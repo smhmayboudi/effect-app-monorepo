@@ -2,9 +2,8 @@
 
 import type { Row } from "@tanstack/react-table";
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
-import { HelpCircle, Trash2, UserPen } from "lucide-react";
+import { Ellipsis, HelpCircle, Trash2, UserPen } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -35,7 +34,7 @@ export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
             className="flex size-8 p-0 data-[state=open]:bg-muted"
             variant="ghost"
           >
-            <DotsHorizontalIcon className="size-4" />
+            <Ellipsis className="size-4" />
             <span className="sr-only">{t("open-menu")}</span>
           </Button>
         </DropdownMenuTrigger>

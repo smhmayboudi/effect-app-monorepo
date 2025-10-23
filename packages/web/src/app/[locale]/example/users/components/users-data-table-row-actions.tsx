@@ -2,8 +2,7 @@
 
 import type { Row } from "@tanstack/react-table";
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Trash2, UserPen } from "lucide-react";
+import { Ellipsis, Trash2, UserPen } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -36,7 +35,7 @@ export function UsersDataTableRowActions({
             className="flex size-8 p-0 data-[state=open]:bg-muted"
             variant="ghost"
           >
-            <DotsHorizontalIcon className="size-4" />
+            <Ellipsis className="size-4" />
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
