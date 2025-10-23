@@ -1,8 +1,8 @@
 import type { Table } from "@tanstack/react-table";
 
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

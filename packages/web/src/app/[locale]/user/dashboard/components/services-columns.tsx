@@ -1,9 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Service } from "@template/domain/service/application/ServiceApplicationDomain";
+
+import { useTranslations } from "next-intl";
 
 import { DataTableColumnHeader } from "@/components/data-table-2";
 import { LongText } from "@/components/long-text";
