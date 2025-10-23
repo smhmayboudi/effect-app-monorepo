@@ -2,7 +2,7 @@ import * as Effect from "effect/Effect";
 import { toast } from "sonner";
 
 type ToastOptions<A, E, Args extends ReadonlyArray<unknown>> = {
-  onFailure: ((error: E, ...args: Args) => string) | string;
+  onFailure: ((e: E, ...args: Args) => string) | string;
   onSuccess: ((a: A, ...args: Args) => string) | string;
   onWaiting: ((...args: Args) => string) | string;
 };

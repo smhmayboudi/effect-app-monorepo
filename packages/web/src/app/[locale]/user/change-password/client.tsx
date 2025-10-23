@@ -6,6 +6,7 @@ import * as Schema from "effect/Schema";
 import { GalleryVerticalEnd } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -58,8 +59,9 @@ export default function Client() {
     handleSubmit,
     reset,
   } = form;
+  const router = useRouter();
   const onSubmit = handleSubmit(async ({ currentPassword, newPassword }) => {
-    await Effect.runPromise(
+    const result = await Effect.runPromise(
       Effect.tryPromise({
         catch: (error) => new Error(String(error)),
         try: (signal) =>
@@ -79,6 +81,9 @@ export default function Client() {
         }),
       ),
     );
+    if (result.data) {
+      router.push("/user/dashboard");
+    }
   });
 
   const { data } = authClient.useSession();
