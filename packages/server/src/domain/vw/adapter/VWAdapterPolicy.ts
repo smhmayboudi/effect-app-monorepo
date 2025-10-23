@@ -4,9 +4,9 @@ import * as Layer from "effect/Layer"
 import { policy } from "../../../util/Policy.js"
 import { VWPortPolicy } from "../application/VWApplicationPortPolicy.js"
 
-export const VWPolicy = Layer.effect(
+export const VWPolicy = Layer.succeed(
   VWPortPolicy,
-  Effect.sync(() => ({
+  VWPortPolicy.of({
     canReadAllGroupPersonTodo: () =>
       policy("VW", "readAllGroupPersonTodo", (actor) =>
         Effect.succeed(true).pipe(
@@ -21,5 +21,5 @@ export const VWPolicy = Layer.effect(
             attributes: { [ATTR_CODE_FUNCTION_NAME]: "canReadAllUserTodo", actor }
           })
         ))
-  }))
+  })
 )

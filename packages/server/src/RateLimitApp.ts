@@ -18,43 +18,41 @@ export class PortRateLimitDefaultConfig extends Context.Tag(
   }
 >() {}
 
-const RateLimitDefaultConfig = Layer.effect(
+const RateLimitDefaultConfig = Layer.succeed(
   PortRateLimitDefaultConfig,
-  Effect.sync(() =>
-    PortRateLimitDefaultConfig.of({
-      defaultConfigs: {
-        "fixed-window": {
-          algorithm: "fixed-window",
-          maxRequests: 5,
-          windowMs: 60000 // 1 minute
-        },
-        "leaky-bucket": {
-          algorithm: "leaky-bucket",
-          bucketSize: 5,
-          leakRate: 0.2, // requests per second
-          maxRequests: 5,
-          windowMs: 60000
-        },
-        "sliding-window": {
-          algorithm: "sliding-window",
-          maxRequests: 5,
-          windowMs: 60000 // 1 minute
-        },
-        "sliding-logs": {
-          algorithm: "sliding-logs",
-          maxRequests: 5,
-          windowMs: 3600000 // 1 hour
-        },
-        "token-bucket": {
-          algorithm: "token-bucket",
-          bucketSize: 5,
-          maxRequests: 5,
-          refillRate: 0.1, // tokens per second
-          windowMs: 60000
-        }
+  PortRateLimitDefaultConfig.of({
+    defaultConfigs: {
+      "fixed-window": {
+        algorithm: "fixed-window",
+        maxRequests: 5,
+        windowMs: 60000 // 1 minute
+      },
+      "leaky-bucket": {
+        algorithm: "leaky-bucket",
+        bucketSize: 5,
+        leakRate: 0.2, // requests per second
+        maxRequests: 5,
+        windowMs: 60000
+      },
+      "sliding-window": {
+        algorithm: "sliding-window",
+        maxRequests: 5,
+        windowMs: 60000 // 1 minute
+      },
+      "sliding-logs": {
+        algorithm: "sliding-logs",
+        maxRequests: 5,
+        windowMs: 3600000 // 1 hour
+      },
+      "token-bucket": {
+        algorithm: "token-bucket",
+        bucketSize: 5,
+        maxRequests: 5,
+        refillRate: 0.1, // tokens per second
+        windowMs: 60000
       }
-    })
-  )
+    }
+  })
 )
 
 export const provideLayer = <A, E, R>(effect: Effect.Effect<A, E, R>) =>

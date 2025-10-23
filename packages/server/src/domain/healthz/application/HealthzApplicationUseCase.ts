@@ -2,11 +2,9 @@ import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import { HealthzPortDriving } from "./HealthzApplicationPortDriving.js"
 
-export const HealthzUseCase = Layer.effect(
+export const HealthzUseCase = Layer.succeed(
   HealthzPortDriving,
-  Effect.sync(() =>
-    HealthzPortDriving.of({
-      check: () => Effect.void
-    })
-  )
+  HealthzPortDriving.of({
+    check: () => Effect.void
+  })
 )

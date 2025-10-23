@@ -11,13 +11,11 @@ export class PortUUID extends Context.Tag("PortUUID")<PortUUID, {
   v7: () => Effect.Effect<string>
 }>() {}
 
-export const UUID = Layer.effect(
+export const UUID = Layer.succeed(
   PortUUID,
-  Effect.sync(() =>
-    PortUUID.of({
-      v7: () => Effect.sync(() => v7())
-    })
-  )
+  PortUUID.of({
+    v7: () => Effect.sync(() => v7())
+  })
 )
 
 export class PortTodoClient extends Context.Tag("PortTodoClient")<PortTodoClient, {
