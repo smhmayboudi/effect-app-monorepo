@@ -8,7 +8,9 @@
     "utils": "@/lib/utils"
   },
   "iconLibrary": "lucide",
-  "registries": {},
+  "registries": {
+    "@svgl": "https://svgl.app/r/{name}.json"
+  },
   "rsc": true,
   "style": "new-york",
   "tailwind": {

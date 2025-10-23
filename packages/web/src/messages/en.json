@@ -86,13 +86,9 @@
     },
     "title": "Forgot Password"
   },
-  "home": {
+  "index": {
     "description": "Home",
     "title": "Home"
-  },
-  "index": {
-    "description": "Index",
-    "title": "Index"
   },
   "reset-password": {
     "content": "Enter your new password to reset password your account",

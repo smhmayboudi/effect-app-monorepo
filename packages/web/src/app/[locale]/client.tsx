@@ -1,15 +1,7 @@
 "use client";
 
 import {
-  DiscordLogoIcon,
-  GitHubLogoIcon,
-  InstagramLogoIcon,
-  LinkedInLogoIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
-import {
   BatteryCharging,
-  ExternalLink,
   GitPullRequest,
   Layers,
   MenuIcon,
@@ -18,6 +10,8 @@ import {
   WandSparkles,
 } from "lucide-react";
 
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import { ModeToggle } from "@/components/mode-toggle";
 import {
   Accordion,
   AccordionContent,
@@ -41,11 +35,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useDirection } from "@/context/direction-provider";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/theme-provider";
+import { EffectDark } from "@/components/ui/svgs/effectDark";
+import { EffectLight } from "@/components/ui/svgs/effectLight";
+import { NextjsLogoDark } from "@/components/ui/svgs/nextjsLogoDark";
+import { NextjsLogoLight } from "@/components/ui/svgs/nextjsLogoLight";
+import { ReactDark } from "@/components/ui/svgs/reactDark";
+import { ReactLight } from "@/components/ui/svgs/reactLight";
+import { ShadcnUi } from "@/components/ui/svgs/shadcnUi";
+import { ShadcnUiDark } from "@/components/ui/svgs/shadcnUiDark";
+import { Tailwindcss } from "@/components/ui/svgs/tailwindcss";
+import { Typescript } from "@/components/ui/svgs/typescript";
+import { GithubLight } from "@/components/ui/svgs/githubLight";
+import { GithubDark } from "@/components/ui/svgs/githubDark";
+import { Discord } from "@/components/ui/svgs/discord";
+import { Linkedin } from "@/components/ui/svgs/linkedin";
 
 const Navbar5 = () => {
-  const features = [
+  const navbars = [
     {
       description: "Overview of your activity",
       href: "#",
@@ -79,15 +87,16 @@ const Navbar5 = () => {
   ];
 
   return (
-    <section className="py-4">
-      <div className="container">
+    <section className="p-4">
+      <div className="container mx-auto">
         <nav className="flex items-center justify-between">
           <a
             className="flex items-center gap-2"
             href="https://www.shadcnblocks.com"
+            target="_blank"
           >
             <img
-              alt="Shadcn UI Navbar"
+              alt="Shadcnblocks.com"
               className="max-h-8"
               src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
             />
@@ -101,17 +110,17 @@ const Navbar5 = () => {
                 <NavigationMenuTrigger>Features</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="grid w-[600px] grid-cols-2 p-3">
-                    {features.map((feature, index) => (
+                    {navbars.map((value, index) => (
                       <NavigationMenuLink
                         className="rounded-md p-3 transition-colors hover:bg-muted/70"
-                        href={feature.href}
+                        href={value.href}
                         key={index}
                       >
                         <p className="mb-1 font-semibold text-foreground">
-                          {feature.title}
+                          {value.title}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {feature.description}
+                          {value.description}
                         </p>
                       </NavigationMenuLink>
                     ))}
@@ -145,8 +154,8 @@ const Navbar5 = () => {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            <Button variant="outline">Sign in</Button>
-            <Button>Start for free</Button>
+            <LocaleSwitcher />
+            <ModeToggle />
           </div>
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -160,9 +169,10 @@ const Navbar5 = () => {
                   <a
                     className="flex items-center gap-2"
                     href="https://www.shadcnblocks.com"
+                    target="_blank"
                   >
                     <img
-                      alt="Shadcn UI Navbar"
+                      alt="Shadcnblocks.com"
                       className="max-h-8"
                       src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
                     />
@@ -180,17 +190,18 @@ const Navbar5 = () => {
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="grid md:grid-cols-2">
-                        {features.map((feature, index) => (
+                        {navbars.map((value, index) => (
                           <a
                             className="rounded-md p-3 transition-colors hover:bg-muted/70"
-                            href={feature.href}
+                            href={value.href}
                             key={index}
+                            target="_blank"
                           >
                             <p className="mb-1 font-semibold text-foreground">
-                              {feature.title}
+                              {value.title}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {feature.description}
+                              {value.description}
                             </p>
                           </a>
                         ))}
@@ -199,19 +210,19 @@ const Navbar5 = () => {
                   </AccordionItem>
                 </Accordion>
                 <div className="flex flex-col gap-6">
-                  <a className="font-medium" href="#">
+                  <a className="font-medium" href="#" target="_blank">
                     Templates
                   </a>
-                  <a className="font-medium" href="#">
+                  <a className="font-medium" href="#" target="_blank">
                     Blog
                   </a>
-                  <a className="font-medium" href="#">
+                  <a className="font-medium" href="#" target="_blank">
                     Pricing
                   </a>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   <Button variant="outline">Sign in</Button>
-                  <Button>Start for free</Button>
+                  <Button>Sign up</Button>
                 </div>
               </div>
             </SheetContent>
@@ -223,43 +234,77 @@ const Navbar5 = () => {
 };
 
 const Hero12 = () => {
-  const { dir } = useDirection();
+  const { theme } = useTheme();
+  const heros = [
+    {
+      href: "https://effect.website/",
+      icon: theme === "light" ? <EffectLight /> : <EffectDark />,
+      title: "effect",
+    },
+    {
+      href: "https://nextjs.org/",
+      icon: theme === "light" ? <NextjsLogoLight /> : <NextjsLogoDark />,
+      title: "nextjs",
+    },
+    {
+      href: "https://react.dev/",
+      icon: theme === "light" ? <ReactLight /> : <ReactDark />,
+      title: "react",
+    },
+    {
+      href: "https://ui.shadcn.com/",
+      icon: theme === "light" ? <ShadcnUi /> : <ShadcnUiDark />,
+      title: "shadcn ui",
+    },
+    {
+      href: "https://tailwindcss.com/",
+      icon: <Tailwindcss />,
+      title: "tailwind css",
+    },
+    {
+      href: "https://www.typescriptlang.org/",
+      icon: <Typescript />,
+      title: "typescript",
+    },
+  ];
 
   return (
     <section className="relative overflow-hidden py-32">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
         <img
-          alt="background"
+          alt="Shadcnblocks.com"
           className="[mask-image:radial-gradient(75%_75%_at_center,white,transparent)] opacity-90"
           src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/patterns/square-alt-grid.svg"
         />
       </div>
-      <div className="relative container">
+      <div className="relative container mx-auto">
         <div className="mx-auto flex max-w-5xl flex-col items-center">
           <div className="flex flex-col items-center gap-6 text-center">
             <div className="rounded-xl bg-background/30 p-4 shadow-sm backdrop-blur-sm">
               <img
-                alt="logo"
+                alt="Shadcnblocks.com"
                 className="h-16"
                 src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
               />
             </div>
             <div>
               <h1 className="mb-6 text-2xl font-bold tracking-tight text-pretty lg:text-5xl">
-                Build your next project with{" "}
-                <span className="text-primary">Blocks</span>
+                Build fast, Scale easy, We’ll handle the{" "}
+                <span className="text-primary">auth</span>
               </h1>
               <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Elig
-                doloremque mollitia fugiat omnis! Porro facilis quo animi
-                consequatur. Explicabo.
+                Our Auth API takes care of users, tokens, and sessions—so you
+                can focus on building great products.
               </p>
             </div>
             <div className="mt-6 flex justify-center gap-3">
-              <Button className="shadow-sm transition-shadow hover:shadow">
-                Get Started
+              <Button
+                asChild
+                className="shadow-sm transition-shadow hover:shadow"
+              >
+                <a href="/sign-up">Get Started</a>
               </Button>
-              <Button className="group" variant="outline">
+              {/* <Button className="group" variant="outline">
                 Learn more{" "}
                 <ExternalLink
                   className={cn(
@@ -269,66 +314,27 @@ const Hero12 = () => {
                       : "group-hover:translate-x-0.5",
                   )}
                 />
-              </Button>
+              </Button> */}
             </div>
             <div className="mt-20 flex flex-col items-center gap-5">
               <p className="font-medium text-muted-foreground lg:text-start">
                 Built with open-source technologies
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <a
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0",
-                  )}
-                  href="#"
-                >
-                  <img
-                    alt="shadcn/ui logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcn-ui-icon.svg"
-                  />
-                </a>
-                <a
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0",
-                  )}
-                  href="#"
-                >
-                  <img
-                    alt="TypeScript logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/typescript-icon.svg"
-                  />
-                </a>
-
-                <a
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0",
-                  )}
-                  href="#"
-                >
-                  <img
-                    alt="React logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/react-icon.svg"
-                  />
-                </a>
-                <a
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0",
-                  )}
-                  href="#"
-                >
-                  <img
-                    alt="Tailwind CSS logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/tailwind-icon.svg"
-                  />
-                </a>
+                {heros.map((value, index) => (
+                  <a
+                    aria-label={value.title}
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "group flex aspect-square h-12 items-center justify-center p-0",
+                    )}
+                    href={value.href}
+                    key={index}
+                    target="_blank"
+                  >
+                    {value.icon}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -339,126 +345,194 @@ const Hero12 = () => {
 };
 
 const Feature43 = () => {
-  const buttonText = "More Features";
-  const buttonUrl = "https://shadcnblocks.com";
   const features = [
     {
       description:
-        "Built with attention to detail and best practices. Every component is thoroughly tested and follows modern React patterns for reliability and performance.",
-      heading: "Quality",
+        "Easily integrate with popular frameworks like Next.js, React, Vue, and Laravel using ready-to-use SDKs and snippets.",
+      heading: "Support for Popular Frameworks",
       icon: <GitPullRequest className="size-6" />,
     },
     {
       description:
-        "Crafted with user experience in mind. Each component is designed to be intuitive, accessible, and provide smooth interactions across all devices.",
-      heading: "Experience",
+        "Enable classic sign-up and sign-in with secure email and password management.",
+      heading: "Email & Password Authentication",
       icon: <SquareKanban className="size-6" />,
     },
     {
       description:
-        "Comprehensive documentation and community support. Get help when you need it with detailed guides, examples, and active community assistance.",
-      heading: "Support",
+        "Connect with Google, Apple, GitHub, or any major OAuth provider for quick and secure social login.",
+      heading: "Support Multiple OAuth Providers",
       icon: <RadioTower className="size-6" />,
     },
     {
       description:
-        "Cutting-edge design patterns and modern web technologies. Stay ahead with the latest trends in UI/UX design and development practices.",
-      heading: "Innovation",
+        "Add an extra layer of protection with codes, authenticator apps, or device-based verification.",
+      heading: "Multi-Factor Authentication (MFA)",
       icon: <WandSparkles className="size-6" />,
     },
     {
       description:
-        "Proven track record of successful implementations. These components have been battle-tested in real-world applications and deliver consistent results.",
-      heading: "Results",
+        "Manage teams and organizations effortlessly — invite members, set roles, and control access in one place.",
+      heading: "Organization Members and Invitations",
       icon: <Layers className="size-6" />,
     },
     {
       description:
-        "Optimized for performance and developer productivity. Lightweight, fast-loading components that help you build faster without compromising on quality.",
-      heading: "Efficiency",
+        "Extend functionality with powerful plugins for analytics, notifications, billing, and beyond.",
+      heading: "A Lot More Features with Plugins",
       icon: <BatteryCharging className="size-6" />,
     },
+    {
+      description:
+        "Securely handle user sessions with automatic token refresh, inactivity timeouts, and session revocation.",
+      heading: "Session Management",
+      icon: <GitPullRequest className="size-6" />,
+    },
+    {
+      description:
+        "Allow users to log in instantly with one-time passcodes sent to their email or phone number.",
+      heading: "Email and SMS One-Time Passcodes (OTP)",
+      icon: <SquareKanban className="size-6" />,
+    },
+    {
+      description:
+        "Detect and block suspicious logins, brute-force attacks, and fake accounts in real-time.",
+      heading: "Fraud and Abuse Prevention",
+      icon: <RadioTower className="size-6" />,
+    },
+    {
+      description: "Users click a secure link and are instantly authenticated.",
+      icon: <WandSparkles className="size-6" />,
+      heading: "Magic Links",
+    },
+    {
+      description:
+        "Let users sign in with their favorite social networks for a faster, frictionless experience.",
+      heading: "Social Sign-On",
+      icon: <Layers className="size-6" />,
+    },
+    {
+      description:
+        "Protect your app with encryption, token rotation, rate limiting, and audit logging.",
+      heading: "Advanced Security",
+      icon: <BatteryCharging className="size-6" />,
+    },
+    {
+      description:
+        "Keep your system clean by automatically identifying and blocking malicious bots.",
+      heading: "Bot Detection",
+      icon: <GitPullRequest className="size-6" />,
+    },
+    {
+      description:
+        "Offer advanced password management — hashing, breach detection, and password strength validation.",
+      heading: "Passwords",
+      icon: <SquareKanban className="size-6" />,
+    },
+    {
+      description:
+        "Provide passwordless authentication using biometrics or device-based verification (Face ID, Touch ID).",
+      heading: "WebAuthn / Passkeys Support",
+      icon: <RadioTower className="size-6" />,
+    },
+    {
+      description:
+        "Track all authentication and access events for compliance and visibility.",
+      heading: "Audit Logs",
+      icon: <WandSparkles className="size-6" />,
+    },
+    {
+      description:
+        "Issue and manage API keys for secure integration between services.",
+      heading: "API Keys Management",
+      icon: <Layers className="size-6" />,
+    },
+    {
+      description:
+        "Personalize login pages, emails, and flows with your brand’s identity.",
+      heading: "Custom Branding",
+      icon: <BatteryCharging className="size-6" />,
+    },
+    {
+      description:
+        "Protect your authentication endpoints from overuse or abuse.",
+      heading: "Rate Limiting and Throttling",
+      icon: <GitPullRequest className="size-6" />,
+    },
+    {
+      description:
+        "Monitor traffic, success rate, and error logs — all in a clean, developer-friendly dashboard.",
+      heading: "Developer Dashboard",
+      icon: <SquareKanban className="size-6" />,
+    },
   ];
-  const title = "Fully featured components for Shadcn UI & Tailwind";
 
   return (
     <section className="py-32">
-      <div className="container">
-        {title && (
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-4xl font-medium text-pretty lg:text-5xl">
-              {title}
-            </h2>
-          </div>
-        )}
+      <div className="container mx-auto">
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <h2 className="text-4xl font-medium text-pretty lg:text-5xl">
+            Feature List
+          </h2>
+        </div>
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, i) => (
-            <div className="flex flex-col" key={i}>
+          {features.map((value, index) => (
+            <div className="flex flex-col" key={index}>
               <div className="mb-5 flex size-16 items-center justify-center rounded-full bg-accent">
-                {feature.icon}
+                {value.icon}
               </div>
-              <h3 className="mb-2 text-xl font-semibold">{feature.heading}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="mb-2 text-xl font-semibold">{value.heading}</h3>
+              <p className="text-muted-foreground">{value.description}</p>
             </div>
           ))}
         </div>
-        {buttonUrl && (
-          <div className="mt-16 flex justify-center">
-            <Button asChild size="lg">
-              <a href={buttonUrl}>{buttonText}</a>
-            </Button>
-          </div>
-        )}
       </div>
     </section>
   );
 };
 
 const Community1 = () => {
+  const { theme } = useTheme();
+  const communitys = [
+    {
+      href: "https://github.com/smhmayboudi/effect-app-monorepo/",
+      icon: theme === "light" ? <GithubLight /> : <GithubDark />,
+      title: "github",
+    },
+    {
+      href: "#",
+      icon: <Discord />,
+      title: "discord",
+    },
+  ];
+
   return (
     <section className="py-32">
-      <div className="container">
+      <div className="container mx-auto">
         <div className="flex flex-col items-center gap-5">
           <img
-            alt="logo"
+            alt="Shadcnblocks.com"
             className="size-10"
             src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
           />
           <h2 className="text-center text-3xl font-semibold">
             Join our community
             <br />
-            <span className="text-muted-foreground/80">
-              of designers & developers
-            </span>
+            <span className="text-muted-foreground/80">of developers</span>
           </h2>
           <div className="flex items-center gap-4">
-            <Button asChild size="lg" variant="outline">
-              <a
-                className="size-10"
-                href="https://x.com/shadcnblocks"
-                target="_blank"
-              >
-                <TwitterLogoIcon />
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <a
-                className="size-10"
-                href="https://github.com/shadcnblocks"
-                target="_blank"
-              >
-                <GitHubLogoIcon />
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <a
-                className="size-10"
-                href="https://shadcnblocks.com"
-                target="_blank"
-              >
-                <DiscordLogoIcon />
-              </a>
-            </Button>
+            {communitys.map((value, index) => (
+              <Button asChild key={index} size="lg" variant="outline">
+                <a
+                  aria-label={value.title}
+                  className="size-10"
+                  href={value.href}
+                  target="_blank"
+                >
+                  {value.icon}
+                </a>
+              </Button>
+            ))}
           </div>
         </div>
       </div>
@@ -517,7 +591,7 @@ const Faq3 = () => {
 
   return (
     <section className="py-32">
-      <div className="container space-y-16">
+      <div className="container mx-auto space-y-16">
         <div className="mx-auto flex max-w-3xl flex-col text-start md:text-center">
           <h2 className="mb-3 text-3xl font-semibold md:mb-4 lg:mb-6 lg:text-4xl">
             {heading}
@@ -529,16 +603,16 @@ const Faq3 = () => {
           collapsible
           type="single"
         >
-          {faqItems.map((item) => (
-            <AccordionItem key={item.id} value={item.id}>
+          {faqItems.map((value, index) => (
+            <AccordionItem key={index} value={value.id}>
               <AccordionTrigger className="transition-opacity duration-200 hover:no-underline hover:opacity-60">
                 <div className="font-medium sm:py-1 lg:py-2 lg:text-lg">
-                  {item.question}
+                  {value.question}
                 </div>
               </AccordionTrigger>
               <AccordionContent className="sm:mb-1 lg:mb-2">
                 <div className="text-muted-foreground lg:text-lg">
-                  {item.answer}
+                  {value.answer}
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -550,9 +624,6 @@ const Faq3 = () => {
 };
 
 const Footer7 = () => {
-  const copyright = "© 2024 Shadcnblocks.com. All rights reserved.";
-  const description =
-    "A collection of components for your startup business or side project.";
   const legalLinks = [
     { href: "#", name: "Terms and Conditions" },
     { href: "#", name: "Privacy Policy" },
@@ -588,68 +659,49 @@ const Footer7 = () => {
   ];
   const socialLinks = [
     {
-      href: "#",
-      icon: <InstagramLogoIcon className="size-5" />,
-      label: "Instagram",
-    },
-    {
-      href: "#",
-      icon: <TwitterLogoIcon className="size-5" />,
-      label: "Twitter",
-    },
-    {
-      href: "#",
-      icon: <LinkedInLogoIcon className="size-5" />,
+      href: "https://www.linkedin.com/in/smhmayboudi/",
+      icon: <Linkedin className="size-5" />,
       label: "LinkedIn",
     },
   ];
-  const logo = {
-    alt: "logo",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-    title: "Shadcnblocks.com",
-    url: "https://www.shadcnblocks.com",
-  };
 
   return (
     <section className="py-32">
-      <div className="container">
+      <div className="container mx-auto">
         <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-start">
           <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
             <div className="flex items-center gap-2 lg:justify-start">
-              <a href={logo.url}>
+              <a href="https://www.shadcnblocks.com" target="_blank">
                 <img
-                  alt={logo.alt}
+                  alt="Shadcnblocks.com"
                   className="h-8"
-                  src={logo.src}
-                  title={logo.title}
+                  src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
                 />
               </a>
-              <h2 className="text-xl font-semibold">{logo.title}</h2>
+              <h2 className="text-xl font-semibold">Shadcnblocks.com</h2>
             </div>
             <p className="max-w-[70%] text-sm text-muted-foreground">
-              {description}
+              A collection of components for your startup business or side
+              project.
             </p>
             <ul className="flex items-center space-x-6 text-muted-foreground">
-              {socialLinks.map((social, idx) => (
-                <li className="font-medium hover:text-primary" key={idx}>
-                  <a aria-label={social.label} href={social.href}>
-                    {social.icon}
+              {socialLinks.map((value, index) => (
+                <li className="font-medium hover:text-primary" key={index}>
+                  <a aria-label={value.label} href={value.href} target="_blank">
+                    {value.icon}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
           <div className="grid w-full gap-6 md:grid-cols-3 lg:gap-20">
-            {sections.map((section, sectionIdx) => (
-              <div key={sectionIdx}>
-                <h3 className="mb-4 font-bold">{section.title}</h3>
+            {sections.map((value, index) => (
+              <div key={index}>
+                <h3 className="mb-4 font-bold">{value.title}</h3>
                 <ul className="space-y-3 text-sm text-muted-foreground">
-                  {section.links.map((link, linkIdx) => (
-                    <li
-                      className="font-medium hover:text-primary"
-                      key={linkIdx}
-                    >
-                      <a href={link.href}>{link.name}</a>
+                  {value.links.map((value2, index2) => (
+                    <li className="font-medium hover:text-primary" key={index2}>
+                      <a href={value2.href}>{value2.name}</a>
                     </li>
                   ))}
                 </ul>
@@ -658,11 +710,13 @@ const Footer7 = () => {
           </div>
         </div>
         <div className="mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium text-muted-foreground md:flex-row md:items-center md:text-start">
-          <p className="order-2 lg:order-1">{copyright}</p>
+          <p className="order-2 lg:order-1">
+            &copy; 2024 Shadcnblocks.com. All rights reserved.
+          </p>
           <ul className="order-1 flex flex-col gap-2 md:order-2 md:flex-row">
-            {legalLinks.map((link, idx) => (
-              <li className="hover:text-primary" key={idx}>
-                <a href={link.href}> {link.name}</a>
+            {legalLinks.map((value, index) => (
+              <li className="hover:text-primary" key={index}>
+                <a href={value.href}>{value.name}</a>
               </li>
             ))}
           </ul>
