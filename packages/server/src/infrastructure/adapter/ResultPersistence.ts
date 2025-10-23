@@ -67,8 +67,8 @@ export const ResultPersistenceTest = makeTestLayer(expPersistence.ResultPersiste
               getMany: <R, IE, E, IA, A>(
                 keys: ReadonlyArray<expPersistence.ResultPersistence.Key<R, IE, E, IA, A>>
               ) =>
-                Effect.sync(() => {
-                  return keys.map((key) => {
+                Effect.sync(() =>
+                  keys.map((key) => {
                     const entry = store.get(JSON.stringify(key))
                     if (!entry) {
                       return Option.none()
@@ -81,7 +81,7 @@ export const ResultPersistenceTest = makeTestLayer(expPersistence.ResultPersiste
 
                     return Option.some(entry.value as Exit.Exit<A, E>)
                   })
-                }),
+                ),
               set: <R, IE, E, IA, A>(
                 key: expPersistence.ResultPersistence.Key<R, IE, E, IA, A>,
                 value: Exit.Exit<A, E>

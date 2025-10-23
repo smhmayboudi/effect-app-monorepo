@@ -30,9 +30,7 @@ export const auth = betterAuth(
         delete: async (key) => {
           await redis.del(storageKey(key))
         },
-        get: async (key) => {
-          return await redis.get(storageKey(key))
-        },
+        get: async (key) => await redis.get(storageKey(key)),
         set: async (key, value, ttl) => {
           if (ttl) {
             await redis.set(storageKey(key), value, "EX", Math.round(ttl))
@@ -72,9 +70,7 @@ export const authF = (serviceId: ServiceId) => {
           delete: async (key) => {
             await redis.del(storageKey(key))
           },
-          get: async (key) => {
-            return await redis.get(storageKey(key))
-          },
+          get: async (key) => await redis.get(storageKey(key)),
           set: async (key, value, ttl) => {
             if (ttl) {
               await redis.set(storageKey(key), value, "EX", Math.round(ttl))

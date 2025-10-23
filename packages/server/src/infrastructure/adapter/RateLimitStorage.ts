@@ -8,29 +8,27 @@ export const RateLimitStorageRedis = Layer.effect(
   PortRedis.pipe(
     Effect.andThen((redis) =>
       PortRateLimitStorage.of({
-        decrement: (key, amount = 1) => {
-          return Effect.tryPromise({
+        decrement: (key, amount = 1) =>
+          Effect.tryPromise({
             try: async () => await redis.decrby(key, amount),
             catch: (error) => new RateLimitStorageError({ command: "decrement", error })
-          })
-        },
+          }),
         delete: (key) =>
           Effect.tryPromise({
             try: async () => await redis.del(key),
             catch: (error) => new RateLimitStorageError({ command: "delete", error })
           }),
-        get: (key) => {
-          return Effect.tryPromise({
+        get: (key) =>
+          Effect.tryPromise({
             try: async () => {
               const data = await redis.get(key)
 
               return data ? JSON.parse(data) : null
             },
             catch: (error) => new RateLimitStorageError({ command: "get", error })
-          })
-        },
-        getWithTtl: (key) => {
-          return Effect.tryPromise({
+          }),
+        getWithTtl: (key) =>
+          Effect.tryPromise({
             try: async () => {
               const [ttl, value] = await Promise.all([
                 redis.ttl(key),
@@ -43,16 +41,14 @@ export const RateLimitStorageRedis = Layer.effect(
               }
             },
             catch: (error) => new RateLimitStorageError({ command: "getWithTtl", error })
-          })
-        },
-        increment: (key, amount = 1) => {
-          return Effect.tryPromise({
+          }),
+        increment: (key, amount = 1) =>
+          Effect.tryPromise({
             try: async () => await redis.incrby(key, amount),
             catch: (error) => new RateLimitStorageError({ command: "increment", error })
-          })
-        },
-        set: (key, entry, ttl) => {
-          return Effect.tryPromise({
+          }),
+        set: (key, entry, ttl) =>
+          Effect.tryPromise({
             try: async () => {
               const serialized = JSON.stringify(entry)
               if (ttl) {
@@ -63,7 +59,6 @@ export const RateLimitStorageRedis = Layer.effect(
             },
             catch: (error) => new RateLimitStorageError({ command: "set", error })
           })
-        }
       })
     )
   )
