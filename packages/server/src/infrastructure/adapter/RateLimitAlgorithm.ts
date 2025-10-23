@@ -7,35 +7,33 @@ import { PortRateLimitStorage } from "../application/PortRateLimitStorage.js"
 export const RateLimitAlgorithmFixedWindow = Layer.effect(
   PortRateLimitAlgorithm,
   PortRateLimitStorage.pipe(
-    Effect.flatMap((storage) =>
-      Effect.sync(() =>
-        PortRateLimitAlgorithm.of({
-          check(key, config) {
-            const now = Date.now()
-            const windowStart = Math.floor(now / config.windowMs) * config.windowMs
-            const storageKey = `ratelimit:fixed_window:${key}:${windowStart}`
+    Effect.andThen((storage) =>
+      PortRateLimitAlgorithm.of({
+        check(key, config) {
+          const now = Date.now()
+          const windowStart = Math.floor(now / config.windowMs) * config.windowMs
+          const storageKey = `ratelimit:fixed_window:${key}:${windowStart}`
 
-            return storage.get(storageKey).pipe(
-              Effect.map((entry) => entry ?? { count: 0, timestamp: now, windowStart }),
-              Effect.flatMap((entry) => {
-                const newCount = (entry.count ?? 0) + 1
-                const resetTime = windowStart + config.windowMs
+          return storage.get(storageKey).pipe(
+            Effect.map((entry) => entry ?? { count: 0, timestamp: now, windowStart }),
+            Effect.flatMap((entry) => {
+              const newCount = (entry.count ?? 0) + 1
+              const resetTime = windowStart + config.windowMs
 
-                return storage.set(storageKey, { ...entry, count: newCount }, Math.ceil(config.windowMs / 1000)).pipe(
-                  Effect.map(() =>
-                    ({
-                      allowed: newCount <= config.maxRequests,
-                      remaining: Math.max(0, config.maxRequests - newCount),
-                      resetTime,
-                      retryAfter: newCount > config.maxRequests ? Math.ceil((resetTime - now) / 1000) : undefined
-                    }) as RateLimitResult
-                  )
+              return storage.set(storageKey, { ...entry, count: newCount }, Math.ceil(config.windowMs / 1000)).pipe(
+                Effect.map(() =>
+                  ({
+                    allowed: newCount <= config.maxRequests,
+                    remaining: Math.max(0, config.maxRequests - newCount),
+                    resetTime,
+                    retryAfter: newCount > config.maxRequests ? Math.ceil((resetTime - now) / 1000) : undefined
+                  }) as RateLimitResult
                 )
-              })
-            )
-          }
-        })
-      )
+              )
+            })
+          )
+        }
+      })
     )
   )
 )

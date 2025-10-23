@@ -5,10 +5,8 @@ import { HealthzPortDriving } from "../application/HealthzApplicationPortDriving
 
 export const HealthzDriving = HttpApiBuilder.group(Api, "healthz", (handlers) =>
   HealthzPortDriving.pipe(
-    Effect.flatMap((driving) =>
-      Effect.sync(() =>
-        handlers
-          .handle("check", () => driving.check())
-      )
+    Effect.andThen((driving) =>
+      handlers
+        .handle("check", () => driving.check())
     )
   ))

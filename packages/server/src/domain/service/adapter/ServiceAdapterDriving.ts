@@ -14,51 +14,49 @@ export const ServiceDriving = HttpApiBuilder.group(
   "service",
   (handlers) =>
     Effect.all([ServicePortDriving, ServicePortPolicy]).pipe(
-      Effect.flatMap(([driving, policy]) =>
-        Effect.sync(() =>
-          handlers
-            .handle("create", ({ payload }) =>
-              Actor.pipe(
-                Effect.flatMap((user) =>
-                  driving.create({ ...payload, ownerId: ActorId.make(user.id) }).pipe(
-                    Effect.withSpan("ServiceDriving", {
-                      attributes: {
-                        [ATTR_CODE_FUNCTION_NAME]: "create",
-                        service: { ...payload, ownerId: ActorId.make(user.id) }
-                      }
-                    })
-                  )
-                ),
-                policyUse(policy.canCreate(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
-                response
-              ))
-            .handle("delete", ({ path: { id } }) =>
-              driving.delete(id).pipe(
-                Effect.withSpan("ServiceDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-                policyUse(policy.canDelete(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
-                response
-              ))
-            .handle("readAll", ({ urlParams }) =>
-              driving.readAll(urlParams).pipe(
-                Effect.withSpan("ServiceDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-                policyUse(policy.canReadAll(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
-                responseArray(urlParams)
-              ))
-            .handle("readById", ({ path: { id } }) =>
-              driving.readById(id).pipe(
-                Effect.withSpan("ServiceDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-                policyUse(policy.canReadById(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
-                response
-              ))
-            .handle("update", ({ path: { id }, payload }) =>
-              driving.update(id, payload).pipe(
-                Effect.withSpan("ServiceDriving", {
-                  attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", service: payload }
-                }),
-                policyUse(policy.canUpdate(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
-                response
-              ))
-        )
+      Effect.andThen(([driving, policy]) =>
+        handlers
+          .handle("create", ({ payload }) =>
+            Actor.pipe(
+              Effect.flatMap((user) =>
+                driving.create({ ...payload, ownerId: ActorId.make(user.id) }).pipe(
+                  Effect.withSpan("ServiceDriving", {
+                    attributes: {
+                      [ATTR_CODE_FUNCTION_NAME]: "create",
+                      service: { ...payload, ownerId: ActorId.make(user.id) }
+                    }
+                  })
+                )
+              ),
+              policyUse(policy.canCreate(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
+              response
+            ))
+          .handle("delete", ({ path: { id } }) =>
+            driving.delete(id).pipe(
+              Effect.withSpan("ServiceDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+              policyUse(policy.canDelete(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
+              response
+            ))
+          .handle("readAll", ({ urlParams }) =>
+            driving.readAll(urlParams).pipe(
+              Effect.withSpan("ServiceDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+              policyUse(policy.canReadAll(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
+              responseArray(urlParams)
+            ))
+          .handle("readById", ({ path: { id } }) =>
+            driving.readById(id).pipe(
+              Effect.withSpan("ServiceDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+              policyUse(policy.canReadById(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
+              response
+            ))
+          .handle("update", ({ path: { id }, payload }) =>
+            driving.update(id, payload).pipe(
+              Effect.withSpan("ServiceDriving", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", service: payload }
+              }),
+              policyUse(policy.canUpdate(ServiceId.make("00000000-0000-0000-0000-000000000000"))),
+              response
+            ))
       )
     )
 )

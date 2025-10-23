@@ -79,7 +79,7 @@ export const checkRateLimit = (
   customConfig?: Partial<RateLimitConfig>
 ) =>
   Effect.all([PortRateLimitDefaultConfig, PortRateLimit]).pipe(
-    Effect.flatMap(([defaultConfig, rateLimiter]) =>
+    Effect.andThen(([defaultConfig, rateLimiter]) =>
       rateLimiter.check(identifier, {
         ...defaultConfig.defaultConfigs[algorithm],
         ...customConfig,

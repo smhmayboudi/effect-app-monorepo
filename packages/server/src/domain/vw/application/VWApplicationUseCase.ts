@@ -10,28 +10,26 @@ import { VWPortEventEmitter } from "./VWApplicationPortEventEmitter.js"
 export const VWUseCase = Layer.effect(
   VWPortDriving,
   Effect.all([VWPortDriven, VWPortEventEmitter]).pipe(
-    Effect.flatMap(([driven, eventEmitter]) =>
-      Effect.sync(() =>
-        VWPortDriving.of({
-          readAllGroupPersonTodo: (urlParams) =>
-            driven.readAllGroupPersonTodo(urlParams).pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("VWUseCaseReadAllGroupPersonTodo", {
-                    in: { urlParams },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("VWUseCaseReadAllGroupPersonTodo", {
-                    in: { urlParams },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-              policyRequire("VW", "readAllGroupPersonTodo")
-            )
-        })
-      )
+    Effect.andThen(([driven, eventEmitter]) =>
+      VWPortDriving.of({
+        readAllGroupPersonTodo: (urlParams) =>
+          driven.readAllGroupPersonTodo(urlParams).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("VWUseCaseReadAllGroupPersonTodo", {
+                  in: { urlParams },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("VWUseCaseReadAllGroupPersonTodo", {
+                  in: { urlParams },
+                  out: Exit.succeed(out)
+                })
+            }),
+            Effect.withSpan("VWUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+            policyRequire("VW", "readAllGroupPersonTodo")
+          )
+      })
     )
   )
 )

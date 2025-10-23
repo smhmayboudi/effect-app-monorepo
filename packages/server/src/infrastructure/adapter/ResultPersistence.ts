@@ -113,7 +113,6 @@ export const ResultPersistenceTest = makeTestLayer(expPersistence.ResultPersiste
                 Effect.sync(() => {
                   store.delete(JSON.stringify(key))
                 }),
-
               clear: Effect.sync(() => {
                 store.clear()
               })

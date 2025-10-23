@@ -15,46 +15,44 @@ export const PersonDriving = HttpApiBuilder.group(
   "person",
   (handlers) =>
     Effect.all([GroupPortPolicy, PersonPortDriving, PersonPortPolicy]).pipe(
-      Effect.flatMap(([groupPolicy, driving, policy]) =>
-        Effect.sync(() =>
-          handlers
-            .handle("create", ({ path: { groupId }, payload }) =>
-              driving.create({ ...payload, groupId }).pipe(
-                Effect.withSpan("PersonDriving", {
-                  attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person: { ...payload, groupId } }
-                }),
-                policyUse(policy.canCreate(PersonId.make("00000000-0000-0000-0000-000000000000"))),
-                policyUse(groupPolicy.canReadById(GroupId.make("00000000-0000-0000-0000-000000000000"))),
-                response
-              ))
-            // .handle("delete", ({ path: { id }}) =>
-            //   driving.delete(id).pipe(
-            //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
-            //     policyUse(policy.canDelete(PersonId.make("00000000-0000-0000-0000-000000000000"))),
-            //     response
-            //   )
-            // )
-            // .handle("readAll", ({ urlParams }) =>
-            //   driving.readAll(urlParams).pipe(
-            //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
-            //     policyUse(policy.canReadAll(PersonId.make("00000000-0000-0000-0000-000000000000"))),
-            //     response
-            //   )
-            // )
-            .handle("readById", ({ path: { id } }) =>
-              driving.readById(id).pipe(
-                Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-                policyUse(policy.canReadById(PersonId.make("00000000-0000-0000-0000-000000000000"))),
-                response
-              ))
-          // .handle("update", ({ path: { id }}) =>
-          //   driving.update(id, { payload }).pipe(
-          //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person: payload }}),
-          //     policyUse(policy.canUpdate(PersonId.make("00000000-0000-0000-0000-000000000000"))),
+      Effect.andThen(([groupPolicy, driving, policy]) =>
+        handlers
+          .handle("create", ({ path: { groupId }, payload }) =>
+            driving.create({ ...payload, groupId }).pipe(
+              Effect.withSpan("PersonDriving", {
+                attributes: { [ATTR_CODE_FUNCTION_NAME]: "create", person: { ...payload, groupId } }
+              }),
+              policyUse(policy.canCreate(PersonId.make("00000000-0000-0000-0000-000000000000"))),
+              policyUse(groupPolicy.canReadById(GroupId.make("00000000-0000-0000-0000-000000000000"))),
+              response
+            ))
+          // .handle("delete", ({ path: { id }}) =>
+          //   driving.delete(id).pipe(
+          //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id }}),
+          //     policyUse(policy.canDelete(PersonId.make("00000000-0000-0000-0000-000000000000"))),
           //     response
           //   )
           // )
-        )
+          // .handle("readAll", ({ urlParams }) =>
+          //   driving.readAll(urlParams).pipe(
+          //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll" }}),
+          //     policyUse(policy.canReadAll(PersonId.make("00000000-0000-0000-0000-000000000000"))),
+          //     response
+          //   )
+          // )
+          .handle("readById", ({ path: { id } }) =>
+            driving.readById(id).pipe(
+              Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+              policyUse(policy.canReadById(PersonId.make("00000000-0000-0000-0000-000000000000"))),
+              response
+            ))
+        // .handle("update", ({ path: { id }}) =>
+        //   driving.update(id, { payload }).pipe(
+        //     Effect.withSpan("PersonDriving", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, person: payload }}),
+        //     policyUse(policy.canUpdate(PersonId.make("00000000-0000-0000-0000-000000000000"))),
+        //     response
+        //   )
+        // )
       )
     )
 )

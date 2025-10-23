@@ -14,50 +14,48 @@ import { withSystemActor } from "../util/Policy.js"
 export const MiddlewareAuthentication = Layer.effect(
   PortMiddlewareAuthentication,
   AuthenticationPortDriving.pipe(
-    Effect.flatMap((authF) =>
-      Effect.sync(() =>
-        PortMiddlewareAuthentication.of({
-          cookie: (token) =>
-            HttpServerRequest.HttpServerRequest.pipe(
-              Effect.flatMap((request) =>
-                authF(ServiceId.make("00000000-0000-0000-0000-000000000000")).call((client) =>
-                  client.api.getSession({
-                    headers: new Headers(
-                      NodeHttpServerRequest.toIncomingMessage(request).headers as Record<string, string>
-                    )
-                  })
-                )
-              ),
-              Effect.flatMap((session) =>
-                Option.fromNullable(session).pipe(
-                  Option.match({
-                    onNone: () =>
-                      Effect.fail(
-                        new ActorErrorUnauthorized({
-                          actorId: ActorId.make("00000000-0000-0000-0000-000000000000"),
-                          entity: "",
-                          action: ""
-                        })
-                      ),
-                    onSome: (a) => Effect.succeed(a.user)
-                  })
-                )
-              ),
-              Effect.catchTag("AuthenticationError", () =>
-                Effect.fail(
-                  new ActorErrorUnauthorized({
-                    actorId: ActorId.make("00000000-0000-0000-0000-000000000000"),
-                    entity: "",
-                    action: ""
-                  })
-                )),
-              Effect.withSpan("MiddlewareAuthentication", {
-                attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token: Redacted.value(token) }
-              }),
-              withSystemActor
-            )
-        })
-      )
+    Effect.andThen((authF) =>
+      PortMiddlewareAuthentication.of({
+        cookie: (token) =>
+          HttpServerRequest.HttpServerRequest.pipe(
+            Effect.flatMap((request) =>
+              authF(ServiceId.make("00000000-0000-0000-0000-000000000000")).call((client) =>
+                client.api.getSession({
+                  headers: new Headers(
+                    NodeHttpServerRequest.toIncomingMessage(request).headers as Record<string, string>
+                  )
+                })
+              )
+            ),
+            Effect.flatMap((session) =>
+              Option.fromNullable(session).pipe(
+                Option.match({
+                  onNone: () =>
+                    Effect.fail(
+                      new ActorErrorUnauthorized({
+                        actorId: ActorId.make("00000000-0000-0000-0000-000000000000"),
+                        entity: "",
+                        action: ""
+                      })
+                    ),
+                  onSome: (a) => Effect.succeed(a.user)
+                })
+              )
+            ),
+            Effect.catchTag("AuthenticationError", () =>
+              Effect.fail(
+                new ActorErrorUnauthorized({
+                  actorId: ActorId.make("00000000-0000-0000-0000-000000000000"),
+                  entity: "",
+                  action: ""
+                })
+              )),
+            Effect.withSpan("MiddlewareAuthentication", {
+              attributes: { [ATTR_CODE_FUNCTION_NAME]: "cookie", token: Redacted.value(token) }
+            }),
+            withSystemActor
+          )
+      })
     )
   )
 )

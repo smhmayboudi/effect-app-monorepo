@@ -13,100 +13,98 @@ import { TodoPortEventEmitter } from "./TodoApplicationPortEventEmitter.js"
 export const TodoUseCase = Layer.scoped(
   TodoPortDriving,
   Effect.all([PortUUID, TodoPortDriven, TodoPortEventEmitter, makeTodoReadResolver]).pipe(
-    Effect.flatMap(([uuid, driven, eventEmitter, resolver]) =>
-      Effect.sync(() =>
-        TodoPortDriving.of({
-          create: (todo) =>
-            uuid.v7().pipe(
-              Effect.flatMap((v7) =>
-                driven.create({ ...todo, id: TodoId.make(v7) }).pipe(
-                  Effect.tapBoth({
-                    onFailure: (out) =>
-                      eventEmitter.emit("TodoUseCaseCreate", {
-                        in: { todo: { ...todo, id: TodoId.make(v7) } },
-                        out: Exit.fail(out)
-                      }),
-                    onSuccess: (out) =>
-                      eventEmitter.emit("TodoUseCaseCreate", {
-                        in: { todo: { ...todo, id: TodoId.make(v7) } },
-                        out: Exit.succeed(out)
-                      })
-                  }),
-                  Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", todo } }),
-                  policyRequire("Todo", "create")
-                )
+    Effect.andThen(([uuid, driven, eventEmitter, resolver]) =>
+      TodoPortDriving.of({
+        create: (todo) =>
+          uuid.v7().pipe(
+            Effect.flatMap((v7) =>
+              driven.create({ ...todo, id: TodoId.make(v7) }).pipe(
+                Effect.tapBoth({
+                  onFailure: (out) =>
+                    eventEmitter.emit("TodoUseCaseCreate", {
+                      in: { todo: { ...todo, id: TodoId.make(v7) } },
+                      out: Exit.fail(out)
+                    }),
+                  onSuccess: (out) =>
+                    eventEmitter.emit("TodoUseCaseCreate", {
+                      in: { todo: { ...todo, id: TodoId.make(v7) } },
+                      out: Exit.succeed(out)
+                    })
+                }),
+                Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "crteate", todo } }),
+                policyRequire("Todo", "create")
               )
-            ),
-          delete: (id) =>
-            driven.delete(id).pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("TodoUseCaseDelete", {
-                    in: { id },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("TodoUseCaseDelete", {
-                    in: { id },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
-              policyRequire("Todo", "delete")
-            ),
-          readAll: (urlParams) =>
-            driven.readAll(urlParams).pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("TodoUseCaseReadAll", {
-                    in: { urlParams },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("TodoUseCaseReadAll", {
-                    in: { urlParams },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
-              policyRequire("Todo", "readAll")
-            ),
-          readById: (id) =>
-            Effect.request(new TodoReadById({ id }), resolver).pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("TodoUseCaseReadById", {
-                    in: { id },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("TodoUseCaseReadById", {
-                    in: { id },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
-              policyRequire("Todo", "readById")
-            ),
-          update: (id, todo) =>
-            driven.update(id, todo).pipe(
-              Effect.tapBoth({
-                onFailure: (out) =>
-                  eventEmitter.emit("TodoUseCaseUpdate", {
-                    in: { id, todo },
-                    out: Exit.fail(out)
-                  }),
-                onSuccess: (out) =>
-                  eventEmitter.emit("TodoUseCaseUpdate", {
-                    in: { id, todo },
-                    out: Exit.succeed(out)
-                  })
-              }),
-              Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo } }),
-              policyRequire("Todo", "update")
             )
-        })
-      )
+          ),
+        delete: (id) =>
+          driven.delete(id).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("TodoUseCaseDelete", {
+                  in: { id },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("TodoUseCaseDelete", {
+                  in: { id },
+                  out: Exit.succeed(out)
+                })
+            }),
+            Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "delete", id } }),
+            policyRequire("Todo", "delete")
+          ),
+        readAll: (urlParams) =>
+          driven.readAll(urlParams).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("TodoUseCaseReadAll", {
+                  in: { urlParams },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("TodoUseCaseReadAll", {
+                  in: { urlParams },
+                  out: Exit.succeed(out)
+                })
+            }),
+            Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readAll", urlParams } }),
+            policyRequire("Todo", "readAll")
+          ),
+        readById: (id) =>
+          Effect.request(new TodoReadById({ id }), resolver).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("TodoUseCaseReadById", {
+                  in: { id },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("TodoUseCaseReadById", {
+                  in: { id },
+                  out: Exit.succeed(out)
+                })
+            }),
+            Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "readById", id } }),
+            policyRequire("Todo", "readById")
+          ),
+        update: (id, todo) =>
+          driven.update(id, todo).pipe(
+            Effect.tapBoth({
+              onFailure: (out) =>
+                eventEmitter.emit("TodoUseCaseUpdate", {
+                  in: { id, todo },
+                  out: Exit.fail(out)
+                }),
+              onSuccess: (out) =>
+                eventEmitter.emit("TodoUseCaseUpdate", {
+                  in: { id, todo },
+                  out: Exit.succeed(out)
+                })
+            }),
+            Effect.withSpan("TodoUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "update", id, todo } }),
+            policyRequire("Todo", "update")
+          )
+      })
     )
   )
 )
