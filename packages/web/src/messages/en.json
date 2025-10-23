@@ -56,6 +56,10 @@
       "description": "New services will appear here.",
       "serviceCreate": "Service create",
       "title": "No Services"
+    },
+    "nav-user": {
+      "account": "Account",
+      "sign-out": "Sign out"
     }
   },
   "email-forgot-password": {

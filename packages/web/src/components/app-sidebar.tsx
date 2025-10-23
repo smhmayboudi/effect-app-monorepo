@@ -1,7 +1,5 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
-
 import { AppTitle } from "@/components/app-title";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";

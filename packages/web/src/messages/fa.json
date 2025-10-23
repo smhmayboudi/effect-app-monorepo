@@ -56,6 +56,10 @@
       "description": "سرویس‌های جدید در اینجا نمایش داده خواهند شد.",
       "serviceCreate": "ایجاد سرویس",
       "title": "سرویسی موجود نیست"
+    },
+    "nav-user": {
+      "account": "حساب کاربری",
+      "sign-out": "خروج"
     }
   },
   "email-forgot-password": {

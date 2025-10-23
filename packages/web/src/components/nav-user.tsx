@@ -3,6 +3,7 @@
 import * as Effect from "effect/Effect";
 import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -14,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "@/components/ui/link";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -25,6 +25,7 @@ import { withToast } from "@/components/with-toast";
 import { authClient } from "@/lib/auth-client";
 
 export function NavUser({ isHeader }: { isHeader: boolean }) {
+  const t = useTranslations("components.nav-user");
   const { isMobile } = useSidebar();
   const { data } = authClient.useSession();
   const router = useRouter();
@@ -117,7 +118,7 @@ export function NavUser({ isHeader }: { isHeader: boolean }) {
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleAccount}>
                 <UserCircleIcon />
-                Account
+                {t("account")}
               </DropdownMenuItem>
               {/* <DropdownMenuItem>
                 <CreditCardIcon />
@@ -131,7 +132,7 @@ export function NavUser({ isHeader }: { isHeader: boolean }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />
-              Sign out
+              {t("sign-out")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
