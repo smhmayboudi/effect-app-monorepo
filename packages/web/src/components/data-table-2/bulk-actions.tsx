@@ -121,7 +121,7 @@ export function DataTableBulkActions<TData>({
   };
 
   const { dir } = useDirection();
-  const selected = t("selected")
+  const selected = t("selected");
 
   return selectedCount === 0 ? (
     <></>
@@ -183,13 +183,16 @@ export function DataTableBulkActions<TData>({
                 <Badge
                   aria-label={`${selectedCount} ${selected}`}
                   className="min-w-8 rounded-lg"
-                  variant="default">
+                  variant="default"
+                >
                   {chunks}
                 </Badge>
               ),
               entityName,
               selectedCount,
-              span: (chunks) => <span className="hidden sm:inline">{chunks}</span>,
+              span: (chunks) => (
+                <span className="hidden sm:inline">{chunks}</span>
+              ),
             })}
           </div>
 

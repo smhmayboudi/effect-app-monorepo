@@ -60,7 +60,9 @@ export function DataTablePagination<TData>({
               ))}
             </SelectContent>
           </Select>
-          <p className="hidden text-sm font-medium sm:block">{t("rows-per-page")}</p>
+          <p className="hidden text-sm font-medium sm:block">
+            {t("rows-per-page")}
+          </p>
         </div>
       </div>
 
@@ -107,7 +109,9 @@ export function DataTablePagination<TData>({
                   onClick={() => table.setPageIndex((pageNumber as number) - 1)}
                   variant={currentPage === pageNumber ? "default" : "outline"}
                 >
-                  <span className="sr-only">{t("go-to-page", { pageNumber })}</span>
+                  <span className="sr-only">
+                    {t("go-to-page", { pageNumber })}
+                  </span>
                   {pageNumber}
                 </Button>
               )}

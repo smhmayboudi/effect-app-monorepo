@@ -7,10 +7,10 @@ import {
   useAtom,
   useAtomValue,
 } from "@effect-atom/atom-react";
-import * as Array from "effect/Array"
-import * as Data from "effect/Data"
-import * as Effect from "effect/Effect"
-import * as Schema from "effect/Schema"
+import * as Array from "effect/Array";
+import * as Data from "effect/Data";
+import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
 import { type FC, useRef } from "react";
 
 class Service extends Schema.Class<Service>("Service")({

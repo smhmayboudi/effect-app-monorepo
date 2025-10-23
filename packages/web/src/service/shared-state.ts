@@ -53,7 +53,7 @@ export class SharedStateService<T> {
     const listeners = this.listeners.get(key)!;
     listeners.add(callback);
     const currentValue = this.get(key);
-    if (!!currentValue) {
+    if (currentValue) {
       callback(currentValue);
     }
 

@@ -1,6 +1,10 @@
 import { getCookieCache } from "better-auth/cookies";
 import createMiddleware from "next-intl/middleware";
-import { type MiddlewareConfig, NextRequest, NextResponse } from "next/server";
+import {
+  type MiddlewareConfig,
+  type NextRequest,
+  NextResponse,
+} from "next/server";
 import { v7 } from "uuid";
 
 import { routing } from "@/i18n/routing";
@@ -50,9 +54,7 @@ export async function middleware(request: NextRequest) {
       `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: ${
         process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'"
       } https://www.googletagmanager.com; ` +
-      `style-src 'self' 'nonce-${nonce}' ${
-        process.env.NODE_ENV === "production" ? "" : "'unsafe-inline'"
-      }; ` +
+      `style-src 'self' 'nonce-${nonce}' ${process.env.NODE_ENV === "production" ? "" : "'unsafe-inline'"}; ` +
       process.env.NODE_ENV ===
     "production"
       ? "upgrade-insecure-requests; "

@@ -38,7 +38,7 @@ export class LeaderElectionService {
   }
 
   cleanup(): void {
-    if (!!this.intervalId) {
+    if (this.intervalId) {
       clearInterval(this.intervalId);
     }
     this.channel.close();

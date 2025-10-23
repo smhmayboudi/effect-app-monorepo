@@ -1,4 +1,4 @@
-const connections: MessagePort[] = [];
+const connections: Array<MessagePort> = [];
 
 self.onconnect = (e: MessageEvent) => {
   const port = e.ports[0];
