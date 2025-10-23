@@ -1,8 +1,8 @@
-import type { SqlClient } from "@effect/sql"
+import type * as sql from "@effect/sql"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 
 export const buildSelectQuery = <A extends object>(
-  sql: SqlClient.SqlClient,
+  sql: sql.SqlClient.SqlClient,
   tableName: string,
   urlParams: URLParams<A>
 ) => {
@@ -56,7 +56,7 @@ export const buildSelectQuery = <A extends object>(
 }
 
 export const buildSelectCountQuery = <A extends object>(
-  sql: SqlClient.SqlClient,
+  sql: sql.SqlClient.SqlClient,
   tableName: string,
   urlParams: URLParams<A>
 ) => {

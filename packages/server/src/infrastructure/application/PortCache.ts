@@ -1,6 +1,10 @@
 // reference: https://github.com/lucas-barake/effect-monorepo/blob/main/packages/domain/src/ManualCache.ts
 
-import type { Duration, Effect, Option, Scope, Types } from "effect"
+import type * as Duration from "effect/Duration"
+import type * as Effect from "effect/Effect"
+import type * as Option from "effect/Option"
+import type * as Scope from "effect/Scope"
+import type * as Types from "effect/Types"
 import * as internal from "../adapter/Cache.js"
 
 /**

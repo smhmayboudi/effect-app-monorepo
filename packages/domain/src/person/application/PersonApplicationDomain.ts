@@ -1,4 +1,4 @@
-import { Schema } from "effect"
+import * as Schema from "effect/Schema"
 import { GroupId } from "../../group/application/GroupApplicationDomain.js"
 
 export const PersonId = Schema.UUID.pipe(

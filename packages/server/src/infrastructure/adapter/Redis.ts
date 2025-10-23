@@ -1,4 +1,6 @@
-import { Config, Effect, Layer } from "effect"
+import * as Config from "effect/Config"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import type { RedisOptions } from "ioredis"
 import { Redis as RedisOriginal } from "ioredis"
 import { PortRedis } from "../application/PortRedis.js"

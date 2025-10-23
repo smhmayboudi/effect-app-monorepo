@@ -3,7 +3,8 @@
 import { Registry } from "@effect-atom/atom-react";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
-import { Effect, Schema } from "effect";
+import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
 import { GalleryVerticalEnd } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";

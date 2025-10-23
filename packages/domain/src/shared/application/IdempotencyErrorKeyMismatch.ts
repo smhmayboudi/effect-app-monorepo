@@ -1,5 +1,5 @@
-import { HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema"
+import * as Schema from "effect/Schema"
 import { IdempotencyKeyClient } from "./IdempotencyKeyClient.js"
 
 export class IdempotencyErrorKeyMismatch

@@ -1,11 +1,15 @@
-import { SqlClient } from "@effect/sql"
-import { SqliteClient, SqliteMigrator } from "@effect/sql-sqlite-node"
-import type { SqliteClientConfig } from "@effect/sql-sqlite-node/SqliteClient"
-import { Config, Effect, identity, Layer, String } from "effect"
+import * as SqliteClient from "@effect/sql-sqlite-node/SqliteClient"
+import * as SqliteMigrator from "@effect/sql-sqlite-node/SqliteMigrator"
+import * as SqlClient from "@effect/sql/SqlClient"
+import * as effect from "effect"
+import * as Config from "effect/Config"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as String from "effect/String"
 import { fileURLToPath } from "url"
 import { makeTestLayer } from "../../util/Layer.js"
 
-const Client = (options: Config.Config.Wrap<SqliteClientConfig>) =>
+const Client = (options: Config.Config.Wrap<SqliteClient.SqliteClientConfig>) =>
   Layer.unwrapEffect(
     Config.unwrap(options).pipe(Effect.map((config) =>
       SqliteClient.layer({
@@ -23,9 +27,9 @@ const Migrator = SqliteMigrator.layer({
   table: "tbl_sql_migration"
 })
 
-export const Sql = (options: Config.Config.Wrap<SqliteClientConfig>) =>
+export const Sql = (options: Config.Config.Wrap<SqliteClient.SqliteClientConfig>) =>
   Migrator.pipe(Layer.provideMerge(Client(options)))
 
 export const SqlTest = makeTestLayer(SqlClient.SqlClient)({
-  withTransaction: identity
+  withTransaction: effect.identity
 })

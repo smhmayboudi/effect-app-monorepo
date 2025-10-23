@@ -1,7 +1,8 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { policy } from "../../../util/Policy.js"
 import { TodoPortPolicy } from "../application/TodoApplicationPortPolicy.js"
 

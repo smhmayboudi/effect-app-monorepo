@@ -1,6 +1,9 @@
-import { HttpApiSchema } from "@effect/platform"
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema"
 import type { User } from "better-auth"
-import { Context, Effect, Predicate, Schema } from "effect"
+import * as Context from "effect/Context"
+import * as Effect from "effect/Effect"
+import * as Predicate from "effect/Predicate"
+import * as Schema from "effect/Schema"
 
 export const ActorId = Schema.UUID.pipe(
   Schema.brand("ActorId"),

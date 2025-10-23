@@ -1,8 +1,12 @@
-import { persisted } from "@effect/experimental/RequestResolver"
+import * as expRequestResolver from "@effect/experimental/RequestResolver"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Group, GroupId } from "@template/domain/group/application/GroupApplicationDomain"
 import { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
-import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import * as Effect from "effect/Effect"
+import * as Exit from "effect/Exit"
+import * as PrimaryKey from "effect/PrimaryKey"
+import * as RequestResolver from "effect/RequestResolver"
+import * as Schema from "effect/Schema"
 import { GroupConfig } from "./GroupApplicationConfig.js"
 import { GroupPortDriven } from "./GroupApplicationPortDriven.js"
 
@@ -27,7 +31,7 @@ export const makeGroupReadResolver = Effect.all([GroupConfig, GroupPortDriven]).
           Effect.tap(() => Effect.logDebug(`DB hit: GroupReadById ${requests.length}`))
         )
     }).pipe(
-      persisted({
+      expRequestResolver.persisted({
         storeId: "Group",
         timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
       })

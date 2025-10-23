@@ -1,6 +1,6 @@
 import type { ResponseSuccess, ResponseSuccessArray, SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import { Effect } from "effect"
+import * as Effect from "effect/Effect"
 
 export const response = <A, E, R>(
   effect: Effect.Effect<A, E, R>

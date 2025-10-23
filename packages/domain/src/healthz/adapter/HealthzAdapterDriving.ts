@@ -1,5 +1,7 @@
-import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "@effect/platform"
-import { Schema } from "effect"
+import * as HttpApiEndpoint from "@effect/platform/HttpApiEndpoint"
+import * as HttpApiGroup from "@effect/platform/HttpApiGroup"
+import * as OpenApi from "@effect/platform/OpenApi"
+import * as Schema from "effect/Schema"
 
 export class HealthzDriving extends HttpApiGroup.make("healthz")
   .add(

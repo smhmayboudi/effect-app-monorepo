@@ -2,7 +2,8 @@ import type { Group, GroupId } from "@template/domain/group/application/GroupApp
 import type { GroupErrorNotFound } from "@template/domain/group/application/GroupApplicationErrorNotFound"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class GroupPortDriven extends Context.Tag("GroupPortDriven")<GroupPortDriven, {
   create: (group: Omit<Group, "createdAt" | "updatedAt" | "deletedAt">) => Effect.Effect<GroupId>

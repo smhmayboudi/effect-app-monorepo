@@ -2,7 +2,13 @@
 
 import { createClient, type LibsqlError } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import { Cause, Effect, Exit, Layer, Option, Redacted, Runtime } from "effect"
+import * as Cause from "effect/Cause"
+import * as Effect from "effect/Effect"
+import * as Exit from "effect/Exit"
+import * as Layer from "effect/Layer"
+import * as Option from "effect/Option"
+import * as Redacted from "effect/Redacted"
+import * as Runtime from "effect/Runtime"
 import type {
   Client,
   DBSchema,

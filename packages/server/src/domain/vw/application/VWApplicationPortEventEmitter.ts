@@ -1,7 +1,7 @@
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { GroupPersonTodo } from "@template/domain/vw/application/GroupPersonTodoApplicationDomain"
-import type { Exit } from "effect"
+import type * as Exit from "effect/Exit"
 import { PortEventEmitter } from "../../../infrastructure/application/PortEventEmitter.js"
 
 type VWEvents = {

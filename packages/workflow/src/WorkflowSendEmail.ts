@@ -1,5 +1,9 @@
-import { Activity, DurableClock, DurableDeferred, Workflow } from "@effect/workflow"
-import { Effect, Schema } from "effect"
+import * as Activity from "@effect/workflow/Activity"
+import * as DurableClock from "@effect/workflow/DurableClock"
+import * as DurableDeferred from "@effect/workflow/DurableDeferred"
+import * as Workflow from "@effect/workflow/Workflow"
+import * as Effect from "effect/Effect"
+import * as Schema from "effect/Schema"
 
 class SendEmailError extends Schema.TaggedError<SendEmailError>("SendEmailError")(
   "SendEmailError",

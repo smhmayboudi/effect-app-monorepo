@@ -1,4 +1,6 @@
-import { Effect, Layer, Option } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as Option from "effect/Option"
 import { PortRateLimit, RateLimitError } from "../application/PortRateLimit.js"
 import { PortRateLimitAlgorithm, type RateLimitConfig } from "../application/PortRateLimitAlgorithm.js"
 import { PortRateLimitStorage } from "../application/PortRateLimitStorage.js"

@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-import { NodeContext, NodeHttpClient, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer } from "effect"
+import * as NodeContext from "@effect/platform-node/NodeContext"
+import * as NodeHttpClient from "@effect/platform-node/NodeHttpClient"
+import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { cli } from "./cli.js"
 import { TodoClient, UUID } from "./TodoClient.js"
 

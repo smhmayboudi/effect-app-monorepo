@@ -1,7 +1,7 @@
 import { AtomHttpApi } from "@effect-atom/atom-react";
-import { FetchHttpClient } from "@effect/platform";
+import * as FetchHttpClient from "@effect/platform/FetchHttpClient";
 import { Api } from "@template/domain/Api";
-import { Layer } from "effect";
+import * as Layer from "effect/Layer";
 
 export class HttpClient extends AtomHttpApi.Tag<HttpClient>()("HttpClient", {
   api: Api,

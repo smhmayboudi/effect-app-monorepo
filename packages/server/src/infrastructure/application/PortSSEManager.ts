@@ -1,6 +1,8 @@
 import type { ActorId } from "@template/domain/Actor"
 import type { SSE } from "@template/domain/sse/application/SSEApplicationDomain"
-import { Context, type Effect, type Queue } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
+import type * as Queue from "effect/Queue"
 
 export class PortSSEManager extends Context.Tag("PortSSEManager")<PortSSEManager, {
   notifyAll: (event: SSE) => Effect.Effect<void>

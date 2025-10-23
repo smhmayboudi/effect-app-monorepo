@@ -1,4 +1,6 @@
-import { HttpApiMiddleware, HttpApiSecurity, OpenApi } from "@effect/platform"
+import * as HttpApiMiddleware from "@effect/platform/HttpApiMiddleware"
+import * as HttpApiSecurity from "@effect/platform/HttpApiSecurity"
+import * as OpenApi from "@effect/platform/OpenApi"
 import { Actor, ActorErrorUnauthorized } from "./Actor.js"
 
 export class PortMiddlewareAuthentication extends HttpApiMiddleware.Tag<PortMiddlewareAuthentication>()(

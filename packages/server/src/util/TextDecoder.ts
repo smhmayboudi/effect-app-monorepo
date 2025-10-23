@@ -1,5 +1,8 @@
-import { HttpApiSchema } from "@effect/platform"
-import { Context, Effect, Layer, Schema } from "effect"
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema"
+import * as Context from "effect/Context"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as Schema from "effect/Schema"
 import * as util from "node:util"
 
 export class TextDecoderError extends Schema.TaggedError<TextDecoderError>("TextDecoderError")(

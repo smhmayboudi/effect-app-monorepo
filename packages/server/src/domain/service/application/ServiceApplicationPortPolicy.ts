@@ -1,6 +1,7 @@
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class ServicePortPolicy extends Context.Tag("ServicePortPolicy")<ServicePortPolicy, {
   canCreate: (id: ServiceId) => Effect.Effect<ActorAuthorized<"Service", "create">, ActorErrorUnauthorized, Actor>

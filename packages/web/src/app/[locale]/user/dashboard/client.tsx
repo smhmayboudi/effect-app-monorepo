@@ -3,8 +3,8 @@
 import type { CSSProperties } from "react";
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { Cookies } from "@effect/platform";
-import { Effect } from "effect";
+import * as Cookies from "@effect/platform/Cookies";
+import * as Effect from "effect/Effect";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 

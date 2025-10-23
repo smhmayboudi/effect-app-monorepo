@@ -1,6 +1,7 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { GroupPersonTodo } from "@template/domain/vw/application/GroupPersonTodoApplicationDomain"
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { PortElasticsearch } from "../../../infrastructure/application/PortElasticsearch.js"
 import { VWPortDriven } from "../application/VWApplicationPortDriven.js"
 

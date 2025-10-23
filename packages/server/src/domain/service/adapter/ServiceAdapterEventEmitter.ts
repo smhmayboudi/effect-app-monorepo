@@ -1,8 +1,9 @@
-import { Command } from "@effect/platform"
-import { NodeContext } from "@effect/platform-node"
+import * as NodeContext from "@effect/platform-node/NodeContext"
+import * as Command from "@effect/platform/Command"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { ServicePortEventEmitter } from "../application/ServiceApplicationPortEventEmitter.js"
 
 export const runCommands = (serviceId: ServiceId) => {

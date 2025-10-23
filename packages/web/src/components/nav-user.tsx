@@ -1,6 +1,6 @@
 "use client";
 
-import { Effect } from "effect";
+import * as Effect from "effect/Effect";
 import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 

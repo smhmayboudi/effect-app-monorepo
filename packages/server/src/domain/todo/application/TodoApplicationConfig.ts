@@ -1,4 +1,4 @@
-import { Config } from "effect"
+import * as Config from "effect/Config"
 
 export const TodoConfig = Config.nested(
   Config.all({

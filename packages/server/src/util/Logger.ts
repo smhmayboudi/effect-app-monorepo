@@ -1,4 +1,8 @@
-import { Array, Inspectable, Logger, Option, Record } from "effect"
+import * as Array from "effect/Array"
+import * as Inspectable from "effect/Inspectable"
+import * as Logger from "effect/Logger"
+import * as Option from "effect/Option"
+import * as Record from "effect/Record"
 
 export const LoggerLive = Logger.replace(
   Logger.defaultLogger,

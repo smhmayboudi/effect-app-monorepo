@@ -1,6 +1,6 @@
 import { Actor, type ActorAuthorized, ActorErrorUnauthorized, ActorId } from "@template/domain/Actor"
 import type { User } from "better-auth"
-import { Effect } from "effect"
+import * as Effect from "effect/Effect"
 
 const actorAuthorized = <Entity extends string, Action extends string>(
   user: User

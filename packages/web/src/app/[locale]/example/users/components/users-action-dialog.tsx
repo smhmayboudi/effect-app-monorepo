@@ -1,7 +1,7 @@
 "use client";
 
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Schema } from "effect";
+import * as Schema from "effect/Schema";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";

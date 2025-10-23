@@ -1,4 +1,5 @@
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { PortRateLimitStorage, RateLimitStorageError } from "../application/PortRateLimitStorage.js"
 import { PortRedis } from "../application/PortRedis.js"
 

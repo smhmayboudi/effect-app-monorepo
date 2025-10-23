@@ -12,7 +12,8 @@ import { ResultPersistenceTest } from "@template/server/infrastructure/adapter/R
 import { UUIDTest } from "@template/server/infrastructure/adapter/UUID"
 import { makeTestLayer } from "@template/server/util/Layer"
 import { withSystemActor } from "@template/server/util/Policy"
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 
 describe("PersonUseCase", () => {
   it.scoped("should be created", () => {

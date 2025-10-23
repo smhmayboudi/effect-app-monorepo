@@ -1,6 +1,7 @@
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { GroupId } from "@template/domain/group/application/GroupApplicationDomain"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class GroupPortPolicy extends Context.Tag("GroupPortPolicy")<GroupPortPolicy, {
   canCreate: (id: GroupId) => Effect.Effect<ActorAuthorized<"Group", "create">, ActorErrorUnauthorized, Actor>

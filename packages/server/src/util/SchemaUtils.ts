@@ -1,21 +1,17 @@
 // reference: https://github.com/lucas-barake/building-an-app-with-effect/blob/main/packages/domain/src/schema-utils.ts
 
-import {
-  Array,
-  Duration,
-  Effect,
-  Either,
-  Equal,
-  Hash,
-  HashSet,
-  identity,
-  ParseResult,
-  Predicate,
-  Schema,
-  type SchemaAST,
-  Struct
-} from "effect"
-import { ArrayFormatter, type ParseIssue } from "effect/ParseResult"
+import * as effect from "effect"
+import * as Array from "effect/Array"
+import * as Duration from "effect/Duration"
+import * as Effect from "effect/Effect"
+import * as Either from "effect/Either"
+import * as Equal from "effect/Equal"
+import * as Hash from "effect/Hash"
+import * as HashSet from "effect/HashSet"
+import * as ParseResult from "effect/ParseResult"
+import * as Predicate from "effect/Predicate"
+import * as Schema from "effect/Schema"
+import * as Struct from "effect/Struct"
 
 // ---------------
 // Schemas
@@ -322,7 +318,7 @@ export const ArrayFromFallible = <A, I, R>(
   ).pipe(
     Schema.transform(Schema.typeSchema(Schema.Array(schema)), {
       decode: (array) => array.filter(Predicate.isNotNull),
-      encode: identity,
+      encode: effect.identity,
       strict: true
     })
   )
@@ -411,13 +407,13 @@ export const HashSetFromIterable = <A, I, R>(
  * @returns An Effect that resolves to a formatted string of parse issues
  */
 export const formatParseIssueMessages = (
-  issue: ParseIssue,
+  issue: ParseResult.ParseIssue,
   opts?: {
     newLines?: number
     numbered?: boolean
   }
 ): Effect.Effect<string> =>
-  ArrayFormatter.formatIssue(issue).pipe(
+  ParseResult.ArrayFormatter.formatIssue(issue).pipe(
     Effect.map((issues) =>
       issues
         .map(
@@ -487,7 +483,7 @@ export const WithEquality = <A extends Record<string, unknown>, I, R>({
 
       return Object.assign(value, extensions)
     },
-    encode: identity,
+    encode: effect.identity,
     strict: true
   })
 
@@ -589,7 +585,7 @@ export const reverseSchema = <A, E, R>(schema: Schema.Schema<A, E, R>): Schema.S
  * @returns A schema for the tagged struct
  */
 export const TaggedStruct = <
-  Tag extends SchemaAST.LiteralValue,
+  Tag extends effect.SchemaAST.LiteralValue,
   Fields extends Schema.Struct.Fields
 >(
   tag: Tag,

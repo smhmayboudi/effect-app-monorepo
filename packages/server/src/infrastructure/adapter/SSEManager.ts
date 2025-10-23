@@ -1,6 +1,13 @@
 import type { ActorId } from "@template/domain/Actor"
 import { SSE } from "@template/domain/sse/application/SSEApplicationDomain"
-import { Array, Effect, Layer, MutableHashMap, Option, type Queue, Ref, Schema } from "effect"
+import * as Array from "effect/Array"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as MutableHashMap from "effect/MutableHashMap"
+import * as Option from "effect/Option"
+import type * as Queue from "effect/Queue"
+import * as Ref from "effect/Ref"
+import * as Schema from "effect/Schema"
 import { PortSSEManager } from "../application/PortSSEManager.js"
 
 interface ActiveConnection {

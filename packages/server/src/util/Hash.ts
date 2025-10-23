@@ -1,7 +1,7 @@
-import { Effect } from "effect"
-import { UnknownException } from "effect/Cause"
+import * as Cause from "effect/Cause"
+import * as Effect from "effect/Effect"
 
-export const generateDataHash = (data: unknown): Effect.Effect<string, UnknownException> =>
+export const generateDataHash = (data: unknown): Effect.Effect<string, Cause.UnknownException> =>
   Effect.try(() => {
     const jsonString = JSON.stringify(data)
     let hash = 0
@@ -16,11 +16,11 @@ export const generateDataHash = (data: unknown): Effect.Effect<string, UnknownEx
 export const validateDataHash = (
   data: unknown,
   existingHash: string
-): Effect.Effect<void, UnknownException> =>
+): Effect.Effect<void, Cause.UnknownException> =>
   generateDataHash(data).pipe(
     Effect.flatMap((currentHash) =>
       currentHash !== existingHash
-        ? Effect.fail(new UnknownException("validateDataHash"))
+        ? Effect.fail(new Cause.UnknownException("validateDataHash"))
         : Effect.void
     )
   )

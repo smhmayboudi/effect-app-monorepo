@@ -1,6 +1,6 @@
-import { HttpApiBuilder } from "@effect/platform"
+import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
 import { Api } from "@template/domain/Api"
-import { Effect } from "effect"
+import * as Effect from "effect/Effect"
 import { HealthzPortDriving } from "../application/HealthzApplicationPortDriving.js"
 
 export const HealthzDriving = HttpApiBuilder.group(Api, "healthz", (handlers) =>

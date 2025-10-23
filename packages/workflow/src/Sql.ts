@@ -1,8 +1,10 @@
-import { SqliteClient } from "@effect/sql-sqlite-node"
-import type { SqliteClientConfig } from "@effect/sql-sqlite-node/SqliteClient"
-import { Config, Effect, Layer, String } from "effect"
+import * as SqliteClient from "@effect/sql-sqlite-node/SqliteClient"
+import * as Config from "effect/Config"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as String from "effect/String"
 
-const Client = (options: Config.Config.Wrap<SqliteClientConfig>) =>
+const Client = (options: Config.Config.Wrap<SqliteClient.SqliteClientConfig>) =>
   Layer.unwrapEffect(
     Config.unwrap(options).pipe(Effect.map((config) =>
       SqliteClient.layer({
@@ -13,4 +15,4 @@ const Client = (options: Config.Config.Wrap<SqliteClientConfig>) =>
     ))
   )
 
-export const Sql = (options: Config.Config.Wrap<SqliteClientConfig>) => Client(options)
+export const Sql = (options: Config.Config.Wrap<SqliteClient.SqliteClientConfig>) => Client(options)

@@ -1,6 +1,7 @@
-import { HttpApiSchema } from "@effect/platform"
-import type { Effect } from "effect"
-import { Context, Schema } from "effect"
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
+import * as Schema from "effect/Schema"
 
 export class RateLimitStorageError extends Schema.TaggedError<RateLimitStorageError>("RateLimitStorageError")(
   "RateLimitStorageError",

@@ -4,7 +4,8 @@ import type { Person, PersonId } from "@template/domain/person/application/Perso
 import type { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class PersonPortDriving extends Context.Tag("PersonPortDriving")<PersonPortDriving, {
   create: (

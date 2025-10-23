@@ -1,4 +1,4 @@
-import { Schema } from "effect"
+import * as Schema from "effect/Schema"
 
 export const ResponseError = Schema.Struct({
   error: Schema.Struct({

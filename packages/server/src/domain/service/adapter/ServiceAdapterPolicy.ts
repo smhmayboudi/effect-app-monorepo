@@ -1,7 +1,8 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { policy } from "../../../util/Policy.js"
 import { ServicePortPolicy } from "../application/ServiceApplicationPortPolicy.js"
 

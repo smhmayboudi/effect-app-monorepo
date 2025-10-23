@@ -1,4 +1,5 @@
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export interface EventEmitter<Events extends Record<string, unknown>> {
   emit<K extends keyof Events>(event: K, data: Events[K]): Effect.Effect<void>

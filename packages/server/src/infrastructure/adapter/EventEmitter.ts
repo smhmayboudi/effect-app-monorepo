@@ -1,4 +1,9 @@
-import { Chunk, Effect, HashMap, Layer, Queue, Ref } from "effect"
+import * as Chunk from "effect/Chunk"
+import * as Effect from "effect/Effect"
+import * as HashMap from "effect/HashMap"
+import * as Layer from "effect/Layer"
+import * as Queue from "effect/Queue"
+import * as Ref from "effect/Ref"
 import { PortEventEmitter } from "../application/PortEventEmitter.js"
 
 export const EventEmitter = <Events extends Record<string, unknown>>() =>

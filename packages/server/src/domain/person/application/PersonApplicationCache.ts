@@ -1,8 +1,12 @@
-import { persisted } from "@effect/experimental/RequestResolver"
+import * as expRequestResolver from "@effect/experimental/RequestResolver"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Person, PersonId } from "@template/domain/person/application/PersonApplicationDomain"
 import { PersonErrorNotFound } from "@template/domain/person/application/PersonApplicationErrorNotFound"
-import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import * as Effect from "effect/Effect"
+import * as Exit from "effect/Exit"
+import * as PrimaryKey from "effect/PrimaryKey"
+import * as RequestResolver from "effect/RequestResolver"
+import * as Schema from "effect/Schema"
 import { PersonConfig } from "./PersonApplicationConfig.js"
 import { PersonPortDriven } from "./PersonApplicationPortDriven.js"
 
@@ -27,7 +31,7 @@ export const makePersonReadResolver = Effect.all([PersonConfig, PersonPortDriven
           Effect.tap(() => Effect.logDebug(`DB hit: PersonReadById ${requests.length}`))
         )
     }).pipe(
-      persisted({
+      expRequestResolver.persisted({
         storeId: "Person",
         timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
       })

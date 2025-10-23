@@ -1,5 +1,7 @@
-import { HttpMiddleware } from "@effect/platform"
-import { Effect, Metric, MetricBoundaries } from "effect"
+import * as HttpMiddleware from "@effect/platform/HttpMiddleware"
+import * as Effect from "effect/Effect"
+import * as Metric from "effect/Metric"
+import * as MetricBoundaries from "effect/MetricBoundaries"
 
 const counterHTTPRequestsTotal = Metric.counter(
   "http_requests_total",

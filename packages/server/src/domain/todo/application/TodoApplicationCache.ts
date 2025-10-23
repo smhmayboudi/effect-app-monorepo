@@ -1,8 +1,12 @@
-import { persisted } from "@effect/experimental/RequestResolver"
+import * as expRequestResolver from "@effect/experimental/RequestResolver"
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
-import { Effect, Exit, PrimaryKey, RequestResolver, Schema } from "effect"
+import * as Effect from "effect/Effect"
+import * as Exit from "effect/Exit"
+import * as PrimaryKey from "effect/PrimaryKey"
+import * as RequestResolver from "effect/RequestResolver"
+import * as Schema from "effect/Schema"
 import { TodoConfig } from "./TodoApplicationConfig.js"
 import { TodoPortDriven } from "./TodoApplicationPortDriven.js"
 
@@ -27,7 +31,7 @@ export const makeTodoReadResolver = Effect.all([TodoConfig, TodoPortDriven]).pip
           Effect.tap(() => Effect.logDebug(`DB hit: TodoReadById ${requests.length}`))
         )
     }).pipe(
-      persisted({
+      expRequestResolver.persisted({
         storeId: "Todo",
         timeToLive: (_req, exit) => Exit.isSuccess(exit) ? cacheTTLMs : 0
       })

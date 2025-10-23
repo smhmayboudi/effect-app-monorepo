@@ -1,7 +1,8 @@
 "use client";
 
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Effect, Schema } from "effect";
+import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
 import { GalleryVerticalEnd } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";

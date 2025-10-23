@@ -1,4 +1,4 @@
-import { Config } from "effect"
+import * as Config from "effect/Config"
 
 const ElasticsearchLive = Config.nested(
   Config.all({

@@ -3,7 +3,8 @@ import type { ServiceErrorAlreadyExists } from "@template/domain/service/applica
 import type { ServiceErrorNotFound } from "@template/domain/service/application/ServiceApplicationErrorNotFound"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class ServicePortDriven extends Context.Tag("ServicePortDriven")<ServicePortDriven, {
   create: (

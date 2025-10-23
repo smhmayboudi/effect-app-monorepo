@@ -4,7 +4,7 @@ import { useAtomSet } from "@effect-atom/atom-react";
 import { effectTsResolver } from "@hookform/resolvers/effect-ts";
 import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
-import { Schema } from "effect";
+import * as Schema from "effect/Schema";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { v7 } from "uuid";

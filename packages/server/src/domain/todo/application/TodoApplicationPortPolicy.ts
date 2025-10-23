@@ -1,6 +1,7 @@
 import type { Actor, ActorAuthorized, ActorErrorUnauthorized } from "@template/domain/Actor"
 import type { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class TodoPortPolicy extends Context.Tag("TodoPortPolicy")<TodoPortPolicy, {
   canCreate: (id: TodoId) => Effect.Effect<ActorAuthorized<"Todo", "create">, ActorErrorUnauthorized, Actor>

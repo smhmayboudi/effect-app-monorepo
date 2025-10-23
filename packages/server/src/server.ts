@@ -1,13 +1,24 @@
-import { NodeSdk } from "@effect/opentelemetry"
-import { HttpApiBuilder, HttpApiScalar, HttpApiSwagger, HttpMiddleware, HttpServer } from "@effect/platform"
-import { NodeContext, NodeHttpServer, NodeRuntime } from "@effect/platform-node"
+import * as NodeSdk from "@effect/opentelemetry/NodeSdk"
+import * as NodeContext from "@effect/platform-node/NodeContext"
+import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer"
+import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
+import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
+import * as HttpApiScalar from "@effect/platform/HttpApiScalar"
+import * as HttpApiSwagger from "@effect/platform/HttpApiSwagger"
+import * as HttpMiddleware from "@effect/platform/HttpMiddleware"
+import * as HttpServer from "@effect/platform/HttpServer"
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http"
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http"
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
-import { Config, Effect, flow, Layer, Logger, LogLevel } from "effect"
+import * as effect from "effect"
+import * as Config from "effect/Config"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as Logger from "effect/Logger"
+import * as LogLevel from "effect/LogLevel"
 import * as http from "node:http"
 import { ApiLive } from "./Api.js"
 import { ConfigLive } from "./Config.js"
@@ -32,7 +43,7 @@ const gracefulShutdown = <A, E, R>(layer: Layer.Layer<A, E, R>) =>
     Layer.provideMerge(layer)
   )
 
-HttpApiBuilder.serve(flow(
+HttpApiBuilder.serve(effect.flow(
   HttpMiddleware.cors({
     allowedOrigins: ["http://127.0.0.1:3001", "http://127.0.0.1:3002"],
     allowedMethods: ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"],

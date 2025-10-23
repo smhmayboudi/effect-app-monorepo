@@ -1,4 +1,4 @@
-import { Schema } from "effect";
+import * as Schema from "effect/Schema";
 
 const userStatusSchema = Schema.Literal(
   "active",

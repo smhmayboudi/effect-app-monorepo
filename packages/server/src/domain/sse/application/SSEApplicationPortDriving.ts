@@ -1,7 +1,9 @@
 import type { ActorId } from "@template/domain/Actor"
 import type { SSE } from "@template/domain/sse/application/SSEApplicationDomain"
-import { Context, type Effect, type Queue } from "effect"
-import type { Scope } from "effect/Scope"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
+import type * as Queue from "effect/Queue"
+import type * as Scope from "effect/Scope"
 
 export class SSEPortDriving extends Context.Tag("SSEPortDriving")<SSEPortDriving, {
   connect: (
@@ -11,7 +13,7 @@ export class SSEPortDriving extends Context.Tag("SSEPortDriving")<SSEPortDriving
   ) => Effect.Effect<
     void,
     never,
-    Scope
+    Scope.Scope
   >
   notify: (sse: SSE, id: ActorId) => Effect.Effect<void>
   notifyAll: (sse: SSE) => Effect.Effect<void>

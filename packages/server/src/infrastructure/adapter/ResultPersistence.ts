@@ -1,21 +1,24 @@
-import type { ResultPersistenceStore } from "@effect/experimental/Persistence"
-import { ResultPersistence } from "@effect/experimental/Persistence"
-import { layerResultConfig } from "@effect/experimental/Persistence/Redis"
-import type { Config, Exit } from "effect"
-import { Duration, Effect, Option, Scope } from "effect"
+import * as expPersistence from "@effect/experimental/Persistence"
+import * as Redis from "@effect/experimental/Persistence/Redis"
+import type * as Config from "effect/Config"
+import * as Duration from "effect/Duration"
+import * as Effect from "effect/Effect"
+import type * as Exit from "effect/Exit"
+import * as Option from "effect/Option"
+import * as Scope from "effect/Scope"
 import type { RedisOptions } from "ioredis"
 import { makeTestLayer } from "../../util/Layer.js"
 
-export const ResultPersistenceRedis = (options: Config.Config.Wrap<RedisOptions>) => layerResultConfig(options)
+export const ResultPersistenceRedis = (options: Config.Config.Wrap<RedisOptions>) => Redis.layerResultConfig(options)
 
-export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
+export const ResultPersistenceTest = makeTestLayer(expPersistence.ResultPersistence)({
   make: (options: {
     readonly storeId: string
     readonly timeToLive?: (
-      key: ResultPersistence.KeyAny,
+      key: expPersistence.ResultPersistence.KeyAny,
       exit: Exit.Exit<unknown, unknown>
     ) => Duration.DurationInput
-  }): Effect.Effect<ResultPersistenceStore, never, Scope.Scope> =>
+  }): Effect.Effect<expPersistence.ResultPersistenceStore, never, Scope.Scope> =>
     Scope.make().pipe(
       Effect.flatMap((scope) => {
         const store = new Map<string, {
@@ -34,7 +37,7 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
         return Scope.addFinalizer(scope, Effect.sync(() => clearInterval(interval))).pipe(
           Effect.flatMap(() => {
             const getExpiration = (
-              key: ResultPersistence.KeyAny,
+              key: expPersistence.ResultPersistence.KeyAny,
               exit: Exit.Exit<unknown, unknown>
             ) => {
               if (!options.timeToLive) {
@@ -46,7 +49,7 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
 
             return Effect.sync(() => ({
               get: <R, IE, E, IA, A>(
-                key: ResultPersistence.Key<R, IE, E, IA, A>
+                key: expPersistence.ResultPersistence.Key<R, IE, E, IA, A>
               ) =>
                 Effect.sync(() => {
                   const entry = store.get(JSON.stringify(key))
@@ -62,7 +65,7 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
                   return Option.some(entry.value as Exit.Exit<A, E>)
                 }),
               getMany: <R, IE, E, IA, A>(
-                keys: ReadonlyArray<ResultPersistence.Key<R, IE, E, IA, A>>
+                keys: ReadonlyArray<expPersistence.ResultPersistence.Key<R, IE, E, IA, A>>
               ) =>
                 Effect.sync(() => {
                   return keys.map((key) => {
@@ -80,7 +83,7 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
                   })
                 }),
               set: <R, IE, E, IA, A>(
-                key: ResultPersistence.Key<R, IE, E, IA, A>,
+                key: expPersistence.ResultPersistence.Key<R, IE, E, IA, A>,
                 value: Exit.Exit<A, E>
               ) =>
                 Effect.sync(() => {
@@ -92,7 +95,7 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
                   })
                 }),
               setMany: <R, IE, E, IA, A>(
-                entries: Iterable<readonly [ResultPersistence.Key<R, IE, E, IA, A>, Exit.Exit<A, E>]>
+                entries: Iterable<readonly [expPersistence.ResultPersistence.Key<R, IE, E, IA, A>, Exit.Exit<A, E>]>
               ) =>
                 Effect.sync(() => {
                   for (const [key, value] of entries) {
@@ -105,7 +108,7 @@ export const ResultPersistenceTest = makeTestLayer(ResultPersistence)({
                   }
                 }),
               remove: <R, IE, E, IA, A>(
-                key: ResultPersistence.Key<R, IE, E, IA, A>
+                key: expPersistence.ResultPersistence.Key<R, IE, E, IA, A>
               ) =>
                 Effect.sync(() => {
                   store.delete(JSON.stringify(key))

@@ -1,16 +1,21 @@
-import type { WorkflowEngine } from "@effect/workflow/WorkflowEngine"
+import type * as WorkflowEngine from "@effect/workflow/WorkflowEngine"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Service, ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
 import type { ServiceErrorAlreadyExists } from "@template/domain/service/application/ServiceApplicationErrorAlreadyExists"
 import type { ServiceErrorNotFound } from "@template/domain/service/application/ServiceApplicationErrorNotFound"
 import type { SuccessArray } from "@template/domain/shared/adapter/Response"
 import type { URLParams } from "@template/domain/shared/adapter/URLParams"
-import { Context, type Effect } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
 
 export class ServicePortDriving extends Context.Tag("ServicePortDriving")<ServicePortDriving, {
   create: (
     service: Omit<Service, "id" | "createdAt" | "updatedAt" | "deletedAt">
-  ) => Effect.Effect<ServiceId, ServiceErrorAlreadyExists, ActorAuthorized<"Service", "create"> | WorkflowEngine>
+  ) => Effect.Effect<
+    ServiceId,
+    ServiceErrorAlreadyExists,
+    ActorAuthorized<"Service", "create"> | WorkflowEngine.WorkflowEngine
+  >
   delete: (id: ServiceId) => Effect.Effect<ServiceId, ServiceErrorNotFound, ActorAuthorized<"Service", "delete">>
   readAll: (
     urlParams: URLParams<Service>

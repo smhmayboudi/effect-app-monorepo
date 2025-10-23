@@ -3,7 +3,7 @@ import type { URLParams } from "@template/domain/shared/adapter/URLParams"
 import type { Todo, TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
 import type { TodoErrorAlreadyExists } from "@template/domain/todo/application/TodoApplicationErrorAlreadyExists"
 import type { TodoErrorNotFound } from "@template/domain/todo/application/TodoApplicationErrorNotFound"
-import type { Exit } from "effect"
+import type * as Exit from "effect/Exit"
 import { PortEventEmitter } from "../../../infrastructure/application/PortEventEmitter.js"
 
 type TodoEvents = {

@@ -1,4 +1,4 @@
-import { Schema } from "effect"
+import * as Schema from "effect/Schema"
 import { GroupSchema } from "../../group/application/GroupApplicationDomain.js"
 import { PersonSchema } from "../../person/application/PersonApplicationDomain.js"
 import { TodoSchema } from "../../todo/application/TodoApplicationDomain.js"

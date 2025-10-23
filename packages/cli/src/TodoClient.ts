@@ -2,7 +2,9 @@ import * as HttpApiClient from "@effect/platform/HttpApiClient"
 import { Api } from "@template/domain/Api"
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
 import type { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
-import { Context, Effect, Layer } from "effect"
+import * as Context from "effect/Context"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { v7 } from "uuid"
 
 export class PortUUID extends Context.Tag("PortUUID")<PortUUID, {

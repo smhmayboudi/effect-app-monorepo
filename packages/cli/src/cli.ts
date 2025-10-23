@@ -1,6 +1,8 @@
-import { Args, Command, Options } from "@effect/cli"
+import * as Args from "@effect/cli/Args"
+import * as Command from "@effect/cli/Command"
+import * as Options from "@effect/cli/Options"
 import { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
-import { Effect } from "effect"
+import * as Effect from "effect/Effect"
 import { PortTodoClient } from "./TodoClient.js"
 
 const todoArg = Args.text({ name: "todo" }).pipe(

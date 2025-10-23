@@ -1,20 +1,18 @@
 // reference: https://github.com/lucas-barake/effect-monorepo/blob/main/packages/domain/src/internal/manual-cache.ts
 
-import {
-  type Clock,
-  Data,
-  Duration,
-  Effect,
-  Equal,
-  Hash,
-  MutableHashMap,
-  MutableQueue,
-  MutableRef,
-  Option,
-  Predicate,
-  Schedule,
-  type Scope
-} from "effect"
+import type * as Clock from "effect/Clock"
+import * as Data from "effect/Data"
+import * as Duration from "effect/Duration"
+import * as Effect from "effect/Effect"
+import * as Equal from "effect/Equal"
+import * as Hash from "effect/Hash"
+import * as MutableHashMap from "effect/MutableHashMap"
+import * as MutableQueue from "effect/MutableQueue"
+import * as MutableRef from "effect/MutableRef"
+import * as Option from "effect/Option"
+import * as Predicate from "effect/Predicate"
+import * as Schedule from "effect/Schedule"
+import type * as Scope from "effect/Scope"
 
 /**
  * Type ID for the ManualCache interface.

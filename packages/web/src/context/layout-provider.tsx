@@ -1,7 +1,10 @@
 "use client";
 
-import { Cookies } from "@effect/platform";
-import { Duration, Either, Option, Schema } from "effect";
+import * as Cookies from "@effect/platform/Cookies";
+import * as Duration from "effect/Duration";
+import * as Either from "effect/Either";
+import * as Option from "effect/Option";
+import * as Schema from "effect/Schema";
 import {
   createContext,
   type PropsWithChildren,

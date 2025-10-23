@@ -1,4 +1,5 @@
-import { HttpApi, OpenApi } from "@effect/platform"
+import * as HttpApi from "@effect/platform/HttpApi"
+import * as OpenApi from "@effect/platform/OpenApi"
 import { GroupDriving } from "./group/adapter/GroupAdapterDriving.js"
 import { HealthzDriving } from "./healthz/adapter/HealthzAdapterDriving.js"
 import { PersonDriving } from "./person/adapter/PersonAdapterDriving.js"

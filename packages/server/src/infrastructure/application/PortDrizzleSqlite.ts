@@ -3,7 +3,9 @@
 import type { Client as LibsqClient, LibsqlError } from "@libsql/client"
 import type { ExtractTablesWithRelations } from "drizzle-orm"
 import type { LibSQLDatabase, LibSQLTransaction } from "drizzle-orm/libsql"
-import { Context, Data, Effect } from "effect"
+import * as Context from "effect/Context"
+import * as Data from "effect/Data"
+import * as Effect from "effect/Effect"
 
 export type DBSchema = Record<string, unknown>
 

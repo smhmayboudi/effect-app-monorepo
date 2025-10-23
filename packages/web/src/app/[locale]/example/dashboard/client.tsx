@@ -2,8 +2,8 @@
 
 import type { CSSProperties } from "react";
 
-import { Cookies } from "@effect/platform";
-import { Effect } from "effect";
+import * as Cookies from "@effect/platform/Cookies";
+import * as Effect from "effect/Effect";
 import {
   BarChartIcon,
   ClipboardListIcon,

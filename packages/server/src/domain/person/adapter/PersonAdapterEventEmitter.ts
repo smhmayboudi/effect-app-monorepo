@@ -1,5 +1,6 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { Effect, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
 import { PersonPortEventEmitter } from "../application/PersonApplicationPortEventEmitter.js"
 
 export const PersonEventEmitter = Layer.effectDiscard(

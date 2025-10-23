@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import * as Effect from "effect/Effect";
 import { toast } from "sonner";
 
 type ToastOptions<A, E, Args extends ReadonlyArray<unknown>> = {

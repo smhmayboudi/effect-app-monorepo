@@ -1,5 +1,7 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
-import { Effect, Exit, Layer } from "effect"
+import * as Effect from "effect/Effect"
+import * as Exit from "effect/Exit"
+import * as Layer from "effect/Layer"
 import { policyRequire } from "../../../util/Policy.js"
 import { VWPortDriven } from "./VWApplicationPortDriven.js"
 import { VWPortDriving } from "./VWApplicationPortDriving.js"

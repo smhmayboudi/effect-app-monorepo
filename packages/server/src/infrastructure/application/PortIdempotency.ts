@@ -1,7 +1,9 @@
 import type { IdempotencyError } from "@template/domain/shared/application/IdempotencyError"
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
-import type { Effect, Option } from "effect"
-import { Context, Schema } from "effect"
+import * as Context from "effect/Context"
+import type * as Effect from "effect/Effect"
+import type * as Option from "effect/Option"
+import * as Schema from "effect/Schema"
 
 export const IdempotencyKeyServer = Schema.Struct({
   clientKey: IdempotencyKeyClient,
