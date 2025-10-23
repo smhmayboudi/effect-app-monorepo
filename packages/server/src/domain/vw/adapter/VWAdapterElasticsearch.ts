@@ -1,4 +1,4 @@
-import { SqlClient } from "@effect/sql"
+import * as SqlClient from "@effect/sql/SqlClient"
 import { ActorId } from "@template/domain/Actor"
 import { GroupId, GroupSchema } from "@template/domain/group/application/GroupApplicationDomain"
 import { PersonId, PersonSchema } from "@template/domain/person/application/PersonApplicationDomain"
@@ -94,7 +94,7 @@ const GroupPersonTodoSchema = () => {
 }
 type GroupPersonTodoSchema = Schema.Schema.Type<ReturnType<typeof GroupPersonTodoSchema>>
 
-export const VWElasticsearch = Layer.scoped(
+export const VWElasticsearch = Layer.effect(
   VWPortElasticsearch,
   Effect.all([PortElasticsearch, SqlClient.SqlClient]).pipe(
     Effect.flatMap(([elasticsearch, sql]) => {

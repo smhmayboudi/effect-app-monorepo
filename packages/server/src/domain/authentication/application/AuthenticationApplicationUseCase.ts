@@ -4,7 +4,7 @@ import { Effect, Layer } from "effect"
 import { authF } from "../../../infrastructure/adapter/Authentication/Authentication.js"
 import { AuthenticationPortDriving } from "./AuthenticationApplicationPortDriving.js"
 
-export const AuthenticationUseCase = Layer.scoped(
+export const AuthenticationUseCase = Layer.effect(
   AuthenticationPortDriving,
   Effect.sync(() =>
     AuthenticationPortDriving.of((serviceId) => ({

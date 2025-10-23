@@ -5,7 +5,7 @@ import { VWPortDriven } from "./VWApplicationPortDriven.js"
 import { VWPortDriving } from "./VWApplicationPortDriving.js"
 import { VWPortEventEmitter } from "./VWApplicationPortEventEmitter.js"
 
-export const VWUseCase = Layer.scoped(
+export const VWUseCase = Layer.effect(
   VWPortDriving,
   Effect.all([VWPortDriven, VWPortEventEmitter]).pipe(
     Effect.flatMap(([driven, eventEmitter]) =>

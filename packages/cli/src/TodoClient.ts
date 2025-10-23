@@ -1,4 +1,4 @@
-import { HttpApiClient } from "@effect/platform"
+import * as HttpApiClient from "@effect/platform/HttpApiClient"
 import { Api } from "@template/domain/Api"
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
 import type { TodoId } from "@template/domain/todo/application/TodoApplicationDomain"
@@ -26,7 +26,7 @@ export class PortTodoClient extends Context.Tag("PortTodoClient")<PortTodoClient
   update: (id: TodoId) => Effect.Effect<void, never, never>
 }>() {}
 
-export const TodoClient = Layer.scoped(
+export const TodoClient = Layer.effect(
   PortTodoClient,
   Effect.all([HttpApiClient.make(Api, { baseUrl: "http://127.0.0.1:3001" }), PortUUID]).pipe(
     Effect.flatMap(([client, uuid]) =>

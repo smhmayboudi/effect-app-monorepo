@@ -2,7 +2,7 @@ import { Chunk, Effect, HashMap, Layer, Queue, Ref } from "effect"
 import { PortEventEmitter } from "../application/PortEventEmitter.js"
 
 export const EventEmitter = <Events extends Record<string, unknown>>() =>
-  Layer.scoped(
+  Layer.effect(
     PortEventEmitter<Events>(),
     Ref.make(HashMap.empty<keyof Events, Queue.Queue<(data: any) => Effect.Effect<void>>>()).pipe(
       Effect.flatMap((listeners) =>
@@ -61,7 +61,7 @@ export const EventEmitter = <Events extends Record<string, unknown>>() =>
   )
 
 export const EventEmitterTest = <Events extends Record<string, unknown>>() =>
-  Layer.scoped(
+  Layer.effect(
     PortEventEmitter<Events>(),
     Effect.sync(() => {
       const listeners = new Map<keyof Events, Array<(data: any) => Effect.Effect<void>>>()
