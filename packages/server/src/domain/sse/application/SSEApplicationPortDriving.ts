@@ -8,8 +8,8 @@ import type * as Scope from "effect/Scope"
 export class SSEPortDriving extends Context.Tag("SSEPortDriving")<SSEPortDriving, {
   connect: (
     connectionId: string,
-    queue: Queue.Queue<string>,
-    actorId: ActorId
+    actorId: ActorId,
+    queue: Queue.Queue<string>
   ) => Effect.Effect<
     void,
     never,

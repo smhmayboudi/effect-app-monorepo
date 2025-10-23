@@ -4,14 +4,14 @@ import * as Layer from "effect/Layer"
 import { PortSSEManager } from "../../../infrastructure/application/PortSSEManager.js"
 import { SSEPortDriving } from "./SSEApplicationPortDriving.js"
 
-export const SSEUseCase = Layer.effect(
+export const SSEUseCase = Layer.scoped(
   SSEPortDriving,
   PortSSEManager.pipe(
     Effect.flatMap((sseManager) =>
       Effect.sync(() =>
         SSEPortDriving.of({
-          connect: (connectionId, queue, actorId) =>
-            sseManager.registerConnection(connectionId, queue, actorId).pipe(
+          connect: (connectionId, actorId, queue) =>
+            sseManager.registerConnection(connectionId, actorId, queue).pipe(
               Effect.flatMap(() => Effect.addFinalizer(() => sseManager.unregisterConnection(connectionId, actorId))),
               Effect.withSpan("SSEUseCase", { attributes: { [ATTR_CODE_FUNCTION_NAME]: "connect" } })
             ),

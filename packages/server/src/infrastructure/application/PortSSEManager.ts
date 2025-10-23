@@ -9,8 +9,8 @@ export class PortSSEManager extends Context.Tag("PortSSEManager")<PortSSEManager
   notifyUser: (event: SSE, actorId: ActorId) => Effect.Effect<void>
   registerConnection: (
     connectionId: string,
-    queue: Queue.Queue<string>,
-    actorId: ActorId
+    actorId: ActorId,
+    queue: Queue.Queue<string>
   ) => Effect.Effect<void>
   unregisterConnection: (connectionId: string, actorId: ActorId) => Effect.Effect<void>
 }>() {}

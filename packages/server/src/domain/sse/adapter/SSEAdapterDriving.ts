@@ -23,7 +23,7 @@ export const SSEDriving = HttpApiBuilder.group(Api, "sse", (handlers) =>
                   Effect.flatMap((v7) =>
                     Queue.unbounded<string>().pipe(
                       Effect.flatMap((queue) =>
-                        driving.connect(v7, queue, ActorId.make(user.id)).pipe(
+                        driving.connect(v7, ActorId.make(user.id), queue).pipe(
                           Effect.map(() => {
                             const kaStream = Stream.repeat(Effect.succeed(":keep-alive"), Schedule.fixed("3 seconds"))
                             const eventsStream = Stream.fromQueue(queue).pipe(

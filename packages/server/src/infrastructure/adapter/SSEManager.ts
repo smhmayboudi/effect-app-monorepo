@@ -63,7 +63,7 @@ export const SSEManager = Layer.effect(
                 )
               )
             })),
-          registerConnection: (connectionId, queue, id) =>
+          registerConnection: (connectionId, id, queue) =>
             connectionsRef.pipe(
               Ref.update((map) =>
                 MutableHashMap.modifyAt(map, id, (activeConnections) =>
