@@ -6,6 +6,19 @@
     }
   },
   "components": {
+    "config-drawer": {
+      "description": "Adjust the appearance and layout to suit your preferences.",
+      "direction-title": "Direction",
+      "direction-description": "Choose between left-to-right or right-to-left site direction",
+      "layout-title": "Layout",
+      "layout-description": "Choose between default expanded, compact icon-only, or full layout mode",
+      "sidebar-title": "Sidebar",
+      "sidebar-description": "Choose between inset, floating, or standard sidebar layout",
+      "theme-title": "Theme",
+      "theme-description": "Choose between system preference, light mode, or dark mode",
+      "reset": "Reset",
+      "theme-settings": "Theme Settings"
+    },
     "data-table-2": {
       "bulk-actions": {
         "description": "<badge>{selectedCount}</badge> <span>{entityName}{selectedCount, plural, =1 {} other {s}}</span> selected",

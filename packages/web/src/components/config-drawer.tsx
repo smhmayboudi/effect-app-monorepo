@@ -2,6 +2,7 @@ import type { SVGProps } from "react"
 
 import { Item, Root as Radio } from "@radix-ui/react-radio-group"
 import { CircleCheck, RotateCcw, Settings } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { IconDir } from "@/assets/custom/icon-dir"
 import { IconLayoutCompact } from "@/assets/custom/icon-layout-compact"
@@ -30,6 +31,7 @@ import { useTheme } from "@/context/theme-provider"
 import { cn } from "@/lib/utils"
 
 export function ConfigDrawer() {
+  const t = useTranslations("components.config-drawer")
   const { setOpen } = useSidebar()
   const { resetDir } = useDirection()
   const { resetTheme } = useTheme()
@@ -56,9 +58,9 @@ export function ConfigDrawer() {
       </SheetTrigger>
       <SheetContent className="flex flex-col" side="right">
         <SheetHeader className="pb-0 text-start">
-          <SheetTitle>Theme Settings</SheetTitle>
+          <SheetTitle>{t("theme-settings")}</SheetTitle>
           <SheetDescription id="config-drawer-description">
-            Adjust the appearance and layout to suit your preferences.
+            {t("description")}
           </SheetDescription>
         </SheetHeader>
         <div className="space-y-6 overflow-y-auto px-4">
@@ -73,7 +75,7 @@ export function ConfigDrawer() {
             onClick={handleReset}
             variant="destructive"
           >
-            Reset
+            {t("reset")}
           </Button>
         </SheetFooter>
       </SheetContent>
@@ -82,6 +84,7 @@ export function ConfigDrawer() {
 }
 
 function DirConfig() {
+  const t = useTranslations("components.config-drawer")
   const { defaultDir, dir, setDir } = useDirection()
 
   return (
@@ -89,7 +92,7 @@ function DirConfig() {
       <SectionTitle
         onReset={() => setDir(defaultDir)}
         showReset={defaultDir !== dir}
-        title="Direction"
+        title={t("direction-title")}
       />
       <Radio
         aria-describedby="direction-description"
@@ -118,13 +121,14 @@ function DirConfig() {
         ))}
       </Radio>
       <div className="sr-only" id="direction-description">
-        Choose between left-to-right or right-to-left site direction
+        {t("direction-description")}
       </div>
     </div>
   )
 }
 
 function LayoutConfig() {
+  const t = useTranslations("components.config-drawer")
   const { open, setOpen } = useSidebar()
   const { collapsible, defaultCollapsible, setCollapsible } = useLayout()
 
@@ -138,7 +142,7 @@ function LayoutConfig() {
           setCollapsible(defaultCollapsible)
         }}
         showReset={radioState !== "default"}
-        title="Layout"
+        title={t("layout-title")}
       />
       <Radio
         aria-describedby="layout-description"
@@ -176,7 +180,7 @@ function LayoutConfig() {
         ))}
       </Radio>
       <div className="sr-only" id="layout-description">
-        Choose between default expanded, compact icon-only, or full layout mode
+        {t("layout-description")}
       </div>
     </div>
   )
@@ -269,6 +273,7 @@ function SectionTitle({
 }
 
 function SidebarConfig() {
+  const t = useTranslations("components.config-drawer")
   const { defaultVariant, setVariant, variant } = useLayout()
 
   return (
@@ -276,7 +281,7 @@ function SidebarConfig() {
       <SectionTitle
         onReset={() => setVariant(defaultVariant)}
         showReset={defaultVariant !== variant}
-        title="Sidebar"
+        title={t("sidebar-title")}
       />
       <Radio
         aria-describedby="sidebar-description"
@@ -306,13 +311,14 @@ function SidebarConfig() {
         ))}
       </Radio>
       <div className="sr-only" id="sidebar-description">
-        Choose between inset, floating, or standard sidebar layout
+        {t("sidebar-description")}
       </div>
     </div>
   )
 }
 
 function ThemeConfig() {
+  const t = useTranslations("components.config-drawer")
   const { defaultTheme, setTheme, theme } = useTheme()
 
   return (
@@ -320,7 +326,7 @@ function ThemeConfig() {
       <SectionTitle
         onReset={() => setTheme(defaultTheme)}
         showReset={theme !== defaultTheme}
-        title="Theme"
+        title={t("theme-title")}
       />
       <Radio
         aria-describedby="theme-description"
@@ -350,7 +356,7 @@ function ThemeConfig() {
         ))}
       </Radio>
       <div className="sr-only" id="theme-description">
-        Choose between system preference, light mode, or dark mode
+        {t("theme-description")}
       </div>
     </div>
   )

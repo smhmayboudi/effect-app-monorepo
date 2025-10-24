@@ -6,6 +6,19 @@
     }
   },
   "components": {
+    "config-drawer": {
+      "description": "ظاهر و چیدمان را مطابق ترجیحات خود تنظیم کنید.",
+      "direction-title": "جهت",
+      "direction-description": "انتخاب بین جهت سایت راست به چپ یا چپ به راست",
+      "layout-title": "چیدمان",
+      "layout-description": "انتخاب بین حالت پیش‌فرض گسترده، فشرده فقط با آیکون، یا حالت چیدمان کامل",
+      "sidebar-title": "نوار کناری",
+      "sidebar-description": "انتخاب بین چیدمان نوار کناری داخلی، شناور یا استاندارد",
+      "theme-title": "تم",
+      "theme-description": "انتخاب بین تم سیستم، حالت روشن یا حالت تاریک",
+      "reset": "بازنشانی",
+      "theme-settings": "تنظیمات تم"
+    },
     "data-table-2": {
       "bulk-actions": {
         "description": "<badge>{selectedCount}</badge> <span>{entityName}</span> انتخاب شده",
