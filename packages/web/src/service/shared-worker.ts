@@ -1,17 +1,17 @@
-const connections: Array<MessagePort> = [];
+const connections: Array<MessagePort> = []
 
 self.onconnect = (e: MessageEvent) => {
-  const port = e.ports[0];
-  connections.push(port);
+  const port = e.ports[0]
+  connections.push(port)
   port.onmessage = (event: MessageEvent) => {
     connections.forEach((conn) => {
       if (conn !== port) {
-        conn.postMessage(event.data);
+        conn.postMessage(event.data)
       }
-    });
-  };
-  port.start();
-};
+    })
+  }
+  port.start()
+}
 
 /**
  * @example
@@ -27,28 +27,28 @@ self.onconnect = (e: MessageEvent) => {
  * workerService.postMessage({ payload: "some data", type: "update" });
  */
 export class SharedWorkerService<T> {
-  private listeners: Array<(data: T) => void> = [];
-  private port: MessagePort;
-  private worker: SharedWorker;
+  private listeners: Array<(data: T) => void> = []
+  private port: MessagePort
+  private worker: SharedWorker
 
   constructor(workerUrl: string) {
-    this.worker = new SharedWorker(workerUrl);
-    this.port = this.worker.port;
+    this.worker = new SharedWorker(workerUrl)
+    this.port = this.worker.port
     this.port.onmessage = (event: MessageEvent) => {
-      this.listeners.forEach((listener) => listener(event.data));
-    };
-    this.port.start();
+      this.listeners.forEach((listener) => listener(event.data))
+    }
+    this.port.start()
   }
 
   onMessage(callback: (data: T) => void): () => void {
-    this.listeners.push(callback);
+    this.listeners.push(callback)
 
     return () => {
-      this.listeners = this.listeners.filter((l) => l !== callback);
-    };
+      this.listeners = this.listeners.filter((l) => l !== callback)
+    }
   }
 
   postMessage(data: T): void {
-    this.port.postMessage(data);
+    this.port.postMessage(data)
   }
 }

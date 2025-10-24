@@ -1,16 +1,17 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server"
+
+import { NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const text = await request.text();
+    const text = await request.text()
     if (!text) {
-      return new Response("No data received", { status: 400 });
+      return new Response("No data received", { status: 400 })
     }
 
     // Here you can process the web vitals data
-    const body = JSON.parse(text);
-    console.debug("Web Vitals received:", body);
+    const body = JSON.parse(text)
+    console.debug("Web Vitals received:", body)
 
     // Send to your analytics service (Google Analytics, etc.)
     // await sendToGoogleAnalytics(body);
@@ -18,13 +19,13 @@ export async function POST(request: NextRequest) {
     // Or store in your database
     // await storeInDatabase(body);
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
-    console.error("Error processing web vitals:", error);
+    console.error("Error processing web vitals:", error)
     return NextResponse.json(
       { error: "Failed to process web vitals" },
-      { status: 500 },
-    );
+      { status: 500 }
+    )
   }
 }
 

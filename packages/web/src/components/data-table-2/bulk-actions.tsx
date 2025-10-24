@@ -50,7 +50,7 @@ export function DataTableBulkActions<TData>({
 
       return () => clearTimeout(timer);
     }
-  }, [selectedCount, entityName]);
+  }, [entityName, t, selectedCount]);
 
   const handleClearSelection = () => {
     table.resetRowSelection();

@@ -1,12 +1,12 @@
-import { createNavigation } from "next-intl/navigation";
+import { createNavigation } from "next-intl/navigation"
 
-import { routing } from "./routing";
+import { routing } from "./routing"
 
 export const {
-  Link,
   getPathname,
+  Link,
   permanentRedirect,
   redirect,
   usePathname,
-  useRouter,
-} = createNavigation(routing);
+  useRouter
+} = createNavigation(routing)

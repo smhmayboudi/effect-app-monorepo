@@ -1,20 +1,20 @@
-import * as Schema from "effect/Schema";
+import * as Schema from "effect/Schema"
 
 const userStatusSchema = Schema.Literal(
   "active",
   "inactive",
   "invited",
-  "suspended",
-);
-export type UserStatus = typeof userStatusSchema.Type;
+  "suspended"
+)
+export type UserStatus = typeof userStatusSchema.Type
 
 const userRoleSchema = Schema.Literal(
   "superadmin",
   "admin",
   "cashier",
-  "manager",
-);
-export type UserRole = typeof userRoleSchema.Type;
+  "manager"
+)
+export type UserRole = typeof userRoleSchema.Type
 
 const userSchema = Schema.Struct({
   createdAt: Schema.ValidDateFromSelf,
@@ -26,7 +26,7 @@ const userSchema = Schema.Struct({
   role: userRoleSchema,
   status: userStatusSchema,
   updatedAt: Schema.ValidDateFromSelf,
-  username: Schema.String,
-});
-export type User = typeof userSchema.Type;
-export const userListSchema = Schema.Array(userSchema);
+  username: Schema.String
+})
+export type User = typeof userSchema.Type
+export const userListSchema = Schema.Array(userSchema)

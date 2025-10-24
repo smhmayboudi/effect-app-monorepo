@@ -2,10 +2,10 @@ import type { Column } from "@tanstack/react-table";
 
 import {
   ArrowDown,
-  ArrowUp,
   ArrowDownUp,
-  EyeOff,
+  ArrowUp,
   ArrowUpDown,
+  EyeOff,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -17,8 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import { useDirection } from "@/context/direction-provider";
+import { cn } from "@/lib/utils";
 
 type DataTableColumnHeaderProps<TData, TValue> =
   React.HTMLAttributes<HTMLDivElement> & {

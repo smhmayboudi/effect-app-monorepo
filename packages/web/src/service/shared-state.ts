@@ -1,10 +1,10 @@
-import { BroadcastChannelService } from "./broadcast-channel";
+import { BroadcastChannelService } from "./broadcast-channel"
 
 type StateUpdate<T> = {
-  key: string;
-  timestamp: number;
-  value: T;
-};
+  key: string
+  timestamp: number
+  value: T
+}
 
 /**
  * @example
@@ -19,64 +19,64 @@ type StateUpdate<T> = {
  * stateService.set("user", { name: "John", id: 123 });
  */
 export class SharedStateService<T> {
-  private channel: BroadcastChannelService;
-  private listeners: Map<string, Set<(value: T) => void>> = new Map();
-  private state: Map<string, { timestamp: number; value: T }> = new Map();
+  private channel: BroadcastChannelService
+  private listeners: Map<string, Set<(value: T) => void>> = new Map()
+  private state: Map<string, { timestamp: number; value: T }> = new Map()
 
   constructor(channelName: string) {
-    this.channel = new BroadcastChannelService(channelName);
+    this.channel = new BroadcastChannelService(channelName)
 
     this.channel.onMessage<StateUpdate<T>>((update) => {
-      this.handleIncomingUpdate(update);
-    });
+      this.handleIncomingUpdate(update)
+    })
   }
 
   get(key: string): T | undefined {
-    return this.state.get(key)?.value;
+    return this.state.get(key)?.value
   }
 
   set(key: string, value: T): void {
     const update: StateUpdate<T> = {
       key,
       timestamp: Date.now(),
-      value,
-    };
-    this.state.set(key, { timestamp: update.timestamp, value });
-    this.channel.postMessage(update);
-    this.notifyListeners(key, value);
+      value
+    }
+    this.state.set(key, { timestamp: update.timestamp, value })
+    this.channel.postMessage(update)
+    this.notifyListeners(key, value)
   }
 
   subscribe(key: string, callback: (value: T) => void): () => void {
     if (!this.listeners.has(key)) {
-      this.listeners.set(key, new Set());
+      this.listeners.set(key, new Set())
     }
-    const listeners = this.listeners.get(key)!;
-    listeners.add(callback);
-    const currentValue = this.get(key);
+    const listeners = this.listeners.get(key)!
+    listeners.add(callback)
+    const currentValue = this.get(key)
     if (currentValue) {
-      callback(currentValue);
+      callback(currentValue)
     }
 
     return () => {
-      listeners.delete(callback);
-    };
+      listeners.delete(callback)
+    }
   }
 
   private handleIncomingUpdate(update: StateUpdate<T>): void {
-    const currentEntry = this.state.get(update.key);
+    const currentEntry = this.state.get(update.key)
     if (!currentEntry || update.timestamp > currentEntry.timestamp) {
       this.state.set(update.key, {
         timestamp: update.timestamp,
-        value: update.value,
-      });
-      this.notifyListeners(update.key, update.value);
+        value: update.value
+      })
+      this.notifyListeners(update.key, update.value)
     }
   }
 
   private notifyListeners(key: string, value: T): void {
-    const listeners = this.listeners.get(key);
+    const listeners = this.listeners.get(key)
     if (listeners) {
-      listeners.forEach((callback) => callback(value));
+      listeners.forEach((callback) => callback(value))
     }
   }
 }

@@ -9,6 +9,7 @@ import {
   SquareKanban,
   WandSparkles,
 } from "lucide-react";
+import Image from "next/image";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -19,6 +20,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "@/components/ui/link";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -35,10 +37,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { useTheme } from "@/context/theme-provider";
+import { Discord } from "@/components/ui/svgs/discord";
 import { EffectDark } from "@/components/ui/svgs/effectDark";
 import { EffectLight } from "@/components/ui/svgs/effectLight";
+import { GithubDark } from "@/components/ui/svgs/githubDark";
+import { GithubLight } from "@/components/ui/svgs/githubLight";
+import { Linkedin } from "@/components/ui/svgs/linkedin";
 import { NextjsLogoDark } from "@/components/ui/svgs/nextjsLogoDark";
 import { NextjsLogoLight } from "@/components/ui/svgs/nextjsLogoLight";
 import { ReactDark } from "@/components/ui/svgs/reactDark";
@@ -47,10 +51,8 @@ import { ShadcnUi } from "@/components/ui/svgs/shadcnUi";
 import { ShadcnUiDark } from "@/components/ui/svgs/shadcnUiDark";
 import { Tailwindcss } from "@/components/ui/svgs/tailwindcss";
 import { Typescript } from "@/components/ui/svgs/typescript";
-import { GithubLight } from "@/components/ui/svgs/githubLight";
-import { GithubDark } from "@/components/ui/svgs/githubDark";
-import { Discord } from "@/components/ui/svgs/discord";
-import { Linkedin } from "@/components/ui/svgs/linkedin";
+import { useTheme } from "@/context/theme-provider";
+import { cn } from "@/lib/utils";
 
 const Navbar5 = () => {
   const navbars = [
@@ -95,7 +97,7 @@ const Navbar5 = () => {
             href="https://www.shadcnblocks.com"
             target="_blank"
           >
-            <img
+            <Image
               alt="Shadcnblocks.com"
               className="max-h-8"
               src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
@@ -171,7 +173,7 @@ const Navbar5 = () => {
                     href="https://www.shadcnblocks.com"
                     target="_blank"
                   >
-                    <img
+                    <Image
                       alt="Shadcnblocks.com"
                       className="max-h-8"
                       src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
@@ -271,7 +273,7 @@ const Hero12 = () => {
   return (
     <section className="relative overflow-hidden py-32">
       <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
-        <img
+        <Image
           alt="Shadcnblocks.com"
           className="[mask-image:radial-gradient(75%_75%_at_center,white,transparent)] opacity-90"
           src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/patterns/square-alt-grid.svg"
@@ -281,7 +283,7 @@ const Hero12 = () => {
         <div className="mx-auto flex max-w-5xl flex-col items-center">
           <div className="flex flex-col items-center gap-6 text-center">
             <div className="rounded-xl bg-background/30 p-4 shadow-sm backdrop-blur-sm">
-              <img
+              <Image
                 alt="Shadcnblocks.com"
                 className="h-16"
                 src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
@@ -302,7 +304,7 @@ const Hero12 = () => {
                 asChild
                 className="shadow-sm transition-shadow hover:shadow"
               >
-                <a href="/sign-up">Get Started</a>
+                <Link href="/sign-up">Get Started</Link>
               </Button>
               {/* <Button className="group" variant="outline">
                 Learn more{" "}
@@ -402,8 +404,8 @@ const Feature43 = () => {
     },
     {
       description: "Users click a secure link and are instantly authenticated.",
-      icon: <WandSparkles className="size-6" />,
       heading: "Magic Links",
+      icon: <WandSparkles className="size-6" />,
     },
     {
       description:
@@ -510,7 +512,7 @@ const Community1 = () => {
     <section className="py-32">
       <div className="container mx-auto">
         <div className="flex flex-col items-center gap-5">
-          <img
+          <Image
             alt="Shadcnblocks.com"
             className="size-10"
             src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
@@ -672,7 +674,7 @@ const Footer7 = () => {
           <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
             <div className="flex items-center gap-2 lg:justify-start">
               <a href="https://www.shadcnblocks.com" target="_blank">
-                <img
+                <Image
                   alt="Shadcnblocks.com"
                   className="h-8"
                   src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"

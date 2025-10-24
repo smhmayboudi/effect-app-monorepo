@@ -2,8 +2,8 @@
 
 import * as Effect from "effect/Effect";
 import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {

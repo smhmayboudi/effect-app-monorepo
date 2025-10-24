@@ -14,7 +14,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const t = await getTranslations("index");
-
   return <Client />;
 }

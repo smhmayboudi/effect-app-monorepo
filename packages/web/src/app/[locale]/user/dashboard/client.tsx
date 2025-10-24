@@ -4,6 +4,8 @@ import type { CSSProperties } from "react";
 
 import { Result, useAtomValue } from "@effect-atom/atom-react";
 import * as Cookies from "@effect/platform/Cookies";
+import { ActorId } from "@template/domain/Actor";
+import { Service, ServiceId } from "@template/domain/service/application/ServiceApplicationDomain";
 import * as Effect from "effect/Effect";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -62,6 +64,19 @@ export default function Client() {
 
   const { navigate, search } = useSearchNavigation();
 
+  const transformServices = (services?: ReadonlyArray<Partial<Service>>): Array<Service> => {
+    const now = new Date();
+
+    return (services??[]).map(service => ({
+      createdAt: service.createdAt ?? now,
+      deletedAt: service.deletedAt ?? null,
+      id: service.id ?? ServiceId.make("00000000-0000-0000-0000-000000000000"),
+      name: service.name ?? '',
+      ownerId: service.ownerId ?? ActorId.make("00000000-0000-0000-0000-000000000000"),
+      updatedAt: service.updatedAt ?? now,
+    }));
+  };
+
   return (
     <LayoutProvider>
       <SidebarProvider
@@ -105,7 +120,8 @@ export default function Client() {
                     </div>
                     <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
                       <ServicesTable
-                        data={services?.data ?? []}
+                        // data={[...(services?.data??[])]}
+                        data={transformServices(services?.data)} 
                         navigate={navigate}
                         search={search}
                       />

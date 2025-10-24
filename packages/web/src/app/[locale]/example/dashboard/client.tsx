@@ -4,19 +4,6 @@ import type { CSSProperties } from "react";
 
 import * as Cookies from "@effect/platform/Cookies";
 import * as Effect from "effect/Effect";
-import {
-  BarChartIcon,
-  ClipboardListIcon,
-  DatabaseIcon,
-  FileIcon,
-  FolderIcon,
-  HelpCircleIcon,
-  LayoutDashboardIcon,
-  ListIcon,
-  SearchIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
@@ -27,75 +14,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { LayoutProvider } from "@/context/layout-provider";
 
 import data from "./data.json";
-
-const dataSide = {
-  navDocuments: [
-    {
-      icon: DatabaseIcon,
-      title: "Data Library",
-      url: "#",
-    },
-    {
-      icon: ClipboardListIcon,
-      title: "Reports",
-      url: "#",
-    },
-    {
-      icon: FileIcon,
-      title: "Word Assistant",
-      url: "#",
-    },
-  ],
-  navMain: [
-    {
-      icon: LayoutDashboardIcon,
-      title: "Dashboard",
-      url: "#",
-    },
-    {
-      icon: ListIcon,
-      title: "Lifecycle",
-      url: "#",
-    },
-    {
-      icon: BarChartIcon,
-      title: "Analytics",
-      url: "#",
-    },
-    {
-      icon: FolderIcon,
-      title: "Projects",
-      url: "#",
-    },
-    {
-      icon: UsersIcon,
-      title: "Team",
-      url: "#",
-    },
-  ],
-  navSecondary: [
-    {
-      icon: SettingsIcon,
-      title: "Settings",
-      url: "#",
-    },
-    {
-      icon: HelpCircleIcon,
-      title: "Get Help",
-      url: "#",
-    },
-    {
-      icon: SearchIcon,
-      title: "Search",
-      url: "#",
-    },
-  ],
-  user: {
-    avatar: "/shadcn.jpg",
-    email: "m@example.com",
-    name: "shadcn",
-  },
-};
 
 export default function Client() {
   const defaultOpen = Effect.runSync(
@@ -121,7 +39,7 @@ export default function Client() {
           } as CSSProperties
         }
       >
-        <AppSidebar data={dataSide} />
+        <AppSidebar />
         <SidebarInset>
           <SiteHeader />
           <div className="flex flex-1 flex-col">

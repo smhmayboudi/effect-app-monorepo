@@ -1,1 +1,1 @@
-import "./instrumentation-client-intl";
+import "./instrumentation-client-intl"
