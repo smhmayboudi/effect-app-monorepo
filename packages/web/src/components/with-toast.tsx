@@ -1,24 +1,20 @@
 import * as Effect from "effect/Effect"
 import { toast } from "sonner"
 
-type ToastOptions<A, E, Args extends ReadonlyArray<unknown>> = {
-  onFailure: ((e: E, ...args: Args) => string) | string
-  onSuccess: ((a: A, ...args: Args) => string) | string
-  onWaiting: ((...args: Args) => string) | string
-}
-
 export const withToast =
-  <A, E, Args extends ReadonlyArray<unknown>, R>(
-    options: ToastOptions<A, E, Args>,
-  ) =>
-  (self: Effect.Effect<A, E, R>, ...args: Args): Effect.Effect<A, E, R> => {
+  <A, E, Args extends ReadonlyArray<unknown>, R>(options: {
+    onFailure: ((e: E, ...args: Args) => string) | string
+    onSuccess: ((a: A, ...args: Args) => string) | string
+    onWaiting: ((...args: Args) => string) | string
+  }) =>
+  (effect: Effect.Effect<A, E, R>, ...args: Args): Effect.Effect<A, E, R> => {
     const toastId = toast.loading(
       typeof options.onWaiting === "string"
         ? options.onWaiting
         : options.onWaiting(...args),
     )
 
-    return self.pipe(
+    return effect.pipe(
       Effect.tapBoth({
         onFailure: (e) =>
           Effect.sync(() => {
