@@ -99,7 +99,7 @@ type GroupPersonTodoSchema = Schema.Schema.Type<ReturnType<typeof GroupPersonTod
 export const VWElasticsearch = Layer.effect(
   VWPortElasticsearch,
   Effect.all([PortElasticsearch, SqlClient.SqlClient]).pipe(
-    Effect.flatMap(([elasticsearch, sql]) => {
+    Effect.andThen(([elasticsearch, sql]) => {
       const vwGroupPersonTodo = () =>
         Effect.tryPromise(() => elasticsearch.indices.exists({ index: "vw_group_person_todo" })).pipe(
           Effect.flatMap((indexExists) =>

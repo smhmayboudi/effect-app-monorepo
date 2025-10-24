@@ -103,7 +103,7 @@ export const options: BetterAuthOptions = {
     max: 100,
     window: 10,
     enabled: true,
-    storage: "database"
+    storage: "secondary-storage"
   },
   session: {
     cookieCache: {

@@ -100,7 +100,9 @@ const Navbar5 = () => {
             <Image
               alt="Shadcnblocks.com"
               className="max-h-8"
+              height="28"
               src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+              width="28"
             />
             <span className="text-lg font-semibold tracking-tighter">
               Shadcnblocks.com
@@ -176,7 +178,9 @@ const Navbar5 = () => {
                     <Image
                       alt="Shadcnblocks.com"
                       className="max-h-8"
+                      height="28"
                       src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+                      width="28"
                     />
                     <span className="text-lg font-semibold tracking-tighter">
                       Shadcnblocks.com
@@ -276,7 +280,9 @@ const Hero12 = () => {
         <Image
           alt="Shadcnblocks.com"
           className="[mask-image:radial-gradient(75%_75%_at_center,white,transparent)] opacity-90"
+          height="958"
           src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/patterns/square-alt-grid.svg"
+          width="1347"
         />
       </div>
       <div className="relative container mx-auto">
@@ -286,7 +292,9 @@ const Hero12 = () => {
               <Image
                 alt="Shadcnblocks.com"
                 className="h-16"
+                height="64"
                 src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
+                width="64"
               />
             </div>
             <div>
@@ -515,7 +523,9 @@ const Community1 = () => {
           <Image
             alt="Shadcnblocks.com"
             className="size-10"
+            height="40"
             src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
+            width="40"
           />
           <h2 className="text-center text-3xl font-semibold">
             Join our community
@@ -677,7 +687,9 @@ const Footer7 = () => {
                 <Image
                   alt="Shadcnblocks.com"
                   className="h-8"
+                  height="28"
                   src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+                  width="28"
                 />
               </a>
               <h2 className="text-xl font-semibold">Shadcnblocks.com</h2>
