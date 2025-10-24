@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 export function IconLayoutCompact(props: SVGProps<SVGSVGElement>) {
   return (
@@ -127,5 +127,5 @@ export function IconLayoutCompact(props: SVGProps<SVGSVGElement>) {
         <path d="M66.57 13.19a6.977 6.977 0 012.52 4.44h-5.17l2.65-4.44m-.31-1.43l-4.1 6.87h8c0-1.39-.36-2.75-1.04-3.95a8.007 8.007 0 00-2.86-2.92z" />
       </g>
     </svg>
-  );
+  )
 }

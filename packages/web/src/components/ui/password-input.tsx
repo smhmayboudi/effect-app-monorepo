@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { type InputHTMLAttributes, type Ref, useState } from "react";
+import { EyeIcon, EyeOffIcon } from "lucide-react"
+import { type InputHTMLAttributes, type Ref, useState } from "react"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
 type PasswordInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "type"
 > & {
-  ref?: Ref<HTMLInputElement>;
-};
+  ref?: Ref<HTMLInputElement>
+}
 
 export function PasswordInput({
   className,
@@ -20,7 +20,7 @@ export function PasswordInput({
   ref,
   ...props
 }: PasswordInputProps) {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <div className={cn("relative", className)}>
@@ -49,5 +49,5 @@ export function PasswordInput({
         </span>
       </Button>
     </div>
-  );
+  )
 }

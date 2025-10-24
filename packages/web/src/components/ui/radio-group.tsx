@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { Circle } from "lucide-react";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
+import { Circle } from "lucide-react"
 import {
   type ComponentPropsWithoutRef,
   type ElementRef,
   forwardRef,
-} from "react";
+} from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 const RadioGroup = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -19,8 +19,8 @@ const RadioGroup = forwardRef<
     {...props}
     ref={ref}
   />
-));
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+))
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
 
 const RadioGroupItem = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Item>,
@@ -38,7 +38,7 @@ const RadioGroupItem = forwardRef<
       <Circle className="size-3.5 fill-primary" />
     </RadioGroupPrimitive.Indicator>
   </RadioGroupPrimitive.Item>
-));
-RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+))
+RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-export { RadioGroup, RadioGroupItem };
+export { RadioGroup, RadioGroupItem }

@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 export function IconThemeDark(props: SVGProps<SVGSVGElement>) {
   return (
@@ -75,5 +75,5 @@ export function IconThemeDark(props: SVGProps<SVGSVGElement>) {
         y={27.75}
       />
     </svg>
-  );
+  )
 }

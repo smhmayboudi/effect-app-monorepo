@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "sonner"
 
 export function showSubmittedData(
   data: unknown,
@@ -11,5 +11,5 @@ export function showSubmittedData(
         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
       </pre>
     ),
-  });
+  })
 }

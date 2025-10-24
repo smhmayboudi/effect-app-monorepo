@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { XIcon } from "lucide-react";
+import * as SheetPrimitive from "@radix-ui/react-dialog"
+import { XIcon } from "lucide-react"
 
-import { useDirection } from "@/context/direction-provider";
-import { cn } from "@/lib/utils";
+import { useDirection } from "@/context/direction-provider"
+import { cn } from "@/lib/utils"
 
 function Sheet({ ...props }: ComponentProps<typeof SheetPrimitive.Root>) {
-  return <SheetPrimitive.Root data-slot="sheet" {...props} />;
+  return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
 function SheetClose({ ...props }: ComponentProps<typeof SheetPrimitive.Close>) {
-  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
+  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />
 }
 
 function SheetContent({
@@ -22,9 +22,9 @@ function SheetContent({
   side = "right",
   ...props
 }: ComponentProps<typeof SheetPrimitive.Content> & {
-  side?: "bottom" | "left" | "right" | "top";
+  side?: "bottom" | "left" | "right" | "top"
 }) {
-  const { dir } = useDirection();
+  const { dir } = useDirection()
 
   return (
     <SheetPortal>
@@ -58,7 +58,7 @@ function SheetContent({
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
     </SheetPortal>
-  );
+  )
 }
 
 function SheetDescription({
@@ -71,7 +71,7 @@ function SheetDescription({
       data-slot="sheet-description"
       {...props}
     />
-  );
+  )
 }
 
 function SheetFooter({ className, ...props }: ComponentProps<"div">) {
@@ -81,7 +81,7 @@ function SheetFooter({ className, ...props }: ComponentProps<"div">) {
       data-slot="sheet-footer"
       {...props}
     />
-  );
+  )
 }
 
 function SheetHeader({ className, ...props }: ComponentProps<"div">) {
@@ -91,7 +91,7 @@ function SheetHeader({ className, ...props }: ComponentProps<"div">) {
       data-slot="sheet-header"
       {...props}
     />
-  );
+  )
 }
 
 function SheetOverlay({
@@ -107,13 +107,13 @@ function SheetOverlay({
       data-slot="sheet-overlay"
       {...props}
     />
-  );
+  )
 }
 
 function SheetPortal({
   ...props
 }: ComponentProps<typeof SheetPrimitive.Portal>) {
-  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
+  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />
 }
 
 function SheetTitle({
@@ -126,13 +126,13 @@ function SheetTitle({
       data-slot="sheet-title"
       {...props}
     />
-  );
+  )
 }
 
 function SheetTrigger({
   ...props
 }: ComponentProps<typeof SheetPrimitive.Trigger>) {
-  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
+  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />
 }
 
 export {
@@ -144,4 +144,4 @@ export {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-};
+}

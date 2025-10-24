@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { useLocale } from "next-intl";
-import { useFormatter } from "next-intl";
+import { useLocale } from "next-intl"
+import { useFormatter } from "next-intl"
 
-import { Link, usePathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/navigation"
+import { routing } from "@/i18n/routing"
 
 export function LocaleSwitcher() {
-  const format = useFormatter();
-  const locale = useLocale();
-  const pathname = usePathname();
+  const format = useFormatter()
+  const locale = useLocale()
+  const pathname = usePathname()
 
   return (
     <div>
@@ -27,5 +27,5 @@ export function LocaleSwitcher() {
         "locale",
       )}
     </div>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import { useLocale } from "next-intl";
-import Script from "next/script";
+import { useLocale } from "next-intl"
+import Script from "next/script"
 
 export default function IntlPolyfills() {
-  const locale = useLocale();
+  const locale = useLocale()
 
   const polyfills = [
     "Intl",
@@ -17,7 +17,7 @@ export default function IntlPolyfills() {
     `Intl.RelativeTimeFormat.~locale.${locale}`,
     "Intl.ListFormat",
     `Intl.ListFormat.~locale.${locale}`,
-  ];
+  ]
 
   return (
     <Script
@@ -27,5 +27,5 @@ export default function IntlPolyfills() {
       }
       strategy="beforeInteractive"
     />
-  );
+  )
 }

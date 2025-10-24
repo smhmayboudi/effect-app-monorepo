@@ -1,26 +1,26 @@
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { SlidersHorizontal } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
+import { SlidersHorizontal } from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 type DataTableViewOptionsProps<TData> = {
-  table: Table<TData>;
-};
+  table: Table<TData>
+}
 
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
-  const t = useTranslations("components.data-table-2.view-options");
+  const t = useTranslations("components.data-table-2.view-options")
 
   return (
     <DropdownMenu modal={false}>
@@ -55,5 +55,5 @@ export function DataTableViewOptions<TData>({
           ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

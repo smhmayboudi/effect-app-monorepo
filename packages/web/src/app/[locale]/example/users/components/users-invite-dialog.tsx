@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import * as Schema from "effect/Schema";
-import { MailPlus, Send } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts"
+import * as Schema from "effect/Schema"
+import { MailPlus, Send } from "lucide-react"
+import { useForm } from "react-hook-form"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -14,7 +14,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -22,13 +22,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { SelectDropdown } from "@/components/ui/select-dropdown";
-import { Textarea } from "@/components/ui/textarea";
-import { showSubmittedData } from "@/lib/show-submitted-data";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { SelectDropdown } from "@/components/ui/select-dropdown"
+import { Textarea } from "@/components/ui/textarea"
+import { showSubmittedData } from "@/lib/show-submitted-data"
 
-import { roles } from "../data/data";
+import { roles } from "../data/data"
 
 const formSchema = Schema.Struct({
   desc: Schema.optionalWith(Schema.String, { exact: true }),
@@ -42,13 +42,13 @@ const formSchema = Schema.Struct({
   role: Schema.NonEmptyString.annotations({
     message: () => "Role is required.",
   }),
-});
-type UserInviteForm = typeof formSchema.Type;
+})
+type UserInviteForm = typeof formSchema.Type
 
 type UsersInviteDialogProps = {
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-};
+  onOpenChange: (open: boolean) => void
+  open: boolean
+}
 
 export function UsersInviteDialog({
   onOpenChange,
@@ -57,19 +57,19 @@ export function UsersInviteDialog({
   const form = useForm<UserInviteForm>({
     defaultValues: { desc: "", email: "", role: "" },
     resolver: effectTsResolver(formSchema),
-  });
+  })
 
   const onSubmit = (values: UserInviteForm) => {
-    form.reset();
-    showSubmittedData(values);
-    onOpenChange(false);
-  };
+    form.reset()
+    showSubmittedData(values)
+    onOpenChange(false)
+  }
 
   return (
     <Dialog
       onOpenChange={(state) => {
-        form.reset();
-        onOpenChange(state);
+        form.reset()
+        onOpenChange(state)
       }}
       open={open}
     >
@@ -154,5 +154,5 @@ export function UsersInviteDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

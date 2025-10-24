@@ -1,55 +1,55 @@
-"use client";
+"use client"
 
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { AlertTriangle } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { AlertTriangle } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
 
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { sleep } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/confirm-dialog"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { sleep } from "@/lib/utils"
 
 type UsersMultiDeleteDialogProps<TData> = {
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-  table: Table<TData>;
-};
+  onOpenChange: (open: boolean) => void
+  open: boolean
+  table: Table<TData>
+}
 
-const CONFIRM_WORD = "DELETE";
+const CONFIRM_WORD = "DELETE"
 
 export function UsersMultiDeleteDialog<TData>({
   onOpenChange,
   open,
   table,
 }: UsersMultiDeleteDialogProps<TData>) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("")
 
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleDelete = () => {
     if (value.trim() !== CONFIRM_WORD) {
-      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`);
+      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
 
-      return;
+      return
     }
 
-    onOpenChange(false);
+    onOpenChange(false)
 
     toast.promise(sleep(2000), {
       error: "Error",
       loading: "Deleting users...",
       success: () => {
-        table.resetRowSelection();
+        table.resetRowSelection()
 
         return `Deleted ${selectedRows.length} ${
           selectedRows.length > 1 ? "users" : "user"
-        }`;
+        }`
       },
-    });
-  };
+    })
+  }
 
   return (
     <ConfirmDialog
@@ -96,5 +96,5 @@ export function UsersMultiDeleteDialog<TData>({
         </span>
       }
     />
-  );
+  )
 }

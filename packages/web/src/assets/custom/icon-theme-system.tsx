@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function IconThemeSystem({
   className,
@@ -112,5 +112,5 @@ export function IconThemeSystem({
         y={27.75}
       />
     </svg>
-  );
+  )
 }

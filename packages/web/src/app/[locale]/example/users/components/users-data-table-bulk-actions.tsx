@@ -1,61 +1,61 @@
-"use client";
+"use client"
 
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { Mail, Trash2, UserCheck, UserX } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Mail, Trash2, UserCheck, UserX } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
 
-import { DataTableBulkActions as BulkActionsToolbar } from "@/components/data-table-2";
-import { Button } from "@/components/ui/button";
+import { DataTableBulkActions as BulkActionsToolbar } from "@/components/data-table-2"
+import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { sleep } from "@/lib/utils";
+} from "@/components/ui/tooltip"
+import { sleep } from "@/lib/utils"
 
-import type { User } from "../data/schema";
+import type { User } from "../data/schema"
 
-import { UsersMultiDeleteDialog } from "./users-multi-delete-dialog";
+import { UsersMultiDeleteDialog } from "./users-multi-delete-dialog"
 
 type UsersDataTableBulkActionsProps<TData> = {
-  table: Table<TData>;
-};
+  table: Table<TData>
+}
 
 export function UsersDataTableBulkActions<TData>({
   table,
 }: UsersDataTableBulkActionsProps<TData>) {
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: "active" | "inactive") => {
-    const selectedUsers = selectedRows.map((row) => row.original as User);
+    const selectedUsers = selectedRows.map((row) => row.original as User)
     toast.promise(sleep(2000), {
       error: `Error ${status === "active" ? "activating" : "deactivating"} users`,
       loading: `${status === "active" ? "Activating" : "Deactivating"} users...`,
       success: () => {
-        table.resetRowSelection();
+        table.resetRowSelection()
 
-        return `${status === "active" ? "Activated" : "Deactivated"} ${selectedUsers.length} user${selectedUsers.length > 1 ? "s" : ""}`;
+        return `${status === "active" ? "Activated" : "Deactivated"} ${selectedUsers.length} user${selectedUsers.length > 1 ? "s" : ""}`
       },
-    });
-    table.resetRowSelection();
-  };
+    })
+    table.resetRowSelection()
+  }
 
   const handleBulkInvite = () => {
-    const selectedUsers = selectedRows.map((row) => row.original as User);
+    const selectedUsers = selectedRows.map((row) => row.original as User)
     toast.promise(sleep(2000), {
       error: "Error inviting users",
       loading: "Inviting users...",
       success: () => {
-        table.resetRowSelection();
+        table.resetRowSelection()
 
-        return `Invited ${selectedUsers.length} user${selectedUsers.length > 1 ? "s" : ""}`;
+        return `Invited ${selectedUsers.length} user${selectedUsers.length > 1 ? "s" : ""}`
       },
-    });
-    table.resetRowSelection();
-  };
+    })
+    table.resetRowSelection()
+  }
 
   return (
     <>
@@ -143,5 +143,5 @@ export function UsersDataTableBulkActions<TData>({
         table={table}
       />
     </>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import { Drawer as DrawerPrimitive } from "vaul";
+import { Drawer as DrawerPrimitive } from "vaul"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Drawer({ ...props }: ComponentProps<typeof DrawerPrimitive.Root>) {
-  return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
+  return <DrawerPrimitive.Root data-slot="drawer" {...props} />
 }
 
 function DrawerClose({
   ...props
 }: ComponentProps<typeof DrawerPrimitive.Close>) {
-  return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />;
+  return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />
 }
 
 function DrawerContent({
@@ -36,7 +36,7 @@ function DrawerContent({
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
-  );
+  )
 }
 
 function DrawerDescription({
@@ -49,7 +49,7 @@ function DrawerDescription({
       data-slot="drawer-description"
       {...props}
     />
-  );
+  )
 }
 
 function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
@@ -59,7 +59,7 @@ function DrawerFooter({ className, ...props }: ComponentProps<"div">) {
       data-slot="drawer-footer"
       {...props}
     />
-  );
+  )
 }
 
 function DrawerHeader({ className, ...props }: ComponentProps<"div">) {
@@ -72,7 +72,7 @@ function DrawerHeader({ className, ...props }: ComponentProps<"div">) {
       data-slot="drawer-header"
       {...props}
     />
-  );
+  )
 }
 
 function DrawerOverlay({
@@ -88,13 +88,13 @@ function DrawerOverlay({
       data-slot="drawer-overlay"
       {...props}
     />
-  );
+  )
 }
 
 function DrawerPortal({
   ...props
 }: ComponentProps<typeof DrawerPrimitive.Portal>) {
-  return <DrawerPrimitive.Portal data-slot="drawer-portal" {...props} />;
+  return <DrawerPrimitive.Portal data-slot="drawer-portal" {...props} />
 }
 
 function DrawerTitle({
@@ -107,13 +107,13 @@ function DrawerTitle({
       data-slot="drawer-title"
       {...props}
     />
-  );
+  )
 }
 
 function DrawerTrigger({
   ...props
 }: ComponentProps<typeof DrawerPrimitive.Trigger>) {
-  return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />;
+  return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />
 }
 
 export {
@@ -127,4 +127,4 @@ export {
   DrawerPortal,
   DrawerTitle,
   DrawerTrigger,
-};
+}

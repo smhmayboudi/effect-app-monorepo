@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import * as Effect from "effect/Effect";
-import * as Schema from "effect/Schema";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts"
+import * as Effect from "effect/Effect"
+import * as Schema from "effect/Schema"
+import { GalleryVerticalEnd } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
+} from "@/components/ui/card"
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field"
 import {
   Form,
   FormControl,
@@ -24,16 +24,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import Link from "@/components/ui/link";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PasswordInput } from "@/components/ui/password-input";
-import { withToast } from "@/components/with-toast";
-import { authClient } from "@/lib/auth-client";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import Link from "@/components/ui/link"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { PasswordInput } from "@/components/ui/password-input"
+import { withToast } from "@/components/with-toast"
+import { authClient } from "@/lib/auth-client"
 
 export default function Client() {
-  const t = useTranslations("sign-up");
+  const t = useTranslations("sign-up")
   const schema = Schema.Struct({
     email: Schema.NonEmptyString.annotations({
       message: () => t("form.email.nonEmptyString"),
@@ -49,17 +49,17 @@ export default function Client() {
     password: Schema.NonEmptyString.annotations({
       message: () => t("form.password.nonEmptyString"),
     }),
-  });
+  })
   const form = useForm<typeof schema.Type>({
     defaultValues: { email: "", name: "", password: "" },
     resolver: effectTsResolver(schema),
-  });
+  })
   const {
     formState: { isSubmitting },
     handleSubmit,
-  } = form;
-  const router = useRouter();
-  const locale = useLocale();
+  } = form
+  const router = useRouter()
+  const locale = useLocale()
   const onSubmit = handleSubmit(async ({ email, name, password }) => {
     const result = await Effect.runPromise(
       Effect.tryPromise({
@@ -81,11 +81,11 @@ export default function Client() {
           onWaiting: "onWaiting",
         }),
       ),
-    );
+    )
     if (result.data) {
-      router.push(`/email-verification?email=${email}`);
+      router.push(`/email-verification?email=${email}`)
     }
-  });
+  })
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -203,5 +203,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { Result, useAtomValue } from "@effect-atom/atom-react";
-import { useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { Result, useAtomValue } from "@effect-atom/atom-react"
+import { useTranslations } from "next-intl"
+import { useMemo } from "react"
 
-import { ServiceListEmpty } from "@/components/service-list-empty";
-import Link from "@/components/ui/link";
-import { HttpClient } from "@/lib/http-client";
+import { ServiceListEmpty } from "@/components/service-list-empty"
+import Link from "@/components/ui/link"
+import { HttpClient } from "@/lib/http-client"
 
-type ServiceListProps = { userId?: string };
+type ServiceListProps = { userId?: string }
 
 export default function ServiceList({ userId }: ServiceListProps) {
-  const t = useTranslations("components.service-list");
+  const t = useTranslations("components.service-list")
   const readAll = useMemo(
     () =>
       HttpClient.query("service", "readAll", {
@@ -30,9 +30,9 @@ export default function ServiceList({ userId }: ServiceListProps) {
           : { sort: [{ column: "ownerId", sort: "ASC" }] },
       }),
     [userId],
-  );
+  )
 
-  const result = useAtomValue(readAll);
+  const result = useAtomValue(readAll)
 
   return Result.builder(result)
     .onDefect((defect) => <div>Defect: {String(defect)}</div>)
@@ -51,7 +51,7 @@ export default function ServiceList({ userId }: ServiceListProps) {
     .onInitial(() => <div>Initial...</div>)
     .onSuccess((data) => {
       if (data.data.length === 0) {
-        return <ServiceListEmpty />;
+        return <ServiceListEmpty />
       }
 
       return (
@@ -83,8 +83,8 @@ export default function ServiceList({ userId }: ServiceListProps) {
             </tbody>
           </table>
         </div>
-      );
+      )
     })
     .onWaiting(() => <div>Waiting...</div>)
-    .render();
+    .render()
 }

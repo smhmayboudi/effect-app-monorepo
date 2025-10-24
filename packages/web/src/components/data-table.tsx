@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   closestCenter,
@@ -10,15 +10,15 @@ import {
   type UniqueIdentifier,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+} from "@dnd-kit/core"
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
 import {
   arrayMove,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -33,8 +33,8 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table";
-import * as Schema from "effect/Schema";
+} from "@tanstack/react-table"
+import * as Schema from "effect/Schema"
 import {
   CheckCircle2Icon,
   ChevronDownIcon,
@@ -48,20 +48,20 @@ import {
   MoreVerticalIcon,
   PlusIcon,
   TrendingUpIcon,
-} from "lucide-react";
-import { useId, useMemo, useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { toast } from "sonner";
+} from "lucide-react"
+import { useId, useMemo, useState } from "react"
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { toast } from "sonner"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/ui/chart"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Drawer,
   DrawerClose,
@@ -71,7 +71,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/components/ui/drawer"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -79,17 +79,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
 import {
   Table,
   TableBody,
@@ -97,10 +97,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useDirection } from "@/context/direction-provider";
-import { useIsMobile } from "@/hooks/use-mobile";
+} from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useDirection } from "@/context/direction-provider"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export const schema = Schema.Struct({
   header: Schema.String,
@@ -110,13 +110,13 @@ export const schema = Schema.Struct({
   status: Schema.String,
   target: Schema.String,
   type: Schema.String,
-});
+})
 
 // Create a separate component for the drag handle
 function DragHandle({ id }: { id: number }) {
   const { attributes, listeners } = useSortable({
     id,
-  });
+  })
 
   return (
     <Button
@@ -129,7 +129,7 @@ function DragHandle({ id }: { id: number }) {
       <GripVerticalIcon className="size-3 text-muted-foreground" />
       <span className="sr-only">Drag to reorder</span>
     </Button>
-  );
+  )
 }
 
 const columns: ColumnDef<typeof schema.Type>[] = [
@@ -200,12 +200,12 @@ const columns: ColumnDef<typeof schema.Type>[] = [
     cell: ({ row }) => (
       <form
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
           toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
             error: "Error",
             loading: `Saving ${row.original.header}`,
             success: "Done",
-          });
+          })
         }}
       >
         <Label className="sr-only" htmlFor={`${row.original.id}-target`}>
@@ -225,12 +225,12 @@ const columns: ColumnDef<typeof schema.Type>[] = [
     cell: ({ row }) => (
       <form
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
           toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
             error: "Error",
             loading: `Saving ${row.original.header}`,
             success: "Done",
-          });
+          })
         }}
       >
         <Label className="sr-only" htmlFor={`${row.original.id}-limit`}>
@@ -248,10 +248,10 @@ const columns: ColumnDef<typeof schema.Type>[] = [
   {
     accessorKey: "reviewer",
     cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer";
+      const isAssigned = row.original.reviewer !== "Assign reviewer"
 
       if (isAssigned) {
-        return row.original.reviewer;
+        return row.original.reviewer
       }
 
       return (
@@ -275,7 +275,7 @@ const columns: ColumnDef<typeof schema.Type>[] = [
             </SelectContent>
           </Select>
         </>
-      );
+      )
     },
     header: "Reviewer",
   },
@@ -303,33 +303,33 @@ const columns: ColumnDef<typeof schema.Type>[] = [
     ),
     id: "actions",
   },
-];
+]
 
 export function DataTable({
   data: initialData,
 }: {
-  data: (typeof schema.Type)[];
+  data: (typeof schema.Type)[]
 }) {
-  const [data, setData] = useState(() => initialData);
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [data, setData] = useState(() => initialData)
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
-  const sortableId = useId();
+  })
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {}),
-  );
+  )
 
   const dataIds = useMemo<UniqueIdentifier[]>(
     () => data?.map(({ id }) => id) || [],
     [data],
-  );
+  )
 
   const table = useReactTable({
     columns,
@@ -354,21 +354,21 @@ export function DataTable({
       rowSelection,
       sorting,
     },
-  });
+  })
 
   function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
+    const { active, over } = event
     if (active && over && active.id !== over.id) {
       setData((data) => {
-        const oldIndex = dataIds.indexOf(active.id);
-        const newIndex = dataIds.indexOf(over.id);
+        const oldIndex = dataIds.indexOf(active.id)
+        const newIndex = dataIds.indexOf(over.id)
 
-        return arrayMove(data, oldIndex, newIndex);
-      });
+        return arrayMove(data, oldIndex, newIndex)
+      })
     }
   }
 
-  const { dir } = useDirection();
+  const { dir } = useDirection()
 
   return (
     <Tabs
@@ -507,7 +507,7 @@ export function DataTable({
               </Label>
               <Select
                 onValueChange={(value) => {
-                  table.setPageSize(Number(value));
+                  table.setPageSize(Number(value))
                 }}
                 value={`${table.getState().pagination.pageSize}`}
               >
@@ -589,13 +589,13 @@ export function DataTable({
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
       </TabsContent>
     </Tabs>
-  );
+  )
 }
 
 function DraggableRow({ row }: { row: Row<typeof schema.Type> }) {
   const { isDragging, setNodeRef, transform, transition } = useSortable({
     id: row.original.id,
-  });
+  })
 
   return (
     <TableRow
@@ -614,7 +614,7 @@ function DraggableRow({ row }: { row: Row<typeof schema.Type> }) {
         </TableCell>
       ))}
     </TableRow>
-  );
+  )
 }
 
 const chartData = [
@@ -624,7 +624,7 @@ const chartData = [
   { desktop: 73, mobile: 190, month: "April" },
   { desktop: 209, mobile: 130, month: "May" },
   { desktop: 214, mobile: 140, month: "June" },
-];
+]
 
 const chartConfig = {
   desktop: {
@@ -635,11 +635,11 @@ const chartConfig = {
     color: "var(--primary)",
     label: "Mobile",
   },
-} satisfies ChartConfig;
+} satisfies ChartConfig
 
 function TableCellViewer({ item }: { item: typeof schema.Type }) {
-  const isMobile = useIsMobile();
-  const { dir } = useDirection();
+  const isMobile = useIsMobile()
+  const { dir } = useDirection()
 
   return (
     <Drawer direction={isMobile ? "bottom" : dir === "rtl" ? "left" : "right"}>
@@ -799,5 +799,5 @@ function TableCellViewer({ item }: { item: typeof schema.Type }) {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  );
+  )
 }

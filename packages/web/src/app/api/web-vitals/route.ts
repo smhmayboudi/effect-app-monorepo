@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     console.error("Error processing web vitals:", error)
     return NextResponse.json(
       { error: "Failed to process web vitals" },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

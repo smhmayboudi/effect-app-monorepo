@@ -4,7 +4,7 @@ const userStatusSchema = Schema.Literal(
   "active",
   "inactive",
   "invited",
-  "suspended"
+  "suspended",
 )
 export type UserStatus = typeof userStatusSchema.Type
 
@@ -12,7 +12,7 @@ const userRoleSchema = Schema.Literal(
   "superadmin",
   "admin",
   "cashier",
-  "manager"
+  "manager",
 )
 export type UserRole = typeof userRoleSchema.Type
 
@@ -26,7 +26,7 @@ const userSchema = Schema.Struct({
   role: userRoleSchema,
   status: userStatusSchema,
   updatedAt: Schema.ValidDateFromSelf,
-  username: Schema.String
+  username: Schema.String,
 })
 export type User = typeof userSchema.Type
 export const userListSchema = Schema.Array(userSchema)

@@ -17,17 +17,17 @@ export const users = Array.from({ length: 500 }, () => {
       "superadmin",
       "admin",
       "cashier",
-      "manager"
+      "manager",
     ]),
     status: faker.helpers.arrayElement([
       "active",
       "inactive",
       "invited",
-      "suspended"
+      "suspended",
     ]),
     updatedAt: faker.date.recent(),
     username: faker.internet
       .username({ firstName, lastName })
-      .toLocaleLowerCase()
+      .toLocaleLowerCase(),
   }
 })

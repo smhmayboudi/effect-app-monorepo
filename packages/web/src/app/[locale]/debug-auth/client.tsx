@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { GalleryVerticalEnd } from "lucide-react";
-import { useEffect, useState } from "react";
+import { GalleryVerticalEnd } from "lucide-react"
+import { useEffect, useState } from "react"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldGroup } from "@/components/ui/field";
-import Link from "@/components/ui/link";
-import { authClient } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field, FieldGroup } from "@/components/ui/field"
+import Link from "@/components/ui/link"
+import { authClient } from "@/lib/auth-client"
 
 export default function Client() {
-  const { data, isPending, refetch } = authClient.useSession();
-  const [cookies, setCookies] = useState<string>("");
+  const { data, isPending, refetch } = authClient.useSession()
+  const [cookies, setCookies] = useState<string>("")
 
   useEffect(() => {
-    refetch();
-    setCookies(document.cookie);
-  }, [refetch]);
+    refetch()
+    setCookies(document.cookie)
+  }, [refetch])
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -63,5 +63,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }

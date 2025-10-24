@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { useSearchNavigation } from "@/hooks/use-search-navigation";
+import { useSearchNavigation } from "@/hooks/use-search-navigation"
 
-import { UsersDialogs } from "./components/users-dialogs";
-import { UsersPrimaryButtons } from "./components/users-primary-buttons";
-import { UsersProvider } from "./components/users-provider";
-import { UsersTable } from "./components/users-table";
-import { users } from "./data/users";
+import { UsersDialogs } from "./components/users-dialogs"
+import { UsersPrimaryButtons } from "./components/users-primary-buttons"
+import { UsersProvider } from "./components/users-provider"
+import { UsersTable } from "./components/users-table"
+import { users } from "./data/users"
 
 export function Client() {
-  const { navigate, search } = useSearchNavigation();
+  const { navigate, search } = useSearchNavigation()
 
   return (
     <UsersProvider>
@@ -27,5 +27,5 @@ export function Client() {
       </div>
       <UsersDialogs />
     </UsersProvider>
-  );
+  )
 }

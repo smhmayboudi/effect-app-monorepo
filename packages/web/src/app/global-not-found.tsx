@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 export default function GlobalNotFound() {
   return (
@@ -7,5 +7,5 @@ export default function GlobalNotFound() {
         <h2>NOT FOUND</h2>
       </body>
     </html>
-  );
+  )
 }

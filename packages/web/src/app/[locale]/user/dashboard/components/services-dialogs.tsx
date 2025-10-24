@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { ServicesDialogCreateUpdate } from "./services-dialog-create-update";
-import { ServicesDialogDelete } from "./services-dialog-delete";
-import { useUsers } from "./services-provider";
+import { ServicesDialogCreateUpdate } from "./services-dialog-create-update"
+import { ServicesDialogDelete } from "./services-dialog-delete"
+import { useUsers } from "./services-provider"
 
 export function ServicesDialogs() {
-  const { currentRow, open, setCurrentRow, setOpen } = useUsers();
+  const { currentRow, open, setCurrentRow, setOpen } = useUsers()
 
   return (
     <>
@@ -18,25 +18,25 @@ export function ServicesDialogs() {
           <ServicesDialogCreateUpdate
             currentRow={currentRow}
             onOpenChange={() => {
-              setOpen("update");
+              setOpen("update")
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             open={open === "update"}
           />
           <ServicesDialogDelete
             currentRow={currentRow}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen("delete")
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             open={open === "delete"}
           />
         </>
       )}
     </>
-  );
+  )
 }

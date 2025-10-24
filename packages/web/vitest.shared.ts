@@ -1,5 +1,5 @@
 // import * as path from "node:path"
-import type { ViteUserConfig } from "vitest/config";
+import type { ViteUserConfig } from "vitest/config"
 
 // const alias = (name: string) => {
 //   const target = process.env.TEST_DIST !== undefined ? "dist/dist/esm" : "src"
@@ -35,6 +35,6 @@ const config: ViteUserConfig = {
     },
     // setupFiles: [path.join(__dirname, "setupTests.ts")]
   },
-};
+}
 
-export default config;
+export default config

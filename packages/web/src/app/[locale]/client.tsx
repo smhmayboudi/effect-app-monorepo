@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   BatteryCharging,
@@ -8,19 +8,19 @@ import {
   RadioTower,
   SquareKanban,
   WandSparkles,
-} from "lucide-react";
-import Image from "next/image";
+} from "lucide-react"
+import Image from "next/image"
 
-import { LocaleSwitcher } from "@/components/locale-switcher";
-import { ModeToggle } from "@/components/mode-toggle";
+import { LocaleSwitcher } from "@/components/locale-switcher"
+import { ModeToggle } from "@/components/mode-toggle"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "@/components/ui/link";
+} from "@/components/ui/accordion"
+import { Button, buttonVariants } from "@/components/ui/button"
+import Link from "@/components/ui/link"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -29,30 +29,30 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+} from "@/components/ui/navigation-menu"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Discord } from "@/components/ui/svgs/discord";
-import { EffectDark } from "@/components/ui/svgs/effectDark";
-import { EffectLight } from "@/components/ui/svgs/effectLight";
-import { GithubDark } from "@/components/ui/svgs/githubDark";
-import { GithubLight } from "@/components/ui/svgs/githubLight";
-import { Linkedin } from "@/components/ui/svgs/linkedin";
-import { NextjsLogoDark } from "@/components/ui/svgs/nextjsLogoDark";
-import { NextjsLogoLight } from "@/components/ui/svgs/nextjsLogoLight";
-import { ReactDark } from "@/components/ui/svgs/reactDark";
-import { ReactLight } from "@/components/ui/svgs/reactLight";
-import { ShadcnUi } from "@/components/ui/svgs/shadcnUi";
-import { ShadcnUiDark } from "@/components/ui/svgs/shadcnUiDark";
-import { Tailwindcss } from "@/components/ui/svgs/tailwindcss";
-import { Typescript } from "@/components/ui/svgs/typescript";
-import { useTheme } from "@/context/theme-provider";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/sheet"
+import { Discord } from "@/components/ui/svgs/discord"
+import { EffectDark } from "@/components/ui/svgs/effectDark"
+import { EffectLight } from "@/components/ui/svgs/effectLight"
+import { GithubDark } from "@/components/ui/svgs/githubDark"
+import { GithubLight } from "@/components/ui/svgs/githubLight"
+import { Linkedin } from "@/components/ui/svgs/linkedin"
+import { NextjsLogoDark } from "@/components/ui/svgs/nextjsLogoDark"
+import { NextjsLogoLight } from "@/components/ui/svgs/nextjsLogoLight"
+import { ReactDark } from "@/components/ui/svgs/reactDark"
+import { ReactLight } from "@/components/ui/svgs/reactLight"
+import { ShadcnUi } from "@/components/ui/svgs/shadcnUi"
+import { ShadcnUiDark } from "@/components/ui/svgs/shadcnUiDark"
+import { Tailwindcss } from "@/components/ui/svgs/tailwindcss"
+import { Typescript } from "@/components/ui/svgs/typescript"
+import { useTheme } from "@/context/theme-provider"
+import { cn } from "@/lib/utils"
 
 const Navbar5 = () => {
   const navbars = [
@@ -86,7 +86,7 @@ const Navbar5 = () => {
       href: "#",
       title: "Support",
     },
-  ];
+  ]
 
   return (
     <section className="p-4">
@@ -232,11 +232,11 @@ const Navbar5 = () => {
         </nav>
       </div>
     </section>
-  );
-};
+  )
+}
 
 const Hero12 = () => {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
   const heros = [
     {
       href: "https://effect.website/",
@@ -268,7 +268,7 @@ const Hero12 = () => {
       icon: <Typescript />,
       title: "typescript",
     },
-  ];
+  ]
 
   return (
     <section className="relative overflow-hidden py-32">
@@ -343,8 +343,8 @@ const Hero12 = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 const Feature43 = () => {
   const features = [
@@ -467,7 +467,7 @@ const Feature43 = () => {
       heading: "Developer Dashboard",
       icon: <SquareKanban className="size-6" />,
     },
-  ];
+  ]
 
   return (
     <section className="py-32">
@@ -490,11 +490,11 @@ const Feature43 = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 const Community1 = () => {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
   const communitys = [
     {
       href: "https://github.com/smhmayboudi/effect-app-monorepo/",
@@ -506,7 +506,7 @@ const Community1 = () => {
       icon: <Discord />,
       title: "discord",
     },
-  ];
+  ]
 
   return (
     <section className="py-32">
@@ -539,12 +539,12 @@ const Community1 = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 const Faq3 = () => {
   const description =
-    "Find answers to common questions about our products. Can't find what you're looking for? Contact our support team.";
+    "Find answers to common questions about our products. Can't find what you're looking for? Contact our support team."
   const faqItems = [
     {
       answer:
@@ -588,8 +588,8 @@ const Faq3 = () => {
       id: "faq-7",
       question: "Should I include links in my FAQ?",
     },
-  ];
-  const heading = "Frequently asked questions";
+  ]
+  const heading = "Frequently asked questions"
 
   return (
     <section className="py-32">
@@ -622,14 +622,14 @@ const Faq3 = () => {
         </Accordion>
       </div>
     </section>
-  );
-};
+  )
+}
 
 const Footer7 = () => {
   const legalLinks = [
     { href: "#", name: "Terms and Conditions" },
     { href: "#", name: "Privacy Policy" },
-  ];
+  ]
   const sections = [
     {
       links: [
@@ -658,14 +658,14 @@ const Footer7 = () => {
       ],
       title: "Resources",
     },
-  ];
+  ]
   const socialLinks = [
     {
       href: "https://www.linkedin.com/in/smhmayboudi/",
       icon: <Linkedin className="size-5" />,
       label: "LinkedIn",
     },
-  ];
+  ]
 
   return (
     <section className="py-32">
@@ -725,8 +725,8 @@ const Footer7 = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 export default function Client() {
   return (
@@ -738,5 +738,5 @@ export default function Client() {
       <Faq3 />
       <Footer7 />
     </>
-  );
+  )
 }

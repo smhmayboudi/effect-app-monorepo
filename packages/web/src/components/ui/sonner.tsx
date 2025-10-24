@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import type { CSSProperties } from "react";
+import type { CSSProperties } from "react"
 
-import { Toaster as Sonner, ToasterProps } from "sonner";
+import { Toaster as Sonner, ToasterProps } from "sonner"
 
-import { useDirection } from "@/context/direction-provider";
-import { useTheme } from "@/context/theme-provider";
+import { useDirection } from "@/context/direction-provider"
+import { useTheme } from "@/context/theme-provider"
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-  const { dir } = useDirection();
+  const { theme = "system" } = useTheme()
+  const { dir } = useDirection()
 
   return (
     <Sonner
@@ -25,7 +25,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       {...props}
     />
-  );
-};
+  )
+}
 
-export { Toaster };
+export { Toaster }

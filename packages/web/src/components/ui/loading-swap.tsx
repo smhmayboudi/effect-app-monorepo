@@ -1,16 +1,16 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react"
 
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon } from "lucide-react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function LoadingSwap({
   children,
   className,
   isLoading,
 }: PropsWithChildren<{
-  className?: string;
-  isLoading: boolean;
+  className?: string
+  isLoading: boolean
 }>) {
   return (
     <div className="grid grid-cols-1 items-center justify-items-center">
@@ -33,5 +33,5 @@ export function LoadingSwap({
         <Loader2Icon className="animate-spin" />
       </div>
     </div>
-  );
+  )
 }

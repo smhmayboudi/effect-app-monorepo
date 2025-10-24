@@ -1,12 +1,12 @@
-import { ImageResponse } from "next/og";
+import { ImageResponse } from "next/og"
 
-export const alt = "My site";
+export const alt = "My site"
 export const size = {
   height: 1024,
   width: 1024,
-};
+}
 
-export const contentType = "image/png";
+export const contentType = "image/png"
 
 export default async function Image() {
   return new ImageResponse(
@@ -28,5 +28,5 @@ export default async function Image() {
     {
       ...size,
     },
-  );
+  )
 }

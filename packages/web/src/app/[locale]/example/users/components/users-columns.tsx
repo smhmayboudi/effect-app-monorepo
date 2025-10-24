@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table"
 
-import { DataTableColumnHeader } from "@/components/data-table-2";
-import { LongText } from "@/components/long-text";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+import { DataTableColumnHeader } from "@/components/data-table-2"
+import { LongText } from "@/components/long-text"
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { cn } from "@/lib/utils"
 
-import type { User } from "../data/schema";
+import type { User } from "../data/schema"
 
-import { callTypes, roles } from "../data/data";
-import { UsersDataTableRowActions } from "./users-data-table-row-actions";
+import { callTypes, roles } from "../data/data"
+import { UsersDataTableRowActions } from "./users-data-table-row-actions"
 
 export const usersColumns: ColumnDef<User>[] = [
   {
@@ -57,10 +57,10 @@ export const usersColumns: ColumnDef<User>[] = [
   },
   {
     cell: ({ row }) => {
-      const { firstName, lastName } = row.original;
-      const fullName = `${firstName} ${lastName}`;
+      const { firstName, lastName } = row.original
+      const fullName = `${firstName} ${lastName}`
 
-      return <LongText className="max-w-36">{fullName}</LongText>;
+      return <LongText className="max-w-36">{fullName}</LongText>
     },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
@@ -88,8 +88,8 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "status",
     cell: ({ row }) => {
-      const { status } = row.original;
-      const badgeColor = callTypes.get(status);
+      const { status } = row.original
+      const badgeColor = callTypes.get(status)
 
       return (
         <div className="flex space-x-2">
@@ -97,7 +97,7 @@ export const usersColumns: ColumnDef<User>[] = [
             {row.getValue("status")}
           </Badge>
         </div>
-      );
+      )
     },
     enableHiding: false,
     enableSorting: false,
@@ -109,11 +109,11 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     cell: ({ row }) => {
-      const { role } = row.original;
-      const userType = roles.find(({ value }) => value === role);
+      const { role } = row.original
+      const userType = roles.find(({ value }) => value === role)
 
       if (!userType) {
-        return null;
+        return null
       }
 
       return (
@@ -123,7 +123,7 @@ export const usersColumns: ColumnDef<User>[] = [
           )}
           <span className="text-sm capitalize">{row.getValue("role")}</span>
         </div>
-      );
+      )
     },
     enableHiding: false,
     enableSorting: false,
@@ -136,4 +136,4 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => <UsersDataTableRowActions row={row} />,
     id: "actions",
   },
-];
+]

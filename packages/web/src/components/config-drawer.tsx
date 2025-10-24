@@ -1,19 +1,19 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { Item, Root as Radio } from "@radix-ui/react-radio-group";
-import { CircleCheck, RotateCcw, Settings } from "lucide-react";
+import { Item, Root as Radio } from "@radix-ui/react-radio-group"
+import { CircleCheck, RotateCcw, Settings } from "lucide-react"
 
-import { IconDir } from "@/assets/custom/icon-dir";
-import { IconLayoutCompact } from "@/assets/custom/icon-layout-compact";
-import { IconLayoutDefault } from "@/assets/custom/icon-layout-default";
-import { IconLayoutFull } from "@/assets/custom/icon-layout-full";
-import { IconSidebarFloating } from "@/assets/custom/icon-sidebar-floating";
-import { IconSidebarInset } from "@/assets/custom/icon-sidebar-inset";
-import { IconSidebarSidebar } from "@/assets/custom/icon-sidebar-sidebar";
-import { IconThemeDark } from "@/assets/custom/icon-theme-dark";
-import { IconThemeLight } from "@/assets/custom/icon-theme-light";
-import { IconThemeSystem } from "@/assets/custom/icon-theme-system";
-import { Button } from "@/components/ui/button";
+import { IconDir } from "@/assets/custom/icon-dir"
+import { IconLayoutCompact } from "@/assets/custom/icon-layout-compact"
+import { IconLayoutDefault } from "@/assets/custom/icon-layout-default"
+import { IconLayoutFull } from "@/assets/custom/icon-layout-full"
+import { IconSidebarFloating } from "@/assets/custom/icon-sidebar-floating"
+import { IconSidebarInset } from "@/assets/custom/icon-sidebar-inset"
+import { IconSidebarSidebar } from "@/assets/custom/icon-sidebar-sidebar"
+import { IconThemeDark } from "@/assets/custom/icon-theme-dark"
+import { IconThemeLight } from "@/assets/custom/icon-theme-light"
+import { IconThemeSystem } from "@/assets/custom/icon-theme-system"
+import { Button } from "@/components/ui/button"
 import {
   Sheet,
   SheetContent,
@@ -22,25 +22,25 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { useSidebar } from "@/components/ui/sidebar";
-import { useDirection } from "@/context/direction-provider";
-import { type Collapsible, useLayout } from "@/context/layout-provider";
-import { useTheme } from "@/context/theme-provider";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/sheet"
+import { useSidebar } from "@/components/ui/sidebar"
+import { useDirection } from "@/context/direction-provider"
+import { type Collapsible, useLayout } from "@/context/layout-provider"
+import { useTheme } from "@/context/theme-provider"
+import { cn } from "@/lib/utils"
 
 export function ConfigDrawer() {
-  const { setOpen } = useSidebar();
-  const { resetDir } = useDirection();
-  const { resetTheme } = useTheme();
-  const { resetLayout } = useLayout();
+  const { setOpen } = useSidebar()
+  const { resetDir } = useDirection()
+  const { resetTheme } = useTheme()
+  const { resetLayout } = useLayout()
 
   const handleReset = () => {
-    setOpen(true);
-    resetDir();
-    resetTheme();
-    resetLayout();
-  };
+    setOpen(true)
+    resetDir()
+    resetTheme()
+    resetLayout()
+  }
 
   return (
     <Sheet>
@@ -78,11 +78,11 @@ export function ConfigDrawer() {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }
 
 function DirConfig() {
-  const { defaultDir, dir, setDir } = useDirection();
+  const { defaultDir, dir, setDir } = useDirection()
 
   return (
     <div>
@@ -121,21 +121,21 @@ function DirConfig() {
         Choose between left-to-right or right-to-left site direction
       </div>
     </div>
-  );
+  )
 }
 
 function LayoutConfig() {
-  const { open, setOpen } = useSidebar();
-  const { collapsible, defaultCollapsible, setCollapsible } = useLayout();
+  const { open, setOpen } = useSidebar()
+  const { collapsible, defaultCollapsible, setCollapsible } = useLayout()
 
-  const radioState = open ? "default" : collapsible;
+  const radioState = open ? "default" : collapsible
 
   return (
     <div className="max-md:hidden">
       <SectionTitle
         onReset={() => {
-          setOpen(true);
-          setCollapsible(defaultCollapsible);
+          setOpen(true)
+          setCollapsible(defaultCollapsible)
         }}
         showReset={radioState !== "default"}
         title="Layout"
@@ -146,12 +146,12 @@ function LayoutConfig() {
         className="grid w-full max-w-md grid-cols-3 gap-4"
         onValueChange={(v) => {
           if (v === "default") {
-            setOpen(true);
+            setOpen(true)
 
-            return;
+            return
           }
-          setOpen(false);
-          setCollapsible(v as Collapsible);
+          setOpen(false)
+          setCollapsible(v as Collapsible)
         }}
         value={radioState}
       >
@@ -179,21 +179,21 @@ function LayoutConfig() {
         Choose between default expanded, compact icon-only, or full layout mode
       </div>
     </div>
-  );
+  )
 }
 
 function RadioGroupItem({
   isTheme = false,
   item,
 }: {
-  isTheme?: boolean;
+  isTheme?: boolean
   item: {
-    icon: (props: SVGProps<SVGSVGElement>) => React.ReactElement;
-    label: string;
-    value: string;
-  };
+    icon: (props: SVGProps<SVGSVGElement>) => React.ReactElement
+    label: string
+    value: string
+  }
 }) {
-  const { dir } = useDirection();
+  const { dir } = useDirection()
 
   return (
     <Item
@@ -232,7 +232,7 @@ function RadioGroupItem({
         {item.label}
       </div>
     </Item>
-  );
+  )
 }
 
 function SectionTitle({
@@ -241,10 +241,10 @@ function SectionTitle({
   showReset = false,
   title,
 }: {
-  className?: string;
-  onReset?: () => void;
-  showReset?: boolean;
-  title: string;
+  className?: string
+  onReset?: () => void
+  showReset?: boolean
+  title: string
 }) {
   return (
     <div
@@ -265,11 +265,11 @@ function SectionTitle({
         </Button>
       )}
     </div>
-  );
+  )
 }
 
 function SidebarConfig() {
-  const { defaultVariant, setVariant, variant } = useLayout();
+  const { defaultVariant, setVariant, variant } = useLayout()
 
   return (
     <div className="max-md:hidden">
@@ -309,11 +309,11 @@ function SidebarConfig() {
         Choose between inset, floating, or standard sidebar layout
       </div>
     </div>
-  );
+  )
 }
 
 function ThemeConfig() {
-  const { defaultTheme, setTheme, theme } = useTheme();
+  const { defaultTheme, setTheme, theme } = useTheme()
 
   return (
     <div>
@@ -353,5 +353,5 @@ function ThemeConfig() {
         Choose between system preference, light mode, or dark mode
       </div>
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import type { Service } from "@template/domain/service/application/ServiceApplicationDomain";
+import type { Service } from "@template/domain/service/application/ServiceApplicationDomain"
 
 import {
   flexRender,
@@ -13,14 +13,14 @@ import {
   type SortingState,
   useReactTable,
   type VisibilityState,
-} from "@tanstack/react-table";
-import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+} from "@tanstack/react-table"
+import { useTranslations } from "next-intl"
+import { useEffect, useState } from "react"
 
 import {
   DataTablePagination,
   DataTableToolbar,
-} from "@/components/data-table-2";
+} from "@/components/data-table-2"
 import {
   Table,
   TableBody,
@@ -28,16 +28,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { type NavigateFn, useTableUrlState } from "@/hooks/use-table-url-state";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/table"
+import { type NavigateFn, useTableUrlState } from "@/hooks/use-table-url-state"
+import { cn } from "@/lib/utils"
 
-import { servicesColumns as columns } from "./services-columns";
-import { ServicesDataTableBulkActions } from "./services-data-table-bulk-actions";
+import { servicesColumns as columns } from "./services-columns"
+import { ServicesDataTableBulkActions } from "./services-data-table-bulk-actions"
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
-    className: string;
+    className: string
   }
 }
 
@@ -46,15 +46,15 @@ export function ServicesTable({
   navigate,
   search,
 }: {
-  data: Array<Service>;
-  navigate: NavigateFn;
-  search: Record<string, unknown>;
+  data: Array<Service>
+  navigate: NavigateFn
+  search: Record<string, unknown>
 }) {
-  const t = useTranslations("user.dashboard.components.services-table");
+  const t = useTranslations("user.dashboard.components.services-table")
   // Local UI-only states
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [sorting, setSorting] = useState<SortingState>([])
 
   // Local state management for table (uncomment to use local-only state, not synced with URL)
   // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
@@ -77,7 +77,7 @@ export function ServicesTable({
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     search,
-  });
+  })
 
   const table = useReactTable({
     columns,
@@ -102,11 +102,11 @@ export function ServicesTable({
       rowSelection,
       sorting,
     },
-  });
+  })
 
   useEffect(() => {
-    ensurePageInRange(table.getPageCount());
-  }, [table, ensurePageInRange]);
+    ensurePageInRange(table.getPageCount())
+  }, [table, ensurePageInRange])
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
@@ -189,5 +189,5 @@ export function ServicesTable({
       <DataTablePagination table={table} />
       <ServicesDataTableBulkActions table={table} />
     </div>
-  );
+  )
 }

@@ -8,9 +8,9 @@ export class HttpClient extends AtomHttpApi.Tag<HttpClient>()("HttpClient", {
   baseUrl: "http://127.0.0.1:3001",
   httpClient: FetchHttpClient.layer.pipe(
     Layer.provide(
-      Layer.succeed(FetchHttpClient.RequestInit, { credentials: "include" })
-    )
+      Layer.succeed(FetchHttpClient.RequestInit, { credentials: "include" }),
+    ),
   ),
   transformClient: undefined,
-  transformResponse: undefined
+  transformResponse: undefined,
 }) {}

@@ -1,7 +1,7 @@
-import { List, PlusIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { List, PlusIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Empty,
   EmptyContent,
@@ -9,11 +9,11 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import Link from "@/components/ui/link";
+} from "@/components/ui/empty"
+import Link from "@/components/ui/link"
 
 export function ServiceListEmpty() {
-  const t = useTranslations("components.service-list-empty");
+  const t = useTranslations("components.service-list-empty")
 
   return (
     <Empty className="h-full bg-gradient-to-b from-muted/50 from-30% to-background">
@@ -34,5 +34,5 @@ export function ServiceListEmpty() {
         </Button>
       </EmptyContent>
     </Empty>
-  );
+  )
 }

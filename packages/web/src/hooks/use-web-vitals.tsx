@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import type { Metric } from "web-vitals";
+import type { Metric } from "web-vitals"
 
-import { useReportWebVitals } from "next/web-vitals";
-import { useEffect, useRef } from "react";
+import { useReportWebVitals } from "next/web-vitals"
+import { useEffect, useRef } from "react"
 
 interface UseWebVitalsOptions {
-  analyticsEndpoint?: string;
-  enabled?: boolean;
-  onMetricReport?: (metric: Metric) => void;
+  analyticsEndpoint?: string
+  enabled?: boolean
+  onMetricReport?: (metric: Metric) => void
 }
 
 export function useWebVitals({
@@ -16,21 +16,21 @@ export function useWebVitals({
   enabled = true,
   onMetricReport,
 }: UseWebVitalsOptions = {}) {
-  const analyticsEndpointRef = useRef(analyticsEndpoint);
+  const analyticsEndpointRef = useRef(analyticsEndpoint)
 
   useEffect(() => {
-    analyticsEndpointRef.current = analyticsEndpoint;
-  }, [analyticsEndpoint]);
+    analyticsEndpointRef.current = analyticsEndpoint
+  }, [analyticsEndpoint])
 
   const handleMetric = (metric: Metric) => {
     // Call custom handler
-    onMetricReport?.(metric);
+    onMetricReport?.(metric)
 
     // Send to analytics
-    sendToAnalytics(metric, analyticsEndpointRef.current);
-  };
+    sendToAnalytics(metric, analyticsEndpointRef.current)
+  }
 
-  useReportWebVitals(enabled ? handleMetric : () => {});
+  useReportWebVitals(enabled ? handleMetric : () => {})
 }
 
 // Utility function to send metrics to analytics
@@ -41,10 +41,10 @@ function sendToAnalytics(metric: Metric, endpoint: string) {
     // Add additional context
     url: window.location.href,
     userAgent: navigator.userAgent,
-  });
+  })
 
   if (navigator.sendBeacon) {
-    navigator.sendBeacon(endpoint, body);
+    navigator.sendBeacon(endpoint, body)
   } else {
     fetch(endpoint, {
       body,
@@ -54,7 +54,7 @@ function sendToAnalytics(metric: Metric, endpoint: string) {
       keepalive: true,
       method: "POST",
     }).catch((error) => {
-      console.error("Failed to send web vitals:", error);
-    });
+      console.error("Failed to send web vitals:", error)
+    })
   }
 }

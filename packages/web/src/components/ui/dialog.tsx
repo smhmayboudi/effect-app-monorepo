@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { XIcon } from "lucide-react";
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { XIcon } from "lucide-react"
 
-import { useDirection } from "@/context/direction-provider";
-import { cn } from "@/lib/utils";
+import { useDirection } from "@/context/direction-provider"
+import { cn } from "@/lib/utils"
 
 function Dialog({ ...props }: ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
 function DialogClose({
   ...props
 }: ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
 function DialogContent({
@@ -24,9 +24,9 @@ function DialogContent({
   showCloseButton = true,
   ...props
 }: ComponentProps<typeof DialogPrimitive.Content> & {
-  showCloseButton?: boolean;
+  showCloseButton?: boolean
 }) {
-  const { dir } = useDirection();
+  const { dir } = useDirection()
 
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -52,7 +52,7 @@ function DialogContent({
         )}
       </DialogPrimitive.Content>
     </DialogPortal>
-  );
+  )
 }
 
 function DialogDescription({
@@ -65,7 +65,7 @@ function DialogDescription({
       data-slot="dialog-description"
       {...props}
     />
-  );
+  )
 }
 
 function DialogFooter({ className, ...props }: ComponentProps<"div">) {
@@ -78,7 +78,7 @@ function DialogFooter({ className, ...props }: ComponentProps<"div">) {
       data-slot="dialog-footer"
       {...props}
     />
-  );
+  )
 }
 
 function DialogHeader({ className, ...props }: ComponentProps<"div">) {
@@ -88,7 +88,7 @@ function DialogHeader({ className, ...props }: ComponentProps<"div">) {
       data-slot="dialog-header"
       {...props}
     />
-  );
+  )
 }
 
 function DialogOverlay({
@@ -104,13 +104,13 @@ function DialogOverlay({
       data-slot="dialog-overlay"
       {...props}
     />
-  );
+  )
 }
 
 function DialogPortal({
   ...props
 }: ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
 }
 
 function DialogTitle({
@@ -123,13 +123,13 @@ function DialogTitle({
       data-slot="dialog-title"
       {...props}
     />
-  );
+  )
 }
 
 function DialogTrigger({
   ...props
 }: ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
 }
 
 export {
@@ -143,4 +143,4 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-};
+}

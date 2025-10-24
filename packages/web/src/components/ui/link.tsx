@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { useLocale } from "next-intl";
-import { LinkProps } from "next/link";
-import { type PropsWithChildren, useEffect, useState } from "react";
+import { useLocale } from "next-intl"
+import { LinkProps } from "next/link"
+import { type PropsWithChildren, useEffect, useState } from "react"
 
-import { Link as Linki18, usePathname } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { Link as Linki18, usePathname } from "@/i18n/navigation"
+import { cn } from "@/lib/utils"
 
 const Link = ({
   children,
@@ -13,26 +13,26 @@ const Link = ({
   classNameActive,
   ...props
 }: PropsWithChildren<LinkProps> & {
-  className?: string;
-  classNameActive?: string;
+  className?: string
+  classNameActive?: string
 }) => {
-  const locale = useLocale();
-  const pathname = usePathname();
-  const [computedClassName, setComputedClassName] = useState(className);
+  const locale = useLocale()
+  const pathname = usePathname()
+  const [computedClassName, setComputedClassName] = useState(className)
 
   useEffect(() => {
     if (pathname) {
-      const activePathname = new URL(pathname, location.href).pathname;
+      const activePathname = new URL(pathname, location.href).pathname
       const linkPathname = new URL(
         props.as?.toString() ?? props.href.toString(),
         location.href,
-      ).pathname;
+      ).pathname
       const newClassName =
         activePathname === linkPathname
           ? cn(className, classNameActive)
-          : className;
+          : className
       if (newClassName !== computedClassName) {
-        setComputedClassName(newClassName);
+        setComputedClassName(newClassName)
       }
     }
   }, [
@@ -42,13 +42,13 @@ const Link = ({
     pathname,
     props.as,
     props.href,
-  ]);
+  ])
 
   return (
     <Linki18 {...props} className={computedClassName} locale={locale}>
       {children}
     </Linki18>
-  );
-};
+  )
+}
 
-export default Link;
+export default Link

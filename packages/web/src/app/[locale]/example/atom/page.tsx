@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Atom,
@@ -6,12 +6,12 @@ import {
   Result,
   useAtom,
   useAtomValue,
-} from "@effect-atom/atom-react";
-import * as Array from "effect/Array";
-import * as Data from "effect/Data";
-import * as Effect from "effect/Effect";
-import * as Schema from "effect/Schema";
-import { type FC, useRef } from "react";
+} from "@effect-atom/atom-react"
+import * as Array from "effect/Array"
+import * as Data from "effect/Data"
+import * as Effect from "effect/Effect"
+import * as Schema from "effect/Schema"
+import { type FC, useRef } from "react"
 
 class Service extends Schema.Class<Service>("Service")({
   id: Schema.String,
@@ -21,21 +21,21 @@ class Service extends Schema.Class<Service>("Service")({
 
 const remoteGetAtom = Atom.make(
   Effect.sleep("1 second").pipe(Effect.as([] as Service[])),
-);
+)
 
 type CacheUpdate = Data.TaggedEnum<{
-  Create: { name: string };
-  Delete: { id: string };
-  Update: { id: string; title: string };
-}>;
-const CacheUpdate = Data.taggedEnum<CacheUpdate>();
+  Create: { name: string }
+  Delete: { id: string }
+  Update: { id: string; title: string }
+}>
+const CacheUpdate = Data.taggedEnum<CacheUpdate>()
 
 const getAtom = Atom.writable(
   (get) => get(remoteGetAtom),
   (ctx, update: CacheUpdate) => {
-    const result = ctx.get(getAtom);
+    const result = ctx.get(getAtom)
     if (result._tag !== "Success") {
-      return;
+      return
     }
 
     const newResult = CacheUpdate.$match(update, {
@@ -55,65 +55,65 @@ const getAtom = Atom.writable(
           result.value.findIndex((t) => t.id === args.id),
           (t) => new Service({ ...t, title: args.title }),
         ),
-    });
+    })
 
-    ctx.setSelf(Result.success(newResult));
+    ctx.setSelf(Result.success(newResult))
   },
-);
+)
 
 const createAtom = Atom.fn(
   Effect.fn(function* (_input: { name: string }, get: Atom.FnContext) {
-    yield* Effect.sleep("0.25 seconds");
-    get.set(getAtom, CacheUpdate.Create({ name: _input.name }));
+    yield* Effect.sleep("0.25 seconds")
+    get.set(getAtom, CacheUpdate.Create({ name: _input.name }))
   }),
-);
+)
 
 const updateAtom = Atom.family((id: string) =>
   Atom.fn(
     Effect.fn(function* (input: { title: string }) {
-      const registry = yield* Registry.AtomRegistry;
-      yield* Effect.sleep("0.3 seconds");
-      registry.set(getAtom, CacheUpdate.Update({ id, title: input.title }));
+      const registry = yield* Registry.AtomRegistry
+      yield* Effect.sleep("0.3 seconds")
+      registry.set(getAtom, CacheUpdate.Update({ id, title: input.title }))
     }),
   ),
-);
+)
 
 const deleteAtom = Atom.family((id: string) =>
   Atom.fn(
     Effect.fn(function* () {
-      const registry = yield* Registry.AtomRegistry;
-      yield* Effect.sleep("0.2 seconds");
-      registry.set(getAtom, CacheUpdate.Delete({ id }));
+      const registry = yield* Registry.AtomRegistry
+      yield* Effect.sleep("0.2 seconds")
+      registry.set(getAtom, CacheUpdate.Delete({ id }))
     }),
   ),
-);
+)
 
 const Form = () => {
-  const [result, createService] = useAtom(createAtom);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [result, createService] = useAtom(createAtom)
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
     await createService({
       name: formData.get("name") as string,
-    });
+    })
     if (formRef.current) {
-      formRef.current.reset();
+      formRef.current.reset()
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
       <input name="name" placeholder="Name" type="text" />
       <button type="submit">{result.waiting ? "Creating..." : "Create"}</button>
     </form>
-  );
-};
+  )
+}
 
 const ServiceItem: FC<{ service: Service }> = ({ service }) => {
-  const [updateResult, updateService] = useAtom(updateAtom(service.id));
-  const [deleteResult, deleteService] = useAtom(deleteAtom(service.id));
+  const [updateResult, updateService] = useAtom(updateAtom(service.id))
+  const [deleteResult, deleteService] = useAtom(deleteAtom(service.id))
 
   return (
     <li>
@@ -131,8 +131,8 @@ const ServiceItem: FC<{ service: Service }> = ({ service }) => {
         </button>
       </div>
     </li>
-  );
-};
+  )
+}
 
 const ServiceList = ({ services }: { services: readonly Service[] }) => (
   <ul>
@@ -140,10 +140,10 @@ const ServiceList = ({ services }: { services: readonly Service[] }) => (
       <ServiceItem key={service.id} service={service} />
     ))}
   </ul>
-);
+)
 
 const ServicesCRUD = () => {
-  const servicesResult = useAtomValue(getAtom);
+  const servicesResult = useAtomValue(getAtom)
 
   return (
     <div>
@@ -154,9 +154,9 @@ const ServicesCRUD = () => {
         .onSuccess((services) => <ServiceList services={services} />)
         .render()}
     </div>
-  );
-};
+  )
+}
 
 export default function Page() {
-  return <ServicesCRUD />;
+  return <ServicesCRUD />
 }

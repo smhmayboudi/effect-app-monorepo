@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import * as Effect from "effect/Effect";
-import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import * as Effect from "effect/Effect"
+import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,25 +14,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { withToast } from "@/components/with-toast";
-import { authClient } from "@/lib/auth-client";
+} from "@/components/ui/sidebar"
+import { withToast } from "@/components/with-toast"
+import { authClient } from "@/lib/auth-client"
 
 export function NavUser({ isHeader }: { isHeader: boolean }) {
-  const t = useTranslations("components.nav-user");
-  const { isMobile } = useSidebar();
-  const { data } = authClient.useSession();
-  const router = useRouter();
+  const t = useTranslations("components.nav-user")
+  const { isMobile } = useSidebar()
+  const { data } = authClient.useSession()
+  const router = useRouter()
 
   const handleAccount = async () => {
-    router.push("/user/update");
-  };
+    router.push("/user/update")
+  }
 
   const handleSignOut = async () => {
     const result = await Effect.runPromise(
@@ -46,11 +46,11 @@ export function NavUser({ isHeader }: { isHeader: boolean }) {
           onWaiting: "onWaiting",
         }),
       ),
-    );
+    )
     if (result.data) {
-      router.push("/");
+      router.push("/")
     }
-  };
+  }
 
   return (
     <SidebarMenu>
@@ -138,5 +138,5 @@ export function NavUser({ isHeader }: { isHeader: boolean }) {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  );
+  )
 }

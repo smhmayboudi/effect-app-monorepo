@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function IconFigma({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -24,5 +24,5 @@ export function IconFigma({ className, ...props }: SVGProps<SVGSVGElement>) {
       <path d="M6 3m0 3a3 3 0 0 1 3 -3h6a3 3 0 0 1 3 3v0a3 3 0 0 1 -3 3h-6a3 3 0 0 1 -3 -3z" />
       <path d="M9 9a3 3 0 0 0 0 6h3m-3 0a3 3 0 1 0 3 3v-15" />
     </svg>
-  );
+  )
 }

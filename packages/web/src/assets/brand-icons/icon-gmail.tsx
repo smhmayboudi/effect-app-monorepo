@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function IconGmail({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -25,5 +25,5 @@ export function IconGmail({ className, ...props }: SVGProps<SVGSVGElement>) {
       <path d="M16 4l-4 4l-4 -4" />
       <path d="M4 6.5l8 7.5l8 -7.5" />
     </svg>
-  );
+  )
 }

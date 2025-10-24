@@ -1,4 +1,4 @@
-import type { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table"
 
 import {
   ArrowDown,
@@ -6,35 +6,35 @@ import {
   ArrowUp,
   ArrowUpDown,
   EyeOff,
-} from "lucide-react";
-import { useTranslations } from "next-intl";
+} from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useDirection } from "@/context/direction-provider";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/dropdown-menu"
+import { useDirection } from "@/context/direction-provider"
+import { cn } from "@/lib/utils"
 
 type DataTableColumnHeaderProps<TData, TValue> =
   React.HTMLAttributes<HTMLDivElement> & {
-    column: Column<TData, TValue>;
-    title: string;
-  };
+    column: Column<TData, TValue>
+    title: string
+  }
 
 export function DataTableColumnHeader<TData, TValue>({
   className,
   column,
   title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  const t = useTranslations("components.data-table-2.column-header");
-  const { dir } = useDirection();
+  const t = useTranslations("components.data-table-2.column-header")
+  const { dir } = useDirection()
   if (!column.getCanSort()) {
-    return <div className={className}>{title}</div>;
+    return <div className={className}>{title}</div>
   }
 
   return (
@@ -79,5 +79,5 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }

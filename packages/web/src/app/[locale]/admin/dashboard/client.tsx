@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { GalleryVerticalEnd } from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import ServiceList from "@/components/service-list";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "@/components/ui/link";
+import ServiceList from "@/components/service-list"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "@/components/ui/link"
 
 export default function Client() {
-  const t = useTranslations("admin.dashboard");
+  const t = useTranslations("admin.dashboard")
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -34,5 +34,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -8,5 +8,5 @@ export const {
   permanentRedirect,
   redirect,
   usePathname,
-  useRouter
+  useRouter,
 } = createNavigation(routing)

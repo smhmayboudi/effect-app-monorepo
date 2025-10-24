@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import * as LabelPrimitive from "@radix-ui/react-label";
+import * as LabelPrimitive from "@radix-ui/react-label"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Label({
   className,
@@ -19,7 +19,7 @@ function Label({
       data-slot="label"
       {...props}
     />
-  );
+  )
 }
 
-export { Label };
+export { Label }

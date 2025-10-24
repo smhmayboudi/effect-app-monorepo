@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 const GithubLight = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} fill="none" viewBox="0 0 1024 1024">
@@ -10,6 +10,6 @@ const GithubLight = (props: SVGProps<SVGSVGElement>) => (
       transform="scale(64)"
     />
   </svg>
-);
+)
 
-export { GithubLight };
+export { GithubLight }

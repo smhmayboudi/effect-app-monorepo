@@ -1,32 +1,35 @@
-"use client";
+"use client"
 
-import type { CSSProperties } from "react";
+import type { CSSProperties } from "react"
 
-import { Result, useAtomValue } from "@effect-atom/atom-react";
-import * as Cookies from "@effect/platform/Cookies";
-import { ActorId } from "@template/domain/Actor";
-import { Service, ServiceId } from "@template/domain/service/application/ServiceApplicationDomain";
-import * as Effect from "effect/Effect";
-import { useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { Result, useAtomValue } from "@effect-atom/atom-react"
+import * as Cookies from "@effect/platform/Cookies"
+import { ActorId } from "@template/domain/Actor"
+import {
+  Service,
+  ServiceId,
+} from "@template/domain/service/application/ServiceApplicationDomain"
+import * as Effect from "effect/Effect"
+import { useTranslations } from "next-intl"
+import { useMemo } from "react"
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { LayoutProvider } from "@/context/layout-provider";
-import { useSearchNavigation } from "@/hooks/use-search-navigation";
-import { authClient } from "@/lib/auth-client";
-import { HttpClient } from "@/lib/http-client";
-import { cn } from "@/lib/utils";
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { LayoutProvider } from "@/context/layout-provider"
+import { useSearchNavigation } from "@/hooks/use-search-navigation"
+import { authClient } from "@/lib/auth-client"
+import { HttpClient } from "@/lib/http-client"
+import { cn } from "@/lib/utils"
 
-import { ServicesDialogs } from "./components/services-dialogs";
-import { ServicesPrimaryButtons } from "./components/services-primary-buttons";
-import { ServicesProvider } from "./components/services-provider";
-import { ServicesTable } from "./components/services-table";
+import { ServicesDialogs } from "./components/services-dialogs"
+import { ServicesPrimaryButtons } from "./components/services-primary-buttons"
+import { ServicesProvider } from "./components/services-provider"
+import { ServicesTable } from "./components/services-table"
 
 export default function Client() {
-  const t = useTranslations("user.dashboard");
-  const { data } = authClient.useSession();
+  const t = useTranslations("user.dashboard")
+  const { data } = authClient.useSession()
 
   const readAll = useMemo(
     () =>
@@ -46,9 +49,9 @@ export default function Client() {
           : { sort: [{ column: "ownerId", sort: "ASC" }] },
       }),
     [data],
-  );
-  const result = useAtomValue(readAll);
-  const services = Result.getOrElse(result, () => undefined);
+  )
+  const result = useAtomValue(readAll)
+  const services = Result.getOrElse(result, () => undefined)
 
   const defaultOpen = Effect.runSync(
     Cookies.getValue(
@@ -60,22 +63,25 @@ export default function Client() {
       Effect.catchTag("NoSuchElementException", () => Effect.succeed("true")),
       Effect.map((value) => value === "true"),
     ),
-  );
+  )
 
-  const { navigate, search } = useSearchNavigation();
+  const { navigate, search } = useSearchNavigation()
 
-  const transformServices = (services?: ReadonlyArray<Partial<Service>>): Array<Service> => {
-    const now = new Date();
+  const transformServices = (
+    services?: ReadonlyArray<Partial<Service>>,
+  ): Array<Service> => {
+    const now = new Date()
 
-    return (services??[]).map(service => ({
+    return (services ?? []).map((service) => ({
       createdAt: service.createdAt ?? now,
       deletedAt: service.deletedAt ?? null,
       id: service.id ?? ServiceId.make("00000000-0000-0000-0000-000000000000"),
-      name: service.name ?? '',
-      ownerId: service.ownerId ?? ActorId.make("00000000-0000-0000-0000-000000000000"),
+      name: service.name ?? "",
+      ownerId:
+        service.ownerId ?? ActorId.make("00000000-0000-0000-0000-000000000000"),
       updatedAt: service.updatedAt ?? now,
-    }));
-  };
+    }))
+  }
 
   return (
     <LayoutProvider>
@@ -121,7 +127,7 @@ export default function Client() {
                     <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
                       <ServicesTable
                         // data={[...(services?.data??[])]}
-                        data={transformServices(services?.data)} 
+                        data={transformServices(services?.data)}
                         navigate={navigate}
                         search={search}
                       />
@@ -135,5 +141,5 @@ export default function Client() {
         </SidebarInset>
       </SidebarProvider>
     </LayoutProvider>
-  );
+  )
 }

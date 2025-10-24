@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { cva, type VariantProps } from "class-variance-authority";
-import { type ComponentProps, type ReactNode, useMemo } from "react";
+import { cva, type VariantProps } from "class-variance-authority"
+import { type ComponentProps, type ReactNode, useMemo } from "react"
 
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
 function FieldGroup({ className, ...props }: ComponentProps<"div">) {
   return (
@@ -17,7 +17,7 @@ function FieldGroup({ className, ...props }: ComponentProps<"div">) {
       data-slot="field-group"
       {...props}
     />
-  );
+  )
 }
 
 function FieldLegend({
@@ -35,7 +35,7 @@ function FieldLegend({
       data-variant={variant}
       {...props}
     />
-  );
+  )
 }
 
 function FieldSet({ className, ...props }: ComponentProps<"fieldset">) {
@@ -48,7 +48,7 @@ function FieldSet({ className, ...props }: ComponentProps<"fieldset">) {
       data-slot="field-set"
       {...props}
     />
-  );
+  )
 }
 
 const fieldVariants = cva(
@@ -73,7 +73,7 @@ const fieldVariants = cva(
       },
     },
   },
-);
+)
 
 function Field({
   className,
@@ -88,7 +88,7 @@ function Field({
       role="group"
       {...props}
     />
-  );
+  )
 }
 
 function FieldContent({ className, ...props }: ComponentProps<"div">) {
@@ -101,7 +101,7 @@ function FieldContent({ className, ...props }: ComponentProps<"div">) {
       data-slot="field-content"
       {...props}
     />
-  );
+  )
 }
 
 function FieldDescription({ className, ...props }: ComponentProps<"p">) {
@@ -114,7 +114,7 @@ function FieldDescription({ className, ...props }: ComponentProps<"p">) {
       data-slot="field-description"
       {...props}
     />
-  );
+  )
 }
 
 function FieldError({
@@ -123,19 +123,19 @@ function FieldError({
   errors,
   ...props
 }: ComponentProps<"div"> & {
-  errors?: Array<undefined | { message?: string }>;
+  errors?: Array<undefined | { message?: string }>
 }) {
   const content = useMemo(() => {
     if (children) {
-      return children;
+      return children
     }
 
     if (!errors) {
-      return null;
+      return null
     }
 
     if (errors?.length === 1 && errors[0]?.message) {
-      return errors[0].message;
+      return errors[0].message
     }
 
     return (
@@ -145,11 +145,11 @@ function FieldError({
             error?.message && <li key={index}>{error.message}</li>,
         )}
       </ul>
-    );
-  }, [children, errors]);
+    )
+  }, [children, errors])
 
   if (!content) {
-    return null;
+    return null
   }
 
   return (
@@ -161,7 +161,7 @@ function FieldError({
     >
       {content}
     </div>
-  );
+  )
 }
 
 function FieldLabel({ className, ...props }: ComponentProps<typeof Label>) {
@@ -174,7 +174,7 @@ function FieldLabel({ className, ...props }: ComponentProps<typeof Label>) {
       data-slot="field-label"
       {...props}
     />
-  );
+  )
 }
 
 function FieldSeparator({
@@ -182,7 +182,7 @@ function FieldSeparator({
   className,
   ...props
 }: ComponentProps<"div"> & {
-  children?: ReactNode;
+  children?: ReactNode
 }) {
   return (
     <div
@@ -204,7 +204,7 @@ function FieldSeparator({
         </span>
       )}
     </div>
-  );
+  )
 }
 
 function FieldTitle({ className, ...props }: ComponentProps<"div">) {
@@ -217,7 +217,7 @@ function FieldTitle({ className, ...props }: ComponentProps<"div">) {
       data-slot="field-label"
       {...props}
     />
-  );
+  )
 }
 
 export {
@@ -231,4 +231,4 @@ export {
   FieldSeparator,
   FieldSet,
   FieldTitle,
-};
+}

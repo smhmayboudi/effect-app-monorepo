@@ -1,30 +1,30 @@
-"use client";
+"use client"
 
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
 
-import { DataTableBulkActions as BulkActionsToolbar } from "@/components/data-table-2";
-import { Button } from "@/components/ui/button";
+import { DataTableBulkActions as BulkActionsToolbar } from "@/components/data-table-2"
+import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/tooltip"
 
-import { ServicesDialogMultipleDelete } from "./services-dialog-multiple-delete";
+import { ServicesDialogMultipleDelete } from "./services-dialog-multiple-delete"
 
 export function ServicesDataTableBulkActions<TData>({
   table,
 }: {
-  table: Table<TData>;
+  table: Table<TData>
 }) {
   const t = useTranslations(
     "user.dashboard.components.services-data-table-bulk-actions",
-  );
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  )
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   return (
     <>
@@ -53,5 +53,5 @@ export function ServicesDataTableBulkActions<TData>({
         table={table}
       />
     </>
-  );
+  )
 }

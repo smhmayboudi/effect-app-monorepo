@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function IconTrello({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -24,5 +24,5 @@ export function IconTrello({ className, ...props }: SVGProps<SVGSVGElement>) {
       <path d="M7 7h3v10h-3z" />
       <path d="M14 7h3v6h-3z" />
     </svg>
-  );
+  )
 }

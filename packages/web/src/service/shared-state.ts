@@ -39,7 +39,7 @@ export class SharedStateService<T> {
     const update: StateUpdate<T> = {
       key,
       timestamp: Date.now(),
-      value
+      value,
     }
     this.state.set(key, { timestamp: update.timestamp, value })
     this.channel.postMessage(update)
@@ -67,7 +67,7 @@ export class SharedStateService<T> {
     if (!currentEntry || update.timestamp > currentEntry.timestamp) {
       this.state.set(update.key, {
         timestamp: update.timestamp,
-        value: update.value
+        value: update.value,
       })
       this.notifyListeners(update.key, update.value)
     }

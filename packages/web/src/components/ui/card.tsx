@@ -1,6 +1,6 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Card({ className, ...props }: ComponentProps<"div">) {
   return (
@@ -12,7 +12,7 @@ function Card({ className, ...props }: ComponentProps<"div">) {
       data-slot="card"
       {...props}
     />
-  );
+  )
 }
 
 function CardAction({ className, ...props }: ComponentProps<"div">) {
@@ -25,7 +25,7 @@ function CardAction({ className, ...props }: ComponentProps<"div">) {
       data-slot="card-action"
       {...props}
     />
-  );
+  )
 }
 
 function CardContent({ className, ...props }: ComponentProps<"div">) {
@@ -35,7 +35,7 @@ function CardContent({ className, ...props }: ComponentProps<"div">) {
       data-slot="card-content"
       {...props}
     />
-  );
+  )
 }
 
 function CardDescription({ className, ...props }: ComponentProps<"div">) {
@@ -45,7 +45,7 @@ function CardDescription({ className, ...props }: ComponentProps<"div">) {
       data-slot="card-description"
       {...props}
     />
-  );
+  )
 }
 
 function CardFooter({ className, ...props }: ComponentProps<"div">) {
@@ -55,7 +55,7 @@ function CardFooter({ className, ...props }: ComponentProps<"div">) {
       data-slot="card-footer"
       {...props}
     />
-  );
+  )
 }
 
 function CardHeader({ className, ...props }: ComponentProps<"div">) {
@@ -68,7 +68,7 @@ function CardHeader({ className, ...props }: ComponentProps<"div">) {
       data-slot="card-header"
       {...props}
     />
-  );
+  )
 }
 
 function CardTitle({ className, ...props }: ComponentProps<"div">) {
@@ -78,7 +78,7 @@ function CardTitle({ className, ...props }: ComponentProps<"div">) {
       data-slot="card-title"
       {...props}
     />
-  );
+  )
 }
 
 export {
@@ -89,4 +89,4 @@ export {
   CardFooter,
   CardHeader,
   CardTitle,
-};
+}

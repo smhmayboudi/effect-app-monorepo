@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 const EffectLight = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} fill="none" viewBox="0 0 220 220">
@@ -31,6 +31,6 @@ const EffectLight = (props: SVGProps<SVGSVGElement>) => (
       fillRule="evenodd"
     />
   </svg>
-);
+)
 
-export { EffectLight };
+export { EffectLight }

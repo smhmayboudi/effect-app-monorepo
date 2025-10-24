@@ -1,85 +1,85 @@
-"use client";
+"use client"
 
-import * as Cookies from "@effect/platform/Cookies";
-import * as Duration from "effect/Duration";
-import * as Either from "effect/Either";
-import * as Option from "effect/Option";
-import * as Schema from "effect/Schema";
+import * as Cookies from "@effect/platform/Cookies"
+import * as Duration from "effect/Duration"
+import * as Either from "effect/Either"
+import * as Option from "effect/Option"
+import * as Schema from "effect/Schema"
 import {
   createContext,
   type PropsWithChildren,
   useContext,
   useEffect,
   useState,
-} from "react";
+} from "react"
 
-const Font = Schema.Literal("inter", "manrope", "system");
-export type Font = typeof Font.Type;
+const Font = Schema.Literal("inter", "manrope", "system")
+export type Font = typeof Font.Type
 
-const FONT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-const FONT_COOKIE_NAME = "__next_font";
-const FONT_DEFAULT = "inter";
+const FONT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
+const FONT_COOKIE_NAME = "__next_font"
+const FONT_DEFAULT = "inter"
 
 type FontProviderState = {
-  defaultFont: Font;
-  font: Font;
-  resetFont: () => void;
-  setFont: (font: Font) => void;
-};
+  defaultFont: Font
+  font: Font
+  resetFont: () => void
+  setFont: (font: Font) => void
+}
 
 const initialState: FontProviderState = {
   defaultFont: FONT_DEFAULT,
   font: "inter",
   resetFont: () => null,
   setFont: () => null,
-};
+}
 
-const FontContext = createContext<FontProviderState>(initialState);
+const FontContext = createContext<FontProviderState>(initialState)
 
 type FontProviderProps = {
-  defaultFont?: Font;
-  storageKey?: string;
-};
+  defaultFont?: Font
+  storageKey?: string
+}
 
 export function FontProvider({
   children,
   defaultFont = FONT_DEFAULT,
   storageKey = FONT_COOKIE_NAME,
 }: PropsWithChildren<FontProviderProps>) {
-  const [font, _setFont] = useState<Font>(defaultFont);
-  const [isClient, setIsClient] = useState(false);
+  const [font, _setFont] = useState<Font>(defaultFont)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true);
+    setIsClient(true)
     const initialFont = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
     ).pipe(
       Option.flatMap(Schema.decodeUnknownOption(Font)),
       Option.getOrElse(() => defaultFont),
-    );
-    _setFont(initialFont);
-  }, [defaultFont, storageKey]);
+    )
+    _setFont(initialFont)
+  }, [defaultFont, storageKey])
 
   useEffect(() => {
     if (!isClient) {
-      return;
+      return
     }
 
     const applyFont = (font: string) => {
-      const root = document.documentElement;
+      const root = document.documentElement
       root.classList.forEach((cls) => {
-        if (cls.startsWith("font-")) root.classList.remove(cls);
-      });
-      root.classList.add(`font-${font}`);
-    };
+        if (cls.startsWith("font-")) root.classList.remove(cls)
+      })
+      root.classList.add(`font-${font}`)
+    }
 
-    applyFont(font);
-  }, [font, isClient]);
+    applyFont(font)
+  }, [font, isClient])
 
   const setFont = (font: Font) => {
     if (!isClient) {
-      return;
+      return
     }
     Cookies.makeCookie(storageKey, font, {
       maxAge: Duration.seconds(FONT_COOKIE_MAX_AGE),
@@ -87,20 +87,20 @@ export function FontProvider({
     }).pipe(
       Either.match({
         onLeft: (left) => {
-          console.error("Cookie creation failed:", left);
-          _setFont(font);
+          console.error("Cookie creation failed:", left)
+          _setFont(font)
         },
         onRight: (right) => {
-          document.cookie = Cookies.serializeCookie(right);
-          _setFont(font);
+          document.cookie = Cookies.serializeCookie(right)
+          _setFont(font)
         },
       }),
-    );
-  };
+    )
+  }
 
   const resetFont = () => {
     if (!isClient) {
-      return;
+      return
     }
     Cookies.makeCookie(storageKey, "", {
       maxAge: Duration.seconds(0),
@@ -108,29 +108,29 @@ export function FontProvider({
     }).pipe(
       Either.match({
         onLeft: (left) => {
-          console.error("Cookie creation failed:", left);
-          _setFont(defaultFont);
+          console.error("Cookie creation failed:", left)
+          _setFont(defaultFont)
         },
         onRight: (right) => {
-          document.cookie = Cookies.serializeCookie(right);
-          _setFont(defaultFont);
+          document.cookie = Cookies.serializeCookie(right)
+          _setFont(defaultFont)
         },
       }),
-    );
-  };
+    )
+  }
 
   return (
     <FontContext.Provider value={{ defaultFont, font, resetFont, setFont }}>
       {children}
     </FontContext.Provider>
-  );
+  )
 }
 
 export function useFont() {
-  const context = useContext(FontContext);
+  const context = useContext(FontContext)
   if (!context) {
-    throw new Error("useFont must be used within a FontProvider");
+    throw new Error("useFont must be used within a FontProvider")
   }
 
-  return context;
+  return context
 }

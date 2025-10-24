@@ -11,21 +11,21 @@ export const formats = {
     short: {
       day: "numeric",
       month: "short",
-      year: "numeric"
-    }
+      year: "numeric",
+    },
   },
   list: {
     locale: {
       localeMatcher: "lookup",
       style: "narrow",
-      type: "unit"
-    }
+      type: "unit",
+    },
   },
   number: {
     precise: {
-      maximumFractionDigits: 2
-    }
-  }
+      maximumFractionDigits: 2,
+    },
+  },
 } satisfies Formats
 
 export default getRequestConfig(async ({ requestLocale }) => {
@@ -40,15 +40,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     formats,
     getMessageFallback: ({ error, key, namespace }) =>
-      `'getMessageFallback' called for ${
-        [namespace, key]
-          .filter((part) => part != null)
-          .join(".")
-      }, ${JSON.stringify(error)}`,
+      `'getMessageFallback' called for ${[namespace, key]
+        .filter((part) => part != null)
+        .join(".")}, ${JSON.stringify(error)}`,
     locale,
     messages: { ...messagesDefault, ...messagesLocale },
     now: now ? new Date(now) : new Date(),
     onError: console.error,
-    timeZone
+    timeZone,
   }
 })

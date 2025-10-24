@@ -9,12 +9,12 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         sizes: "any",
         src: "/favicon.ico",
-        type: "image/x-icon"
-      }
+        type: "image/x-icon",
+      },
     ],
     name: "Next.js App",
     short_name: "Next.js App",
     start_url: "/",
-    theme_color: "#fff"
+    theme_color: "#fff",
   }
 }

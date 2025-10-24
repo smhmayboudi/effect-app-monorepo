@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: ComponentProps<"table">) {
   return (
@@ -16,7 +16,7 @@ function Table({ className, ...props }: ComponentProps<"table">) {
         {...props}
       />
     </div>
-  );
+  )
 }
 
 function TableBody({ className, ...props }: ComponentProps<"tbody">) {
@@ -26,7 +26,7 @@ function TableBody({ className, ...props }: ComponentProps<"tbody">) {
       data-slot="table-body"
       {...props}
     />
-  );
+  )
 }
 
 function TableCaption({ className, ...props }: ComponentProps<"caption">) {
@@ -36,7 +36,7 @@ function TableCaption({ className, ...props }: ComponentProps<"caption">) {
       data-slot="table-caption"
       {...props}
     />
-  );
+  )
 }
 
 function TableCell({ className, ...props }: ComponentProps<"td">) {
@@ -49,7 +49,7 @@ function TableCell({ className, ...props }: ComponentProps<"td">) {
       data-slot="table-cell"
       {...props}
     />
-  );
+  )
 }
 
 function TableFooter({ className, ...props }: ComponentProps<"tfoot">) {
@@ -62,7 +62,7 @@ function TableFooter({ className, ...props }: ComponentProps<"tfoot">) {
       data-slot="table-footer"
       {...props}
     />
-  );
+  )
 }
 
 function TableHead({ className, ...props }: ComponentProps<"th">) {
@@ -75,7 +75,7 @@ function TableHead({ className, ...props }: ComponentProps<"th">) {
       data-slot="table-head"
       {...props}
     />
-  );
+  )
 }
 
 function TableHeader({ className, ...props }: ComponentProps<"thead">) {
@@ -85,7 +85,7 @@ function TableHeader({ className, ...props }: ComponentProps<"thead">) {
       data-slot="table-header"
       {...props}
     />
-  );
+  )
 }
 
 function TableRow({ className, ...props }: ComponentProps<"tr">) {
@@ -98,7 +98,7 @@ function TableRow({ className, ...props }: ComponentProps<"tr">) {
       data-slot="table-row"
       {...props}
     />
-  );
+  )
 }
 
 export {
@@ -110,4 +110,4 @@ export {
   TableHead,
   TableHeader,
   TableRow,
-};
+}

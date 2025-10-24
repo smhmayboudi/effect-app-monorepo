@@ -7,7 +7,7 @@ export const routing = defineRouting({
     name: "__next_locale",
     path: "/",
     sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
-    secure: process.env.NODE_ENV === "production"
+    secure: process.env.NODE_ENV === "production",
   },
-  locales: ["en", "fa"]
+  locales: ["en", "fa"],
 })

@@ -1,25 +1,25 @@
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { X } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useEffect, useRef, useState } from "react"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useDirection } from "@/context/direction-provider";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/tooltip"
+import { useDirection } from "@/context/direction-provider"
+import { cn } from "@/lib/utils"
 
 type DataTableBulkActionsProps<TData> = {
-  children: React.ReactNode;
-  entityName: string;
-  table: Table<TData>;
-};
+  children: React.ReactNode
+  entityName: string
+  table: Table<TData>
+}
 
 /**
  * A modular toolbar for displaying bulk actions when table rows are selected.
@@ -37,58 +37,58 @@ export function DataTableBulkActions<TData>({
   entityName,
   table,
 }: DataTableBulkActionsProps<TData>): null | React.ReactNode {
-  const t = useTranslations("components.data-table-2.bulk-actions");
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
-  const selectedCount = selectedRows.length;
-  const toolbarRef = useRef<HTMLDivElement>(null);
-  const [announcement, setAnnouncement] = useState("");
+  const t = useTranslations("components.data-table-2.bulk-actions")
+  const selectedRows = table.getFilteredSelectedRowModel().rows
+  const selectedCount = selectedRows.length
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const [announcement, setAnnouncement] = useState("")
 
   useEffect(() => {
     if (selectedCount > 0) {
-      setAnnouncement(t("message", { entityName, selectedCount }));
-      const timer = setTimeout(() => setAnnouncement(""), 3000);
+      setAnnouncement(t("message", { entityName, selectedCount }))
+      const timer = setTimeout(() => setAnnouncement(""), 3000)
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer)
     }
-  }, [entityName, t, selectedCount]);
+  }, [entityName, t, selectedCount])
 
   const handleClearSelection = () => {
-    table.resetRowSelection();
-  };
+    table.resetRowSelection()
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    const buttons = toolbarRef.current?.querySelectorAll("button");
+    const buttons = toolbarRef.current?.querySelectorAll("button")
     if (!buttons) {
-      return;
+      return
     }
 
     const currentIndex = Array.from(buttons).findIndex(
       (button) => button === document.activeElement,
-    );
+    )
 
     switch (event.key) {
       case "ArrowLeft": {
-        event.preventDefault();
+        event.preventDefault()
         const prevIndex =
-          currentIndex === 0 ? buttons.length - 1 : currentIndex - 1;
-        buttons[prevIndex]?.focus();
-        break;
+          currentIndex === 0 ? buttons.length - 1 : currentIndex - 1
+        buttons[prevIndex]?.focus()
+        break
       }
       case "ArrowRight": {
-        event.preventDefault();
-        const nextIndex = (currentIndex + 1) % buttons.length;
-        buttons[nextIndex]?.focus();
-        break;
+        event.preventDefault()
+        const nextIndex = (currentIndex + 1) % buttons.length
+        buttons[nextIndex]?.focus()
+        break
       }
       case "End":
-        event.preventDefault();
-        buttons[buttons.length - 1]?.focus();
-        break;
+        event.preventDefault()
+        buttons[buttons.length - 1]?.focus()
+        break
       case "Escape": {
         // Check if the Escape key came from a dropdown trigger or content
         // We can't check dropdown state because Radix UI closes it before our handler runs
-        const target = event.target as HTMLElement;
-        const activeElement = document.activeElement as HTMLElement;
+        const target = event.target as HTMLElement
+        const activeElement = document.activeElement as HTMLElement
 
         // Check if the event target or currently focused element is a dropdown trigger
         const isFromDropdownTrigger =
@@ -96,32 +96,32 @@ export function DataTableBulkActions<TData>({
           activeElement?.getAttribute("data-slot") ===
             "dropdown-menu-trigger" ||
           target?.closest('[data-slot="dropdown-menu-trigger"]') ||
-          activeElement?.closest('[data-slot="dropdown-menu-trigger"]');
+          activeElement?.closest('[data-slot="dropdown-menu-trigger"]')
 
         // Check if the focused element is inside dropdown content (which is portaled)
         const isFromDropdownContent =
           activeElement?.closest('[data-slot="dropdown-menu-content"]') ||
-          target?.closest('[data-slot="dropdown-menu-content"]');
+          target?.closest('[data-slot="dropdown-menu-content"]')
 
         if (isFromDropdownTrigger || isFromDropdownContent) {
           // Escape was meant for the dropdown - don't clear selection
-          return;
+          return
         }
 
         // Escape was meant for the toolbar - clear selection
-        event.preventDefault();
-        handleClearSelection();
-        break;
+        event.preventDefault()
+        handleClearSelection()
+        break
       }
       case "Home":
-        event.preventDefault();
-        buttons[0]?.focus();
-        break;
+        event.preventDefault()
+        buttons[0]?.focus()
+        break
     }
-  };
+  }
 
-  const { dir } = useDirection();
-  const selected = t("selected");
+  const { dir } = useDirection()
+  const selected = t("selected")
 
   return selectedCount === 0 ? (
     <></>
@@ -206,5 +206,5 @@ export function DataTableBulkActions<TData>({
         </div>
       </div>
     </>
-  );
+  )
 }

@@ -1,45 +1,45 @@
-"use client";
+"use client"
 
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { useAtomSet } from "@effect-atom/atom-react";
-import { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain";
-import { AlertTriangle } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useAtomSet } from "@effect-atom/atom-react"
+import { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
+import { AlertTriangle } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
 
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { HttpClient } from "@/lib/http-client";
+import { ConfirmDialog } from "@/components/confirm-dialog"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { HttpClient } from "@/lib/http-client"
 
 export function ServicesDialogMultipleDelete<TData>({
   onOpenChange,
   open,
   table,
 }: {
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-  table: Table<TData>;
+  onOpenChange: (open: boolean) => void
+  open: boolean
+  table: Table<TData>
 }) {
   const t = useTranslations(
     "user.dashboard.components.services-dialog-multiple-delete",
-  );
-  const CONFIRM_WORD = "DELETE";
-  const deleteMutationAtom = HttpClient.mutation("service", "delete");
+  )
+  const CONFIRM_WORD = "DELETE"
+  const deleteMutationAtom = HttpClient.mutation("service", "delete")
   const deleteService = useAtomSet(deleteMutationAtom, {
     mode: "promise",
-  });
-  const [value, setValue] = useState("");
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  })
+  const [value, setValue] = useState("")
+  const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleDelete = async () => {
     if (value.trim() !== CONFIRM_WORD) {
-      return;
+      return
     }
 
-    setValue("");
+    setValue("")
     await Promise.all(
       selectedRows.map((value) =>
         deleteService({
@@ -47,10 +47,10 @@ export function ServicesDialogMultipleDelete<TData>({
           reactivityKeys: ["services"],
         }),
       ),
-    );
-    table.resetRowSelection();
-    onOpenChange(false);
-  };
+    )
+    table.resetRowSelection()
+    onOpenChange(false)
+  }
 
   return (
     <ConfirmDialog
@@ -94,5 +94,5 @@ export function ServicesDialogMultipleDelete<TData>({
         </span>
       }
     />
-  );
+  )
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   flexRender,
@@ -11,13 +11,13 @@ import {
   type SortingState,
   useReactTable,
   type VisibilityState,
-} from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+} from "@tanstack/react-table"
+import { useEffect, useState } from "react"
 
 import {
   DataTablePagination,
   DataTableToolbar,
-} from "@/components/data-table-2";
+} from "@/components/data-table-2"
 import {
   Table,
   TableBody,
@@ -25,33 +25,33 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { type NavigateFn, useTableUrlState } from "@/hooks/use-table-url-state";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/table"
+import { type NavigateFn, useTableUrlState } from "@/hooks/use-table-url-state"
+import { cn } from "@/lib/utils"
 
-import type { User } from "../data/schema";
+import type { User } from "../data/schema"
 
-import { roles } from "../data/data";
-import { usersColumns as columns } from "./users-columns";
-import { UsersDataTableBulkActions } from "./users-data-table-bulk-actions";
+import { roles } from "../data/data"
+import { usersColumns as columns } from "./users-columns"
+import { UsersDataTableBulkActions } from "./users-data-table-bulk-actions"
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
-    className: string;
+    className: string
   }
 }
 
 type UsersTableProps = {
-  data: User[];
-  navigate: NavigateFn;
-  search: Record<string, unknown>;
-};
+  data: User[]
+  navigate: NavigateFn
+  search: Record<string, unknown>
+}
 
 export function UsersTable({ data, navigate, search }: UsersTableProps) {
   // Local UI-only states
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [sorting, setSorting] = useState<SortingState>([])
 
   // Local state management for table (uncomment to use local-only state, not synced with URL)
   // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
@@ -75,7 +75,7 @@ export function UsersTable({ data, navigate, search }: UsersTableProps) {
     navigate,
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     search,
-  });
+  })
 
   const table = useReactTable({
     columns,
@@ -99,11 +99,11 @@ export function UsersTable({ data, navigate, search }: UsersTableProps) {
       rowSelection,
       sorting,
     },
-  });
+  })
 
   useEffect(() => {
-    ensurePageInRange(table.getPageCount());
-  }, [table, ensurePageInRange]);
+    ensurePageInRange(table.getPageCount())
+  }, [table, ensurePageInRange])
 
   return (
     <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
@@ -194,5 +194,5 @@ export function UsersTable({ data, navigate, search }: UsersTableProps) {
       <DataTablePagination table={table} />
       <UsersDataTableBulkActions table={table} />
     </div>
-  );
+  )
 }

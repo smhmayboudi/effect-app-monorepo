@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 const ShadcnUiDark = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} viewBox="0 0 256 256">
@@ -11,6 +11,6 @@ const ShadcnUiDark = (props: SVGProps<SVGSVGElement>) => (
       strokeWidth="25"
     />
   </svg>
-);
+)
 
-export { ShadcnUiDark };
+export { ShadcnUiDark }

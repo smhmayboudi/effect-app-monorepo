@@ -6,23 +6,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
 type ConfirmDialogProps = {
-  cancelBtnText?: string;
-  children?: React.ReactNode;
-  className?: string;
-  confirmText?: React.ReactNode;
-  desc: React.JSX.Element | string;
-  destructive?: boolean;
-  disabled?: boolean;
-  handleConfirm: () => void;
-  isLoading?: boolean;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-  title: React.ReactNode;
-};
+  cancelBtnText?: string
+  children?: React.ReactNode
+  className?: string
+  confirmText?: React.ReactNode
+  desc: React.JSX.Element | string
+  destructive?: boolean
+  disabled?: boolean
+  handleConfirm: () => void
+  isLoading?: boolean
+  onOpenChange: (open: boolean) => void
+  open: boolean
+  title: React.ReactNode
+}
 
 export function ConfirmDialog(props: ConfirmDialogProps) {
   const {
@@ -37,7 +37,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
     isLoading,
     title,
     ...actions
-  } = props;
+  } = props
 
   return (
     <AlertDialog {...actions}>
@@ -63,5 +63,5 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

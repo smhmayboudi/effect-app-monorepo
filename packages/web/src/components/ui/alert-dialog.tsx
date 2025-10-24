@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
+import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 import {
   type ComponentPropsWithoutRef,
   type ElementRef,
   forwardRef,
   type HTMLAttributes,
-} from "react";
+} from "react"
 
-import { buttonVariants } from "@/components/ui/button";
-import { useDirection } from "@/context/direction-provider";
-import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button"
+import { useDirection } from "@/context/direction-provider"
+import { cn } from "@/lib/utils"
 
-const AlertDialog = AlertDialogPrimitive.Root;
+const AlertDialog = AlertDialogPrimitive.Root
 
-const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 
-const AlertDialogPortal = AlertDialogPrimitive.Portal;
+const AlertDialogPortal = AlertDialogPrimitive.Portal
 
 const AlertDialogOverlay = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Overlay>,
@@ -30,14 +30,14 @@ const AlertDialogOverlay = forwardRef<
     {...props}
     ref={ref}
   />
-));
-AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
+))
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName
 
 const AlertDialogContent = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content> & {}
 >(({ className, ...props }, ref) => {
-  const { dir } = useDirection();
+  const { dir } = useDirection()
 
   return (
     <AlertDialogPortal>
@@ -52,9 +52,9 @@ const AlertDialogContent = forwardRef<
         {...props}
       />
     </AlertDialogPortal>
-  );
-});
-AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
+  )
+})
+AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
 const AlertDialogHeader = ({
   className,
@@ -67,8 +67,8 @@ const AlertDialogHeader = ({
     )}
     {...props}
   />
-);
-AlertDialogHeader.displayName = "AlertDialogHeader";
+)
+AlertDialogHeader.displayName = "AlertDialogHeader"
 
 const AlertDialogFooter = ({
   className,
@@ -81,8 +81,8 @@ const AlertDialogFooter = ({
     )}
     {...props}
   />
-);
-AlertDialogFooter.displayName = "AlertDialogFooter";
+)
+AlertDialogFooter.displayName = "AlertDialogFooter"
 
 const AlertDialogTitle = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Title>,
@@ -93,8 +93,8 @@ const AlertDialogTitle = forwardRef<
     ref={ref}
     {...props}
   />
-));
-AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
+))
+AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName
 
 const AlertDialogDescription = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Description>,
@@ -105,9 +105,9 @@ const AlertDialogDescription = forwardRef<
     ref={ref}
     {...props}
   />
-));
+))
 AlertDialogDescription.displayName =
-  AlertDialogPrimitive.Description.displayName;
+  AlertDialogPrimitive.Description.displayName
 
 const AlertDialogAction = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Action>,
@@ -118,8 +118,8 @@ const AlertDialogAction = forwardRef<
     ref={ref}
     {...props}
   />
-));
-AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
+))
+AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName
 
 const AlertDialogCancel = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Cancel>,
@@ -134,8 +134,8 @@ const AlertDialogCancel = forwardRef<
     ref={ref}
     {...props}
   />
-));
-AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
+))
+AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName
 
 export {
   AlertDialog,
@@ -149,4 +149,4 @@ export {
   AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
-};
+}

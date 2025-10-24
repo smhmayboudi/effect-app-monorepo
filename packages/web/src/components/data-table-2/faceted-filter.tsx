@@ -1,11 +1,11 @@
-import type { Column } from "@tanstack/react-table";
-import type { ComponentType } from "react";
+import type { Column } from "@tanstack/react-table"
+import type { ComponentType } from "react"
 
-import { Check, CirclePlus } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { Check, CirclePlus } from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -14,34 +14,34 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/command";
+} from "@/components/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/popover"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
 type DataTableFacetedFilterProps<TData, TValue> = {
-  column?: Column<TData, TValue>;
+  column?: Column<TData, TValue>
 
   options: {
-    icon?: ComponentType<{ className?: string }>;
-    label: string;
-    value: string;
-  }[];
-  title?: string;
-};
+    icon?: ComponentType<{ className?: string }>
+    label: string
+    value: string
+  }[]
+  title?: string
+}
 
 export function DataTableFacetedFilter<TData, TValue>({
   column,
   options,
   title,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const t = useTranslations("components.data-table-2.faceted-filter");
-  const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const t = useTranslations("components.data-table-2.faceted-filter")
+  const facets = column?.getFacetedUniqueValues()
+  const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
     <Popover>
@@ -91,21 +91,21 @@ export function DataTableFacetedFilter<TData, TValue>({
             <CommandEmpty>{t("no-results-found")}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
-                const isSelected = selectedValues.has(option.value);
+                const isSelected = selectedValues.has(option.value)
 
                 return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
                       if (isSelected) {
-                        selectedValues.delete(option.value);
+                        selectedValues.delete(option.value)
                       } else {
-                        selectedValues.add(option.value);
+                        selectedValues.add(option.value)
                       }
-                      const filterValues = Array.from(selectedValues);
+                      const filterValues = Array.from(selectedValues)
                       column?.setFilterValue(
                         filterValues.length ? filterValues : undefined,
-                      );
+                      )
                     }}
                   >
                     <div
@@ -128,7 +128,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       </span>
                     )}
                   </CommandItem>
-                );
+                )
               })}
             </CommandGroup>
             {selectedValues.size > 0 && (
@@ -148,5 +148,5 @@ export function DataTableFacetedFilter<TData, TValue>({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

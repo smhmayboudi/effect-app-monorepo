@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { Registry } from "@effect-atom/atom-react";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
-import * as Effect from "effect/Effect";
-import * as Schema from "effect/Schema";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { v7 } from "uuid";
+import { Registry } from "@effect-atom/atom-react"
+import { effectTsResolver } from "@hookform/resolvers/effect-ts"
+import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
+import * as Effect from "effect/Effect"
+import * as Schema from "effect/Schema"
+import { GalleryVerticalEnd } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { v7 } from "uuid"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Field, FieldGroup } from "@/components/ui/field";
+} from "@/components/ui/card"
+import { Field, FieldGroup } from "@/components/ui/field"
 import {
   Form,
   FormControl,
@@ -27,39 +27,39 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import Link from "@/components/ui/link";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { withToast } from "@/components/with-toast";
-import { HttpClient } from "@/lib/http-client";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import Link from "@/components/ui/link"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { withToast } from "@/components/with-toast"
+import { HttpClient } from "@/lib/http-client"
 
 export default function Client() {
-  const t = useTranslations("user.service-create");
+  const t = useTranslations("user.service-create")
   const schema = Schema.Struct({
     name: Schema.NonEmptyString.annotations({
       message: () => t("form.name.nonEmptyString"),
     }),
-  });
+  })
   const form = useForm<typeof schema.Type>({
     defaultValues: { name: "" },
     resolver: effectTsResolver(schema),
-  });
+  })
   const {
     formState: { isSubmitting },
     handleSubmit,
-  } = form;
-  const router = useRouter();
+  } = form
+  const router = useRouter()
   const onSubmit = handleSubmit(async ({ name }) => {
-    const createMutation = HttpClient.mutation("service", "create");
-    const registry = Registry.make();
+    const createMutation = HttpClient.mutation("service", "create")
+    const registry = Registry.make()
     registry.set(createMutation, {
       headers: {
         "idempotency-key": IdempotencyKeyClient.make(v7()),
       },
       payload: { name },
       reactivityKeys: ["services"],
-    });
+    })
     const result = await Effect.runPromise(
       Registry.getResult(registry, createMutation, {
         suspendOnWaiting: true,
@@ -70,11 +70,11 @@ export default function Client() {
           onWaiting: "onWaiting",
         }),
       ),
-    );
+    )
     if (result.data) {
-      router.push("/user/dashboard");
+      router.push("/user/dashboard")
     }
-  });
+  })
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -130,5 +130,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }

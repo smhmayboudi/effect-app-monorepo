@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { HelpCircleIcon, SearchIcon, SettingsIcon } from "lucide-react";
+import { HelpCircleIcon, SearchIcon, SettingsIcon } from "lucide-react"
 
-import Link from "@/components/ui/link";
+import Link from "@/components/ui/link"
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar"
 
 export function NavSecondary() {
   const items = [
@@ -28,7 +28,7 @@ export function NavSecondary() {
       title: "Search",
       url: "#",
     },
-  ];
+  ]
 
   return (
     <SidebarGroup className="mt-auto">
@@ -47,5 +47,5 @@ export function NavSecondary() {
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  );
+  )
 }

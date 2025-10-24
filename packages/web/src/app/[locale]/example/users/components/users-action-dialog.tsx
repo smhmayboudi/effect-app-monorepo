@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import * as Schema from "effect/Schema";
-import { useForm } from "react-hook-form";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts"
+import * as Schema from "effect/Schema"
+import { useForm } from "react-hook-form"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -20,15 +20,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
-import { SelectDropdown } from "@/components/ui/select-dropdown";
-import { showSubmittedData } from "@/lib/show-submitted-data";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
+import { SelectDropdown } from "@/components/ui/select-dropdown"
+import { showSubmittedData } from "@/lib/show-submitted-data"
 
-import type { User } from "../data/schema";
+import type { User } from "../data/schema"
 
-import { roles } from "../data/data";
+import { roles } from "../data/data"
 
 const formSchema = Schema.Struct({
   confirmPassword: Schema.NonEmptyString.annotations({
@@ -60,21 +60,21 @@ const formSchema = Schema.Struct({
   username: Schema.NonEmptyString.annotations({
     message: () => "Username is required.",
   }),
-});
-type UserForm = Schema.Schema.Type<typeof formSchema>;
+})
+type UserForm = Schema.Schema.Type<typeof formSchema>
 
 type UsersActionDialogProps = {
-  currentRow?: User;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-};
+  currentRow?: User
+  onOpenChange: (open: boolean) => void
+  open: boolean
+}
 
 export function UsersActionDialog({
   currentRow,
   onOpenChange,
   open,
 }: UsersActionDialogProps) {
-  const isEdit = !!currentRow;
+  const isEdit = !!currentRow
   const form = useForm<UserForm>({
     defaultValues: isEdit
       ? {
@@ -95,21 +95,21 @@ export function UsersActionDialog({
           username: "",
         },
     resolver: effectTsResolver(formSchema),
-  });
+  })
 
   const onSubmit = (values: UserForm) => {
-    form.reset();
-    showSubmittedData(values);
-    onOpenChange(false);
-  };
+    form.reset()
+    showSubmittedData(values)
+    onOpenChange(false)
+  }
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password;
+  const isPasswordTouched = !!form.formState.dirtyFields.password
 
   return (
     <Dialog
       onOpenChange={(state) => {
-        form.reset();
-        onOpenChange(state);
+        form.reset()
+        onOpenChange(state)
       }}
       open={open}
     >
@@ -292,5 +292,5 @@ export function UsersActionDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import { Slot } from "@radix-ui/react-slot";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { Slot } from "@radix-ui/react-slot"
+import { ChevronRight, MoreHorizontal } from "lucide-react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Breadcrumb({ ...props }: ComponentProps<"nav">) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
 }
 
 function BreadcrumbEllipsis({ className, ...props }: ComponentProps<"span">) {
@@ -21,7 +21,7 @@ function BreadcrumbEllipsis({ className, ...props }: ComponentProps<"span">) {
       <MoreHorizontal className="size-4" />
       <span className="sr-only">More</span>
     </span>
-  );
+  )
 }
 
 function BreadcrumbItem({ className, ...props }: ComponentProps<"li">) {
@@ -31,7 +31,7 @@ function BreadcrumbItem({ className, ...props }: ComponentProps<"li">) {
       data-slot="breadcrumb-item"
       {...props}
     />
-  );
+  )
 }
 
 function BreadcrumbLink({
@@ -39,9 +39,9 @@ function BreadcrumbLink({
   className,
   ...props
 }: ComponentProps<"a"> & {
-  asChild?: boolean;
+  asChild?: boolean
 }) {
-  const Comp = asChild ? Slot : "a";
+  const Comp = asChild ? Slot : "a"
 
   return (
     <Comp
@@ -49,7 +49,7 @@ function BreadcrumbLink({
       data-slot="breadcrumb-link"
       {...props}
     />
-  );
+  )
 }
 
 function BreadcrumbList({ className, ...props }: ComponentProps<"ol">) {
@@ -62,7 +62,7 @@ function BreadcrumbList({ className, ...props }: ComponentProps<"ol">) {
       data-slot="breadcrumb-list"
       {...props}
     />
-  );
+  )
 }
 
 function BreadcrumbPage({ className, ...props }: ComponentProps<"span">) {
@@ -75,7 +75,7 @@ function BreadcrumbPage({ className, ...props }: ComponentProps<"span">) {
       role="link"
       {...props}
     />
-  );
+  )
 }
 
 function BreadcrumbSeparator({
@@ -93,7 +93,7 @@ function BreadcrumbSeparator({
     >
       {children ?? <ChevronRight />}
     </li>
-  );
+  )
 }
 
 export {
@@ -104,4 +104,4 @@ export {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-};
+}

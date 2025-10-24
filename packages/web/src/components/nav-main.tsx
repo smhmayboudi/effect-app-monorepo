@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { LayoutDashboardIcon } from "lucide-react";
+import { LayoutDashboardIcon } from "lucide-react"
 
-import Link from "@/components/ui/link";
+import Link from "@/components/ui/link"
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar"
 
 export function NavMain() {
   const items = [
@@ -38,7 +38,7 @@ export function NavMain() {
     //   title: "Team",
     //   url: "#",
     // },
-  ];
+  ]
 
   return (
     <SidebarGroup>
@@ -74,5 +74,5 @@ export function NavMain() {
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  );
+  )
 }

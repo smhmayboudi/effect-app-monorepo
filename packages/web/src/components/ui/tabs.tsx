@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import * as TabsPrimitive from "@radix-ui/react-tabs";
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 function Tabs({
   className,
@@ -16,7 +16,7 @@ function Tabs({
       data-slot="tabs"
       {...props}
     />
-  );
+  )
 }
 
 function TabsContent({
@@ -29,7 +29,7 @@ function TabsContent({
       data-slot="tabs-content"
       {...props}
     />
-  );
+  )
 }
 
 function TabsList({
@@ -45,7 +45,7 @@ function TabsList({
       data-slot="tabs-list"
       {...props}
     />
-  );
+  )
 }
 
 function TabsTrigger({
@@ -61,7 +61,7 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       {...props}
     />
-  );
+  )
 }
 
-export { Tabs, TabsContent, TabsList, TabsTrigger };
+export { Tabs, TabsContent, TabsList, TabsTrigger }

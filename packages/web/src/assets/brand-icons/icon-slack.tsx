@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function IconSlack({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -25,5 +25,5 @@ export function IconSlack({ className, ...props }: SVGProps<SVGSVGElement>) {
       <path d="M12 12v6a2 2 0 0 1 -4 0v-6m0 2a2 2 0 1 1 -2 -2h6" />
       <path d="M12 12h-6a2 2 0 0 1 0 -4h6m-2 0a2 2 0 1 1 2 -2v6" />
     </svg>
-  );
+  )
 }

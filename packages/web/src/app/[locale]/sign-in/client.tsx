@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import * as Effect from "effect/Effect";
-import * as Schema from "effect/Schema";
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { effectTsResolver } from "@hookform/resolvers/effect-ts"
+import * as Effect from "effect/Effect"
+import * as Schema from "effect/Schema"
+import { GalleryVerticalEnd } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useForm } from "react-hook-form"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
+} from "@/components/ui/card"
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field"
 import {
   Form,
   FormControl,
@@ -24,18 +24,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import Link from "@/components/ui/link";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PasswordInput } from "@/components/ui/password-input";
-import { withToast } from "@/components/with-toast";
-import { authClient } from "@/lib/auth-client";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import Link from "@/components/ui/link"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { PasswordInput } from "@/components/ui/password-input"
+import { withToast } from "@/components/with-toast"
+import { authClient } from "@/lib/auth-client"
 
 export default function Client() {
-  const t = useTranslations("sign-in");
-  const searchParams = useSearchParams();
-  const callbackURL = searchParams.get("callbackURL") ?? "/user/dashboard";
+  const t = useTranslations("sign-in")
+  const searchParams = useSearchParams()
+  const callbackURL = searchParams.get("callbackURL") ?? "/user/dashboard"
   const schema = Schema.Struct({
     email: Schema.NonEmptyString.annotations({
       message: () => t("form.email.nonEmptyString"),
@@ -48,16 +48,16 @@ export default function Client() {
     password: Schema.NonEmptyString.annotations({
       message: () => t("form.password.nonEmptyString"),
     }),
-  });
+  })
   const form = useForm<typeof schema.Type>({
     defaultValues: { email: "", password: "" },
     resolver: effectTsResolver(schema),
-  });
+  })
   const {
     formState: { isSubmitting },
     handleSubmit,
-  } = form;
-  const router = useRouter();
+  } = form
+  const router = useRouter()
   const onSubmit = handleSubmit(async ({ email, password }) => {
     const result = await Effect.runPromise(
       Effect.tryPromise({
@@ -71,16 +71,16 @@ export default function Client() {
           onWaiting: "onWaiting",
         }),
       ),
-    );
+    )
     if (result.data) {
-      router.push(callbackURL);
+      router.push(callbackURL)
     }
     if (result.error) {
       if (result.error.code === "EMAIL_NOT_VERIFIED") {
-        router.push(`/email-verification?email=${email}`);
+        router.push(`/email-verification?email=${email}`)
       }
     }
-  });
+  })
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -177,5 +177,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }

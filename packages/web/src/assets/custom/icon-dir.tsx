@@ -1,10 +1,10 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 type IconDirProps = SVGProps<SVGSVGElement> & {
-  dir: "ltr" | "rtl";
-};
+  dir: "ltr" | "rtl"
+}
 
 export function IconDir({ className, dir, ...props }: IconDirProps) {
   return (
@@ -106,5 +106,5 @@ export function IconDir({ className, dir, ...props }: IconDirProps) {
         y={41.32}
       />
     </svg>
-  );
+  )
 }

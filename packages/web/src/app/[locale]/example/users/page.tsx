@@ -1,9 +1,9 @@
-import * as Schema from "effect/Schema";
+import * as Schema from "effect/Schema"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-import { Client } from "./client";
-import { roles } from "./data/data";
+import { Client } from "./client"
+import { roles } from "./data/data"
 
 const usersSearchSchema = Schema.Struct({
   page: Schema.optionalWith(Schema.Number, { default: () => 1, exact: true }),
@@ -23,7 +23,7 @@ const usersSearchSchema = Schema.Struct({
     default: () => "",
     exact: true,
   }),
-});
+})
 
 export default async function Page() {
   return (
@@ -41,5 +41,5 @@ export default async function Page() {
     >
       <Client />
     </div>
-  );
+  )
 }

@@ -8,29 +8,29 @@ export const callTypes = new Map<UserStatus, string>([
   ["invited", "bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300"],
   [
     "suspended",
-    "bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10"
-  ]
+    "bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10",
+  ],
 ])
 
 export const roles = [
   {
     icon: Shield,
     label: "Superadmin",
-    value: "superadmin"
+    value: "superadmin",
   },
   {
     icon: UserCheck,
     label: "Admin",
-    value: "admin"
+    value: "admin",
   },
   {
     icon: Users,
     label: "Manager",
-    value: "manager"
+    value: "manager",
   },
   {
     icon: CreditCard,
     label: "Cashier",
-    value: "cashier"
-  }
+    value: "cashier",
+  },
 ] as const

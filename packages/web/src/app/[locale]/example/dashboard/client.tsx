@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import type { CSSProperties } from "react";
+import type { CSSProperties } from "react"
 
-import * as Cookies from "@effect/platform/Cookies";
-import * as Effect from "effect/Effect";
+import * as Cookies from "@effect/platform/Cookies"
+import * as Effect from "effect/Effect"
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
-import { SectionCards } from "@/components/section-cards";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { LayoutProvider } from "@/context/layout-provider";
+import { AppSidebar } from "@/components/app-sidebar"
+import { ChartAreaInteractive } from "@/components/chart-area-interactive"
+import { DataTable } from "@/components/data-table"
+import { SectionCards } from "@/components/section-cards"
+import { SiteHeader } from "@/components/site-header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { LayoutProvider } from "@/context/layout-provider"
 
-import data from "./data.json";
+import data from "./data.json"
 
 export default function Client() {
   const defaultOpen = Effect.runSync(
@@ -26,7 +26,7 @@ export default function Client() {
       Effect.catchTag("NoSuchElementException", () => Effect.succeed("true")),
       Effect.map((value) => value === "true"),
     ),
-  );
+  )
 
   return (
     <LayoutProvider>
@@ -56,5 +56,5 @@ export default function Client() {
         </SidebarInset>
       </SidebarProvider>
     </LayoutProvider>
-  );
+  )
 }

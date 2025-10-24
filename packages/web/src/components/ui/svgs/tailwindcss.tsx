@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 const Tailwindcss = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} fill="none" viewBox="0 0 54 33">
@@ -11,6 +11,6 @@ const Tailwindcss = (props: SVGProps<SVGSVGElement>) => (
       />
     </g>
   </svg>
-);
+)
 
-export { Tailwindcss };
+export { Tailwindcss }

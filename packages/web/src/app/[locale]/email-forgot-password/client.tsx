@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { GalleryVerticalEnd } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useSearchParams } from "next/navigation"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "@/components/ui/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "@/components/ui/link"
 
 export default function Client() {
-  const t = useTranslations("email-forgot-password");
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") ?? "me@example.com";
+  const t = useTranslations("email-forgot-password")
+  const searchParams = useSearchParams()
+  const email = searchParams.get("email") ?? "me@example.com"
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -34,5 +34,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }

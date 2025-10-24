@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"
 
 /**
  * Custom hook for confirm dialog
@@ -9,10 +9,10 @@ import { useState } from "react";
 export default function useDialogState<T extends boolean | string>(
   initialState: null | T = null,
 ) {
-  const [open, _setOpen] = useState<null | T>(initialState);
+  const [open, _setOpen] = useState<null | T>(initialState)
 
   const setOpen = (str: null | T) =>
-    _setOpen((prev) => (prev === str ? null : str));
+    _setOpen((prev) => (prev === str ? null : str))
 
-  return [open, setOpen] as const;
+  return [open, setOpen] as const
 }

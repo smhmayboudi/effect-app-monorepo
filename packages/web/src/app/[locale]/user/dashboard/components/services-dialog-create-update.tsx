@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { useAtomSet } from "@effect-atom/atom-react";
-import { effectTsResolver } from "@hookform/resolvers/effect-ts";
-import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
-import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient";
-import * as Schema from "effect/Schema";
-import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
-import { v7 } from "uuid";
+import { useAtomSet } from "@effect-atom/atom-react"
+import { effectTsResolver } from "@hookform/resolvers/effect-ts"
+import { Service } from "@template/domain/service/application/ServiceApplicationDomain"
+import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
+import * as Schema from "effect/Schema"
+import { useTranslations } from "next-intl"
+import { useForm } from "react-hook-form"
+import { v7 } from "uuid"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -25,36 +25,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { HttpClient } from "@/lib/http-client";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { HttpClient } from "@/lib/http-client"
 
 export function ServicesDialogCreateUpdate({
   currentRow,
   onOpenChange,
   open,
 }: {
-  currentRow?: Service;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
+  currentRow?: Service
+  onOpenChange: (open: boolean) => void
+  open: boolean
 }) {
   const t = useTranslations(
     "user.dashboard.components.services-dialog-create-update",
-  );
+  )
   const formSchema = Schema.Struct({
     name: Schema.NonEmptyString.annotations({
       message: () => t("form.name.nonEmptyString"),
     }),
-  });
-  type UserForm = Schema.Schema.Type<typeof formSchema>;
-  const createMutationAtom = HttpClient.mutation("service", "create");
-  const updateMutationAtom = HttpClient.mutation("service", "update");
+  })
+  type UserForm = Schema.Schema.Type<typeof formSchema>
+  const createMutationAtom = HttpClient.mutation("service", "create")
+  const updateMutationAtom = HttpClient.mutation("service", "update")
   const createService = useAtomSet(createMutationAtom, {
     mode: "promise",
-  });
+  })
   const updateService = useAtomSet(updateMutationAtom, {
     mode: "promise",
-  });
+  })
   const form = useForm<UserForm>({
     defaultValues: currentRow
       ? {
@@ -64,10 +64,10 @@ export function ServicesDialogCreateUpdate({
           name: "",
         },
     resolver: effectTsResolver(formSchema),
-  });
+  })
 
   const onSubmit = async (values: UserForm) => {
-    form.reset();
+    form.reset()
     if (currentRow) {
       await updateService({
         headers: {
@@ -76,7 +76,7 @@ export function ServicesDialogCreateUpdate({
         path: { id: currentRow.id },
         payload: { ...values },
         reactivityKeys: ["services"],
-      });
+      })
     } else {
       await createService({
         headers: {
@@ -84,16 +84,16 @@ export function ServicesDialogCreateUpdate({
         },
         payload: { ...values },
         reactivityKeys: ["services"],
-      });
+      })
     }
-    onOpenChange(false);
-  };
+    onOpenChange(false)
+  }
 
   return (
     <Dialog
       onOpenChange={(state) => {
-        form.reset();
-        onOpenChange(state);
+        form.reset()
+        onOpenChange(state)
       }}
       open={open}
     >
@@ -143,5 +143,5 @@ export function ServicesDialogCreateUpdate({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

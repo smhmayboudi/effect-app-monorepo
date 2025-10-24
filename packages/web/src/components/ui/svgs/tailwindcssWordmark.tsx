@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 const TailwindcssWordmark = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} fill="none" viewBox="0 0 262 33">
@@ -13,6 +13,6 @@ const TailwindcssWordmark = (props: SVGProps<SVGSVGElement>) => (
       />
     </g>
   </svg>
-);
+)
 
-export { TailwindcssWordmark };
+export { TailwindcssWordmark }

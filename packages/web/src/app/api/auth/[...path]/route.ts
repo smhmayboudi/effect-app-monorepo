@@ -12,17 +12,18 @@ export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
     headers: {
       "access-control-allow-credentials": "true",
-      "access-control-allow-headers": "authorization,b3,content-type,idempotency-key,traceparent",
+      "access-control-allow-headers":
+        "authorization,b3,content-type,idempotency-key,traceparent",
       "access-control-allow-methods": "DELETE,GET,OPTIONS,PATCH,POST,PUT",
       "access-control-allow-origin": allowedOrigins.includes(
-          request.headers.get("origin") ?? ""
-        )
+        request.headers.get("origin") ?? "",
+      )
         ? (request.headers.get("origin") ?? "")
         : "",
       "access-control-expose-headers": "authorization,content-type,set-cookie",
-      "access-control-max-age": "86400"
+      "access-control-max-age": "86400",
     },
-    status: 200
+    status: 200,
   })
 }
 
@@ -48,32 +49,32 @@ async function handler(request: NextRequest) {
     }
     const { pathname } = new URL(request.url)
     const response = await fetch(
-      `http://127.0.0.1:3001/auth/00000000-0000-0000-0000-000000000000/${
-        pathname.replace(
-          "/api/auth/",
-          ""
-        )
-      }`,
+      `http://127.0.0.1:3001/auth/00000000-0000-0000-0000-000000000000/${pathname.replace(
+        "/api/auth/",
+        "",
+      )}`,
       {
         body: request.method !== "GET" ? await request.text() : undefined,
         credentials: "include",
         headers,
-        method: request.method
-      }
+        method: request.method,
+      },
     )
     const data = await response.json()
     const res = NextResponse.json(data, {
       headers: {
         "access-control-allow-credentials": "true",
-        "access-control-allow-headers": "authorization,b3,content-type,idempotency-key,traceparent",
+        "access-control-allow-headers":
+          "authorization,b3,content-type,idempotency-key,traceparent",
         "access-control-allow-methods": "DELETE,GET,OPTIONS,PATCH,POST,PUT",
         "access-control-allow-origin": allowedOrigins.includes(origin ?? "")
           ? (origin ?? "")
           : "",
-        "access-control-expose-headers": "authorization,content-type,set-cookie",
-        "access-control-max-age": "86400"
+        "access-control-expose-headers":
+          "authorization,content-type,set-cookie",
+        "access-control-max-age": "86400",
       },
-      status: response.status
+      status: response.status,
     })
     const setCookie = response.headers.get("set-cookie")
     if (setCookie) {
@@ -84,7 +85,7 @@ async function handler(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

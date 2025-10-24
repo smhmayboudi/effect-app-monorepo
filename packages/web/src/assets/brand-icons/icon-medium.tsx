@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 export function IconMedium({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -27,5 +27,5 @@ export function IconMedium({ className, ...props }: SVGProps<SVGSVGElement>) {
       <path d="M9 9l0 6" />
       <path d="M15 9l0 6" />
     </svg>
-  );
+  )
 }

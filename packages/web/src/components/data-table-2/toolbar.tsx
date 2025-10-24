@@ -1,28 +1,28 @@
-import type { Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table"
 
-import { X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { X } from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
-import { DataTableFacetedFilter } from "./faceted-filter";
-import { DataTableViewOptions } from "./view-options";
+import { DataTableFacetedFilter } from "./faceted-filter"
+import { DataTableViewOptions } from "./view-options"
 
 type DataTableToolbarProps<TData> = {
   filters?: {
-    columnId: string;
+    columnId: string
     options: {
-      icon?: React.ComponentType<{ className?: string }>;
-      label: string;
-      value: string;
-    }[];
-    title: string;
-  }[];
-  searchKey?: string;
-  searchPlaceholder?: string;
-  table: Table<TData>;
-};
+      icon?: React.ComponentType<{ className?: string }>
+      label: string
+      value: string
+    }[]
+    title: string
+  }[]
+  searchKey?: string
+  searchPlaceholder?: string
+  table: Table<TData>
+}
 
 export function DataTableToolbar<TData>({
   filters = [],
@@ -30,9 +30,9 @@ export function DataTableToolbar<TData>({
   searchPlaceholder = "Filter...",
   table,
 }: DataTableToolbarProps<TData>) {
-  const t = useTranslations("components.data-table-2.toolbar");
+  const t = useTranslations("components.data-table-2.toolbar")
   const isFiltered =
-    table.getState().columnFilters.length > 0 || table.getState().globalFilter;
+    table.getState().columnFilters.length > 0 || table.getState().globalFilter
 
   return (
     <div className="flex items-center justify-between">
@@ -58,9 +58,9 @@ export function DataTableToolbar<TData>({
         )}
         <div className="flex gap-x-2">
           {filters.map((filter) => {
-            const column = table.getColumn(filter.columnId);
+            const column = table.getColumn(filter.columnId)
             if (!column) {
-              return null;
+              return null
             }
 
             return (
@@ -70,15 +70,15 @@ export function DataTableToolbar<TData>({
                 options={filter.options}
                 title={filter.title}
               />
-            );
+            )
           })}
         </div>
         {isFiltered && (
           <Button
             className="h-8 px-2 lg:px-3"
             onClick={() => {
-              table.resetColumnFilters();
-              table.setGlobalFilter("");
+              table.resetColumnFilters()
+              table.setGlobalFilter("")
             }}
             variant="ghost"
           >
@@ -89,5 +89,5 @@ export function DataTableToolbar<TData>({
       </div>
       <DataTableViewOptions table={table} />
     </div>
-  );
+  )
 }

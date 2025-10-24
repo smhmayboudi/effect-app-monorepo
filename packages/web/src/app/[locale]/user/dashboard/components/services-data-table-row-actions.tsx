@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import type { Row } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table"
 
-import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
-import { Ellipsis, HelpCircle, Trash2, UserPen } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { Service } from "@template/domain/service/application/ServiceApplicationDomain"
+import { Ellipsis, HelpCircle, Trash2, UserPen } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,16 +15,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
-import { useUsers } from "./services-provider";
+import { useUsers } from "./services-provider"
 
 export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
   const t = useTranslations(
     "user.dashboard.components.services-data-table-row-actions",
-  );
-  const { setCurrentRow, setOpen } = useUsers();
-  const router = useRouter();
+  )
+  const { setCurrentRow, setOpen } = useUsers()
+  const router = useRouter()
 
   return (
     <>
@@ -41,8 +41,8 @@ export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original);
-              setOpen("update");
+              setCurrentRow(row.original)
+              setOpen("update")
             }}
           >
             {t("edit")}
@@ -52,7 +52,7 @@ export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              router.push(`/user/service-help?serviceId=${row.original.id}`);
+              router.push(`/user/service-help?serviceId=${row.original.id}`)
             }}
           >
             {t("help")}
@@ -63,8 +63,8 @@ export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original);
-              setOpen("delete");
+              setCurrentRow(row.original)
+              setOpen("delete")
             }}
             variant="destructive"
           >
@@ -76,5 +76,5 @@ export function ServicesDataTableRowActions({ row }: { row: Row<Service> }) {
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }

@@ -1,44 +1,51 @@
-"use client";
+"use client"
 
-import type { Column, Row, Table } from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
-import type { Service } from "@template/domain/service/application/ServiceApplicationDomain";
+import type { Column, Row, Table } from "@tanstack/react-table"
+import type { ColumnDef } from "@tanstack/react-table"
+import type { Service } from "@template/domain/service/application/ServiceApplicationDomain"
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "next-intl"
 
-import { DataTableColumnHeader } from "@/components/data-table-2";
-import { LongText } from "@/components/long-text";
-import { Checkbox } from "@/components/ui/checkbox";
+import { DataTableColumnHeader } from "@/components/data-table-2"
+import { LongText } from "@/components/long-text"
+import { Checkbox } from "@/components/ui/checkbox"
 
-import { ServicesDataTableRowActions } from "./services-data-table-row-actions";
+import { ServicesDataTableRowActions } from "./services-data-table-row-actions"
 
-function IdHeader<TData, TValue>({ column }: { column: Column<TData, TValue>  }) {
-  const t = useTranslations("user.dashboard.components.services-columns");
+function IdHeader<TData, TValue>({
+  column,
+}: {
+  column: Column<TData, TValue>
+}) {
+  const t = useTranslations("user.dashboard.components.services-columns")
 
-  return (
-    <DataTableColumnHeader column={column} title={t("identification")} />
-  );
+  return <DataTableColumnHeader column={column} title={t("identification")} />
 }
 
-function NameHeader<TData, TValue>({ column }: { column: Column<TData, TValue> }) {
-  const t = useTranslations("user.dashboard.components.services-columns");
+function NameHeader<TData, TValue>({
+  column,
+}: {
+  column: Column<TData, TValue>
+}) {
+  const t = useTranslations("user.dashboard.components.services-columns")
 
-  return <DataTableColumnHeader column={column} title={t("name")} />;
+  return <DataTableColumnHeader column={column} title={t("name")} />
 }
 
-function OwnerIdHeader<TData, TValue>({ column }: { column: Column<TData, TValue> }) {
-  const t = useTranslations("user.dashboard.components.services-columns");
+function OwnerIdHeader<TData, TValue>({
+  column,
+}: {
+  column: Column<TData, TValue>
+}) {
+  const t = useTranslations("user.dashboard.components.services-columns")
 
   return (
-    <DataTableColumnHeader
-      column={column}
-      title={t("owner-identification")}
-    />
-  );
+    <DataTableColumnHeader column={column} title={t("owner-identification")} />
+  )
 }
 
 function SelectCell<TData, TValue>({ row }: { row: Row<Service> }) {
-  const t = useTranslations("user.dashboard.components.services-columns");
+  const t = useTranslations("user.dashboard.components.services-columns")
 
   return (
     <Checkbox
@@ -47,11 +54,11 @@ function SelectCell<TData, TValue>({ row }: { row: Row<Service> }) {
       className="translate-y-[2px]"
       onCheckedChange={(value) => row.toggleSelected(!!value)}
     />
-  );
+  )
 }
 
 function SelectHeader({ table }: { table: Table<Service> }) {
-  const t = useTranslations("user.dashboard.components.services-columns");
+  const t = useTranslations("user.dashboard.components.services-columns")
 
   return (
     <Checkbox
@@ -63,7 +70,7 @@ function SelectHeader({ table }: { table: Table<Service> }) {
       className="translate-y-[2px]"
       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
     />
-  );
+  )
 }
 
 export const servicesColumns: ColumnDef<Service>[] = [
@@ -104,4 +111,4 @@ export const servicesColumns: ColumnDef<Service>[] = [
     cell: ({ row }) => <ServicesDataTableRowActions row={row} />,
     id: "actions",
   },
-];
+]

@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import type { Row } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table"
 
-import { Ellipsis, Trash2, UserPen } from "lucide-react";
+import { Ellipsis, Trash2, UserPen } from "lucide-react"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,20 +12,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
-import type { User } from "../data/schema";
+import type { User } from "../data/schema"
 
-import { useUsers } from "./users-provider";
+import { useUsers } from "./users-provider"
 
 type UsersDataTableRowActionsProps = {
-  row: Row<User>;
-};
+  row: Row<User>
+}
 
 export function UsersDataTableRowActions({
   row,
 }: UsersDataTableRowActionsProps) {
-  const { setCurrentRow, setOpen } = useUsers();
+  const { setCurrentRow, setOpen } = useUsers()
 
   return (
     <>
@@ -42,8 +42,8 @@ export function UsersDataTableRowActions({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
             onClick={() => {
-              setCurrentRow(row.original);
-              setOpen("edit");
+              setCurrentRow(row.original)
+              setOpen("edit")
             }}
           >
             Edit
@@ -55,8 +55,8 @@ export function UsersDataTableRowActions({
           <DropdownMenuItem
             className="text-red-500!"
             onClick={() => {
-              setCurrentRow(row.original);
-              setOpen("delete");
+              setCurrentRow(row.original)
+              setOpen("delete")
             }}
           >
             Delete
@@ -67,5 +67,5 @@ export function UsersDataTableRowActions({
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }

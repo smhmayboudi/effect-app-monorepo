@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from "react"
 
 export function IconLayoutDefault(props: SVGProps<SVGSVGElement>) {
   return (
@@ -120,5 +120,5 @@ export function IconLayoutDefault(props: SVGProps<SVGSVGElement>) {
         </g>
       </g>
     </svg>
-  );
+  )
 }

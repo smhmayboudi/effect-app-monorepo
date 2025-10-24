@@ -1,11 +1,11 @@
-import * as Effect from "effect/Effect";
-import { toast } from "sonner";
+import * as Effect from "effect/Effect"
+import { toast } from "sonner"
 
 type ToastOptions<A, E, Args extends ReadonlyArray<unknown>> = {
-  onFailure: ((e: E, ...args: Args) => string) | string;
-  onSuccess: ((a: A, ...args: Args) => string) | string;
-  onWaiting: ((...args: Args) => string) | string;
-};
+  onFailure: ((e: E, ...args: Args) => string) | string
+  onSuccess: ((a: A, ...args: Args) => string) | string
+  onWaiting: ((...args: Args) => string) | string
+}
 
 export const withToast =
   <A, E, Args extends ReadonlyArray<unknown>, R>(
@@ -16,7 +16,7 @@ export const withToast =
       typeof options.onWaiting === "string"
         ? options.onWaiting
         : options.onWaiting(...args),
-    );
+    )
 
     return self.pipe(
       Effect.tapBoth({
@@ -27,7 +27,7 @@ export const withToast =
                 ? options.onFailure
                 : options.onFailure(e, ...args),
               { id: toastId },
-            );
+            )
           }),
         onSuccess: (a) =>
           Effect.sync(() => {
@@ -36,8 +36,8 @@ export const withToast =
                 ? options.onSuccess
                 : options.onSuccess(a, ...args),
               { id: toastId },
-            );
+            )
           }),
       }),
-    );
-  };
+    )
+  }

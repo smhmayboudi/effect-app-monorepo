@@ -12,7 +12,8 @@
  * storageSync.setItem("app-theme", "dark");
  */
 export class StorageSyncService {
-  private listeners: Map<string, Set<(value: null | string) => void>> = new Map()
+  private listeners: Map<string, Set<(value: null | string) => void>> =
+    new Map()
 
   constructor() {
     window.addEventListener("storage", (event) => {

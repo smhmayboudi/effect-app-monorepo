@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   ClipboardListIcon,
@@ -8,7 +8,7 @@ import {
   MoreHorizontalIcon,
   ShareIcon,
   Trash,
-} from "lucide-react";
+} from "lucide-react"
 
 import {
   DropdownMenu,
@@ -16,8 +16,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "@/components/ui/link";
+} from "@/components/ui/dropdown-menu"
+import Link from "@/components/ui/link"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -26,12 +26,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { useDirection } from "@/context/direction-provider";
+} from "@/components/ui/sidebar"
+import { useDirection } from "@/context/direction-provider"
 
 export function NavDocuments() {
-  const { isMobile } = useSidebar();
-  const { dir } = useDirection();
+  const { isMobile } = useSidebar()
+  const { dir } = useDirection()
   const items = [
     {
       icon: DatabaseIcon,
@@ -48,7 +48,7 @@ export function NavDocuments() {
       title: "Word Assistant",
       url: "#",
     },
-  ];
+  ]
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -102,5 +102,5 @@ export function NavDocuments() {
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
-  );
+  )
 }

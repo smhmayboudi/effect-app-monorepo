@@ -1,45 +1,45 @@
-"use client";
+"use client"
 
-import { useAtomSet } from "@effect-atom/atom-react";
-import { Service } from "@template/domain/service/application/ServiceApplicationDomain";
-import { AlertTriangle } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useAtomSet } from "@effect-atom/atom-react"
+import { Service } from "@template/domain/service/application/ServiceApplicationDomain"
+import { AlertTriangle } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useState } from "react"
 
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { HttpClient } from "@/lib/http-client";
+import { ConfirmDialog } from "@/components/confirm-dialog"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { HttpClient } from "@/lib/http-client"
 
 export function ServicesDialogDelete({
   currentRow,
   onOpenChange,
   open,
 }: {
-  currentRow: Service;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
+  currentRow: Service
+  onOpenChange: (open: boolean) => void
+  open: boolean
 }) {
-  const t = useTranslations("user.dashboard.components.services-dialog-delete");
-  const deleteMutationAtom = HttpClient.mutation("service", "delete");
+  const t = useTranslations("user.dashboard.components.services-dialog-delete")
+  const deleteMutationAtom = HttpClient.mutation("service", "delete")
   const deleteService = useAtomSet(deleteMutationAtom, {
     mode: "promise",
-  });
-  const [value, setValue] = useState("");
+  })
+  const [value, setValue] = useState("")
 
   const handleDelete = async () => {
     if (value.trim() !== currentRow.name) {
-      return;
+      return
     }
 
-    setValue("");
+    setValue("")
     await deleteService({
       path: { id: currentRow.id },
       reactivityKeys: ["services"],
-    });
-    onOpenChange(false);
-  };
+    })
+    onOpenChange(false)
+  }
 
   return (
     <ConfirmDialog
@@ -82,5 +82,5 @@ export function ServicesDialogDelete({
         </span>
       }
     />
-  );
+  )
 }

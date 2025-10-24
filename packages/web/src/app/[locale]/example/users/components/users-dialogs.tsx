@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import { UsersActionDialog } from "./users-action-dialog";
-import { UsersDeleteDialog } from "./users-delete-dialog";
-import { UsersInviteDialog } from "./users-invite-dialog";
-import { useUsers } from "./users-provider";
+import { UsersActionDialog } from "./users-action-dialog"
+import { UsersDeleteDialog } from "./users-delete-dialog"
+import { UsersInviteDialog } from "./users-invite-dialog"
+import { useUsers } from "./users-provider"
 
 export function UsersDialogs() {
-  const { currentRow, open, setCurrentRow, setOpen } = useUsers();
+  const { currentRow, open, setCurrentRow, setOpen } = useUsers()
 
   return (
     <>
@@ -28,10 +28,10 @@ export function UsersDialogs() {
             currentRow={currentRow}
             // key={`user-edit-${currentRow.id}`}
             onOpenChange={() => {
-              setOpen("edit");
+              setOpen("edit")
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             open={open === "edit"}
           />
@@ -40,15 +40,15 @@ export function UsersDialogs() {
             currentRow={currentRow}
             // key={`user-delete-${currentRow.id}`}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen("delete")
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             open={open === "delete"}
           />
         </>
       )}
     </>
-  );
+  )
 }

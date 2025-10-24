@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
+import type { ComponentProps } from "react"
 
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
-import { useDirection } from "@/context/direction-provider";
-import { cn } from "@/lib/utils";
+import { useDirection } from "@/context/direction-provider"
+import { cn } from "@/lib/utils"
 
 function Tooltip({ ...props }: ComponentProps<typeof TooltipPrimitive.Root>) {
   return (
     <TooltipProvider>
       <TooltipPrimitive.Root data-slot="tooltip" {...props} />
     </TooltipProvider>
-  );
+  )
 }
 
 function TooltipContent({
@@ -21,7 +21,7 @@ function TooltipContent({
   sideOffset = 0,
   ...props
 }: ComponentProps<typeof TooltipPrimitive.Content> & {}) {
-  const { dir } = useDirection();
+  const { dir } = useDirection()
 
   return (
     <TooltipPrimitive.Portal>
@@ -41,7 +41,7 @@ function TooltipContent({
         <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] bg-foreground fill-foreground" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
-  );
+  )
 }
 
 function TooltipProvider({
@@ -54,13 +54,13 @@ function TooltipProvider({
       delayDuration={delayDuration}
       {...props}
     />
-  );
+  )
 }
 
 function TooltipTrigger({
   ...props
 }: ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger }

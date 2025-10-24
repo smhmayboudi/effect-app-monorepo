@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { ExternalLink, GalleryVerticalEnd } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { ExternalLink, GalleryVerticalEnd } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useSearchParams } from "next/navigation"
 
 import {
   Card,
@@ -10,14 +10,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import Link from "@/components/ui/link";
+} from "@/components/ui/card"
+import Link from "@/components/ui/link"
 
 export default function Client() {
-  const t = useTranslations("user.service-help");
-  const searchParams = useSearchParams();
+  const t = useTranslations("user.service-help")
+  const searchParams = useSearchParams()
   const serviceId =
-    searchParams.get("serviceId") ?? "00000000-0000-0000-0000-000000000000";
+    searchParams.get("serviceId") ?? "00000000-0000-0000-0000-000000000000"
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -49,5 +49,5 @@ export default function Client() {
         </div>
       </div>
     </div>
-  );
+  )
 }
