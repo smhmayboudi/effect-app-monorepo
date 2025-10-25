@@ -34,7 +34,7 @@ import { authClient } from "@/lib/auth-client"
 
 export default function Client() {
   const t = useTranslations("sign-up")
-  const schema = Schema.Struct({
+  const formSchema = Schema.Struct({
     email: Schema.NonEmptyString.annotations({
       message: () => t("form.email.nonEmptyString"),
     }).pipe(
@@ -50,9 +50,9 @@ export default function Client() {
       message: () => t("form.password.nonEmptyString"),
     }),
   })
-  const form = useForm<typeof schema.Type>({
+  const form = useForm<typeof formSchema.Type>({
     defaultValues: { email: "", name: "", password: "" },
-    resolver: effectTsResolver(schema),
+    resolver: effectTsResolver(formSchema),
   })
   const {
     formState: { isSubmitting },

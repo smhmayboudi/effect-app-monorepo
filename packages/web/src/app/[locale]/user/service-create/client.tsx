@@ -37,14 +37,14 @@ import { HttpClient } from "@/lib/http-client"
 
 export default function Client() {
   const t = useTranslations("user.service-create")
-  const schema = Schema.Struct({
+  const formSchema = Schema.Struct({
     name: Schema.NonEmptyString.annotations({
       message: () => t("form.name.nonEmptyString"),
     }),
   })
-  const form = useForm<typeof schema.Type>({
+  const form = useForm<typeof formSchema.Type>({
     defaultValues: { name: "" },
-    resolver: effectTsResolver(schema),
+    resolver: effectTsResolver(formSchema),
   })
   const {
     formState: { isSubmitting },

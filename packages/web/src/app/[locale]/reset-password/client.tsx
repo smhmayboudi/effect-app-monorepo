@@ -34,7 +34,7 @@ import { authClient } from "@/lib/auth-client"
 
 export default function Client() {
   const t = useTranslations("reset-password")
-  const schema = Schema.Struct({
+  const formSchema = Schema.Struct({
     newPassword: Schema.NonEmptyString.annotations({
       message: () => t("form.newPassword.nonEmptyString"),
     }),
@@ -42,9 +42,9 @@ export default function Client() {
       message: () => t("form.token.nonEmptyString"),
     }),
   })
-  const form = useForm<typeof schema.Type>({
+  const form = useForm<typeof formSchema.Type>({
     defaultValues: { newPassword: "", token: "" },
-    resolver: effectTsResolver(schema),
+    resolver: effectTsResolver(formSchema),
   })
   const {
     formState: { isSubmitting },
