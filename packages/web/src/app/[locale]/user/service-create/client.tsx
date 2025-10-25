@@ -1,6 +1,6 @@
 "use client"
 
-import { Registry } from "@effect-atom/atom-react"
+import { Registry, RegistryContext } from "@effect-atom/atom-react"
 import { effectTsResolver } from "@hookform/resolvers/effect-ts"
 import { IdempotencyKeyClient } from "@template/domain/shared/application/IdempotencyKeyClient"
 import * as Effect from "effect/Effect"
@@ -8,6 +8,7 @@ import * as Schema from "effect/Schema"
 import { GalleryVerticalEnd } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
+import { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { v7 } from "uuid"
 
@@ -50,9 +51,10 @@ export default function Client() {
     handleSubmit,
   } = form
   const router = useRouter()
+
   const onSubmit = handleSubmit(async ({ name }) => {
     const createMutation = HttpClient.mutation("service", "create")
-    const registry = Registry.make()
+    const registry = useContext(RegistryContext)
     registry.set(createMutation, {
       headers: {
         "idempotency-key": IdempotencyKeyClient.make(v7()),
