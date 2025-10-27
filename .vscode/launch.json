@@ -17,9 +17,9 @@
       "internalConsoleOptions": "neverOpen",
       "name": "ShardManager",
       "outFiles": [
-        "${workspaceFolder}/packages/workflow/dist/dist/esm/**/*.js"
+        "${workspaceFolder}/packages/shared-manager/dist/dist/esm/**/*.js"
       ],
-      "program": "${workspaceFolder}/packages/workflow/dist/dist/esm/ShardManager.js",
+      "program": "${workspaceFolder}/packages/shared-manager/dist/dist/esm/ShardManager.js",
       "request": "launch",
       "skipFiles": [
         "<node_internals>/**"
