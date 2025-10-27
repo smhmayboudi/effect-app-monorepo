@@ -36,5 +36,5 @@ export const ConfigLive = Config.nested(
     Redis: RedisLive,
     Sqlite: SqliteLive
   }),
-  "CLIENT"
+  "SERVER"
 )
