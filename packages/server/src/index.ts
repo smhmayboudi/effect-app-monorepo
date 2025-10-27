@@ -11,6 +11,9 @@ export * as RateLimitApp from "./RateLimitApp.js"
 export * as RateLimitMain from "./RateLimitMain.js"
 
 
+export * as Server from "./Server.js"
+
+
 export * as AuthenticationApplicationPortDriving from "./domain/authentication/application/AuthenticationApplicationPortDriving.js"
 
 
@@ -316,9 +319,6 @@ export * as MiddlewareIdempotency from "./middleware/MiddlewareIdempotency.js"
 
 
 export * as MiddlewareMetric from "./middleware/MiddlewareMetric.js"
-
-
-export * as server from "./server.js"
 
 
 export * as Response from "./shared/adapter/Response.js"
