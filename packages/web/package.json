@@ -79,7 +79,7 @@
   "name": "web",
   "private": true,
   "scripts": {
-    "build": "next build --turbo",
+    "build": "PORT=3002 next build --turbo",
     "dev": "NODE_OPTIONS='--inspect' PORT=3002 next dev --turbo",
     "lint": "eslint",
     "start": "PORT=3002 next start",

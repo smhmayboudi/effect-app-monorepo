@@ -9,7 +9,7 @@ import { v7 } from "uuid"
 
 import { routing } from "@/i18n/routing"
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const isAuth = ["/forgot-password", "/sign-in", "/sign-up"].some((route) =>
     request.nextUrl.pathname.includes(route),
   )
