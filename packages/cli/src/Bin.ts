@@ -5,7 +5,7 @@ import * as NodeHttpClient from "@effect/platform-node/NodeHttpClient"
 import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
-import { cli } from "./cli.js"
+import { cli } from "./Cli.js"
 import { TodoClient, UUID } from "./TodoClient.js"
 
 const Bin = TodoClient.pipe(
