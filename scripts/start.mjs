@@ -8,9 +8,9 @@ const run = (cmd, args, forwardStdin = true) =>
   })
 
 const processes = [
+  run("node", ["packages/runner/dist/dist/esm/Runner.js"], false),
   run("node", ["packages/server/dist/dist/esm/Server.js"], false),
-  run("node", ["packages/shared-manager/dist/dist/esm/ShardManager.js"], false),
-  run("node", ["packages/workflow/dist/dist/esm/Runner.js"], false)
+  run("node", ["packages/shared-manager/dist/dist/esm/ShardManager.js"], false)
 ]
 
 const shutdown = () => {

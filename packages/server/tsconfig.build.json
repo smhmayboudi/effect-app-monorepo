@@ -13,7 +13,7 @@
       "path": "../domain/tsconfig.build.json"
     },
     {
-      "path": "../workflow/tsconfig.build.json"
+      "path": "../runner/tsconfig.build.json"
     }
   ]
 }

@@ -16,7 +16,7 @@
       "path": "../domain"
     },
     {
-      "path": "../workflow"
+      "path": "../runner"
     }
   ]
 }

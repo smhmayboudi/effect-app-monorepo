@@ -31,7 +31,7 @@
     "@template/domain": "workspace:^",
     "effect": "latest"
   },
-  "description": "The workflow template",
+  "description": "The runner template",
   "devDependencies": {},
   "effect": {
     "generateExports": {
@@ -51,7 +51,7 @@
   },
   "homepage": "https://github.com/smhmayboudi/effect-app-monorepo",
   "license": "MIT",
-  "name": "@template/workflow",
+  "name": "@template/runner",
   "os": [
     "darwin",
     "linux",
@@ -63,7 +63,7 @@
     "directory": "dist"
   },
   "repository": {
-    "directory": "packages/workflow",
+    "directory": "packages/runner",
     "type": "git",
     "url": "https://github.com/smhmayboudi/effect-app-monorepo"
   },

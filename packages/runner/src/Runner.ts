@@ -8,7 +8,7 @@ import * as Layer from "effect/Layer"
 import * as Logger from "effect/Logger"
 import * as LogLevel from "effect/LogLevel"
 import * as Option from "effect/Option"
-import { WorkflowConfigLive } from "./Config.js"
+import { ConfigLive } from "./Config.js"
 import { Sql } from "./Sql.js"
 import { WorkflowSendEmailLayer } from "./WorkflowSendEmail.js"
 
@@ -25,16 +25,16 @@ Layer.mergeAll(
 ).pipe(
   Layer.provide(ClusterWorkflowEngine.layer),
   Layer.provide(
-    Layer.unwrapEffect(WorkflowConfigLive.pipe(Effect.map((config) =>
+    Layer.unwrapEffect(ConfigLive.pipe(Effect.map((config) =>
       NodeClusterRunnerHttp.layer({
         shardingConfig: {
           runnerAddress: Option.some(RunnerAddress.make(
-            config.client.runnerAddress.host,
-            config.client.runnerAddress.port
+            config.runnerAddress.host,
+            config.runnerAddress.port
           )),
           shardManagerAddress: RunnerAddress.make(
-            config.client.shardManagerAddress.host,
-            config.client.shardManagerAddress.port
+            config.shardManagerAddress.host,
+            config.shardManagerAddress.port
           )
         },
         storage: "sql",
@@ -42,7 +42,8 @@ Layer.mergeAll(
       })
     )))
   ),
-  Layer.provide(Sql(WorkflowConfigLive.pipe(Config.map((options) => options.client.sqlite)))),
+  Layer.provide(Sql(ConfigLive.pipe(Config.map((options) => options.sqlite)))),
+  Layer.orDie,
   gracefulShutdown,
   Layer.launch,
   NodeRuntime.runMain

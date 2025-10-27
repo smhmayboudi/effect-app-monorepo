@@ -27,9 +27,9 @@ export default [
       "**/*.md",
       "packages/cli/src/index.ts",
       "packages/domain/src/index.ts",
+      "packages/runner/src/index.ts",
       "packages/server/src/index.ts",
-      "packages/shared-manager/src/index.ts",
-      "packages/workflow/src/index.ts"
+      "packages/shared-manager/src/index.ts"
     ]
   },
   ...compat.extends(

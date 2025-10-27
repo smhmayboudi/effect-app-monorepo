@@ -1,6 +1,6 @@
 import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
 import { Api } from "@template/domain/Api"
-import { WorkflowEngineLayer } from "@template/workflow/RunnerClient"
+import { WorkflowEngineLayer } from "@template/runner/RunnerClient"
 import * as Config from "effect/Config"
 import * as Layer from "effect/Layer"
 import { ConfigLive } from "./Config.js"

@@ -32,9 +32,9 @@
       "internalConsoleOptions": "neverOpen",
       "name": "Runner",
       "outFiles": [
-        "${workspaceFolder}/packages/workflow/dist/dist/esm/**/*.js"
+        "${workspaceFolder}/packages/runner/dist/dist/esm/**/*.js"
       ],
-      "program": "${workspaceFolder}/packages/workflow/dist/dist/esm/Runner.js",
+      "program": "${workspaceFolder}/packages/runner/dist/dist/esm/Runner.js",
       "request": "launch",
       "skipFiles": [
         "<node_internals>/**"

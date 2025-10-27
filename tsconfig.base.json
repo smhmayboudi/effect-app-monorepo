@@ -44,15 +44,15 @@
       "@template/domain": ["./packages/domain/src/index.js"],
       "@template/domain/*": ["./packages/domain/src/*.js"],
       "@template/domain/test/*": ["./packages/domain/test/*.js"],
+      "@template/runner": ["./packages/runner/src/index.js"],
+      "@template/runner/*": ["./packages/runner/src/*.js"],
+      "@template/runner/test/*": ["./packages/runner/test/*.js"],
       "@template/server": ["./packages/server/src/index.js"],
       "@template/server/*": ["./packages/server/src/*.js"],
       "@template/server/test/*": ["./packages/server/test/*.js"],
       "@template/shard-manager": ["./packages/shard-manager/src/index.js"],
       "@template/shard-manager/*": ["./packages/shard-manager/src/*.js"],
-      "@template/shard-manager/test/*": ["./packages/shard-manager/test/*.js"],
-      "@template/workflow": ["./packages/workflow/src/index.js"],
-      "@template/workflow/*": ["./packages/workflow/src/*.js"],
-      "@template/workflow/test/*": ["./packages/workflow/test/*.js"]
+      "@template/shard-manager/test/*": ["./packages/shard-manager/test/*.js"]
     }
   }
 }

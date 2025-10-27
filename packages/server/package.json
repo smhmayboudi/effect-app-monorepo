@@ -40,7 +40,7 @@
     "@opentelemetry/sdk-trace-web": "^2.0.1",
     "@opentelemetry/semantic-conventions": "^1.36.0",
     "@template/domain": "workspace:^",
-    "@template/workflow": "workspace:^",
+    "@template/runner": "workspace:^",
     "better-auth": "^1.3.28",
     "deepmerge-ts": "^7.1.5",
     "drizzle-orm": "^0.44.4",
