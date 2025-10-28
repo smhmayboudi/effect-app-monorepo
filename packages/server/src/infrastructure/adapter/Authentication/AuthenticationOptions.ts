@@ -1,6 +1,11 @@
 import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth"
 import { bearer, createAuthMiddleware, openAPI } from "better-auth/plugins"
 import { v7 } from "uuid"
+import { sendChangeEmailVerificationEmail } from "./emails/change-email-verification.js"
+import { sendDeleteAccountVerificationEmail } from "./emails/delete-account-verification.js"
+import { sendEmailVerificationEmail } from "./emails/email-verification.js"
+import { sendPasswordResetEmail } from "./emails/password-reset.js"
+import { sendWelcomeEmail } from "./emails/welcome-email.js"
 
 export const options: BetterAuthOptions = {
   account: {
@@ -66,8 +71,7 @@ export const options: BetterAuthOptions = {
     requireEmailVerification: true,
     resetPasswordTokenExpiresIn: 3600, // 1 hour
     sendResetPassword: async ({ token, url, user }) => {
-      console.log({ token, url, user })
-      // await sendPasswordResetEmail({ token, url, user })
+      await sendPasswordResetEmail({ token, url, user })
     }
   },
   emailVerification: {
@@ -75,8 +79,7 @@ export const options: BetterAuthOptions = {
     expiresIn: 3600, // 1 hour
     sendOnSignUp: true,
     sendVerificationEmail: async ({ token, url, user }) => {
-      console.log({ token, url, user })
-      // await sendEmailVerificationEmail({ user, url })
+      await sendEmailVerificationEmail({ token, user, url })
     }
   },
   hooks: {
@@ -88,8 +91,7 @@ export const options: BetterAuthOptions = {
         }
 
         if (user != null) {
-          console.log({ user })
-          // await sendWelcomeEmail(user)
+          await sendWelcomeEmail(user)
         }
       }
     })
@@ -125,18 +127,13 @@ export const options: BetterAuthOptions = {
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async ({ newEmail, token, url, user }) => {
-        console.log({ newEmail, token, url, user })
-        // await sendEmailVerificationEmail({
-        //   user: { ...user, email: newEmail },
-        //   url
-        // })
+        await sendChangeEmailVerificationEmail({ newEmail, token, url, user })
       }
     },
     deleteUser: {
       enabled: true,
       sendDeleteAccountVerification: async ({ token, url, user }) => {
-        console.log({ token, url, user })
-        // await sendDeleteAccountVerificationEmail({ user, url })
+        await sendDeleteAccountVerificationEmail({ token, user, url })
       }
     }
   },

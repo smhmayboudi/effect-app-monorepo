@@ -1,4 +1,3 @@
-import type * as WorkflowEngine from "@effect/workflow/WorkflowEngine"
 import type { ActorAuthorized } from "@template/domain/Actor"
 import type { Service, ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
 import type { ServiceErrorAlreadyExists } from "@template/domain/service/application/ServiceApplicationErrorAlreadyExists"
@@ -14,7 +13,7 @@ export class ServicePortDriving extends Context.Tag("ServicePortDriving")<Servic
   ) => Effect.Effect<
     ServiceId,
     ServiceErrorAlreadyExists,
-    ActorAuthorized<"Service", "create"> | WorkflowEngine.WorkflowEngine
+    ActorAuthorized<"Service", "create">
   >
   delete: (id: ServiceId) => Effect.Effect<ServiceId, ServiceErrorNotFound, ActorAuthorized<"Service", "delete">>
   readAll: (

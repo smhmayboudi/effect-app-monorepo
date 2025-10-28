@@ -121,6 +121,8 @@ services:
     environment:
       - BETTER_AUTH_SECRET=better-auth-secret-123456789-00000000-0000-0000-0000-000000000000
       - BETTER_AUTH_URL=http://127.0.0.1:3001
+      - RESEND_API_KEY=-re_xxxxxxxxx
+      - RESEND_FROM_EMAIL=smhmayboudi@gmail.com
       - SERVER_ELASTICSEARCH_NODE=http://elasticsearch:9200
       - SERVER_REDIS_HOST=redis
       - SERVER_REDIS_PORT=6379
