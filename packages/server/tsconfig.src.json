@@ -11,9 +11,6 @@
   "references": [
     {
       "path": "../domain"
-    },
-    {
-      "path": "../runner"
     }
   ]
 }

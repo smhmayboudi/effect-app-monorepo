@@ -1,6 +1,6 @@
 import { ATTR_CODE_FUNCTION_NAME } from "@opentelemetry/semantic-conventions"
 import { ServiceId } from "@template/domain/service/application/ServiceApplicationDomain"
-import { WorkflowSendEmail } from "@template/runner/WorkflowSendEmail"
+import { WorkflowSendEmail } from "@template/domain/workflow/application/WorkflowApplicationSendEmail"
 import * as Effect from "effect/Effect"
 import * as Exit from "effect/Exit"
 import * as Layer from "effect/Layer"
@@ -21,7 +21,9 @@ export const ServiceUseCase = Layer.scoped(
             Effect.flatMap((v7) =>
               driven.create({ ...service, id: ServiceId.make(v7) }).pipe(
                 Effect.tap((out) =>
-                  WorkflowSendEmail.execute({ id: out, to: out }).pipe(Effect.catchTag("SendEmailError", Effect.die))
+                  WorkflowSendEmail.execute({ id: out, to: out }).pipe(
+                    Effect.catchTag("WorkflowSendEmailError", Effect.die)
+                  )
                 ),
                 Effect.tapBoth({
                   onFailure: (out) =>

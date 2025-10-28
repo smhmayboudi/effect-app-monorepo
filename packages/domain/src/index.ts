@@ -87,3 +87,9 @@ export * as VWAdapterDriving from "./vw/adapter/VWAdapterDriving.js"
 
 
 export * as GroupPersonTodoApplicationDomain from "./vw/application/GroupPersonTodoApplicationDomain.js"
+
+
+export * as WorkflowApplicationSendEmail from "./workflow/application/WorkflowApplicationSendEmail.js"
+
+
+export * as WorkflowApplicationSendEmailError from "./workflow/application/WorkflowApplicationSendEmailError.js"

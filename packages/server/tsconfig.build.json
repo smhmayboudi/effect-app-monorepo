@@ -11,9 +11,6 @@
   "references": [
     {
       "path": "../domain/tsconfig.build.json"
-    },
-    {
-      "path": "../runner/tsconfig.build.json"
     }
   ]
 }

@@ -30,11 +30,41 @@ const SqliteLive = Config.nested(
   "SQLITE"
 )
 
+const WorkflowShardManagerAddressLive = Config.nested(
+  Config.all({
+    host: Config.string("HOST").pipe(
+      Config.withDefault("127.0.0.1")
+    ),
+    port: Config.integer("PORT").pipe(
+      Config.withDefault(8080)
+    )
+  }),
+  "SHARD_MANAGER_ADDRESS"
+)
+
+const WorkflowSqliteLive = Config.nested(
+  Config.all({
+    filename: Config.string("FILENAME").pipe(
+      Config.withDefault("./db-workflow.sqlite")
+    )
+  }),
+  "SQLITE"
+)
+
+const WorkflowLive = Config.nested(
+  Config.all({
+    shardManagerAddress: WorkflowShardManagerAddressLive,
+    sqlite: WorkflowSqliteLive
+  }),
+  "RUNNER"
+)
+
 export const ConfigLive = Config.nested(
   Config.all({
-    Elasticsearch: ElasticsearchLive,
-    Redis: RedisLive,
-    Sqlite: SqliteLive
+    elasticsearch: ElasticsearchLive,
+    redis: RedisLive,
+    sqlite: SqliteLive,
+    workflow: WorkflowLive
   }),
   "SERVER"
 )

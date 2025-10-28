@@ -1,6 +1,5 @@
 import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
 import { Api } from "@template/domain/Api"
-import { WorkflowEngineLayer } from "@template/runner/RunnerClient"
 import * as Config from "effect/Config"
 import * as Layer from "effect/Layer"
 import { ConfigLive } from "./Config.js"
@@ -42,6 +41,7 @@ import { ResultPersistenceRedis } from "./infrastructure/adapter/ResultPersisten
 import { Sql } from "./infrastructure/adapter/Sql.js"
 import { SSEManager } from "./infrastructure/adapter/SSEManager.js"
 import { UUID } from "./infrastructure/adapter/UUID.js"
+import { WorkflowEngineLayer } from "./infrastructure/adapter/Workflow.js"
 import { MiddlewareAuthentication } from "./middleware/MiddlewareAuthentication.js"
 
 export const ApiLive = HttpApiBuilder.api(Api)
@@ -95,11 +95,11 @@ export const ApiLive = HttpApiBuilder.api(Api)
     Layer.provide(AuthenticationUseCase)
   )
   .pipe(
-    Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((options) => options.Elasticsearch)))),
+    Layer.provide(Elasticsearch(ConfigLive.pipe(Config.map((options) => options.elasticsearch)))),
     Layer.provide(EventEmitter()),
-    Layer.provide(Redis(ConfigLive.pipe(Config.map((options) => options.Redis)))),
-    Layer.provide(ResultPersistenceRedis(ConfigLive.pipe(Config.map((options) => options.Redis)))),
-    Layer.provide(Sql(ConfigLive.pipe(Config.map((options) => options.Sqlite)))),
+    Layer.provide(Redis(ConfigLive.pipe(Config.map((options) => options.redis)))),
+    Layer.provide(ResultPersistenceRedis(ConfigLive.pipe(Config.map((options) => options.redis)))),
+    Layer.provide(Sql(ConfigLive.pipe(Config.map((options) => options.sqlite)))),
     Layer.provide(UUID),
     Layer.provide(WorkflowEngineLayer)
   )

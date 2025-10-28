@@ -1,30 +1,14 @@
 import * as Activity from "@effect/workflow/Activity"
 import * as DurableClock from "@effect/workflow/DurableClock"
 import * as DurableDeferred from "@effect/workflow/DurableDeferred"
-import * as Workflow from "@effect/workflow/Workflow"
+import { WorkflowSendEmail } from "@template/domain/workflow/application/WorkflowApplicationSendEmail"
+import { WorkflowSendEmailError } from "@template/domain/workflow/application/WorkflowApplicationSendEmailError"
 import * as Effect from "effect/Effect"
-import * as Schema from "effect/Schema"
-
-class SendEmailError extends Schema.TaggedError<SendEmailError>("SendEmailError")(
-  "SendEmailError",
-  { message: Schema.String }
-) {}
-
-export const WorkflowSendEmail = Workflow.make({
-  error: SendEmailError,
-  idempotencyKey: ({ id }) => id,
-  name: "WorkflowSendEmail",
-  payload: {
-    id: Schema.String,
-    to: Schema.String
-  },
-  success: Schema.Void
-})
 
 export const WorkflowSendEmailLayer = WorkflowSendEmail.toLayer(
   (payload, executionId) =>
     Activity.make({
-      error: SendEmailError,
+      error: WorkflowSendEmailError,
       execute: Activity.CurrentAttempt.pipe(
         Effect.flatMap((attempt) =>
           Effect.annotateLogs(Effect.log(`Sending email`), {
@@ -35,7 +19,7 @@ export const WorkflowSendEmailLayer = WorkflowSendEmail.toLayer(
             Effect.flatMap(() => {
               if (attempt !== 5) {
                 return Effect.fail(
-                  new SendEmailError({
+                  new WorkflowSendEmailError({
                     message: `Failed to send email for ${payload.id} on attempt ${attempt}`
                   })
                 )

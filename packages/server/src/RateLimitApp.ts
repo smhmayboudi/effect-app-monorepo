@@ -63,7 +63,7 @@ export const provideLayer = <A, E, R>(effect: Effect.Effect<A, E, R>) =>
         RateLimit.pipe(
           Layer.provide(RateLimitStorageRedis),
           Layer.provide(
-            Redis(ConfigLive.pipe(Config.map((opts) => opts.Redis)))
+            Redis(ConfigLive.pipe(Config.map((opts) => opts.redis)))
           )
         )
       )
