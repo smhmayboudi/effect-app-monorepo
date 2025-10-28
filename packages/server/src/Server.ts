@@ -32,7 +32,7 @@ import { TextDecoder } from "./util/TextDecoder.js"
 const NodeSdkLive = NodeSdk.layer(() => ({
   logRecordProcessor: new BatchLogRecordProcessor(new OTLPLogExporter()),
   metricReader: new PeriodicExportingMetricReader({ exporter: new OTLPMetricExporter() }),
-  resource: { serviceName: "effect-app-monorepo", serviceVersion: "0.0.0" },
+  resource: { serviceName: "server", serviceVersion: "0.0.0" },
   spanProcessor: new BatchSpanProcessor(new OTLPTraceExporter())
 }))
 
