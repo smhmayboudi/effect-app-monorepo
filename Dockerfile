@@ -18,15 +18,29 @@ ARG ORG_OPENCONTAINERS_IMAGE_URL=${ORG_OPENCONTAINERS_IMAGE_URL:-}
 ARG ORG_OPENCONTAINERS_IMAGE_VENDOR=${ORG_OPENCONTAINERS_IMAGE_VENDOR:-}
 ARG ORG_OPENCONTAINERS_IMAGE_VERSION=${ORG_OPENCONTAINERS_IMAGE_VERSION:-}
 
-ARG CLIENT_ELASTICSEARCH_NODE=${CLIENT_ELASTICSEARCH_NODE:-http://elasticsearch:9200}
-ARG CLIENT_REDIS_HOST=${CLIENT_REDIS_HOST:-redis}
-ARG CLIENT_REDIS_PORT=${CLIENT_REDIS_PORT:-6379}
-ARG CLIENT_SQLITE_FILENAME=${CLIENT_SQLITE_FILENAME:-./db-server.sqlite}
-ARG SERVER_ACCOUNT_CACHE_TTL_MS=${SERVER_ACCOUNT_CACHE_TTL_MS:-30000}
+ARG BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-better-auth-secret-123456789-00000000-0000-0000-0000-000000000000}
+ARG BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://127.0.0.1:3001}
+ARG RESEND_API_KEY=${RESEND_API_KEY:-re_xxxxxxxxx}
+ARG RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-smhmayboudi@gmail.com}
+ARG RUNNER_SHARD_RUNNER_ADDRESS_HOST=${RUNNER_SHARD_RUNNER_ADDRESS_HOST:-127.0.0.1}
+ARG RUNNER_SHARD_RUNNER_ADDRESS_PORT=${RUNNER_SHARD_RUNNER_ADDRESS_PORT:-8088}
+ARG RUNNER_SHARD_MANAGER_ADDRESS_HOST=${RUNNER_SHARD_MANAGER_ADDRESS_HOST:-127.0.0.1}
+ARG RUNNER_SHARD_MANAGER_ADDRESS_PORT=${RUNNER_SHARD_MANAGER_ADDRESS_PORT:-8080}
+ARG RUNNER_SQLITE_FILENAME=${RUNNER_SQLITE_FILENAME:-./db-workflow.sqlite}
+ARG SERVER_ELASTICSEARCH_NODE=${SERVER_ELASTICSEARCH_NODE:-http://127.0.0.1:9200}
+ARG SERVER_REDIS_HOST=${SERVER_REDIS_HOST:-127.0.0.1}
+ARG SERVER_REDIS_PORT=${SERVER_REDIS_PORT:-6379}
+ARG SERVER_SQLITE_FILENAME=${SERVER_SQLITE_FILENAME:-./db-server.sqlite}
+ARG SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_HOST=${SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_HOST:-127.0.0.1}
+ARG SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_PORT=${SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_PORT:-8080}
+ARG SERVER_WORKFLOW_SQLITE_FILENAME=${SERVER_WORKFLOW_SQLITE_FILENAME:-./db-workflow.sqlite}
 ARG SERVER_GROUP_CACHE_TTL_MS=${SERVER_GROUP_CACHE_TTL_MS:-30000}
 ARG SERVER_PERSON_CACHE_TTL_MS=${SERVER_PERSON_CACHE_TTL_MS:-30000}
+ARG SERVER_SERVICE_CACHE_TTL_MS=${SERVER_SERVICE_CACHE_TTL_MS:-30000}
 ARG SERVER_TODO_CACHE_TTL_MS=${SERVER_TODO_CACHE_TTL_MS:-30000}
-ARG SERVER_USER_CACHE_TTL_MS=${SERVER_USER_CACHE_TTL_MS:-30000}
+ARG SHARD_MANAGER_SHARD_MANAGER_ADDRESS_HOST=${SHARD_MANAGER_SHARD_MANAGER_ADDRESS_HOST:-127.0.0.1}
+ARG SHARD_MANAGER_SHARD_MANAGER_ADDRESS_PORT=${SHARD_MANAGER_SHARD_MANAGER_ADDRESS_PORT:-8080}
+ARG SHARD_MANAGER_SQLITE_FILENAME=${SHARD_MANAGER_SQLITE_FILENAME:-./db-workflow.sqlite}
 
 FROM ${NODE_IMAGE_URL}:${NODE_IMAGE_VERSION} AS base
 ARG ORG_OPENCONTAINERS_IMAGE_AUTHORS
@@ -67,8 +81,9 @@ COPY pnpm-lock.yaml .
 COPY pnpm-workspace.yaml .
 COPY packages/cli/package.json ./packages/cli/
 COPY packages/domain/package.json ./packages/domain/
+COPY packages/runner/package.json ./packages/runner/
 COPY packages/server/package.json ./packages/server/
-COPY packages/workflow/package.json ./packages/workflow/
+COPY packages/shard-manager/package.json ./packages/shard-manager/
 COPY patches/ ./patches
 RUN pnpm i --frozen-lockfile
 
@@ -80,13 +95,15 @@ COPY pnpm-lock.yaml .
 COPY pnpm-workspace.yaml .
 COPY packages/cli/package.json ./packages/cli/
 COPY packages/domain/package.json ./packages/domain/
+COPY packages/runner/package.json ./packages/runner/
 COPY packages/server/package.json ./packages/server/
-COPY packages/workflow/package.json ./packages/workflow/
+COPY packages/shard-manager/package.json ./packages/shard-manager/
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages/cli/node_modules ./packages/cli/node_modules
 COPY --from=deps /app/packages/domain/node_modules ./packages/domain/node_modules
+COPY --from=deps /app/packages/runner/node_modules ./packages/runner/node_modules
 COPY --from=deps /app/packages/server/node_modules ./packages/server/node_modules
-COPY --from=deps /app/packages/workflow/node_modules ./packages/workflow/node_modules
+COPY --from=deps /app/packages/shard-manager/node_modules ./packages/shard-manager/node_modules
 RUN pnpm prune --prod
 
 FROM base AS build
@@ -96,8 +113,9 @@ COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages/cli/node_modules ./packages/cli/node_modules
 COPY --from=deps /app/packages/domain/node_modules ./packages/domain/node_modules
+COPY --from=deps /app/packages/runner/node_modules ./packages/runner/node_modules
 COPY --from=deps /app/packages/server/node_modules ./packages/server/node_modules
-COPY --from=deps /app/packages/workflow/node_modules ./packages/workflow/node_modules
+COPY --from=deps /app/packages/shard-manager/node_modules ./packages/shard-manager/node_modules
 RUN pnpm run build
 
 FROM base AS cli
@@ -110,27 +128,51 @@ COPY --chown=node:node --from=deps-prod /app/packages/cli/node_modules ./package
 COPY --chown=node:node --from=build /app/packages/domain/dist ./packages/domain/dist
 COPY --chown=node:node --from=build /app/packages/cli/dist ./packages/cli/dist
 USER node
-ENTRYPOINT [ "node", "packages/cli/dist/dist/esm/bin.js" ]
+ENTRYPOINT [ "node", "packages/cli/dist/dist/esm/Bin.js" ]
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN mkdir -p /app && chown node:node /app
+COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
+COPY --chown=node:node --from=deps-prod /app/packages/domain/node_modules ./packages/domain/node_modules
+COPY --chown=node:node --from=deps-prod /app/packages/runner/node_modules ./packages/runner/node_modules
+COPY --chown=node:node --from=build /app/packages/domain/dist ./packages/domain/dist
+COPY --chown=node:node --from=build /app/packages/runner/dist ./packages/runner/dist
+USER node
+ENTRYPOINT [ "node", "packages/runner/dist/dist/esm/Runner.js" ]
 
 FROM base AS server
-ARG CLIENT_ELASTICSEARCH_NODE
-ARG CLIENT_REDIS_HOST
-ARG CLIENT_REDIS_PORT
-ARG CLIENT_SQLITE_FILENAME
-ARG SERVER_ACCOUNT_CACHE_TTL_MS
+ARG BETTER_AUTH_SECRET
+ARG BETTER_AUTH_URL
+ARG RESEND_API_KEY
+ARG RESEND_FROM_EMAIL
+ARG SERVER_ELASTICSEARCH_NODE
+ARG SERVER_REDIS_HOST
+ARG SERVER_REDIS_PORT
+ARG SERVER_SQLITE_FILENAME
+ARG SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_HOST
+ARG SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_PORT
+ARG SERVER_WORKFLOW_SQLITE_FILENAME
 ARG SERVER_GROUP_CACHE_TTL_MS
 ARG SERVER_PERSON_CACHE_TTL_MS
+ARG SERVER_SERVICE_CACHE_TTL_MS
 ARG SERVER_TODO_CACHE_TTL_MS
-ARG SERVER_USER_CACHE_TTL_MS
-ENV CLIENT_ELASTICSEARCH_NODE=${CLIENT_ELASTICSEARCH_NODE}
-ENV CLIENT_REDIS_HOST=${CLIENT_REDIS_HOST}
-ENV CLIENT_REDIS_PORT=${CLIENT_REDIS_PORT}
-ENV CLIENT_SQLITE_FILENAME=${CLIENT_SQLITE_FILENAME}
-ENV SERVER_ACCOUNT_CACHE_TTL_MS=${SERVER_ACCOUNT_CACHE_TTL_MS}
+ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENV BETTER_AUTH_URL=${BETTER_AUTH_URL}
+ENV RESEND_API_KEY=${RESEND_API_KEY}
+ENV RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
+ENV SERVER_ELASTICSEARCH_NODE=${SERVER_ELASTICSEARCH_NODE}
+ENV SERVER_REDIS_HOST=${SERVER_REDIS_HOST}
+ENV SERVER_REDIS_PORT=${SERVER_REDIS_PORT}
+ENV SERVER_SQLITE_FILENAME=${SERVER_SQLITE_FILENAME}
+ENV SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_HOST=${SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_HOST}
+ENV SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_PORT=${SERVER_WORKFLOW_SHARD_MANAGER_ADDRESS_PORT}
+ENV SERVER_WORKFLOW_SQLITE_FILENAME=${SERVER_WORKFLOW_SQLITE_FILENAME}
 ENV SERVER_GROUP_CACHE_TTL_MS=${SERVER_GROUP_CACHE_TTL_MS}
 ENV SERVER_PERSON_CACHE_TTL_MS=${SERVER_PERSON_CACHE_TTL_MS}
+ENV SERVER_SERVICE_CACHE_TTL_MS=${SERVER_SERVICE_CACHE_TTL_MS}
 ENV SERVER_TODO_CACHE_TTL_MS=${SERVER_TODO_CACHE_TTL_MS}
-ENV SERVER_USER_CACHE_TTL_MS=${SERVER_USER_CACHE_TTL_MS}
 WORKDIR /app
 ENV NODE_ENV=production
 # ENV TINI_VERSION=v0.19.0
@@ -157,16 +199,16 @@ COPY --chown=node:node --from=build /app/packages/domain/dist ./packages/domain/
 COPY --chown=node:node --from=build /app/packages/server/dist ./packages/server/dist
 USER node
 EXPOSE 3001
-CMD [ "node", "packages/server/dist/dist/esm/server.js" ]
+CMD [ "node", "packages/server/dist/dist/esm/Server.js" ]
 
-FROM base AS workflow
+FROM base AS shard-manager
 WORKDIR /app
 ENV NODE_ENV=production
 RUN mkdir -p /app && chown node:node /app
 COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
 COPY --chown=node:node --from=deps-prod /app/packages/domain/node_modules ./packages/domain/node_modules
-COPY --chown=node:node --from=deps-prod /app/packages/workflow/node_modules ./packages/workflow/node_modules
+COPY --chown=node:node --from=deps-prod /app/packages/shard-manager/node_modules ./packages/shard-manager/node_modules
 COPY --chown=node:node --from=build /app/packages/domain/dist ./packages/domain/dist
-COPY --chown=node:node --from=build /app/packages/workflow/dist ./packages/workflow/dist
+COPY --chown=node:node --from=build /app/packages/shard-manager/dist ./packages/shard-manager/dist
 USER node
-ENTRYPOINT [ "node", "packages/workflow/dist/dist/esm/workflow.js" ]
+ENTRYPOINT [ "node", "packages/shard-manager/dist/dist/esm/ShardManager.js" ]
