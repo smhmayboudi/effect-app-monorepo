@@ -5,7 +5,8 @@
   "references": [
     { "path": "packages/cli" },
     { "path": "packages/domain" },
+    { "path": "packages/runner" },
     { "path": "packages/server" },
-    { "path": "packages/workflow" }
+    { "path": "packages/shard-manager" }
   ]
 }

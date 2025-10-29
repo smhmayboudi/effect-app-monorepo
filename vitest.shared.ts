@@ -3,6 +3,7 @@ import type { ViteUserConfig } from "vitest/config"
 
 const alias = (name: string) => {
   const target = process.env.TEST_DIST !== undefined ? "dist/dist/esm" : "src"
+
   return {
     [`@template/${name}/test`]: path.join(__dirname, "packages", name, "test"),
     [`@template/${name}`]: path.join(__dirname, "packages", name, target),
@@ -23,8 +24,9 @@ const config: ViteUserConfig = {
     alias: {
       ...alias("cli"),
       ...alias("domain"),
+      ...alias("runner"),
       ...alias("server"),
-      ...alias("workflow")
+      ...alias("shard-manager")
     },
     fakeTimers: {
       toFake: undefined

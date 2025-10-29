@@ -23,8 +23,9 @@ const config: ViteUserConfig = {
     // alias: {
     //   ...alias("cli"),
     //   ...alias("domain"),
+    //   ...alias("runner"),
     //   ...alias("server"),
-    //   ...alias("workflow")
+    //   ...alias("shard-manager")
     // },
     fakeTimers: {
       toFake: undefined,
