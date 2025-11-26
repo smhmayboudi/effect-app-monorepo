@@ -64,10 +64,10 @@ export function LayoutProvider({
   const [collapsible, _setCollapsible] =
     useState<Collapsible>(defaultCollapsible)
   const [variant, _setVariant] = useState<Variant>(defaultVariant)
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, _setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
+    _setIsClient(true)
     const initialCollapsible = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKeyCollapsible,
@@ -112,27 +112,6 @@ export function LayoutProvider({
     )
   }
 
-  const setVariant = (newVariant: Variant) => {
-    if (!isClient) {
-      return
-    }
-    Cookies.makeCookie(storageKeyVariant, newVariant, {
-      maxAge: Duration.seconds(LAYOUT_COOKIE_MAX_AGE),
-      path: "/",
-    }).pipe(
-      Either.match({
-        onLeft: (left) => {
-          console.error("Cookie creation failed:", left)
-          _setVariant(newVariant)
-        },
-        onRight: (right) => {
-          document.cookie = Cookies.serializeCookie(right)
-          _setVariant(newVariant)
-        },
-      }),
-    )
-  }
-
   const resetLayout = () => {
     if (!isClient) {
       return
@@ -164,6 +143,27 @@ export function LayoutProvider({
         onRight: (right) => {
           document.cookie = Cookies.serializeCookie(right)
           _setVariant(defaultVariant)
+        },
+      }),
+    )
+  }
+
+  const setVariant = (newVariant: Variant) => {
+    if (!isClient) {
+      return
+    }
+    Cookies.makeCookie(storageKeyVariant, newVariant, {
+      maxAge: Duration.seconds(LAYOUT_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left)
+          _setVariant(newVariant)
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right)
+          _setVariant(newVariant)
         },
       }),
     )

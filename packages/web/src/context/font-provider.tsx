@@ -47,10 +47,10 @@ export function FontProvider({
   storageKey = FONT_COOKIE_NAME,
 }: PropsWithChildren<FontProviderProps>) {
   const [font, _setFont] = useState<Font>(defaultFont)
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, _setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
+    _setIsClient(true)
     const initialFont = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
@@ -77,27 +77,6 @@ export function FontProvider({
     applyFont(font)
   }, [font, isClient])
 
-  const setFont = (font: Font) => {
-    if (!isClient) {
-      return
-    }
-    Cookies.makeCookie(storageKey, font, {
-      maxAge: Duration.seconds(FONT_COOKIE_MAX_AGE),
-      path: "/",
-    }).pipe(
-      Either.match({
-        onLeft: (left) => {
-          console.error("Cookie creation failed:", left)
-          _setFont(font)
-        },
-        onRight: (right) => {
-          document.cookie = Cookies.serializeCookie(right)
-          _setFont(font)
-        },
-      }),
-    )
-  }
-
   const resetFont = () => {
     if (!isClient) {
       return
@@ -114,6 +93,27 @@ export function FontProvider({
         onRight: (right) => {
           document.cookie = Cookies.serializeCookie(right)
           _setFont(defaultFont)
+        },
+      }),
+    )
+  }
+
+  const setFont = (font: Font) => {
+    if (!isClient) {
+      return
+    }
+    Cookies.makeCookie(storageKey, font, {
+      maxAge: Duration.seconds(FONT_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left)
+          _setFont(font)
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right)
+          _setFont(font)
         },
       }),
     )

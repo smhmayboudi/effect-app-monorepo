@@ -38,8 +38,8 @@ const initialState: DirectionProviderState = {
 const DirectionContext = createContext<DirectionProviderState>(initialState)
 
 type DirectionProviderProps = {
-  defaultDir?: Direction
-  storageKey?: string
+  defaultDir?: Direction | undefined
+  storageKey?: string | undefined
 }
 
 export function DirectionProvider({
@@ -48,10 +48,10 @@ export function DirectionProvider({
   storageKey = DIRECTION_COOKIE_NAME,
 }: PropsWithChildren<DirectionProviderProps>) {
   const [dir, _setDir] = useState<Direction>(defaultDir)
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, _setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
+    _setIsClient(true)
     const initialDir = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
@@ -66,31 +66,8 @@ export function DirectionProvider({
     if (!isClient) {
       return
     }
-
-    const htmlElement = document.documentElement
-    htmlElement.setAttribute("dir", dir)
+    document.documentElement.setAttribute("dir", dir)
   }, [dir, isClient])
-
-  const setDir = (dir: Direction) => {
-    if (!isClient) {
-      return
-    }
-    Cookies.makeCookie(storageKey, dir, {
-      maxAge: Duration.seconds(DIRECTION_COOKIE_MAX_AGE),
-      path: "/",
-    }).pipe(
-      Either.match({
-        onLeft: (left) => {
-          console.error("Cookie creation failed:", left)
-          _setDir(dir)
-        },
-        onRight: (right) => {
-          document.cookie = Cookies.serializeCookie(right)
-          _setDir(dir)
-        },
-      }),
-    )
-  }
 
   const resetDir = () => {
     if (!isClient) {
@@ -108,6 +85,27 @@ export function DirectionProvider({
         onRight: (right) => {
           document.cookie = Cookies.serializeCookie(right)
           _setDir(defaultDir)
+        },
+      }),
+    )
+  }
+
+  const setDir = (dir: Direction) => {
+    if (!isClient) {
+      return
+    }
+    Cookies.makeCookie(storageKey, dir, {
+      maxAge: Duration.seconds(DIRECTION_COOKIE_MAX_AGE),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left)
+          _setDir(dir)
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right)
+          _setDir(dir)
         },
       }),
     )

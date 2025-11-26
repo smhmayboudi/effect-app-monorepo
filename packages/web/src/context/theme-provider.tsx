@@ -53,10 +53,10 @@ export function ThemeProvider({
   ...props
 }: PropsWithChildren<ThemeProviderProps>) {
   const [theme, _setTheme] = useState<Theme>(defaultTheme)
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, _setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
+    _setIsClient(true)
     const initialTheme = Cookies.getValue(
       Cookies.fromSetCookie(document.cookie.split(";")),
       storageKey,
@@ -105,6 +105,27 @@ export function ThemeProvider({
     return () => mediaQuery.removeEventListener("change", handleChange)
   }, [theme, resolvedTheme, isClient])
 
+  const resetTheme = () => {
+    if (!isClient) {
+      return
+    }
+    Cookies.makeCookie(storageKey, "", {
+      maxAge: Duration.seconds(0),
+      path: "/",
+    }).pipe(
+      Either.match({
+        onLeft: (left) => {
+          console.error("Cookie creation failed:", left)
+          _setTheme(defaultTheme)
+        },
+        onRight: (right) => {
+          document.cookie = Cookies.serializeCookie(right)
+          _setTheme(defaultTheme)
+        },
+      }),
+    )
+  }
+
   const setTheme = (theme: Theme) => {
     if (!isClient) {
       return
@@ -122,27 +143,6 @@ export function ThemeProvider({
         onRight: (right) => {
           document.cookie = Cookies.serializeCookie(right)
           _setTheme(theme)
-        },
-      }),
-    )
-  }
-
-  const resetTheme = () => {
-    if (!isClient) {
-      return
-    }
-    Cookies.makeCookie(storageKey, "", {
-      maxAge: Duration.seconds(0),
-      path: "/",
-    }).pipe(
-      Either.match({
-        onLeft: (left) => {
-          console.error("Cookie creation failed:", left)
-          _setTheme(defaultTheme)
-        },
-        onRight: (right) => {
-          document.cookie = Cookies.serializeCookie(right)
-          _setTheme(defaultTheme)
         },
       }),
     )
