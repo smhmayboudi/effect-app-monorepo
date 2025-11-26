@@ -10,6 +10,8 @@ export const GroupPersonTodoSchema = Schema.Struct({
 }).pipe(Schema.annotations({ description: "GroupPersonTodo", identifier: "GroupPersonTodo" }))
 export type GroupPersonTodoSchema = typeof GroupPersonTodoSchema.Type
 
-export class GroupPersonTodo extends Schema.Class<GroupPersonTodo>("GroupPersonTodo")(GroupPersonTodoSchema) {
+export class GroupPersonTodo
+  extends Schema.TaggedClass<GroupPersonTodo>("GroupPersonTodo")("GroupPersonTodo", GroupPersonTodoSchema)
+{
   static decodeUnknown = Schema.decodeUnknown(GroupPersonTodo)
 }

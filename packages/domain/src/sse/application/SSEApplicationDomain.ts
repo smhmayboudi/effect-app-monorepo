@@ -5,6 +5,6 @@ export const SSESchema = Schema.Struct({
 }).pipe(Schema.annotations({ description: "SSE", identifier: "SSE" }))
 export type SSESchema = typeof SSESchema.Type
 
-export class SSE extends Schema.Class<SSE>("SSE")(SSESchema) {
+export class SSE extends Schema.TaggedClass<SSE>("SSE")("SSE", SSESchema) {
   static decodeUnknown = Schema.decodeUnknown(SSE)
 }

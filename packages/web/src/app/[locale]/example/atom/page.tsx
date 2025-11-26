@@ -13,7 +13,8 @@ import * as Effect from "effect/Effect"
 import * as Schema from "effect/Schema"
 import { type FC, useRef } from "react"
 
-class Service extends Schema.Class<Service>("Service")({
+
+export class Service extends Schema.TaggedClass<Service>("Service")("Service", {
   id: Schema.String,
   ownerId: Schema.String,
   title: Schema.String,

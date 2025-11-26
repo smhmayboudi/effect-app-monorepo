@@ -17,6 +17,6 @@ export const ServiceSchema = Schema.Struct({
 }).pipe(Schema.annotations({ description: "Service", identifier: "Service" }))
 export type ServiceSchema = typeof ServiceSchema.Type
 
-export class Service extends Schema.Class<Service>("Service")(ServiceSchema) {
+export class Service extends Schema.TaggedClass<Service>("Service")("Service", ServiceSchema) {
   static decodeUnknown = Schema.decodeUnknown(Service)
 }

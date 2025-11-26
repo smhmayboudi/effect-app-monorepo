@@ -18,6 +18,6 @@ export const TodoSchema = Schema.Struct({
 }).pipe(Schema.annotations({ description: "Todo", identifier: "Todo" }))
 export type TodoSchema = typeof TodoSchema.Type
 
-export class Todo extends Schema.Class<Todo>("Todo")(TodoSchema) {
+export class Todo extends Schema.TaggedClass<Todo>("Todo")("Todo", TodoSchema) {
   static decodeUnknown = Schema.decodeUnknown(Todo)
 }

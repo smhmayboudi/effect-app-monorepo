@@ -19,6 +19,6 @@ export const PersonSchema = Schema.Struct({
 }).pipe(Schema.annotations({ description: "Person", identifier: "Person" }))
 export type PersonSchema = typeof PersonSchema.Type
 
-export class Person extends Schema.Class<Person>("Person")(PersonSchema) {
+export class Person extends Schema.TaggedClass<Person>("Person")("Person", PersonSchema) {
   static decodeUnknown = Schema.decodeUnknown(Person)
 }
