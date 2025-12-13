@@ -93,6 +93,7 @@
     "url": "https://github.com/smhmayboudi/effect-app-monorepo"
   },
   "scripts": {
+    "prepare": "effect-language-service patch",
     "build": "tsc -b tsconfig.build.json && pnpm --filter=!web --parallel --recursive run build && pnpm --filter web run build",
     "changeset-publish": "pnpm build && TEST_DIST= pnpm vitest && changeset publish",
     "changeset-version": "changeset version && node scripts/version.mjs",
